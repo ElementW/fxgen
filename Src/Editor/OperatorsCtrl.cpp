@@ -196,8 +196,10 @@ void NOperatorsCtrl::DisplayOperator(NGraphics* _pdc, NOperator* _pop)
 	else													_pdc->Draw3dRect(rcBloc,RGB(255,255,255),RGB(0,0,0));
 
 	//Operator's Name
-	//_pdc->DrawText(_pop->GetRTClass()->m_pszClassName, rcBloc, DT_SINGLELINE|DT_CENTER|DT_END_ELLIPSIS|DT_VCENTER);
-	_pdc->DrawText(_pop->GetName(), rcBloc, DT_SINGLELINE|DT_CENTER|DT_END_ELLIPSIS|DT_VCENTER);
+	char* pszname = _pop->GetUserName();
+	if (pszname==null || (strlen(pszname)==0))		pszname=_pop->GetName();
+
+	_pdc->DrawText(pszname, rcBloc, DT_SINGLELINE|DT_CENTER|DT_END_ELLIPSIS|DT_VCENTER);
 
 	//Operator's Resize Zone
 	NRect rcResize(rcBloc);
@@ -443,7 +445,10 @@ void NOperatorsCtrl::OnMouseWheel(udword flags, sword zDelta, NPoint pos)
 	fy0-=m_fPosY;
 
 	//Change scale
-	m_fScaleX+=(float)zDelta / WHEEL_DELTA;
+	//m_fScaleX+=(float)zDelta / WHEEL_DELTA;
+	if (zDelta>0)	m_fScaleX+=0.2f;
+	if (zDelta<0)	m_fScaleX-=0.2f;
+
 	if (m_fScaleX<0.2f)	m_fScaleX=0.2f;
 	if (m_fScaleX>2.0f)	m_fScaleX=2.0f;
 	m_fScaleY=m_fScaleX;

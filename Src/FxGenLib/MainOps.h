@@ -35,7 +35,9 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x004080FF;	}
-	virtual char*		GetName();
+	virtual char*		GetName()			{ return "Store";	}		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Misc"; }		//!< Operator's Category
+	virtual char*		GetUserName();											//!< Operator's User Name
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -56,7 +58,9 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x000000FF;	}
-	virtual char*		GetName();
+	virtual char*		GetName()			{ return "Store Result";	}	//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Misc";	}					//!< Operator's Category
+	virtual char*		GetUserName();														//!< Operator's User Name
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -76,7 +80,9 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00e36464;	}
-	virtual char*		GetName();
+	virtual char*		GetName()			{ return "Load"; }		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Misc"; }		//!< Operator's Category
+	virtual char*		GetUserName();											//!< Operator's User Name
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -96,8 +102,9 @@ public:
 	NChannelAnimFX1Op();
 
 	//Methods
-	virtual	udword	GetColor()	{ return 0x00e36464;	}
-	virtual char*		GetName()		{ return "Channel FX1"; }
+	virtual	udword	GetColor()		{ return 0x00e36464;	}
+	virtual char*		GetName()			{ return "Channel FX1"; }	//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Animation"; }		//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);

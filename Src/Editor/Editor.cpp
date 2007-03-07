@@ -22,11 +22,7 @@
 #include "WinMain.h"
 #include "Editor.h"
 
-//-----------------------------------------------------------------
-// 										Defines
-//-----------------------------------------------------------------
-#define WIDTH		800
-#define HEIGHT	600
+
 
 //-----------------------------------------------------------------
 //										Variables
@@ -73,7 +69,7 @@ bool NFxGenApp::Init()
 
 	//Create Main Frame Window
 	NMainFrm* frame = new NMainFrm();
-	frame->Create("FxGen Editor v0.1 alpha", NRect(200,100,200+WIDTH,100+HEIGHT));
+	frame->Create(CAPTION, NRect(200,100,200+WIDTH,100+HEIGHT));
 	m_pMainWnd = frame;
 
 	return true;

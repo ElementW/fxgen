@@ -227,10 +227,6 @@ udword NOperatorsPage::AddOp(NOperator* _pop)
 //-----------------------------------------------------------------
 udword NOperatorsPage::DeleteOp(NOperator* _pop)
 {
-	//Invalidate moved operator
-	//_pop->m_bInvalided = true;
-	//_pop->m_pnextOpToProcess = null;
-
 	//Invalidate linked operators
 	NObjectArray	carray;
 	GetNextOperators(_pop, carray);
@@ -357,6 +353,7 @@ void NOperatorsPage::_ComputeLinks(NOperator* _pop, NOperator* _pprevop, udword 
 {
 	//Update current operator execution link
 	_pop->m_pnextOpToProcess = m_pprevOp;
+	_pop->m_pprevOpToProcess = null;
 
 	if (m_pprevOp)
 		m_pprevOp->m_pprevOpToProcess = _pop;

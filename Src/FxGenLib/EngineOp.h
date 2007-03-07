@@ -49,7 +49,9 @@ public:
 	//Methods
 	virtual NObject* Duplicate();						//!< Duplicate this object (used for copy-paste)
 	virtual	COLORREF GetColor()	= 0;				//!< Operator color
-	virtual char* GetName()	{ return ""; }	//!< Operator's Name
+	virtual char* GetName()				{ return ""; }			//!< Operator's Name
+	virtual char* GetCategory()		{ return "Misc"; }	//!< Operator's Category
+	virtual char* GetUserName()		{ return null; }		//!< Operator's User Name
 
 	//Serialization
 	virtual	bool Save(NArchive* _s);	//!< Save object
@@ -59,10 +61,8 @@ public:
 	virtual udword Process(float _ftime, NOperator** _pOpsInts) = 0;	//!< object processing (texture, mesh ...)
 
 	//Datas GUI
-//
 	sword	m_wPosX, m_wPosY;			//!< Position (grid unit)
 	sword	m_wWidth;							//!< Width (grid unit)
-//
 
 	//Datas Execution
 	ubyte	m_byDepth;						//!< Depth in tree

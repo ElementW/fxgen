@@ -125,17 +125,31 @@ udword NString::ExtractToken(udword i, NString& strToken, char* pszSeparators)
 	udword l = Length();
 	sbyte c;
 
-	while (mBuffer[i++]==pszSeparators[0] && i<l);
+	udword sepCount = strlen(pszSeparators);
+	if (sepCount==0)	return (udword)-1;
+
+	udword j=0;
+	while (j<sepCount)
+	{
+		while (mBuffer[i++]==pszSeparators[j] && i<l);
+		j++;
+		i--;
+	}
 
 	if (i>=l)	return (udword)-1;
 
 	for (i; i<l; i++)
 	{
 		c = mBuffer[i];
-		if (c==pszSeparators[0])
+		j=0;
+		while (j<sepCount)
 		{
-			strToken = Mid(f, i-f);
-			return f;
+			if (c==pszSeparators[j])
+			{
+				strToken = Mid(f, i-f);
+				return f;
+			}
+			j++;
 		}
 	}
 

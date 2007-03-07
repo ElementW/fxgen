@@ -47,6 +47,9 @@ NOperatorsWnd::~NOperatorsWnd(void)
 	EVT_UNREGISTERALL();
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Control creation
+//-----------------------------------------------------------------
 bool NOperatorsWnd::Create(char* name, NRect& rect, NWnd* parent)
 {
 	NOperatorsCtrl::Create(name, rect, parent);
@@ -61,37 +64,46 @@ bool NOperatorsWnd::Create(char* name, NRect& rect, NWnd* parent)
 	return true;
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Context menu creation
+//-----------------------------------------------------------------
 void NOperatorsWnd::InitCtxMenu()
 {
 	//Creation du menu
 	m_hMenu = CreatePopupMenu();
 
-	//Creation de la liste des Blocs en fct de leurs categorie
+	//Create Operators list sorted by category
 	NRTClass* prtc = GetFirstClassBySuperClass("NOperator");
 	while (prtc)
 	{
-		//Recherche si la categorie existe deja
+		//Create operator in order to get operator name and categorie
+		NOperator* pop = (NOperator*)prtc->m_pCreateCB();
+
+		//Search if category already exist in menu
 		HMENU popMenu =null;
 		sdword count = ::GetMenuItemCount(m_hMenu);
 		for (sdword j = 0; j < count; j++)
 		{
 			char szBuf[256];
-			if (::GetMenuString(m_hMenu, j, szBuf, sizeof(szBuf), MF_BYPOSITION) && (strcmp(szBuf, prtc->m_pszSuperClassName) == 0))
+			if (::GetMenuString(m_hMenu, j, szBuf, sizeof(szBuf), MF_BYPOSITION) && (strcmp(szBuf, pop->GetCategory()) == 0))
 			{
 				popMenu = ::GetSubMenu(m_hMenu, j);
 				break;
 			}
 		}
 
-		//on cree la categorie si elle n'existe pas deja
+		//Create category if it doesn't exist
 		if (popMenu==null)
 		{
 			popMenu = CreateMenu();
-			::AppendMenu(m_hMenu, MF_POPUP, (UINT)popMenu, prtc->m_pszSuperClassName);
+			::AppendMenu(m_hMenu, MF_POPUP, (UINT)popMenu, pop->GetCategory() );
 		}
 
-		//Insertion du bloc
-		::AppendMenu(popMenu, MF_STRING, (DWORD)prtc->CLASSID, prtc->m_pszClassName+1);	//+1 for class prefix 'N'
+		//Add new operator
+		::AppendMenu(popMenu, MF_STRING, (DWORD)prtc->CLASSID, pop->GetName() );	//+1 for class prefix 'N'
+
+		//Delete operator
+		delete pop;
 
 		//Next RTC
 		prtc = GetNextClassBySuperClass("NOperator", prtc);
@@ -99,7 +111,9 @@ void NOperatorsWnd::InitCtxMenu()
 
 }
 
-
+//-----------------------------------------------------------------
+//!	\brief	Windows Message Right button down
+//-----------------------------------------------------------------
 void NOperatorsWnd::OnRightButtonDown(udword flags, NPoint pos)
 {
 	if (m_hMenu && m_popsPage)
@@ -111,6 +125,9 @@ void NOperatorsWnd::OnRightButtonDown(udword flags, NPoint pos)
 
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Windows Message Command
+//-----------------------------------------------------------------
 void NOperatorsWnd::OnCommand(udword id)
 {
 	ID classid = (ID)id;
@@ -119,7 +136,9 @@ void NOperatorsWnd::OnCommand(udword id)
 	Update();
 }
 
-
+//-----------------------------------------------------------------
+//!	\brief	An operator is marked show
+//-----------------------------------------------------------------
 void NOperatorsWnd::OnMarkShowOperator(NOperator* pop)
 {
 	NOperatorsCtrl::OnMarkShowOperator(pop);
@@ -130,6 +149,9 @@ void NOperatorsWnd::OnMarkShowOperator(NOperator* pop)
 
 }
 
+//-----------------------------------------------------------------
+//!	\brief	An operator is deleting
+//-----------------------------------------------------------------
 void NOperatorsWnd::OnDeletingOperator(NOperator* pop)
 {
 	NFxGenApp* papp = (NFxGenApp*)GetApp();
@@ -137,7 +159,9 @@ void NOperatorsWnd::OnDeletingOperator(NOperator* pop)
 	pfrm->DeletingOperator(pop);
 }
 
-
+//-----------------------------------------------------------------
+//!	\brief	An operator is deleted
+//-----------------------------------------------------------------
 void NOperatorsWnd::OnDeletedOperator(NOperator* pop)
 {
 	NFxGenApp* papp = (NFxGenApp*)GetApp();
@@ -145,23 +169,9 @@ void NOperatorsWnd::OnDeletedOperator(NOperator* pop)
 	pfrm->DeletedOperator(pop);
 }
 
-
-EVT_IMPLEMENT_HANDLER(NOperatorsWnd, OnPageSelected)
-{
-	NOperatorsPage* popsPage = (NOperatorsPage*)dwParam1;
-	DisplayOperatorsPage(popsPage);
-	Update();
-
-	return 0;
-}
-
-EVT_IMPLEMENT_HANDLER(NOperatorsWnd, OnRendering)
-{
-	float* ftime = (float*)dwParam2;
-	Update(*ftime);
-	return 0;
-}
-
+//-----------------------------------------------------------------
+//!	\brief	Return First RTClass from a super class name
+//-----------------------------------------------------------------
 NRTClass* NOperatorsWnd::GetFirstClassBySuperClass(char* _pszSuperClassName)
 {
 	NRTClass* pcurRTC = NRTClass::m_pFirstRTClass;
@@ -175,6 +185,9 @@ NRTClass* NOperatorsWnd::GetFirstClassBySuperClass(char* _pszSuperClassName)
 	return null;
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Return Next RTClass from a super class name
+//-----------------------------------------------------------------
 NRTClass* NOperatorsWnd::GetNextClassBySuperClass(char* _pszSuperClassName, NRTClass* _prtclass)
 {
 	_prtclass = _prtclass->m_pNextRTC;
@@ -188,4 +201,28 @@ NRTClass* NOperatorsWnd::GetNextClassBySuperClass(char* _pszSuperClassName, NRTC
 	}
 
 	return null;
+}
+
+
+
+//-----------------------------------------------------------------
+//!	\brief	Event a page is selected
+//-----------------------------------------------------------------
+EVT_IMPLEMENT_HANDLER(NOperatorsWnd, OnPageSelected)
+{
+	NOperatorsPage* popsPage = (NOperatorsPage*)dwParam1;
+	DisplayOperatorsPage(popsPage);
+	Update();
+
+	return 0;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Event rendering asked
+//-----------------------------------------------------------------
+EVT_IMPLEMENT_HANDLER(NOperatorsWnd, OnRendering)
+{
+	float* ftime = (float*)dwParam2;
+	Update(*ftime);
+	return 0;
 }

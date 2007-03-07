@@ -178,12 +178,13 @@ void NMainFrm::OnNewProject()
 
 	//Display Projects's Pages
 	m_pprojectwnd->DisplayOperatorsProject(gNFxGen_GetEngine());
-	//m_pstoredwnd->DisplayOperatorsProject(gNFxGen_GetEngine());
 
 	m_opswnd->DisplayOperatorsPage(null);
 	m_opswnd->Update();
 
-	SetWindowText("FxGen Editor v0.1 alpha - Untitled");
+	NString strTitle(CAPTION);
+	strTitle+="Untitled";
+	SetWindowText(strTitle.Buffer());
 
 	m_bExecuteLocked = false;
 }
@@ -205,7 +206,7 @@ void NMainFrm::OnOpenProject()
 
 		if (gNFxGen_GetEngine()->LoadProject(str.Buffer()))
 		{
-			NString strTitle("FxGen Editor v0.1 alpha - ");
+			NString strTitle(CAPTION);
 			strTitle+=str.Buffer();
 			SetWindowText(strTitle.Buffer());
 		}
@@ -232,7 +233,7 @@ void NMainFrm::OnSaveProject()
 		NString str = dlg.GetPathName();
 		if (gNFxGen_GetEngine()->SaveProject(str.Buffer()))
 		{
-			NString strTitle("FxGen Editor v0.1 alpha - ");
+			NString strTitle(CAPTION);
 			strTitle+=str.Buffer();
 			SetWindowText(strTitle.Buffer());
 		}

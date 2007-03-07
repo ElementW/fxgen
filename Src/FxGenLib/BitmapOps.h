@@ -53,8 +53,9 @@ public:
 	DECLARE_CLASS();
 
 	//Methods
-	virtual	udword	GetColor()	{ return 0x009696c0;	}
-	virtual char*		GetName()		{ return "Nop"; }	//!< Operator's Name
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Nop"; }		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Misc"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -72,8 +73,9 @@ public:
 	NFlatOp();
 
 	//Methods
-	virtual	udword	GetColor()	{ return 0x009696c0;	}
-	virtual char*		GetName()		{ return "Flat"; }	//!< Operator's Name
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Flat"; }			//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Renderer"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -91,8 +93,9 @@ public:
 	NRectOp();
 
 	//Methods
-	virtual	udword	GetColor()	{ return 0x009696c0;	}
-	virtual char*		GetName()		{ return "Rect"; }	//!< Operator's Name
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Rect"; }			//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Renderer"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -111,8 +114,9 @@ public:
 	NPixelsOp();
 
 	//Methods
-	virtual	udword	GetColor()	{ return 0x009696c0;	}
-	virtual char*		GetName()		{ return "Pixels"; }	//!< Operator's Name
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Pixels"; }	//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -130,8 +134,9 @@ public:
 	NAddOp();
 
 	//Methods
-	virtual	udword	GetColor()	{ return 0x009696c0;	}
-	virtual char*		GetName()		{ return "Add"; }	//!< Operator's Name
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Add"; }			//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -149,8 +154,10 @@ public:
 	NGlowOp();
 
 	//Methods
-	virtual	udword	GetColor()	{ return 0x009696c0;	}
-	virtual char*		GetName()		{ return "Glow"; }	//!< Operator's Name
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Glow"; }		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
+
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -170,8 +177,10 @@ public:
 	virtual ~NRotoZoomOp();
 
 	//Methods
-	virtual	udword	GetColor()	{ return 0x009696c0;	}
-	virtual char*		GetName()		{ return "Roto Zoom"; }	//!< Operator's Name
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Roto Zoom"; }	//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Distord"; }		//!< Operator's Category
+
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -189,8 +198,9 @@ public:
 	NBlurOp();
 
 	//Methods
-	virtual	udword	GetColor()	{ return 0x009696c0;	}
-	virtual char*		GetName()		{ return "Blur"; }	//!< Operator's Name
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Blur"; }			//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Filter"; }		//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -208,8 +218,9 @@ public:
 	NColorsOp();
 
 	//Methods
-	virtual	udword	GetColor()	{ return 0x009696c0;	}
-	virtual char*		GetName()		{ return "Colors"; }	//!< Operator's Name
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Colors"; }	//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -228,8 +239,9 @@ public:
 	NLightOp();
 
 	//Methods
-	virtual	udword	GetColor()	{ return 0x009696c0;	}
-	virtual char*		GetName()		{ return "Light"; }	//!< Operator's Name
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Light"; }	//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -265,8 +277,9 @@ public:
 	NNormalsOp();
 
 	//Methods
-	virtual	udword	GetColor()	{ return 0x009696c0;	}
-	virtual char*		GetName()		{ return "Normals"; }	//!< Operator's Name
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Normals"; }	//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -284,8 +297,9 @@ public:
 	NCrackOp();
 
 	//Methods
-	virtual	udword	GetColor()	{ return 0x009696c0;	}
-	virtual char*		GetName()		{ return "Crack"; }	//!< Operator's Name
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Crack"; }		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -307,8 +321,9 @@ public:
 	NCloudOp();
 
 	//Methods
-	virtual	udword	GetColor()	{ return 0x009696c0;	}
-	virtual char*		GetName()		{ return "Cloud"; }	//!< Operator's Name
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Cloud"; }		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -340,8 +355,9 @@ public:
 	NDistortOp();
 
 	//Methods
-	virtual	udword	GetColor()	{ return 0x009696c0;	}
-	virtual char*		GetName()		{ return "Distort"; }	//!< Operator's Name
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Distort"; }	//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -360,8 +376,9 @@ public:
 	NSetSizeOp();
 
 	//Methods
-	virtual	udword	GetColor()	{ return 0x009696c0;	}
-	virtual char*		GetName()		{ return "SetSize"; }	//!< Operator's Name
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "SetSize"; }	//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Misc"; }		//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -380,8 +397,9 @@ public:
 	NGradientOp();
 
 	//Methods
-	virtual	udword	GetColor()	{ return 0x009696c0;	}
-	virtual char*		GetName()		{ return "Gradient"; }	//!< Operator's Name
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Gradient"; }	//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Render"; }		//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);

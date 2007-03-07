@@ -229,7 +229,7 @@ void NTreeNodeCtrl::OnSize()
 
 void NTreeNodeCtrl::OnLeftButtonDown(udword flags, NPoint _point)
 {
-	TRACE("OnLeftButtonDown\n");
+	//TRACE("OnLeftButtonDown\n");
 
 	SetFocus();
 

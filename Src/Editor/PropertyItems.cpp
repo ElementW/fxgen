@@ -265,11 +265,11 @@ void NUbyteComboProp::DrawItem(NGraphics* pdc, NRect& rcItem)
 		udword i=3;
 		do
 		{
-			i = str.ExtractToken(i, word, ",");
+			i = str.ExtractToken(i, word, ",]");
 			if (i!=-1)
 			{
 				m_carrayStringsList.AddItem(word);
-				i+=word.Length();
+				i+=word.Length()+1;
 			}
 
 		} while (i!=-1);
@@ -434,7 +434,8 @@ void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 		for (udword i=0; i<storedOp.Count(); i++)
 		{
 			NOperator* pop = (NOperator*)storedOp[i];
-			::AppendMenu(popMenu, MF_STRING, (DWORD)pop, pop->GetName());
+			if (strlen(pop->GetUserName())!=0)
+				::AppendMenu(popMenu, MF_STRING, (DWORD)pop, pop->GetUserName());
 		}
 	}
 
