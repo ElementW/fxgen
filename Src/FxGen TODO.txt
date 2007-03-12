@@ -1,0 +1,23 @@
+/////////////////////////////////////////
+//					TODO
+/////////////////////////////////////////
+
+.Display error message at viewport if a process error occurs
+.See advanced color filtering (like Exel tool)
+
+
+/////////////////////////////////////////
+//					CHANGED
+/////////////////////////////////////////
+
+Version 0.2 alpha !!! in work !!!
+----------------------------------
+.Crash correction while deleting a linked operator.
+.Operators context menu displayed by categories
+.Fixed properties enumeration name (comma removed)
+
+Version 0.1 alpha
+-----------------
+Initial version.
+
+
