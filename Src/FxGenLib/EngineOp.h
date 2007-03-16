@@ -177,6 +177,7 @@ protected:
 	NOperator*	m_aStacks[MAX_CONTEXTS][MAX_DEPTH];	//!< Inputs Stack for operators process
 	udword			m_nCurContext;				//!< indice (see m_aStacks[m_nCurContext, dwCurLevel])
 	NOperator*	m_popFinal;
+	bool				m_bError;							//!< Error while process
 
 	//Garbage
 	NObjectGarbage	m_bitmapsAlloc;

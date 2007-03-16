@@ -75,7 +75,7 @@ public:
 	//Methods
 	virtual	udword	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Flat"; }			//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Renderer"; }	//!< Operator's Category
+	virtual char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
@@ -95,7 +95,7 @@ public:
 	//Methods
 	virtual	udword	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Rect"; }			//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Renderer"; }	//!< Operator's Category
+	virtual char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);

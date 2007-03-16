@@ -87,10 +87,14 @@ void NViewportsCtrl::Update()
 //-----------------------------------------------------------------
 void NViewportsCtrl::OnPaint()
 {
-	NRect rc = GetClientRect();
+//	NRect rc = GetClientRect();
 
-	NGraphics dc(this);
-	dc.FillSolidRect(rc, RGB(0,0,0));
+//	NGraphics dc(this);
+//	dc.FillSolidRect(rc, RGB(0,0,0));
+
+//		dc.SetFont(m_hfontNormal);
+//		dc.SetTextColor(RGB(200,255,200));
+//		dc.DrawText("Please select a page !", rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 
 }
 

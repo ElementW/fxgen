@@ -186,7 +186,7 @@ void NProjectWnd::Delete()
 	NOperatorsPage* ppage = GetSelectedPage();
 	if (ppage)
 	{
-		udword dwRet = GetApp()->MessageBox("Do you really want to delete this page ?", MB_YESNO);
+		udword dwRet = GetApp()->MessageBox("Do you really want to delete this page ?", MB_YESNO|MB_DEFBUTTON2);
 		if (dwRet==IDYES)
 		{
 			//Get Group for this page
@@ -206,29 +206,26 @@ void NProjectWnd::Delete()
 		}
 		return;
 	}
-/*
+
 	/////////////////////////////////////////////
 	// Delete a group from project
 	NTreeNode* pgroup =	GetSelectedGroup();
 	if (pgroup)
 	{
-		udword dwRet = GetApp()->MessageBox("Do you really want to delete this group ?", MB_YESNO);
+		udword dwRet = GetApp()->MessageBox("Do you really want to delete this group ?", MB_YESNO|MB_DEFBUTTON2);
 		if (dwRet==IDYES)
 		{
 			//Get parent for this group
-			HTREEITEM hitemSel		= GetSelection();
-			HTREEITEM hitemParent = GetParent(hitemSel);
-			NTreeNode* pnodeparent = (NTreeNode*)GetItemData(hitemParent);
-
+			NTreeNode* pnodeparent = (NTreeNode*)GetParent(pgroup);
 			udword idx = pnodeparent->FindSon(pgroup);
 			if (idx!=-1)
 			{
 				pnodeparent->DeleteSon(idx);
-				Update();
+				DisplayOperatorsProject(m_popsProject);
 			}
 
 		}
-	}*/
+	}
 
 }
 

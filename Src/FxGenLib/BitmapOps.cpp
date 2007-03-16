@@ -269,6 +269,8 @@ udword NAddOp::Process(float _ftime, NOperator** _pOpsInts)
 	{
 		_pOpsInts++;
 		NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
+		if (pSrc==null)		break;
+
 		RGBA* pPxSrc = pSrc->GetPixels();
 		RGBA* pPxDst = pDst->GetPixels();
 

@@ -34,6 +34,7 @@
 //-----------------------------------------------------------------
 NViewportsWnd::NViewportsWnd(void)
 {
+	m_hfontNormal	= null;
 	m_pcurObject	= null;
 	m_dwTextureID = 0;
 	m_dwTexWidth=m_dwTexHeight=0;
@@ -48,6 +49,7 @@ NViewportsWnd::NViewportsWnd(void)
 //-----------------------------------------------------------------
 NViewportsWnd::~NViewportsWnd(void)
 {
+	if (m_hfontNormal)	::DeleteObject(m_hfontNormal);
 }
 
 //-----------------------------------------------------------------
@@ -57,6 +59,12 @@ bool NViewportsWnd::Create(char* name, NRect& rect, NWnd* parent)
 {
 	NViewportsCtrl::Create(name, rect, parent);
 
+	//Create Normal Font
+	m_hfontNormal = ::CreateFont(
+		10, 0, 0, 0, FW_NORMAL, FALSE, FALSE,
+		0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+		DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, "Lucida console");
+
 	//Initialize Renderer
 	m_renderer.Init(m_W32HWnd, false);
 	m_renderer.Resize(rect.right-rect.left, rect.bottom-rect.top);
@@ -64,6 +72,7 @@ bool NViewportsWnd::Create(char* name, NRect& rect, NWnd* parent)
 	m_renderer.Update();
 
 	m_dwTextureID = m_renderer.CreateTexture(256,256);
+
 
 	//Register Events
 	EVT_REGISTER(EVT_OPDELETING,	(EVENTFNC)&NViewportsWnd::OnOPDeleting	);
@@ -93,11 +102,22 @@ EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnRender)
 {
 	//Check operator
 	NOperator* pop = (NOperator*)dwParam1;
-	if (pop==null || pop->m_pObj==null)
+	if (pop==null || pop->m_pObj==null || (pop!=null && pop->m_bError))
 	{
 		m_pcurObject = null;
-		m_renderer.Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		m_renderer.Update();
+
+		//Texte
+		NRect rc = GetClientRect();
+		NGraphics dc(this);
+		dc.FillSolidRect(rc, RGB(115,115,115));
+		dc.SetFont(m_hfontNormal);
+		dc.SetTextColor(RGB(200,255,200));
+
+		if (pop==null)
+			dc.DrawText("Select an operator then push S key", rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+		else if (pop && pop->m_bError)
+			dc.DrawText("Invalid links !", rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+
 		return 0;
 	}
 

@@ -558,12 +558,15 @@ void NEngineOp::_ComputeInvaliddOps(NOperator* _pop)
 	NOperator* pccurOP = _pop;	//Start
 	while (pccurOP)
 	{
+
 		//Invalidate Referenced operators (refTarget)
 		udword dwRefCount = pccurOP->GetRefCount();
 		for (udword j=0; j<dwRefCount; j++)
 		{
 			NOperator* prefop = (NOperator*)pccurOP->GetRef(j);
-			//TRACE("RefTarget Must be invalided <%s> !\n", prefop->GetName());
+
+			//TRACE("RefTarget Must be invalided <%s> !\n", prefop->GetUserName());
+
 			NOperator* pcrootOpToProcess = GetRootOperator(prefop);
 			if (pcrootOpToProcess)
 			{
@@ -593,6 +596,19 @@ void NEngineOp::_ComputeInvaliddOps(NOperator* _pop)
 			}
 		}
 
+		//Invalidate operators that reference me(refMaker)
+		udword dwRefToMeCount = pccurOP->GetRefToMeCount();
+		for (udword j=0; j<dwRefToMeCount; j++)
+		{
+			NOperator* preftomeop = (NOperator*)pccurOP->GetRefToMe(j);
+			//TRACE("RefToMe Must be invalided <%s> !\n", preftomeop->GetUserName());
+			if (pccurOP->m_bInvalided)
+			{
+				preftomeop->m_bInvalided=true;
+			}
+
+		}
+
 		//Update Stack
 		m_aStacks[m_nCurContext][pccurOP->m_byDepth] = pccurOP;
 
@@ -616,7 +632,8 @@ void NEngineOp::Execute(float _ftime, NOperator* _popFinal)
 
 		//Init
 		m_nCurContext = 0;
-		m_popFinal = _popFinal;
+		m_popFinal		= _popFinal;
+		m_bError			= false;
 		ZeroMemory(m_aStacks, sizeof(m_aStacks));
 
 		//Execute
@@ -664,15 +681,14 @@ void NEngineOp::_Execute(float _ftime, NOperator* _popFinal)
 		}
 
 		//Process operator if marked invalid
-		if (pccurOP->m_bInvalided)
+		if (pccurOP->m_bInvalided || pccurOP->m_bError)
 		{
-			NOperator** pOpsIns = &m_aStacks[m_nCurContext][pccurOP->m_byDepth];
-			if (pccurOP->Process(_ftime, pOpsIns)==-1)
+			if (!m_bError)
 			{
-				pccurOP->m_bError = true;
-				return;	//	Error
+				NOperator** pOpsIns = &m_aStacks[m_nCurContext][pccurOP->m_byDepth];
+				if (pccurOP->Process(_ftime, pOpsIns)==-1)
+					m_bError = true;
 			}
-			pccurOP->m_bError = false;
 
 			if (pccurOP->m_pcvarsBloc && pccurOP->m_pcvarsBloc->IsAnimated())
 				pccurOP->m_bInvalided = true;
@@ -683,6 +699,9 @@ void NEngineOp::_Execute(float _ftime, NOperator* _popFinal)
 
 			//TRACE("Process <%s> Ctxt<%d>\n", pccurOP->GetName(), m_nCurContext);
 		}
+
+		//Update error state
+		pccurOP->m_bError = m_bError;
 
 		//Update Stack
 		m_aStacks[m_nCurContext][pccurOP->m_byDepth] = pccurOP;

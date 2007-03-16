@@ -103,7 +103,7 @@ bool NMainFrm::Create(char* name, NRect& rect)
 	// Split du mainframe
 	udword dwViewportsPaneID	= SPLITPANE_DEFAULT_ID;
 	udword dwResourcesPaneID	= pwrkspace->SplitRow(dwViewportsPaneID, 50);
-	udword dwPropertiesPaneID = pwrkspace->SplitColumn(dwViewportsPaneID, 80);
+	udword dwPropertiesPaneID = pwrkspace->SplitColumn(dwViewportsPaneID, 70);
 	udword dwOperatorsPaneID	= pwrkspace->SplitColumn(dwResourcesPaneID, 20);
 	pwrkspace->SetPaneWnd("Viewport", dwViewportsPaneID,	viewportswnd);
 	pwrkspace->SetPaneWnd("Operators", dwOperatorsPaneID,	m_opswnd);
@@ -270,6 +270,12 @@ NOperator* NMainFrm::Execute(float _ftime)
 void NMainFrm::MarkShowOperator(NOperator* _pop)
 {
 	m_popMarkedShow = _pop;
+
+	//###DEBUG###
+	//Time
+	//float ftime = (float)GetTickCount() * 60.0f / 1000.0f;
+	//NOperator* pop = Execute(ftime);
+
 }
 
 //-----------------------------------------------------------------

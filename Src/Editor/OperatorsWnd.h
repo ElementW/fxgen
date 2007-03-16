@@ -58,6 +58,7 @@ protected:
 	virtual	void OnCommand(udword id);
 
 	//Datas
-	HMENU m_hMenu;
+	HMENU		m_hMenu;
+
 
 };

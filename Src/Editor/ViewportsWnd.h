@@ -54,6 +54,7 @@ protected:
 
 
 	//Datas
+	HFONT				m_hfontNormal;
 	NGLRenderer m_renderer;			//!< OpenGL Renderer
 	sdword			m_dwTextureID;	//!< OpenGL Texture ID
 	udword			m_dwTexWidth, m_dwTexHeight;
