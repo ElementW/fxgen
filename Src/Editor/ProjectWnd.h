@@ -36,6 +36,7 @@ public:
 	virtual	bool Create(char* name, NRect& rect, NWnd* parent);
 
 	void DisplayOperatorsProject(NEngineOp* _popsProject);
+	void SelectFirstPage();
 
 protected:
 	//Methods
@@ -46,6 +47,8 @@ protected:
 
 	NTreeNode*			GetSelectedGroup();
 	NOperatorsPage* GetSelectedPage();
+
+	NObject* _FindNodeFromClassName(NTreeNode* _pParent, char* _pszClassName);
 
 	// Messages Notify
 	void OnTreeSelChange();

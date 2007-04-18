@@ -114,7 +114,7 @@ EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnRender)
 		dc.SetTextColor(RGB(200,255,200));
 
 		if (pop==null)
-			dc.DrawText("Select an operator then push S key", rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+			dc.DrawText("Select an operator by double clicking on it", rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 		else if (pop && pop->m_bError)
 			dc.DrawText("Invalid links !", rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 

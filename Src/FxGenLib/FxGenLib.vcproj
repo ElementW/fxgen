@@ -312,6 +312,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DentoidOps.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DentoidOps.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MainOps.cpp"
 				>
 			</File>

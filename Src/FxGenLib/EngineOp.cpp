@@ -351,6 +351,11 @@ void NOperatorsPage::ComputeLinks()
 //-----------------------------------------------------------------
 void NOperatorsPage::_ComputeLinks(NOperator* _pop, NOperator* _pprevop, udword _dwCurDepth)
 {
+/*	if (_pprevop)
+		TRACE("\t_ComputeLinks %s PrevOP %s dwCurDepth %d\n", _pop->GetName(), _pprevop->GetName(), _dwCurDepth );
+	else
+		TRACE("\t_ComputeLinks %s PrevOP -- dwCurDepth %d\n", _pop->GetName(), _dwCurDepth );*/
+
 	//Update current operator execution link
 	_pop->m_pnextOpToProcess = m_pprevOp;
 	_pop->m_pprevOpToProcess = null;
@@ -379,8 +384,13 @@ void NOperatorsPage::_ComputeLinks(NOperator* _pop, NOperator* _pprevop, udword 
 		_dwCurDepth--;
 		NOperator* pprevOp = (NOperator*)carray[i];
 
+		//Get next op from prev
+		NObjectArray	carray2;
+		GetNextOperators(pprevOp, carray2);
+
 		//Compute previous operators
-		_ComputeLinks(pprevOp, _pop, _dwCurDepth);
+		if (carray2[0] == _pop)
+			_ComputeLinks(pprevOp, _pop, _dwCurDepth);
 	}
 
 }
@@ -445,7 +455,7 @@ void NOperatorsPage::GetNextOperators(NOperator* pop, NObjectArray& carrayNextOp
 
 
 //-----------------------------------------------------------------
-//!	\brief	Return final operator from graphical position
+//!	\brief	Return final operator (lower down) from graphical position
 //!	\param	_pop	operator
 //!	\return final operator
 //-----------------------------------------------------------------

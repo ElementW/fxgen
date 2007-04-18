@@ -56,6 +56,9 @@ NProjectWnd::~NProjectWnd(void)
 	if (m_hMenu)				::DestroyMenu(m_hMenu);
 }
 
+//-----------------------------------------------------------------
+//!	\brief	control Creation
+//-----------------------------------------------------------------
 bool NProjectWnd::Create(char* name, NRect& rect, NWnd* parent)
 {
 	NTreeNodeCtrl::Create(name, rect, parent);
@@ -69,6 +72,10 @@ bool NProjectWnd::Create(char* name, NRect& rect, NWnd* parent)
 	return true;
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Display a new operators project
+//!	\param	_popsProject	Project to display
+//-----------------------------------------------------------------
 void NProjectWnd::DisplayOperatorsProject(NEngineOp* _popsProject)
 {
 	EVT_EXECUTE(EVT_PAGESELECTED, 0, 0 );
@@ -78,9 +85,17 @@ void NProjectWnd::DisplayOperatorsProject(NEngineOp* _popsProject)
 	//Display
 	NTreeNode* pRoot = m_popsProject->GetRootGroup();
 	DisplayTreeNode(pRoot);
+
+	//Select first Page	//###TODO###
+	//SelectItemFromIdx(1);
+
 	Update();
+
 }
 
+//-----------------------------------------------------------------
+//!	\brief	control right button down message
+//-----------------------------------------------------------------
 void NProjectWnd::OnRightButtonDown(udword flags, NPoint pos)
 {
 	if (m_hMenu)
@@ -91,6 +106,9 @@ void NProjectWnd::OnRightButtonDown(udword flags, NPoint pos)
 	}
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Init context menu
+//-----------------------------------------------------------------
 void NProjectWnd::InitCtxMenu()
 {
 	//Creation du menu
@@ -102,9 +120,13 @@ void NProjectWnd::InitCtxMenu()
 
 }
 
-void NProjectWnd::OnCommand(udword id)
+//-----------------------------------------------------------------
+//!	\brief	Command message
+//!	\param	_id	Command ID
+//-----------------------------------------------------------------
+void NProjectWnd::OnCommand(udword _id)
 {
-	switch (id)
+	switch (_id)
 	{
 		case ID_ADDGROUP:	AddGroup();		break;
 		case ID_ADDPAGE:	AddPage();		break;
@@ -114,6 +136,10 @@ void NProjectWnd::OnCommand(udword id)
 
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Return selected group
+//!	\return	Pointer on selected group else null
+//-----------------------------------------------------------------
 NTreeNode* NProjectWnd::GetSelectedGroup()
 {
 	//Get Selected Object
@@ -129,6 +155,10 @@ NTreeNode* NProjectWnd::GetSelectedGroup()
 	return null;
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Return selected page
+//!	\return	Pointer on selected page else null
+//-----------------------------------------------------------------
 NOperatorsPage* NProjectWnd::GetSelectedPage()
 {
 	//Get Selected Object
@@ -144,7 +174,9 @@ NOperatorsPage* NProjectWnd::GetSelectedPage()
 	return null;
 }
 
-
+//-----------------------------------------------------------------
+//!	\brief	Add a new group at selected node
+//-----------------------------------------------------------------
 void NProjectWnd::AddGroup()
 {
 	//Get Selected Group
@@ -162,6 +194,9 @@ void NProjectWnd::AddGroup()
 
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Add a new page at selected node
+//-----------------------------------------------------------------
 void NProjectWnd::AddPage()
 {
 	//Get Selected Group
@@ -179,6 +214,9 @@ void NProjectWnd::AddPage()
 	DisplayOperatorsProject(m_popsProject);
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Delete a group or a page
+//-----------------------------------------------------------------
 void NProjectWnd::Delete()
 {
 	/////////////////////////////////////////////
@@ -212,24 +250,29 @@ void NProjectWnd::Delete()
 	NTreeNode* pgroup =	GetSelectedGroup();
 	if (pgroup)
 	{
-		udword dwRet = GetApp()->MessageBox("Do you really want to delete this group ?", MB_YESNO|MB_DEFBUTTON2);
-		if (dwRet==IDYES)
+		//Get parent for this group
+		NTreeNode* pnodeparent = (NTreeNode*)GetParent(pgroup);
+		if (pnodeparent)
 		{
-			//Get parent for this group
-			NTreeNode* pnodeparent = (NTreeNode*)GetParent(pgroup);
-			udword idx = pnodeparent->FindSon(pgroup);
-			if (idx!=-1)
+			udword dwRet = GetApp()->MessageBox("Do you really want to delete this group ?", MB_YESNO|MB_DEFBUTTON2);
+			if (dwRet==IDYES)
 			{
-				pnodeparent->DeleteSon(idx);
-				DisplayOperatorsProject(m_popsProject);
+				udword idx = pnodeparent->FindSon(pgroup);
+				if (idx!=-1)
+				{
+					pnodeparent->DeleteSon(idx);
+					DisplayOperatorsProject(m_popsProject);
+				}
 			}
-
 		}
+
 	}
 
 }
 
-
+//-----------------------------------------------------------------
+//!	\brief	Rename a node
+//-----------------------------------------------------------------
 void NProjectWnd::Rename()
 {
 	//Get Selected Object
@@ -246,12 +289,12 @@ void NProjectWnd::Rename()
 			pobj->SetName(dlg.GetName());
 			DisplayOperatorsProject(m_popsProject);
 		}
-
 	}
-
 }
 
-
+//-----------------------------------------------------------------
+//!	\brief	Event when user change selected node
+//-----------------------------------------------------------------
 void NProjectWnd::OnTreeSelChange()
 {
 	//TRACE("NProjectWnd::OnSelChange\n");
@@ -263,3 +306,62 @@ void NProjectWnd::OnTreeSelChange()
 	EVT_EXECUTE(EVT_PAGESELECTED, (udword)pcurpage, 0 );
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Select first page found from root
+//-----------------------------------------------------------------
+void NProjectWnd::SelectFirstPage()
+{
+	if (m_popsProject)
+	{
+		NTreeNode* pRoot = m_popsProject->GetRootGroup();
+		NObject* pobj = _FindNodeFromClassName(pRoot, "NOperatorsPage");
+		if (pobj)
+		{
+			udword idx = GetItemIdxFromObject(pobj);
+			if (idx!=-1)
+			{
+				SelectItemFromIdx(idx);
+
+				//Expand parent node
+				pobj = GetParent(pobj);
+				idx = GetItemIdxFromObject(pobj);
+				ExpandItemFromIdx(idx, true);
+
+				//Refresh control
+				Update();
+			}
+		}
+
+	}
+
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Select first page found from a root node
+//-----------------------------------------------------------------
+NObject* NProjectWnd::_FindNodeFromClassName(NTreeNode* _pParent, char* _pszClassName)
+{
+	//Sons
+	NTreeNode* pnode = _pParent->GetSon();
+	while (pnode)
+	{
+		//Objects array
+		NObjectArray& array = pnode->GetObjsArray();
+		for (udword i=0; i<array.Count(); i++)
+		{
+			NObject* pobj = array[i];
+			if (strcmp(pobj->GetRTClass()->m_pszClassName, _pszClassName) == 0)
+				return pobj;
+		}
+
+		//Son Nodes
+		NObject* pfind = _FindNodeFromClassName(pnode, _pszClassName);
+		if (pfind)
+			return pfind;
+
+		//Next brothers nodes
+		pnode = pnode->GetBrother();
+	}
+
+	return null;
+}

@@ -237,7 +237,7 @@ void NTreeNodeCtrl::OnLeftButtonDown(udword flags, NPoint _point)
 	udword dwrowIdx = GetExpandItemIdxUnderPt(_point);
 	if (dwrowIdx!=-1)
 	{
-		ExpaNGraphicsollapseItemFromIdx(dwrowIdx);
+		ExpandItemFromIdx(dwrowIdx, !IsItemExpanded(dwrowIdx) );
 	}
 
 	//Select Item
@@ -433,14 +433,25 @@ udword NTreeNodeCtrl::GetItemIdxUnderPt(NPoint& _point)
 }
 
 
-void NTreeNodeCtrl::ExpaNGraphicsollapseItemFromIdx(udword _idx)
+void NTreeNodeCtrl::ExpandItemFromIdx(udword _idx, bool _bExpand)
 {
 	if (_idx<m_carrayItems.Count())
 	{
 		NTNItemDesc& item = m_carrayItems[_idx];
-		item.bExpanded=!item.bExpanded;
+		item.bExpanded=_bExpand;
 	}
 }
+
+bool NTreeNodeCtrl::IsItemExpanded(udword _idx)
+{
+	if (_idx<m_carrayItems.Count())
+	{
+		NTNItemDesc& item = m_carrayItems[_idx];
+		return item.bExpanded;
+	}
+	return false;
+}
+
 
 void NTreeNodeCtrl::SelectItemFromIdx(udword _idx)
 {

@@ -178,9 +178,10 @@ void NMainFrm::OnNewProject()
 
 	//Display Projects's Pages
 	m_pprojectwnd->DisplayOperatorsProject(gNFxGen_GetEngine());
+	m_pprojectwnd->SelectFirstPage();
 
-	m_opswnd->DisplayOperatorsPage(null);
-	m_opswnd->Update();
+	//m_opswnd->DisplayOperatorsPage(null);
+	//m_opswnd->Update();
 
 	NString strTitle(CAPTION);
 	strTitle+="Untitled";
@@ -213,6 +214,8 @@ void NMainFrm::OnOpenProject()
 
 		//Display Projects's Pages
 		m_pprojectwnd->DisplayOperatorsProject(gNFxGen_GetEngine());
+		m_pprojectwnd->SelectFirstPage();
+
 	}
 
 	m_bExecuteLocked = false;

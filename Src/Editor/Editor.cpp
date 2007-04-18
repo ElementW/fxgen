@@ -46,8 +46,31 @@ NFxGenApp::NFxGenApp()
 {
 	NNopOp op;		//Force Register	###TOFIX###
 	NStoreOp op1;	//Force Register	###TOFIX###
+	NCellOp	op2;	//Force Register	###TOFIX###
 
 	g_pceventsMgr = new NEventsMgr;
+
+	//###TEST###
+/*	NTreeNode* proot	= new NTreeNode;
+	proot->SetName("Root");
+
+	NTreeNode* pgroup1 = new NTreeNode;
+	pgroup1->SetName("Group1");
+
+	NTreeNode* pgroup2 = new NTreeNode;
+	pgroup2->SetName("Group2");
+
+	proot->AddSon(pgroup1, -1);
+	proot->AddSon(pgroup2, -1);
+
+	proot->DeleteSon(1);
+
+	pgroup2 = new NTreeNode;
+	pgroup2->SetName("Group2");
+
+	proot->AddSon(pgroup2, -1);
+	TRACE("");*/
+
 }
 
 //-----------------------------------------------------------------

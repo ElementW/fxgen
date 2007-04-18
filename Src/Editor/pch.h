@@ -47,4 +47,4 @@
 
 #include "MainOps.h"
 #include "BitmapOps.h"
-
+#include "DentoidOps.h"

@@ -1,14 +1,30 @@
-/////////////////////////////////////////
-//					TODO
-/////////////////////////////////////////
+Next Version
+-------------
+.custom menu bar and popup menu
+.statusbar suppression ?
+.review animation controllers
+.a merge project command menu 
+.add an editor's icon
+
+...
 
 
 
-/////////////////////////////////////////
-//					CHANGED
-/////////////////////////////////////////
+Version 0.3 alpha
+----------------------------------
+.Double click to show an operator result.
+.Added operators collision detection when user move or add them (to avoid operators orverlap).
+.First page selection when a project is opened or created.
+.Fixed crash when deleting a group.
+.Fixed application freeze with a complex operators stacking schema (Thanks to: Cristea Cristian)
+.Animation controller now saved.
 
-Version 0.2 alpha !!! in work !!!
+.New operators
+	."Cell"			(Code: Anders Stenberg).
+	."Invert"		(Code: Anders Stenberg).
+
+
+Version 0.2 alpha
 ----------------------------------
 .Crash correction while deleting a linked operator.
 .Operators context menu displayed by categories.
@@ -20,5 +36,3 @@ Version 0.2 alpha !!! in work !!!
 Version 0.1 alpha
 -----------------
 Initial version.
-
-

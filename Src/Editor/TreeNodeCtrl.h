@@ -80,12 +80,13 @@ protected:
 	void InsertItem(NObject* _pcobj, udword _dwCurDepth, udword _dwCurPos);
 	udword GetExpandItemIdxUnderPt(NPoint& _point);
 	udword GetItemIdxUnderPt(NPoint& _point);
-	void ExpaNGraphicsollapseItemFromIdx(udword _idx);
+	void ExpandItemFromIdx(udword _idx, bool _bExpand=true);
 	void SelectItemFromIdx(udword _idx);
 	void DeleteItemFromIdx(udword _idx);
 	udword GetSortedIdxFromIdx(udword _idx);
 
 	bool IsParentItem(udword _nSortedIdx);
+	bool IsItemExpanded(udword _idx);
 
 	// Datas
 	HFONT		m_hfontNormal, m_hfontBold;
@@ -113,6 +114,6 @@ protected:
 	virtual	void	OnKeyDown(udword dwchar);
 
 	//Windows Proc
-	virtual	LRESULT				WndProc( UINT msg, WPARAM wparam, LPARAM lparam);
+	virtual	LRESULT	WndProc( UINT msg, WPARAM wparam, LPARAM lparam);
 };
 

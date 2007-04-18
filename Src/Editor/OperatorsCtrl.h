@@ -76,6 +76,9 @@ protected:
 
 	void				DisplayOperator(NGraphics* _pdc, NOperator* _pop);
 
+	bool				IsMovedSelOperatorsCollide(sdword _dwoffsetX, sdword _dwoffsetY);
+	bool				IsOpRectCollide(NRect _rcItemTest, bool _bExcludeSel);
+
 	// Clipboard Methods
 	void CopyOperatorsSelectedToClipboard();
 	void PasteOperatorsFromClipboard();
@@ -117,6 +120,7 @@ protected:
 	virtual void	OnMButtonUp(udword flags, NPoint pos);
 	virtual void	OnLeftButtonUp(udword flags, NPoint pos);
 	virtual void	OnLeftButtonDown(udword flags, NPoint pos);
+	virtual	void	OnLeftButtonDblClk(udword flags, NPoint point);
 	virtual void	OnRightButtonDown(udword flags, NPoint pos);
 	virtual	void	OnMouseWheel(udword flags, sword zDelta, NPoint pos);
 	virtual	void	OnKeyDown(udword dwchar);

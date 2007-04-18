@@ -344,10 +344,13 @@ void NOperatorsCtrl::OnLeftButtonUp(udword flags, NPoint point)
 
 		if (dwOffsetX || dwOffsetY)
 		{
-			for (udword i=0; i<m_carrayOpsSelected.Count(); i++)
+			if (!IsMovedSelOperatorsCollide(dwOffsetX, dwOffsetY))
 			{
-				NOperator* pop = m_carrayOpsSelected[i];
-				m_popsPage->MoveOp(pop, sword(pop->m_wPosX+dwOffsetX), sword(pop->m_wPosY+ dwOffsetY));
+				for (udword i=0; i<m_carrayOpsSelected.Count(); i++)
+				{
+					NOperator* pop = m_carrayOpsSelected[i];
+					m_popsPage->MoveOp(pop, sword(pop->m_wPosX+dwOffsetX), sword(pop->m_wPosY+ dwOffsetY));
+				}
 			}
 			Update();
 		}
@@ -386,6 +389,21 @@ void NOperatorsCtrl::OnRightButtonDown(udword flags, NPoint point)
 {
 	SetFocus();
 }
+
+void NOperatorsCtrl::OnLeftButtonDblClk(udword flags, NPoint point)
+{
+	SetFocus();
+
+	//Select operator
+	bool bResizeZone;
+	NOperator* pstBloc = GetOperatorAt(point, bResizeZone);
+	SelectOperator(pstBloc);
+
+	//Mark operator as "show"
+	OnMarkShowOperator(m_popMarkedSelected);
+	Update();
+}
+
 
 void NOperatorsCtrl::OnMouseMove(udword flags, NPoint point )
 {
@@ -540,14 +558,28 @@ void NOperatorsCtrl::DisplayOperatorsPage(NOperatorsPage* popsPage)
 
 void NOperatorsCtrl::PlaceOperator(ID CLASSID)
 {
-	//Place New Operator
-	NOperator* pop = AddOperator((sword)m_dwCursorX,(sword)m_dwCursorY,4,CLASSID);
+	udword dwWidth = 4;
 
-	//clear selection
-	SelectOperator(null);
+	//Compute to add operator rect
+	NRect rcItemAdd;
+	rcItemAdd.left		= (sdword) ((( (m_dwCursorX) * GB_GRIDUNIT) + m_fPosX) * m_fScaleX);
+	rcItemAdd.top			= (sdword) ((( (m_dwCursorY) * GB_GRIDUNIT) + m_fPosY) * m_fScaleY);
+	rcItemAdd.right		= (sdword) (rcItemAdd.left + (dwWidth * GB_GRIDUNIT * m_fScaleX));
+	rcItemAdd.bottom	= (sdword) (rcItemAdd.top  + (1 * GB_GRIDUNIT * m_fScaleY));
+	rcItemAdd.Deflate(1,1);
 
-	//Selection du op
-	SelectOperator(pop);
+	//If we doesn't have a collision
+	if(!IsOpRectCollide(rcItemAdd, false))
+	{
+		//Place New Operator
+		NOperator* pop = AddOperator((sword)m_dwCursorX,(sword)m_dwCursorY,dwWidth,CLASSID);
+
+		//clear selection
+		SelectOperator(null);
+
+		//Selection du op
+		SelectOperator(pop);
+	}
 
 }
 
@@ -770,4 +802,45 @@ void NOperatorsCtrl::ClearClipboard()
 		delete m_carrayOpsClipboard[i];
 	}
 	m_carrayOpsClipboard.Clear();
+}
+
+bool NOperatorsCtrl::IsMovedSelOperatorsCollide(sdword _dwoffsetX, sdword _dwoffsetY)
+{
+
+	for (udword i=0; i<m_carrayOpsSelected.Count(); i++)
+	{
+		NOperator* popSel = m_carrayOpsSelected[i];
+
+		//Compute asked operator rect
+		NRect rcItemSel;
+		rcItemSel.left		= (sdword) ((( (popSel->m_wPosX+_dwoffsetX) * GB_GRIDUNIT) + m_fPosX) * m_fScaleX);
+		rcItemSel.top			= (sdword) ((( (popSel->m_wPosY+_dwoffsetY) * GB_GRIDUNIT) + m_fPosY) * m_fScaleY);
+		rcItemSel.right		= (sdword) (rcItemSel.left + (popSel->m_wWidth * GB_GRIDUNIT * m_fScaleX));
+		rcItemSel.bottom	= (sdword) (rcItemSel.top  + (1 * GB_GRIDUNIT * m_fScaleY));
+		rcItemSel.Deflate(1,1);
+
+		//Control if one collision with other operators rect
+		if (IsOpRectCollide(rcItemSel, true))
+			return true;		//One collision found !
+
+	}
+
+	return false;	//No collision found
+}
+
+bool NOperatorsCtrl::IsOpRectCollide(NRect _rcItemTest, bool _bExcludeSel)
+{
+	for (udword i=0; i<m_popsPage->GetOpsCount() ; i++)
+	{
+		NOperator* pop = m_popsPage->GetOpFromIdx(i);
+
+		if (_bExcludeSel && m_carrayOpsSelected.Find(pop)!=-1)	continue;
+
+		NRect rcItem;
+		GetOperatorRect(pop, rcItem);
+		if (!rcItem.IsIntersected(_rcItemTest))
+			return true;	//One collision found !
+	}
+
+	return false;	//No collision found
 }

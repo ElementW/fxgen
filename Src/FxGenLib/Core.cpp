@@ -61,7 +61,7 @@ NVarsBloc::~NVarsBloc()
 //-----------------------------------------------------------------
 bool NVarsBloc::Save(NArchive* _s)
 {
-	ubyte byVersion=0;
+	ubyte byVersion=1;
 	*_s<<byVersion;	//###RESERVED###
 
 	*_s<<m_udwordVarsCount;
@@ -79,6 +79,12 @@ bool NVarsBloc::Save(NArchive* _s)
 			case estring:	*_s<<pval->szVal;									break;
 			default:	assert(0);														break;
 		}
+
+		//Anim Control
+		ubyte byAniCtrl = pval->pcCtrlObj!=null?1:0;
+		*_s<<byAniCtrl;
+
+		if (byAniCtrl)		_s->PutClass(pval->pcCtrlObj);
 
 	}
 
@@ -112,7 +118,18 @@ bool NVarsBloc::Load(NArchive* _l)
 			default:	assert(0);															break;
 		}
 
-		pval->pcCtrlObj = null;
+		//Anim Control
+		if (byVersion>=1)
+		{
+			ubyte byAniCtrl;
+			*_l>>byAniCtrl;
+
+			if (byAniCtrl)		pval->pcCtrlObj = _l->GetClass();
+			else							pval->pcCtrlObj = null;
+		} else {
+			pval->pcCtrlObj = null;
+		}
+
 	}
 
 	return true;
@@ -901,24 +918,32 @@ void NTreeNode::AddSon(NTreeNode* _pnode, udword _idx)
 	//Add a son at the End
 	if (_idx==-1)
 	{
-		*m_ppLastSon = _pnode;
-		m_ppLastSon = &_pnode->m_pBrother;
+		_pnode->m_pBrother = null;
 
-	//Add a son at n Pos ###TODO###
-	}/* else {
+		NTreeNode** pnode = m_ppLastSon;
 
-	 udword idx=0;
-	 NTreeNode* pnode = m_pFirstSon;
-	 while (pnode->m_pBrother && idx!=_idx)
-	 {
-	 pnode=pnode->m_pBrother;
-	 idx++;
+		m_ppLastSon = &(_pnode->m_pBrother);
+
+		*pnode = _pnode;
+
+
+	//Add a son at n Pos
+	} else {
+
+		udword idx=0;
+		NTreeNode** ppnode = &m_pFirstSon;
+		while (*ppnode && idx!=_idx)
+		{
+			ppnode=&((*ppnode)->m_pBrother);
+			idx++;
+		}
+
+		_pnode->m_pBrother = *ppnode;
+		if (*ppnode==null)	m_ppLastSon = &(_pnode->m_pBrother);
+		*ppnode = _pnode;
+
 	 }
 
-	 if (pnode->m_pBrother==null)	m_pLastSon = _pnode;
-	 pnode->m_pBrother = _pnode;
-
-	 }*/
 }
 
 //-----------------------------------------------------------------
@@ -950,7 +975,8 @@ void NTreeNode::DeleteSon(udword _idx)
 		if (idx==_idx)
 		{
 			NTreeNode* pnodeToDel = *ppnode;
-			*ppnode = pnodeToDel->GetBrother();	//Unlink
+			*ppnode = pnodeToDel->m_pBrother;	//Unlink
+			if (*ppnode==null)	m_ppLastSon = ppnode;
 			delete pnodeToDel;
 			return;
 		}
@@ -967,9 +993,10 @@ void NTreeNode::DeleteAllSons()
 	NTreeNode* pcurnode = m_pFirstSon;
 	while (pcurnode)
 	{
-		NTreeNode* pcurnodeToDel = pcurnode;
-		pcurnode = pcurnode->m_pBrother;
-		delete pcurnodeToDel;
+		NTreeNode* pcurnodeToDel = pcurnode->m_pBrother;
+		delete pcurnode;
+		pcurnode = pcurnodeToDel;
+
 	}
 	m_pFirstSon=null;
 }
