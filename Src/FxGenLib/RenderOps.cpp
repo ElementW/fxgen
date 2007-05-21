@@ -136,13 +136,16 @@ udword NCloudOp::Process(float _ftime, NOperator** _pOpsInts)
 	m_pbyPxTps	= (sdword*)NMemAlloc(w*h*sizeof(sdword)*2);
 	m_pbyPxTps1 = m_pbyPxTps;
 	m_pbyPxTps2 = m_pbyPxTps1 + (w*h);
-	m_dwWidth		= 2;
-	m_dwHeight	= 2;
 
 	memset(m_pbyPxTps1, 0, w*h*sizeof(sdword)*2);
 
-	//Process operator
-	Cloud(7, (float)byAmp/256.0f);
+        int octaves = logf(min(w,h))/logf(2)-0.5f;
+
+	m_dwWidth	= w >> octaves;
+	m_dwHeight	= h >> octaves;
+
+        //Process operator
+	Cloud(octaves, (float)byAmp/256.0f);
 	Normalize();
 
 	//Temporary buffeur to Texture
