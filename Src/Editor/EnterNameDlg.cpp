@@ -47,8 +47,9 @@ BOOL NEnterNameDlg::OnInitDialog()
 
 	//Create Edit control
 	m_editCtrl.Create(m_cstrName.Buffer(), NRect(10,10,10+256,10+18), this, false);
+	m_editCtrl.SetFocus();
 
-	return TRUE;
+	return FALSE;	//FALSE => Focus on control
 }
 
 //-----------------------------------------------------------------

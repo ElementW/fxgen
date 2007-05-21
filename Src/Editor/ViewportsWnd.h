@@ -44,6 +44,7 @@ protected:
 	virtual void	OnMButtonUp		(udword flags, NPoint pos);
 	virtual void	OnLeftButtonUp(udword flags, NPoint pos);
 	virtual void	OnRightButtonDown(udword flags, NPoint pos);
+	virtual	void	OnCommand(udword id);
 
 	//Events
 	EVT_DECLARE_HANDLER(OnOPDeleting);
@@ -52,12 +53,13 @@ protected:
 	//Methods
 	void DisplayTexture(NObject* pobj);
 
-
 	//Datas
 	HFONT				m_hfontNormal;
 	NGLRenderer m_renderer;			//!< OpenGL Renderer
 	sdword			m_dwTextureID;	//!< OpenGL Texture ID
 	udword			m_dwTexWidth, m_dwTexHeight;
+
+	NMenuCtrl		m_wndMenu;
 
 	float				m_fScale;
 	bool				m_bPanning;

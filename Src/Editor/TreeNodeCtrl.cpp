@@ -60,7 +60,7 @@ bool NTreeNodeCtrl::Create(char* name, NRect& rect, NWnd* parent)
 	wc.Name					= name;
 	wc.Parent				= parent;
 	wc.Rect					= rect;
-	wc.W32ClassName	= "NEXUS_WNGraphicsLASS";
+	wc.W32ClassName	= "FXGen_WNDCLASS";
 	wc.W32Style			= WS_CHILD | WS_CLIPCHILDREN;   //WS_CLIPSIBLINGS;
 	wc.W32StyleEx		= WS_EX_ACCEPTFILES;
 	NWnd::Create(wc);

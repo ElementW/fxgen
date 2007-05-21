@@ -38,7 +38,7 @@ class NObject;
 //!	\author		JN
 //!	\version  1.0
 //-----------------------------------------------------------------
-class NController :	public NObject
+class FXGEN_API NController :	public NObject
 {
 public:
 	DECLARE_CLASS();

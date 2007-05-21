@@ -47,6 +47,8 @@ NFxGenApp::NFxGenApp()
 	NNopOp op;		//Force Register	###TOFIX###
 	NStoreOp op1;	//Force Register	###TOFIX###
 	NCellOp	op2;	//Force Register	###TOFIX###
+	NRotoZoomOp	op3;	//Force Register	###TOFIX###
+	NBlurOp	op4;	//Force Register	###TOFIX###
 
 	g_pceventsMgr = new NEventsMgr;
 

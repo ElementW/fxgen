@@ -17,6 +17,15 @@
 #pragma once
 
 //-----------------------------------------------------------------
+//                   Macros
+//-----------------------------------------------------------------
+#ifdef FXGEN_EXPORTS
+	#define FXGEN_API __declspec(dllexport)
+#else
+	#define FXGEN_API __declspec(dllimport)
+#endif
+
+//-----------------------------------------------------------------
 // Class Prototypes
 //-----------------------------------------------------------------
 	class NRTClass;
@@ -50,7 +59,7 @@
 //!	\class		NRTClass
 //!	\brief		RuntimeClass description
 //-----------------------------------------------------------------
-class NRTClass
+class FXGEN_API NRTClass
 {
 public:
 
@@ -173,7 +182,7 @@ struct NVarsBlocDesc
 //!	\class	NVarsBloc Core.h
 //!	\brief	Bloc of variables
 //-----------------------------------------------------------------
-class NVarsBloc
+class FXGEN_API NVarsBloc
 {
 public:
 	NVarsBloc();
@@ -234,7 +243,7 @@ protected:
 typedef int( __cdecl *CompareFnc) (const void *_elem1, const void *_elem2);
 
 
-class NObjectArray
+class FXGEN_API NObjectArray
 {
 public:
 	NObjectArray();
@@ -283,7 +292,7 @@ protected:
 //!		.Automatic variables serialisation
 //!		.References management
 //-----------------------------------------------------------------
-class NObject
+class FXGEN_API NObject
 {
 public:
 	//Constructor-Destructor
@@ -299,13 +308,13 @@ public:
 	virtual NObject* Duplicate();
 
 	//Serialization
-	virtual bool Save(NArchive* _s);	//!< Save object
-	virtual	bool Load(NArchive* _l);	//!< Load Object
+	virtual bool Save(NArchive* _s);
+	virtual	bool Load(NArchive* _l);
 
 	//Variables methods
 	NVarsBloc* AddVarsBloc(udword _dwVarCount, NVarsBlocDesc* _pdesc);
 	NVarsBloc* GetFirstVarsBloc()		{ return m_pcfirstVarsBloc; }
-	void			 RemoveVarsRef(NObject* _pobj);	//!< Remove a referenced object from variables (erefobj)
+	void			 RemoveVarsRef(NObject* _pobj);
 
 	//A reference creates a record of the dependency between a Reference Master and a Reference Target
 	//rk. The system automatically takes care of loading and saving references when an object is saved to disk.
@@ -345,7 +354,7 @@ public:
 //	+Son/Brother idx0
 //	+Son/Brother idx1
 
-class NTreeNode : public NObject
+class FXGEN_API NTreeNode : public NObject
 {
 public:
 	NTreeNode();
@@ -390,7 +399,7 @@ struct NObjGarbageDesc
 	bool bPermanent;
 };
 
-class NObjectGarbage
+class FXGEN_API NObjectGarbage
 {
 public:
 	NObjectGarbage();

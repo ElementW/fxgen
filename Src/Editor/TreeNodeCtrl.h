@@ -62,8 +62,8 @@ public:
 
 	// Methods
 	void	Clear();
-	void	DisplayTreeNode(NTreeNode* _proot);	//!< Display Tree Node
-	void	Update();	//!< MAJ de l'affichage
+	void	DisplayTreeNode(NTreeNode* _proot);
+	void	Update();
 
 	NObject*	GetSelectedItemObj();
 

@@ -35,8 +35,10 @@ IMPLEMENT_CLASS(NBitmap, NObject);
 //-----------------------------------------------------------------
 NBitmap::NBitmap() : NObject()
 {
-	m_dwWidth=m_dwHeight= 256;
-	m_pbyPixels = (RGBA*)NMemAlloc(m_dwWidth*m_dwHeight*sizeof(RGBA));
+	m_dwWidth=m_dwHeight=0;
+	m_pbyPixels=null;
+	//m_dwWidth=m_dwHeight= 256;
+	//m_pbyPixels = (RGBA*)NMemAlloc(m_dwWidth*m_dwHeight*sizeof(RGBA));
 }
 
 //-----------------------------------------------------------------
@@ -48,13 +50,42 @@ NBitmap::~NBitmap()
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Change bitmap size
+//!	\brief	Set bitmap size
 //!	\param	_w	Width
 //!	\param	_h	Height
 //-----------------------------------------------------------------
 void NBitmap::SetSize(udword _w, udword _h)
 {
-	m_dwWidth	=_w;
-	m_dwHeight=_h;
-	m_pbyPixels = (RGBA*)NMemRealloc(m_pbyPixels, m_dwWidth*m_dwHeight*sizeof(RGBA));
+	if (_w!=m_dwWidth || _h!=m_dwHeight)
+	{
+		//Bitmap resize
+		if (m_pbyPixels)
+		{
+			RGBA* pbyNewPixels = (RGBA*)NMemAlloc(_w*_h*sizeof(RGBA));
+
+			RGBA* pPxSrc	= m_pbyPixels;
+			RGBA* pPxDst	= pbyNewPixels;
+
+			for (udword y=0; y<_h; y++)
+			{
+				for (udword x=0; x<_w; x++)
+				{
+					udword px = x * m_dwWidth/_w;
+					udword py = y * m_dwHeight/_h;
+					*pPxDst = pPxSrc[px + py*m_dwWidth];
+					pPxDst++;
+				}
+			}
+
+			NMemFree(m_pbyPixels);
+			m_pbyPixels = pbyNewPixels;
+
+		//Bitmap creation
+		} else {
+			m_pbyPixels = (RGBA*)NMemAlloc(_w*_h*sizeof(RGBA));
+		}
+		
+		m_dwWidth	=_w;	m_dwHeight=_h;
+	}
+
 }

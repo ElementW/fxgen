@@ -82,7 +82,7 @@ bool NApplication::Init()
 	wc.hCursor			= LoadCursor ((HINSTANCE)NULL, IDC_ARROW);
 	wc.hbrBackground= (HBRUSH)(COLOR_APPWORKSPACE);
 	wc.lpszMenuName	= NULL;
-	wc.lpszClassName= "NEXUS_WNGraphicsLASS";
+	wc.lpszClassName= "FXGen_WNDCLASS";
 	RegisterClass(&wc);
 
 	// Load the RichEdit DLL to activate the RichEdit classes	###TOMOVE###
@@ -456,6 +456,7 @@ bool NWnd::Create(NWNDCREATE &c)
 {
 	//Save Creation struct datas
 	m_pParentWnd	= c.Parent;
+	cstrWindowName = c.Name;
 
 	//Get Parent if any
 	HWND W32HWndParent = null;
@@ -470,8 +471,8 @@ bool NWnd::Create(NWNDCREATE &c)
 	//Set user data in param for retrieve this class pointer
 	::SetWindowLong (m_W32HWnd, GWL_USERDATA, (LONG)this);
 
-	//If it's not a NEXUS_WNGraphicsLASS then we subclass its WndProc (useful for all the controls contained in a dialog box for example, in order to handle all the keyboard messages to control the focus...)
-	if (strcmp((LPCTSTR) c.W32ClassName, (LPCTSTR) "NEXUS_WNGraphicsLASS"))		m_OldWndProc = (WNDPROC) ::SetWindowLong(m_W32HWnd, GWL_WNDPROC, (LONG) StaticWndProc);
+	//If it's not a FXGen_WNDCLASS then we subclass its WndProc (useful for all the controls contained in a dialog box for example, in order to handle all the keyboard messages to control the focus...)
+	if (strcmp((LPCTSTR) c.W32ClassName, (LPCTSTR) "FXGen_WNDCLASS"))		m_OldWndProc = (WNDPROC) ::SetWindowLong(m_W32HWnd, GWL_WNDPROC, (LONG) StaticWndProc);
 
 	//Set Default Font
 	::SendMessage(m_W32HWnd, WM_SETFONT, (WPARAM) ::GetStockObject(DEFAULT_GUI_FONT), MAKELPARAM(TRUE, 0));
@@ -601,12 +602,12 @@ LRESULT NWnd::WndProc( UINT msg, WPARAM wparam, LPARAM lparam)
 		case WM_KILLFOCUS:		OnKillFocus();		break;
 
 		case WM_COMMAND: {
-			HWND HWNGraphicstrl	= (HWND)lparam;	  // handle of control
+			HWND HWNDCtrl	= (HWND)lparam;	  // handle of control
 
 			//Intercept control message
-			if (HWNGraphicstrl) {
+			if (HWNDCtrl) {
 				for (sdword i=mControlsList.Count()-1; i>=0; i--)
-					if (mControlsList[i]->m_W32HWnd == HWNGraphicstrl &&
+					if (mControlsList[i]->m_W32HWnd == HWNDCtrl &&
 						mControlsList[i]->CatchControlCommand(HIWORD(wparam), LOWORD(wparam)))	 return 1;
 			}
 
@@ -617,13 +618,13 @@ LRESULT NWnd::WndProc( UINT msg, WPARAM wparam, LPARAM lparam)
 		}
 
 		case WM_NOTIFY: {
-			HWND HWNGraphicstrl	= ((NMHDR*)lparam)->hwndFrom;	  // handle of control
+			HWND HWNDCtrl	= ((NMHDR*)lparam)->hwndFrom;	  // handle of control
 
 			//Intercept control notification
-			if (HWNGraphicstrl)
+			if (HWNDCtrl)
 			{
 				for (sdword i=mControlsList.Count()-1; i>=0; i--)
-					if (mControlsList[i]->m_W32HWnd == HWNGraphicstrl &&
+					if (mControlsList[i]->m_W32HWnd == HWNDCtrl &&
 						mControlsList[i]->CatchControlNotify( (udword) ((NMHDR*)lparam)->code) ) return 1;
 			}
 			break;
@@ -676,7 +677,7 @@ bool NFrmWnd::Create(char* name, NRect& rect)
 	wc.Name					= name;
 	wc.Parent				= null;
 	wc.Rect					= rect;
-	wc.W32ClassName	= "NEXUS_WNGraphicsLASS";
+	wc.W32ClassName	= "FXGen_WNDCLASS";
 	wc.W32Style			= WS_OVERLAPPEDWINDOW|WS_CLIPCHILDREN;
 	wc.W32StyleEx		= 0;
 	NWnd::Create(wc);
@@ -1464,7 +1465,7 @@ bool NStatusBar::Create(NWnd* parent)
 	wc.Name						= "statusbar";
 	wc.Parent					= parent;
 	wc.Rect						= NRect(0,0,1,1);
-	wc.W32ClassName	= "NEXUS_WNGraphicsLASS";
+	wc.W32ClassName	= "FXGen_WNDCLASS";
 	wc.W32Style				= WS_VISIBLE|WS_CHILD|WS_CLIPCHILDREN;
 	wc.W32StyleEx			= WS_EX_DLGMODALFRAME/*WS_EX_CLIENTEDGE*/;
 	NWnd::Create(wc);

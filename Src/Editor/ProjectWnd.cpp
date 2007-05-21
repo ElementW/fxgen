@@ -86,9 +86,7 @@ void NProjectWnd::DisplayOperatorsProject(NEngineOp* _popsProject)
 	NTreeNode* pRoot = m_popsProject->GetRootGroup();
 	DisplayTreeNode(pRoot);
 
-	//Select first Page	//###TODO###
-	//SelectItemFromIdx(1);
-
+	//Screen Update
 	Update();
 
 }
@@ -98,12 +96,10 @@ void NProjectWnd::DisplayOperatorsProject(NEngineOp* _popsProject)
 //-----------------------------------------------------------------
 void NProjectWnd::OnRightButtonDown(udword flags, NPoint pos)
 {
-	if (m_hMenu)
-	{
-		POINT pt;
-		::GetCursorPos(&pt);	//Cursor position even with keyboard 'Context key'
-		::TrackPopupMenu(m_hMenu, TPM_LEFTALIGN|TPM_LEFTBUTTON, pt.x, pt.y, null, m_W32HWnd, null);
-	}
+	POINT pt;	::GetCursorPos(&pt);	//Cursor position even with keyboard 'Context key'
+
+	NPoint pT(pt.x, pt.y);
+	m_wndMenu.TrackPopupMenu(pT);
 }
 
 //-----------------------------------------------------------------
@@ -111,12 +107,12 @@ void NProjectWnd::OnRightButtonDown(udword flags, NPoint pos)
 //-----------------------------------------------------------------
 void NProjectWnd::InitCtxMenu()
 {
-	//Creation du menu
-	m_hMenu = CreatePopupMenu();
-	::AppendMenu(m_hMenu, MF_STRING, (DWORD)ID_ADDGROUP,	"Add Group"	);
-	::AppendMenu(m_hMenu, MF_STRING, (DWORD)ID_ADDPAGE,		"Add Page"	);
-	::AppendMenu(m_hMenu, MF_STRING, (DWORD)ID_DELETE,		"Delete"		);
-	::AppendMenu(m_hMenu, MF_STRING, (DWORD)ID_RENAME,		"Rename"		);
+	//Menu creation
+	m_wndMenu.Create("Project:", this);
+	m_wndMenu.AddItem("Add Group",	ID_ADDGROUP,	null);
+	m_wndMenu.AddItem("Add Page",		ID_ADDPAGE,		null);
+	m_wndMenu.AddItem("Delete",			ID_DELETE,		null);
+	m_wndMenu.AddItem("Rename",			ID_RENAME,		null);
 
 }
 
@@ -182,9 +178,10 @@ void NProjectWnd::AddGroup()
 	//Get Selected Group
 	NTreeNode* pnodeGroup=GetSelectedGroup();
 
+	if (pnodeGroup==null)	return;
+
 	//Check Parent Group
-	if (pnodeGroup==null)
-		pnodeGroup = m_popsProject->GetRootGroup();
+	//if (pnodeGroup==null)		pnodeGroup = m_popsProject->GetRootGroup();
 
 	//Attach a new group to Parent Group
 	NTreeNode* pNewGrpNode = new NTreeNode;

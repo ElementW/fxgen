@@ -173,7 +173,7 @@ public:
 	inline	bool		IsIntersected(NRect& R);
 	inline	NRect&	Union(NRect& R);
 
-	bool IsEmpty()		{ return (left==right || right==bottom); }
+	bool IsEmpty()		{ return (left==right || top==bottom); }
 
 	//Comparison operators
 	inline	bool	operator==(NRect& R);

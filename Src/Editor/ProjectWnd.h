@@ -63,4 +63,5 @@ protected:
 	//Datas
 	NEngineOp*	m_popsProject;
 	HMENU				m_hMenu;
+	NMenuCtrl		m_wndMenu;
 };

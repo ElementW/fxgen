@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------
 //                   Defines
 //-----------------------------------------------------------------
-#define CAPTION		"FxGen Editor v0.3 alpha - "
+#define CAPTION		"FxGen Editor v0.4 alpha - "
 #define WIDTH			800
 #define HEIGHT		600
 

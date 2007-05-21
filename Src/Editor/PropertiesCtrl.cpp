@@ -61,7 +61,7 @@ bool NPropertiesCtrl::Create(char* name, NRect& rect, NWnd* parent)
 	wc.Name					= name;
 	wc.Parent				= parent;
 	wc.Rect					= rect;
-	wc.W32ClassName	= "NEXUS_WNGraphicsLASS";
+	wc.W32ClassName	= "FXGen_WNDCLASS";
 	wc.W32Style			= WS_CHILD | WS_CLIPCHILDREN;   //WS_CLIPSIBLINGS;
 	wc.W32StyleEx		= WS_EX_ACCEPTFILES;
 	NWnd::Create(wc);
@@ -177,7 +177,7 @@ void NPropertiesCtrl::OnPaint()
 			dc.DrawText(prd->strName.Buffer(), rcRow, DT_END_ELLIPSIS|DT_VCENTER|DT_SINGLELINE);
 
 			//Check if value can be animated
-			bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc[prd->pItem->m_dwvarIdx].bCanBeAnimate;
+			bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc->bCanBeAnimate;
 			bool bAnimated		 = prd->pItem->m_pvarValue->pcCtrlObj!=null;
 
 			//Display Right Part

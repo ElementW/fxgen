@@ -223,6 +223,7 @@ protected:
 	WNDPROC	m_OldWndProc;
 	NWnd*		m_pParentWnd;
 	NArray<NWControl*>	mControlsList;
+	NString	cstrWindowName;
 
 	//Windows Proc
 	static	LRESULT CALLBACK StaticWndProc(HWND window, UINT msg, WPARAM wparam, LPARAM lparam);

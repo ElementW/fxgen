@@ -22,6 +22,12 @@
 #include "viewportswnd.h"
 
 //-----------------------------------------------------------------
+//                   Defines
+//-----------------------------------------------------------------
+#define ID_RESET			100
+#define ID_TILEONOFF	101
+
+//-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
 //										NViewportsWnd Class Implementation
@@ -73,6 +79,10 @@ bool NViewportsWnd::Create(char* name, NRect& rect, NWnd* parent)
 
 	m_dwTextureID = m_renderer.CreateTexture(256,256);
 
+	//Create context menu
+	m_wndMenu.Create("Viewport:", this);
+	m_wndMenu.AddItem("Reset",				ID_RESET,			null);
+	m_wndMenu.AddItem("Tile On/Off",	ID_TILEONOFF,	null);
 
 	//Register Events
 	EVT_REGISTER(EVT_OPDELETING,	(EVENTFNC)&NViewportsWnd::OnOPDeleting	);
@@ -302,28 +312,29 @@ void NViewportsWnd::OnRightButtonDown(udword flags, NPoint pos)
 {
 	SetFocus();
 
-	//Create Context Menu
-	HMENU hMenu = CreatePopupMenu();
+	POINT pt;	::GetCursorPos(&pt);	//Cursor position even with keyboard 'Context key'
 
-	::AppendMenu(hMenu, MF_STRING, (DWORD)1, "Reset");
-	::AppendMenu(hMenu, MF_STRING, (DWORD)2, "Tile On/Off");
+	NPoint pT(pt.x, pt.y);
+	m_wndMenu.TrackPopupMenu(pT);
 
-	POINT pt;
-	::GetCursorPos(&pt);	//Cursor position even with keyboard 'Context key'
-	DWORD dwRet = (DWORD)::TrackPopupMenu(hMenu, TPM_LEFTALIGN|TPM_LEFTBUTTON|TPM_RETURNCMD, pt.x, pt.y, null, m_W32HWnd, null);
+}
 
-	::DestroyMenu(hMenu);
-
-	//Process user action
-	switch (dwRet)
+//-----------------------------------------------------------------
+//!	\brief	Command message
+//!	\param	_id	Command ID
+//-----------------------------------------------------------------
+void NViewportsWnd::OnCommand(udword _id)
+{
+	switch (_id)
 	{
-		case 1:
+		case ID_RESET:
 		{
 			m_fScale = 1.0f;
 			m_vecTrans.x=m_vecTrans.y=m_vecTrans.z=0.0f;
 			break;
 		}
-		case 2:
+
+		case ID_TILEONOFF:
 		{
 			m_bTiling=!m_bTiling;
 			break;

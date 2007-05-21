@@ -351,8 +351,6 @@ NObject::~NObject()
 //!	\param	_s	archive container
 //!	\return	True if success
 //-----------------------------------------------------------------
-
-
 bool NObject::Save(NArchive* _s)
 {
 	//Save object's name
@@ -472,8 +470,8 @@ void NObject::RemoveVarsRef(NObject* _pobj)
 }
 
 //-----------------------------------------------------------------
-//!	\brief
-//!	\param
+//!	\brief	Add an object to reference by this
+//!	\param	_pobj		object to reference
 //-----------------------------------------------------------------
 void NObject::AddRef(NObject* _pobj)
 {
@@ -482,8 +480,8 @@ void NObject::AddRef(NObject* _pobj)
 }
 
 //-----------------------------------------------------------------
-//!	\brief
-//!	\param
+//!	\brief	Remove object referenced by this
+//!	\param	_pobj	object referenced
 //-----------------------------------------------------------------
 void NObject::RemoveRef(NObject* _pobj)
 {

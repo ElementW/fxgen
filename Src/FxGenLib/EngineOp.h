@@ -40,7 +40,7 @@ class NObject;
 //!	\class		NOperator
 //!	\brief		Base class for an operator
 //-----------------------------------------------------------------
-class NOperator :	public NObject
+class FXGEN_API NOperator :	public NObject
 {
 public:
 	NOperator();
@@ -85,7 +85,7 @@ public:
 //!	\class		NOperatorsPage
 //!	\brief		one operators page
 //-----------------------------------------------------------------
-class NOperatorsPage : public NObject
+class FXGEN_API NOperatorsPage : public NObject
 {
 public:
 	DECLARE_CLASS();
@@ -130,7 +130,7 @@ public:
 //!	\class		NEngineOp
 //!	\brief		Engine operators process
 //-----------------------------------------------------------------
-class NEngineOp
+class FXGEN_API NEngineOp
 {
 public:
 	//Constructors-Destructor
@@ -187,4 +187,4 @@ protected:
 //-----------------------------------------------------------------
 //	Externs
 //-----------------------------------------------------------------
-extern NEngineOp* gNFxGen_GetEngine();
+FXGEN_API extern NEngineOp* gNFxGen_GetEngine();

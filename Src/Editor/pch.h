@@ -40,11 +40,14 @@
 #include "Gui.h"
 #include "SplitWnd.h"
 #include "Dialog.h"
+#include "MenuCtrl.h"
 #include "EventsMgr.h"
 #include "EventsList.h"
 
 #include "EngineOp.h"
 
 #include "MainOps.h"
-#include "BitmapOps.h"
-#include "DentoidOps.h"
+#include "FilterOps.h"
+#include "DistordOps.h"
+#include "RenderOps.h"
+#include "CombineOps.h"

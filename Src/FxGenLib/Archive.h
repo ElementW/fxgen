@@ -61,7 +61,7 @@ class NObject;
 //!	\class	NArchive
 //!	\brief	Serializer for datas loading and saving
 //-----------------------------------------------------------------
-class NArchive
+class FXGEN_API NArchive
 {
 public:
 	//Constructor-Destructor
