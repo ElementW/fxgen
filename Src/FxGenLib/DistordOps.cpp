@@ -32,19 +32,20 @@ IMPLEMENT_CLASS(NRotoZoomOp, NOperator);
 
 static NVarsBlocDesc blocdescRotoZoomOp[] =
 {
-	VAR(eubyte,	false, "Set Width",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
-	VAR(eubyte,	false, "Set Height",	"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//1
+	VAR(eubyte,	false, "Set Width",		"0,[0 (Default),1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
+	VAR(eubyte,	false, "Set Height",	"0,[0 (Default),1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//1
 	VAR(efloat,		true, "CenterX",	"0.5",		"NFloatProp")	//2
 	VAR(efloat,		true, "CenterY",	"0.5",		"NFloatProp")	//3
 	VAR(efloat,		true, "Rotate",		"0.0",		"NFloatProp")	//4
 	VAR(efloat,		true, "ZoomX",		"1.0",		"NFloatProp")	//5
 	VAR(efloat,		true, "ZoomY",		"1.0",		"NFloatProp")	//6
+	VAR(eubyte,		true, "Wrap",			"1,[0 (Off), 1 (On)]",	"NUbyteComboProp")	//7
 };
 
 NRotoZoomOp::NRotoZoomOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(7, blocdescRotoZoomOp);
+	m_pcvarsBloc = AddVarsBloc(8, blocdescRotoZoomOp);
 }
 
 NRotoZoomOp::~NRotoZoomOp()
@@ -63,101 +64,108 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts)
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst = (NBitmap*)m_pObj;
 
-	udword ws = pSrc->GetWidth();
-	udword hs = pSrc->GetHeight();
+	udword tw = pSrc->GetWidth();
+	udword th = pSrc->GetHeight();
+
+	udword w = tw;
+	udword h = th;
 
 	//Get Variables Values
 	ubyte byVal;
 
 	m_pcvarsBloc->GetValue(0, 0, byVal);
-	udword w=1<<((udword)byVal);
+	if (byVal!=0)		w=1<<((udword)(byVal-1));
 
 	m_pcvarsBloc->GetValue(1, 0, byVal);
-	udword h=1<<((udword)byVal);
+	if (byVal!=0)		h=1<<((udword)(byVal-1));
 
 	pDst->SetSize(w, h);
 
-	float fCenterX, fCenterY, fRotate, fZoom;
-	m_pcvarsBloc->GetValue(0, _ftime, fCenterX);	//-0.5 <> +0.1
-	m_pcvarsBloc->GetValue(1, _ftime, fCenterY);	//-0.5 <> +0.1
-	m_pcvarsBloc->GetValue(2, _ftime, fRotate);		//0.0 <> 1.0 => 0 => Pi
-	m_pcvarsBloc->GetValue(3, _ftime, fZoom);			//
+	float fCenterX, fCenterY, fRotate, fZoomX, fZoomY;
+	m_pcvarsBloc->GetValue(2, _ftime, fCenterX);	//-0.5 <> +0.1
+	m_pcvarsBloc->GetValue(3, _ftime, fCenterY);	//-0.5 <> +0.1
+	m_pcvarsBloc->GetValue(4, _ftime, fRotate);		//0.0 <> 1.0 => 0 => 2xPi
+	m_pcvarsBloc->GetValue(5, _ftime, fZoomX);
+	m_pcvarsBloc->GetValue(6, _ftime, fZoomY);
 
 	//Rotate
 	fRotate = fRotate * nv_two_pi;
 
 	//Zoom
-	fZoom=0.5f - fZoom;
-	fZoom=exp(fZoom*6.0f);
+	fZoomX=1.0f - fZoomX;
+	fZoomX=exp(fZoomX*6.0f);
+
+	fZoomY=1.0f - fZoomY;
+	fZoomY=exp(fZoomY*6.0f);
 
 	//CenterX and CenterY
-/*	uword CenterX = byCenterX;		//CenterX 0-255 (128=center)
-	uword CenterY = byCenterY;		//CenterY 0-255	(128=center)
-	CenterX<<=8;
-	CenterY<<=8;
+	float fTW = (float)tw;
+	float fTH = (float)th;
 
 	//Process RotoZoom
 	RGBA* pPxlSrc = pSrc->GetPixels();
 	RGBA* pPxlDst = pDst->GetPixels();
 
-	uword	c = (uword) (cos(fRotate) * fZoom * 256.0f);
-	uword	s = (uword) (sin(fRotate) * fZoom * 256.0f);
+	float fCoefX = ((float)tw / (float)w) * fZoomX;
+	float fCoefY = ((float)th / (float)h) * fZoomY;
 
-	uword	ys = (uword)(s*-128);
-	uword	yc = (uword)(c*-128);
+	float	c = (float) (cos(fRotate));
+	float	s = (float) (sin(fRotate));
+
+	float tw2 = (float)w / 2.0f;
+	float th2 = (float)h / 2.0f;
+
+	float	ys = s * -th2;
+	float	yc = c * -th2;
+
 	RGBI Color;
 
 	for (udword y=0; y<h; y++)
 	{
-		uword	u = ((c*-128)-ys) + CenterX;			// x' = cos(x)-sin(y) + Center X;
-		uword	v = ((s*-128)+yc) + CenterY;			// y' = sin(x)+cos(y) + Center Y;
+		float	u = (((c * -tw2) - ys) * fCoefX) + (fCenterX*tw);		// x' = cos(x)-sin(y) + Center X;
+		float	v = (((s * -tw2) + yc) * fCoefY) + (fCenterY*th);		// y' = sin(x)+cos(y) + Center Y;
 
 		for (udword x=0; x<w; x++)
 		{
-			uword	uf			= u&0xff;	//Fraction
-			uword	vf			= v&0xff;	//Fraction
-			uword  inv_uf	= 255-uf;
-			uword  inv_vf	= 255-vf;
-			uword	ut			= (u&0xff00)>>8;
-			uword	vt			= (v&0xff00)>>8;
+			float uf = u - (sdword)u;
+			float vf = v - (sdword)v;
+			udword ut = (udword)u;
+			udword vt = (udword)v;
+
 			//Texels
 			// 1 | 2
 			//-------
 			// 3 | 4
 
 			//Texel1
-			uword WeightFactors =	(inv_uf * inv_vf)>>8;	//(inv_uf * inv_vf);
+			float WeightFactors = (1.0f-uf) * (1.0f-vf);						
 
-			//RGBA* ptexel = pPxlSrc + ((v&0xff00) + (u>>8));
-			RGBA* ptexel = pPxlSrc + ((vt%h)*w) + (ut%w);
-			Color.r = ((udword)ptexel->r	* WeightFactors)>>8;
-			Color.g = ((udword)ptexel->g	* WeightFactors)>>8;
-			Color.b = ((udword)ptexel->b	* WeightFactors)>>8;
-
-			//Texel2
-			WeightFactors = (uf * inv_vf)>>8;	//(uf * inv_vf);
-			//ptexel = pPxlSrc + ((v&0xff00) + ((u+0xff)>>8));
-			ptexel = pPxlSrc + ((vt%h)*w) + ((ut+1)%w);
-			Color.r	+= ((udword)ptexel->r	* WeightFactors)>>8;
-			Color.g	+= ((udword)ptexel->g	* WeightFactors)>>8;
-			Color.b	+= ((udword)ptexel->b	* WeightFactors)>>8;
-
+			RGBA* ptexel = pPxlSrc + ((vt%th)*tw) + (ut%tw);
+			Color.r = ((udword)ptexel->r	* WeightFactors);
+			Color.g = ((udword)ptexel->g	* WeightFactors);
+			Color.b = ((udword)ptexel->b	* WeightFactors);
+			
+			//Texel2			
+			WeightFactors = uf * (1.0f-vf);
+			ptexel = pPxlSrc + ((vt%th)*tw) + ((ut+1)%tw);
+			Color.r+= ((udword)ptexel->r	* WeightFactors);
+			Color.g+= ((udword)ptexel->g	* WeightFactors);
+			Color.b+= ((udword)ptexel->b	* WeightFactors);
+			
 			//Texel3
-			WeightFactors = (inv_uf*vf)>>8;	//(inv_uf * vf);
-			//ptexel = pPxlSrc + (((v+0xff)&0xff00) + (u>>8));
-			ptexel = pPxlSrc + (((vt+1)%h)*w) + (ut%w);
-			Color.r	+= ((udword)ptexel->r	* WeightFactors)>>8;
-			Color.g	+= ((udword)ptexel->g	* WeightFactors)>>8;
-			Color.b	+= ((udword)ptexel->b	* WeightFactors)>>8;
-
+			WeightFactors = (1.0f-uf) * vf;			
+			ptexel = pPxlSrc + (((vt+1)%th)*tw) + (ut%tw);
+			Color.r+= ((udword)ptexel->r	* WeightFactors);
+			Color.g+= ((udword)ptexel->g	* WeightFactors);
+			Color.b+= ((udword)ptexel->b	* WeightFactors);
+			
 			//Texel4
-			WeightFactors = (uf*vf)>>8;	//(uf * vf);
-			//ptexel = pPxlSrc + (((v+0xff)&0xff00) + ((u+0xff)>>8));
-			ptexel = pPxlSrc + (((vt+1)%h)*w) + ((ut+1)%w);
-			Color.r	+= ((udword)ptexel->r	* WeightFactors)>>8;
-			Color.g	+= ((udword)ptexel->g	* WeightFactors)>>8;
-			Color.b	+= ((udword)ptexel->b	* WeightFactors)>>8;
-
+			WeightFactors = uf * vf;			
+			ptexel = pPxlSrc + (((vt+1)%th)*tw) + ((ut+1)%tw);
+			Color.r+= ((udword)ptexel->r	* WeightFactors);
+			Color.g+= ((udword)ptexel->g	* WeightFactors);
+			Color.b+= ((udword)ptexel->b	* WeightFactors);
+		
 			//Pixel
 			pPxlDst->r = (ubyte)Color.r;
 			pPxlDst->g = (ubyte)Color.g;
@@ -166,13 +174,13 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts)
 			pPxlDst++;
 
 			//Vectors
-			u+=c;	v+=s;
+			u+=c*fCoefX;	v+=s*fCoefY;
 		};
 
 		//Vectors
 		ys+=s; yc+=c;
 	};
-*/
+
 
 	return 1;
 }

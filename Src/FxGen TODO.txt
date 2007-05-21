@@ -5,14 +5,18 @@ Next Version
 .review animation controllers
 .a merge project command menu 
 .add an editor's icon
-.any textures sizes management
-	.SetSize operator must do the same thing that ZotoZoom but with Width and Height parameters
-		.Fusion?
-.'A' button bug on properties control
 .Static Library to Dynamic
 ...
 
-Modified
+Main Changes
+.any textures sizes management
+
+
+Fixes
+.'A' button bug on properties control
+
+
+Operators modified
 .AddOp support different texture size
 	.Addop's bitmap had the first input operator's bitmap size.
 	.Other inputs have their size cropped.
@@ -25,7 +29,10 @@ Modified
 		.ubyte to float
 		.texture resize
 		.x and y zoom factors separated
+	.Can change texture size now
 
+.SetSizeOp
+	.Deleted see RotoZoomOp
 	
 
 Version 0.3 alpha

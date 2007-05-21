@@ -149,7 +149,7 @@ bool NFloatProp::EndEdit(bool bSaveChanged)
 
 bool NFloatProp::AddValue(sdword dwDelta)
 {
-	m_pvarValue->fVal = m_pvarValue->fVal + ((float)dwDelta)/10.0f;
+	m_pvarValue->fVal = m_pvarValue->fVal + ((float)dwDelta)/1000.0f;
 	return true;
 }
 

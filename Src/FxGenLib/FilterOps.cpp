@@ -56,9 +56,9 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts)
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst = (NBitmap*)m_pObj;
-
-	sdword w = pDst->GetWidth();
-	sdword h = pDst->GetHeight();
+	sdword w = pSrc->GetWidth();
+	sdword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
 
 	//Get Variables Values
 	ubyte byWidth, byHeight, byAmplify;
@@ -242,8 +242,9 @@ udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts)
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst = (NBitmap*)m_pObj;
 
-	udword w = pDst->GetWidth();
-	udword h = pDst->GetHeight();
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
 
 	//Get Variables Values
 	ubyte byMode=1;
@@ -384,8 +385,9 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts)
 	NBitmap* pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst	= (NBitmap*)m_pObj;
 
-	udword w = pDst->GetWidth();
-	udword h = pDst->GetHeight();
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
 
 	/////////////////////////////////////////
 	//Get Variables Values
@@ -518,8 +520,10 @@ udword NNormalsOp::Process(float _ftime, NOperator** _pOpsInts)
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst = (NBitmap*)m_pObj;
 
-	udword w = pDst->GetWidth();
-	udword h = pDst->GetHeight();
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
+
 
 	/////////////////////////////////////////
 	//Get Variables Values
@@ -620,8 +624,10 @@ udword NInvertOp::Process(float _ftime, NOperator** _pOpsInts)
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst	= (NBitmap*)m_pObj;
 
-	udword w = pDst->GetWidth();
-	udword h = pDst->GetHeight();
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
+
 	RGBA* pPxSrc = pSrc->GetPixels();
 	RGBA* pPxDst = pDst->GetPixels();
 
@@ -700,8 +706,10 @@ udword NThresholdOp::Process(float _ftime, NOperator** _pOpsInts)
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst	= (NBitmap*)m_pObj;
 
-	udword w = pDst->GetWidth();
-	udword h = pDst->GetHeight();
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
+
 	RGBA* pPxSrc = pSrc->GetPixels();
 	RGBA* pPxDst = pDst->GetPixels();
 
@@ -813,8 +821,9 @@ udword NGaussianOp::Process(float _ftime, NOperator** _pOpsInts)
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst = (NBitmap*)m_pObj;
 
-	sdword w = pDst->GetWidth();
-	sdword h = pDst->GetHeight();
+	sdword w = pSrc->GetWidth();
+	sdword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
 
 	//Get Variables Values
 	ubyte bySize, byAmplify;
