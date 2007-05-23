@@ -42,7 +42,7 @@ static NVarsBlocDesc blocdescBlurOp[] =
 NBlurOp::NBlurOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(3, blocdescBlurOp);
+	m_pcvarsBloc = AddVarsBloc(3, blocdescBlurOp, 1);
 }
 
 udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts)
@@ -227,7 +227,7 @@ static NVarsBlocDesc blocdescColorsOp[] =
 NColorsOp::NColorsOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(4, blocdescColorsOp);
+	m_pcvarsBloc = AddVarsBloc(4, blocdescColorsOp, 1);
 }
 
 udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts)
@@ -367,7 +367,7 @@ static NVarsBlocDesc blocdescLightOp[] =
 NLightOp::NLightOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(8, blocdescLightOp);
+	m_pcvarsBloc = AddVarsBloc(8, blocdescLightOp, 1);
 
 }
 
@@ -503,7 +503,7 @@ static NVarsBlocDesc blocdescNormalsOp[] =
 NNormalsOp::NNormalsOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(1, blocdescNormalsOp);
+	m_pcvarsBloc = AddVarsBloc(1, blocdescNormalsOp, 1);
 
 }
 
@@ -669,7 +669,7 @@ static NVarsBlocDesc blocdescThresholdOp[] =
 NThresholdOp::NThresholdOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(3, blocdescThresholdOp);
+	m_pcvarsBloc = AddVarsBloc(3, blocdescThresholdOp, 1);
 }
 
 static inline ubyte expandIntensity(ubyte intensity, float ratio, ubyte threshold)
@@ -806,7 +806,7 @@ static NVarsBlocDesc blocdescGaussianOp[] =
 NGaussianOp::NGaussianOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(2, blocdescGaussianOp);
+	m_pcvarsBloc = AddVarsBloc(2, blocdescGaussianOp, 1);
 }
 
 udword NGaussianOp::Process(float _ftime, NOperator** _pOpsInts)

@@ -43,7 +43,7 @@ static NVarsBlocDesc blocdescControllersOp[] =
 NController::NController()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(2, blocdescControllersOp);
+	m_pcvarsBloc = AddVarsBloc(2, blocdescControllersOp, 1);
 }
 
 //-----------------------------------------------------------------

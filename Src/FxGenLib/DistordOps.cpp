@@ -30,6 +30,15 @@
 //-----------------------------------------------------------------
 IMPLEMENT_CLASS(NRotoZoomOp, NOperator);
 
+static NMapVarsBlocDesc mapblocdescRotoZoomOp[] =
+{
+	MAP(1, eubyte,		"2",		"*0.00390625"	)	//V1 => 0-CenterX
+	MAP(1, eubyte,		"3",		"*0.00390625"	)	//V1 => 1-CenterY
+	MAP(1, eubyte,		"4",		"*0.00390625"	)	//V1 => 2-Rotate
+	MAP(1, eubyte,		"5,6",	"*0.0078125"	)	//V1 => 3-Zoom
+};
+
+
 static NVarsBlocDesc blocdescRotoZoomOp[] =
 {
 	VAR(eubyte,	false, "Set Width",		"0,[0 (Default),1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
@@ -45,7 +54,10 @@ static NVarsBlocDesc blocdescRotoZoomOp[] =
 NRotoZoomOp::NRotoZoomOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(8, blocdescRotoZoomOp);
+	m_pcvarsBloc = AddVarsBloc(8, blocdescRotoZoomOp, 2);
+	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
+	m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescRotoZoomOp);
+
 }
 
 NRotoZoomOp::~NRotoZoomOp()
@@ -203,7 +215,7 @@ static NVarsBlocDesc blocdescDistortOp[] =
 NDistortOp::NDistortOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(1, blocdescDistortOp);
+	m_pcvarsBloc = AddVarsBloc(1, blocdescDistortOp, 1);
 
 }
 
