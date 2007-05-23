@@ -38,7 +38,7 @@ static NVarsBlocDesc blocdescStoreOp[] =
 NStoreOp::NStoreOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(1, blocdescStoreOp);
+	m_pcvarsBloc = AddVarsBloc(1, blocdescStoreOp, 1);
 }
 
 NStoreOp::~NStoreOp()
@@ -64,8 +64,12 @@ udword NStoreOp::Process(float _ftime, NOperator** _pOpsInts)
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst = (NBitmap*)m_pObj;
 
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
+
 	//Copy Source to This
-	CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), pDst->GetWidth() * pDst->GetHeight() * sizeof(RGBA));
+	CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
 
 	return 0;
 }
@@ -88,7 +92,7 @@ static NVarsBlocDesc blocdescStoreResultOp[] =
 NStoreResultOp::NStoreResultOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(1, blocdescStoreResultOp);
+	m_pcvarsBloc = AddVarsBloc(1, blocdescStoreResultOp, 1);
 }
 
 NStoreResultOp::~NStoreResultOp()
@@ -115,8 +119,12 @@ udword NStoreResultOp::Process(float _ftime, NOperator** _pOpsInts)
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst = (NBitmap*)m_pObj;
 
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
+
 	//Copy Source to This
-	CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), pDst->GetWidth() * pDst->GetHeight() * sizeof(RGBA));
+	CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
 
 	return 0;
 }
@@ -140,7 +148,7 @@ static NVarsBlocDesc blocdescLoadOp[] =
 NLoadOp::NLoadOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(1, blocdescLoadOp);
+	m_pcvarsBloc = AddVarsBloc(1, blocdescLoadOp, 1);
 }
 
 char* NLoadOp::GetUserName()
@@ -174,8 +182,12 @@ udword NLoadOp::Process(float _ftime, NOperator** _pOpsInts)
 		NBitmap* pSrc = (NBitmap*)popRef->m_pObj;
 		NBitmap* pDst = (NBitmap*)m_pObj;
 
+		udword w = pSrc->GetWidth();
+		udword h = pSrc->GetHeight();
+		pDst->SetSize(w,h);
+
 		//Copy Source to This
-		CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), pDst->GetWidth() * pDst->GetHeight() * sizeof(RGBA));
+		CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
 	}
 
 	return 0;
@@ -205,7 +217,7 @@ static NVarsBlocDesc blocdescChanAnimFX1Op[] =
 NChannelAnimFX1Op::NChannelAnimFX1Op()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(6, blocdescChanAnimFX1Op);
+	m_pcvarsBloc = AddVarsBloc(6, blocdescChanAnimFX1Op, 1);
 }
 
 udword NChannelAnimFX1Op::Process(float _ftime, NOperator** _pOpsInts)

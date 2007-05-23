@@ -121,6 +121,10 @@ void gDebugLog( char* fmt, ... );
 	NRTClass	class_name::m_RTClass((RTCLASS_HANDLER*)&class_name##CB, #class_name, #superclass_name );
 
 
+//Variables
+#define		VAR(type,	bCanBeAnimate, pszName,	pszDefValue, pszCLASSGUI) type,	bCanBeAnimate, pszName,	pszDefValue, pszCLASSGUI,
+#define		MAP(version, type, pszMapping,	pszExpression )	version,	type, pszMapping,	pszExpression,
+
 
 //-----------------------------------------------------------------
 //!	\enum		eVarType
@@ -173,9 +177,19 @@ struct NVarsBlocDesc
 	char*			pszCLASSGUI;	//!< Graphic control for editing
 };
 
-//
-#define VAR(type,	bCanBeAnimate, pszName,	pszDefValue, pszCLASSGUI) type,	bCanBeAnimate, pszName,	pszDefValue, pszCLASSGUI,
-//#define VAR(type,	bCanBeAnimate, pszName,	pszDefValue, pszCLASSGUI) type,	bCanBeAnimate,
+//-----------------------------------------------------------------
+//!	\struct NMapVarsBlocDesc
+//! \brief	Mapping Variable description for variable bloc
+//-----------------------------------------------------------------
+struct NMapVarsBlocDesc
+{
+	ubyte			byVersion;			//!< Bloc Version
+	eVarType	eType;					//!< Type of variables (eubyte, euword ...)
+	char*			pszMapping;			//!< ie (">2>3") => transfert this old variable bloc version
+														//!								to new variable bloc index 2 and 3
+	char*			pszExpression;	//!< value conversion (* or +)
+														//!  ie ("*2.0") to multiply by 2.0
+};
 
 
 //-----------------------------------------------------------------
@@ -193,9 +207,10 @@ public:
 	bool Load(NArchive* _l);	//!< Load Object
 
 	//Methods
-	void		Init(udword _dwVarsCount, NVarsBlocDesc* _pvarsBlocDesc, NObject* _powner);
+	void	Init(udword _dwVarsCount, NVarsBlocDesc* _pvarsBlocDesc, NObject* _powner, ubyte _byVersion);
+	void	SetMapVarBlocDesc(udword _dwVarsCount, NMapVarsBlocDesc* _pmapVarsBlocDesc);
 
-	udword					Count()				{ return m_udwordVarsCount; }
+	udword					Count()				{ return m_dwVarsCount;			}
 	NVarsBlocDesc*	GetBlocDesc()	{ return m_pcvarsblocDesc;	}
 	NVarValue*			GetValues()		{ return m_paVarsValues;		}
 
@@ -218,11 +233,21 @@ public:
 	void	SetValue(udword _idx, float _fTime, char*			_val);	//!< Change variable value
 
 protected:
+	//Methods
+	void DoVarBlocVersion_Mapping(NArchive* _l, ubyte _byVersion);
+	void MapValueTo(double _val, udword _idx, char* _pszExpression);
+	void MapValueTo(NObject* _val, udword _idx);
+	void MapValueTo(char* _val, udword _idx);
+
 	//Datas
 	NObject*						m_powner;						//!< Object that contain this varsbloc
 	NVarsBlocDesc*			m_pcvarsblocDesc;		//!< Variables Descriptions
-	udword							m_udwordVarsCount;	//!< Values Count
+	udword							m_dwVarsCount;			//!< Values Count
 	NVarValue*					m_paVarsValues;			//!< Values array
+	ubyte								m_byVersion;				//!< Bloc version (for serialization)
+
+	NMapVarsBlocDesc*		m_pcmapVarsBlocDesc;
+	udword							m_dwMapVarsCount;	//!< Map Values Count
 
 	NVarsBloc*					m_pcnextVarsBloc;		//!< Pointer on next variables bloc
 
@@ -312,7 +337,7 @@ public:
 	virtual	bool Load(NArchive* _l);
 
 	//Variables methods
-	NVarsBloc* AddVarsBloc(udword _dwVarCount, NVarsBlocDesc* _pdesc);
+	NVarsBloc* AddVarsBloc(udword _dwVarCount, NVarsBlocDesc* _pdesc, ubyte _byVersion);
 	NVarsBloc* GetFirstVarsBloc()		{ return m_pcfirstVarsBloc; }
 	void			 RemoveVarsRef(NObject* _pobj);
 

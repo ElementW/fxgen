@@ -40,12 +40,16 @@ udword NNopOp::Process(float _ftime, NOperator** _pOpsInts)
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst = (NBitmap*)m_pObj;
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
+
 
 	//Bitmap instance
 	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
 
 	//Copy Source to This
-	CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), pDst->GetWidth() * pDst->GetHeight() * sizeof(RGBA));
+	CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
 
 	return 0;
 }
@@ -72,7 +76,7 @@ static NVarsBlocDesc blocdescRectOp[] =
 NRectOp::NRectOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(5, blocdescRectOp);
+	m_pcvarsBloc = AddVarsBloc(5, blocdescRectOp, 1);
 }
 
 udword NRectOp::Process(float _ftime, NOperator** _pOpsInts)
@@ -86,6 +90,9 @@ udword NRectOp::Process(float _ftime, NOperator** _pOpsInts)
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst = (NBitmap*)m_pObj;
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
 
 	//Get Variables Values
 	RGBA col;
@@ -97,12 +104,12 @@ udword NRectOp::Process(float _ftime, NOperator** _pOpsInts)
 	m_pcvarsBloc->GetValue(4, _ftime, y2);
 
 	//Copy Source to this bitmap
-	CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), pDst->GetWidth() * pDst->GetHeight() * sizeof(RGBA));
+	CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
 
 	//Process operator
 	for (udword y=y1; y<=y2; y++)
 	{
-		RGBA* pPixelsD = pDst->GetPixels() + (y*pDst->GetWidth()) + x1;
+		RGBA* pPixelsD = pDst->GetPixels() + (y*w) + x1;
 		for (udword x=x1; x<=x2; x++)
 			*pPixelsD++ = col;
 	}
@@ -129,7 +136,7 @@ static NVarsBlocDesc blocdescPixelsOp[] =
 NPixelsOp::NPixelsOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(3, blocdescPixelsOp);
+	m_pcvarsBloc = AddVarsBloc(3, blocdescPixelsOp, 1);
 
 }
 
@@ -144,6 +151,9 @@ udword NPixelsOp::Process(float _ftime, NOperator** _pOpsInts)
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst = (NBitmap*)m_pObj;
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
 
 	//Get Variables Values
 	RGBA col;
@@ -154,13 +164,11 @@ udword NPixelsOp::Process(float _ftime, NOperator** _pOpsInts)
 	m_pcvarsBloc->GetValue(2, _ftime, byCount);
 
 	//Copy Source to This
-	CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), pDst->GetWidth() * pDst->GetHeight() * sizeof(RGBA));
+	CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
 
 	//Process operator
 	SetSeedValue(wSeed);
 
-	udword w = pDst->GetWidth();
-	udword h = pDst->GetHeight();
 	udword dwCount = 2<<(byCount>>4);
 	RGBA* pPxDst = pDst->GetPixels();
 	while (--dwCount)
@@ -191,7 +199,7 @@ static NVarsBlocDesc blocdescAddOp[] =
 NAddOp::NAddOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(2, blocdescAddOp);
+	m_pcvarsBloc = AddVarsBloc(2, blocdescAddOp, 1);
 }
 
 udword NAddOp::Process(float _ftime, NOperator** _pOpsInts)
@@ -448,7 +456,7 @@ static NVarsBlocDesc blocdescGlowOp[] =
 NGlowOp::NGlowOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(7, blocdescGlowOp);
+	m_pcvarsBloc = AddVarsBloc(7, blocdescGlowOp, 1);
 
 }
 
@@ -464,8 +472,9 @@ udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts)
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst = (NBitmap*)m_pObj;
 
-	sdword w = pDst->GetWidth();
-	sdword h = pDst->GetHeight();
+	sdword w = pSrc->GetWidth();
+	sdword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
 
 	//Get Variables Values
 	RGBA col;
@@ -552,7 +561,7 @@ static NVarsBlocDesc blocdescCrackOp[] =
 NCrackOp::NCrackOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(5, blocdescCrackOp);
+	m_pcvarsBloc = AddVarsBloc(5, blocdescCrackOp, 1);
 
 }
 
@@ -568,8 +577,10 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts)
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst	= (NBitmap*)m_pObj;
 
-	udword w = pDst->GetWidth();
-	udword h = pDst->GetHeight();
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
+
 	RGBA* pPxDst	= pDst->GetPixels();
 
 	//Copy Source to This
@@ -655,13 +666,17 @@ udword NLerpOp::Process(float _ftime, NOperator** _pOpsInts)
 	NBitmap* pBlend = (NBitmap*)(*(_pOpsInts+2))->m_pObj;
 	NBitmap* pDst = (NBitmap*)m_pObj;
 
+	sdword w = pSrc1->GetWidth();
+	sdword h = pSrc1->GetHeight();
+	pDst->SetSize(w,h);
+
+		//###TODO### multi sources size adjust
+
 	RGBA* pPxSrc1 = pSrc1->GetPixels();
 	RGBA* pPxSrc2 = pSrc2->GetPixels();
 	RGBA* pPxBlend = pBlend->GetPixels();
 	RGBA* pPxDst = pDst->GetPixels();
 
-	sdword w = pDst->GetWidth();
-	sdword h = pDst->GetHeight();
 
 	for (udword y=0; y<h; y++)
 	{
