@@ -104,15 +104,11 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts)
 	fRotate = fRotate * nv_two_pi;
 
 	//Zoom
-	fZoomX=1.0f - fZoomX;
+	fZoomX=0.5f - (fZoomX/2.0f);
 	fZoomX=exp(fZoomX*6.0f);
 
-	fZoomY=1.0f - fZoomY;
+	fZoomY=0.5f - (fZoomY/2.0f);
 	fZoomY=exp(fZoomY*6.0f);
-
-	//CenterX and CenterY
-	float fTW = (float)tw;
-	float fTH = (float)th;
 
 	//Process RotoZoom
 	RGBA* pPxlSrc = pSrc->GetPixels();
@@ -132,10 +128,12 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts)
 
 	RGBI Color;
 
+	RGBA* ptexelMax = pPxlSrc + (th*tw);// + tw;
+
 	for (udword y=0; y<h; y++)
 	{
-		float	u = (((c * -tw2) - ys) * fCoefX) + (fCenterX*tw);		// x' = cos(x)-sin(y) + Center X;
-		float	v = (((s * -tw2) + yc) * fCoefY) + (fCenterY*th);		// y' = sin(x)+cos(y) + Center Y;
+		float	u = (((c * -tw2) - ys) * fCoefX) + (fCenterX*(float)tw);		// x' = cos(x)-sin(y) + Center X;
+		float	v = (((s * -tw2) + yc) * fCoefY) + (fCenterY*(float)th);		// y' = sin(x)+cos(y) + Center Y;
 
 		for (udword x=0; x<w; x++)
 		{
@@ -153,6 +151,7 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts)
 			float WeightFactors = (1.0f-uf) * (1.0f-vf);						
 
 			RGBA* ptexel = pPxlSrc + ((vt%th)*tw) + (ut%tw);
+
 			Color.r = ((udword)ptexel->r	* WeightFactors);
 			Color.g = ((udword)ptexel->g	* WeightFactors);
 			Color.b = ((udword)ptexel->b	* WeightFactors);
@@ -163,21 +162,21 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts)
 			Color.r+= ((udword)ptexel->r	* WeightFactors);
 			Color.g+= ((udword)ptexel->g	* WeightFactors);
 			Color.b+= ((udword)ptexel->b	* WeightFactors);
-			
+
 			//Texel3
 			WeightFactors = (1.0f-uf) * vf;			
 			ptexel = pPxlSrc + (((vt+1)%th)*tw) + (ut%tw);
 			Color.r+= ((udword)ptexel->r	* WeightFactors);
 			Color.g+= ((udword)ptexel->g	* WeightFactors);
 			Color.b+= ((udword)ptexel->b	* WeightFactors);
-			
+
 			//Texel4
 			WeightFactors = uf * vf;			
 			ptexel = pPxlSrc + (((vt+1)%th)*tw) + ((ut+1)%tw);
 			Color.r+= ((udword)ptexel->r	* WeightFactors);
 			Color.g+= ((udword)ptexel->g	* WeightFactors);
 			Color.b+= ((udword)ptexel->b	* WeightFactors);
-		
+
 			//Pixel
 			pPxlDst->r = (ubyte)Color.r;
 			pPxlDst->g = (ubyte)Color.g;
@@ -233,8 +232,9 @@ udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts)
 	NBitmap* pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst	= (NBitmap*)m_pObj;
 
-	udword w = pDst->GetWidth();
-	udword h = pDst->GetHeight();
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w, h);
 
 	/////////////////////////////////////////
 	//Get Variables Values

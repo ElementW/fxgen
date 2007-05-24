@@ -101,7 +101,7 @@ bool NVarsBloc::Load(NArchive* _l)
 	ubyte byFileVersion=0;
 	*_l>>byFileVersion;
 
-	if (m_byVersion!=byFileVersion)
+	if (m_byVersion!=byFileVersion && byFileVersion!=0)
 	{
 		DoVarBlocVersion_Mapping(_l, byFileVersion);
 	} else {
@@ -122,7 +122,7 @@ bool NVarsBloc::Load(NArchive* _l)
 			}
 
 			//Anim Control
-			if (m_byVersion>=1)
+			if (byFileVersion>=1)
 			{
 				ubyte byAniCtrl;
 				*_l>>byAniCtrl;
@@ -380,7 +380,7 @@ void NVarsBloc::DoVarBlocVersion_Mapping(NArchive* _l, ubyte _byVersion)
 					} //Switch
 
 					//Anim Control
-					if (m_byVersion>=1)
+					if (_byVersion>=1)
 					{
 						ubyte byAniCtrl;
 						*_l>>byAniCtrl;
