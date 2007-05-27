@@ -32,11 +32,12 @@
 //-----------------------------------------------------------------
 // Constructor
 //-----------------------------------------------------------------
-NArchive::NArchive()
+NArchive::NArchive(NStream *_stream)
 {
-	m_pStream			= null;
-	m_pbyBuffer		= null;
-	m_pGuidsArray	= null;
+  m_pBufferedStream = null;
+  m_pStream = _stream;
+  m_pGuidsArray = null;
+  Clear();
 }
 
 //-----------------------------------------------------------------
@@ -44,82 +45,54 @@ NArchive::NArchive()
 //-----------------------------------------------------------------
 NArchive::~NArchive()
 {
-	Close();
+  if (m_pBufferedStream != null)
+    delete m_pBufferedStream;
+
+  if (m_pGuidsArray != null)
+    NMemFree(m_pGuidsArray);
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Open an archive for read or save
-//!	\param	_filename	full file name
-//!	\param	_writing	true if open for save
-//!	\return	true si success
+//!	\brief	Resets the archive
 //-----------------------------------------------------------------
-bool NArchive::Open(const char* _filename, bool _writing)
+void NArchive::Clear()
 {
-	m_bWriting = _writing;
+  if (m_pGuidsArray != null)
+    NMemFree(m_pGuidsArray);
 
-	m_wGuidsSize		= NSF_GUIDSARRAYSIZE;
-	m_wGuidsCount		= 0;
-	m_pGuidsArray		= (ID*)NMemAlloc(sizeof(ID) * m_wGuidsSize);
+  m_wGuidsSize		= NSF_GUIDSARRAYSIZE;
+  m_wGuidsCount		= 0;
+  m_pGuidsArray		= (ID*)NMemAlloc(sizeof(ID) * m_wGuidsSize);
 
-	m_carrayMappedObjs.Clear();
-	m_carrayMappedObjs.AddItem(null);	//at idx 0, null object reference
-
-	///////////////////////////////////////////
-	//For Writing
-	if (_writing)
-	{
-		errno_t err = fopen_s(&m_pStream, _filename, "wb" );
-		if (err!=0)													return false;
-
-		//Init
-		m_dwBufSize	= NSF_BUFSTARTSIZE;
-		m_dwBufPos		= 0;
-		m_pbyBuffer		= (ubyte*)NMemAlloc(m_dwBufSize);
-
-	///////////////////////////////////////////
-	//For Reading
-	} else {
-		errno_t err = fopen_s(&m_pStream, _filename, "rb" );
-		if (err!=0)													return false;
-
-		//Init
-		m_dwBufSize	= NSF_BUFSTARTSIZE;
-		m_dwBufPos		= 0;
-		m_pbyBuffer		= (ubyte*)NMemAlloc(m_dwBufSize);
-
-		//Lecture de l'entete et de la table des GUIDS
-		if (!Read())			return false;
-
-	}
-
-	return true;
+  m_carrayMappedObjs.Clear();
+  m_carrayMappedObjs.AddItem(null);	//at idx 0, null object reference
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Close archive
-//-----------------------------------------------------------------
-void NArchive::Close()
-{
-
-	if (m_bWriting)	Save();
-
-
-	if (m_pbyBuffer)			{ NMemFree(m_pbyBuffer); m_pbyBuffer=null; }
-	if (m_pStream!=null)	{ fclose(m_pStream); m_pStream=null;	}
-}
-
-//-----------------------------------------------------------------
-//!	\brief		Save archive
+//!	\brief		Finalize saving of the archive
 //!	\return		true if success
 //-----------------------------------------------------------------
-
-bool NArchive::Save()
+bool NArchive::PrepareSave()
 {
-	if (m_pStream==null)		return false;
+  if (m_pBufferedStream != null)
+    delete m_pBufferedStream;
+
+  m_pBufferedStream = new NMemoryStream();
+
+  return true;
+}
+
+//-----------------------------------------------------------------
+//!	\brief		Finalize saving of the archive
+//!	\return		true if success
+//-----------------------------------------------------------------
+bool NArchive::FinalizeSave()
+{
+	if (m_pBufferedStream == null || m_pStream==null)		return false;
 
 	//Add Mapped Objects To Archive
 	udword j;
-	udword dwUserDatasEndPos = m_dwBufPos;
+        udword dwUserDatasEndPos = m_pBufferedStream->Tell();
 
 	for (j=0; j<m_carrayMappedObjs.Count(); j++)
 	{
@@ -134,17 +107,16 @@ bool NArchive::Save()
 	h.GUIDCount					= m_wGuidsCount;
 	h.MappedObjsCount		= (uword)m_carrayMappedObjs.Count();
 	h.MappedObjsOffset	= sizeof(NSFHeader)+ (m_wGuidsCount * sizeof(ID)) + dwUserDatasEndPos;
-	fwrite(&h, sizeof(NSFHeader),1, m_pStream);
+	m_pStream->PutData(&h, sizeof(NSFHeader));
 
 	//Save GUIDs Table
-	for (j=0; j<m_wGuidsCount; j++)
-	{
-		fwrite(&m_pGuidsArray[j], sizeof(ID),1,m_pStream);
-	}
+        m_pStream->PutData(m_pGuidsArray, sizeof(ID)*m_wGuidsCount);
 
 	//Save Datas block
-	fwrite(m_pbyBuffer, m_dwBufPos, 1, m_pStream);
+        m_pStream->PutData(m_pBufferedStream->GetBuffer(), m_pBufferedStream->Tell());
 
+        delete m_pBufferedStream;
+        m_pBufferedStream = null;
 
 	return true;
 }
@@ -160,7 +132,7 @@ bool NArchive::Read()
 
 	//Read Header
 	NSFHeader		h;
-	fread(&h, sizeof(NSFHeader), 1, m_pStream);
+        m_pStream->GetData(&h, sizeof(NSFHeader));
 
 	//Check if it's a NSF file
 	if (h.NSFId!=NSF_HEADERID)		{ ERR("Not an NSF File",0); return false; }
@@ -177,17 +149,14 @@ bool NArchive::Read()
 		m_pGuidsArray = (ID*)NMemRealloc(m_pGuidsArray, sizeof(ID) * (m_wGuidsSize));
 	}
 
-	udword i;
-	for (i=0; i<h.GUIDCount; i++)
-	{
-		fread(&m_pGuidsArray[i], sizeof(ID), 1, m_pStream);
-	}
+        m_pStream->GetData(m_pGuidsArray, sizeof(ID)*h.GUIDCount);
 
 	// Save current file pos then jump to Mapped Objects ...
-	udword dwSavedPos = ftell(m_pStream);
-	fseek(m_pStream, h.MappedObjsOffset, SEEK_SET);
+	udword dwSavedPos = m_pStream->Tell();
+	m_pStream->Seek(h.MappedObjsOffset);
 
 	//Read Mapped Objects Table
+	udword i;
 	m_carrayMappedObjs.SetSize(h.MappedObjsCount);
 	for (i=1; i<h.MappedObjsCount; i++)	//from 1 because idx0 = null object reference
 	{
@@ -196,7 +165,7 @@ bool NArchive::Read()
 	}
 
 	//Restore old file pos
-	fseek(m_pStream, dwSavedPos, SEEK_SET);
+	m_pStream->Seek(dwSavedPos);
 
 	//Then Datas ...
 
@@ -239,41 +208,44 @@ ID NArchive::GetGUIDFromIdx(uword _idx)
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Put datas into archive
+//!	\brief	Put data into archive
 //!	\param	_buf			buffer to add
 //!	\param	_length		len of datas
 //-----------------------------------------------------------------
 
-void NArchive::PutDatas(void* _buf, udword _length)
+bool NArchive::PutData(void* _buf, udword _length)
 {
-	//Grow buffer size if necessary
-	if ((m_dwBufPos+_length)>=m_dwBufSize){
-		m_dwBufSize+=NSF_BUFGROWSIZE+_length;
-		m_pbyBuffer=(ubyte*)NMemRealloc(m_pbyBuffer,m_dwBufSize);
-	}
-
-	//Save datas
-	CopyMemory(m_pbyBuffer+m_dwBufPos, _buf, _length);
-	m_dwBufPos+=_length;
+  return (m_pBufferedStream != null ? m_pBufferedStream : m_pStream)->PutData(_buf, _length);
 }
 
 
 //-----------------------------------------------------------------
-//!	\brief	Get datas from archive
+//!	\brief	Get data from archive
 //!	\param	_buf			buffer to add
 //!	\param	_length		len of datas
 //-----------------------------------------------------------------
-void NArchive::GetDatas(void* _buf, udword _length)
+bool NArchive::GetData(void* _buf, udword _length)
 {
-	fread(_buf, _length, 1, m_pStream);
+  return (m_pBufferedStream != null ? m_pBufferedStream : m_pStream)->GetData(_buf, _length);
 }
 
+
+NArchive &NArchive::operator <<(const char *_val)
+{
+  *(m_pBufferedStream != null ? m_pBufferedStream : m_pStream) << _val;
+  return *this;
+}
+
+NArchive &NArchive::operator >>(char *_val)
+{
+  *(m_pBufferedStream != null ? m_pBufferedStream : m_pStream) >> _val;
+  return *this;
+}
 
 //-----------------------------------------------------------------
 //!	\brief	Put a class to archive
 //!	\param	_c	class to put
 //-----------------------------------------------------------------
-
 void NArchive::PutClass(NObject* _c)
 {
 	//Not referenced Class
@@ -291,7 +263,6 @@ void NArchive::PutClass(NObject* _c)
 //!	\brief	Put an object to archive
 //!	\param	_c object to put
 //-----------------------------------------------------------------
-
 void NArchive::PutObj(NObject* _c)
 {
 	//Get Class ID idx
@@ -375,10 +346,9 @@ void	NArchive::PutMappedObj(NObject* _c)
 {
 	//Write Tag
 	*this << (ubyte)NSF_MAPPEDCLASS_TAG;
-
 	uword idx = 0;	//idx0 => obj=null
 	if (_c!=null)	idx = AddUniqueMappedObjs(_c);
-	*this<<idx;
+	*this << idx;
 }
 
 

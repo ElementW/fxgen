@@ -825,8 +825,10 @@ void NEngineOp::GetFinalOps(NTreeNode* _pnode, NObjectArray& _finalsOp, bool _bR
 bool NEngineOp::LoadProject(char* _pszFullFileName)
 {
 	//Open Archive
-	NArchive ar;
-	if (!ar.Open(_pszFullFileName))
+        NFileStream fileStream;
+        fileStream.Open(_pszFullFileName);
+	NArchive ar(&fileStream);
+	if (!ar.Read())
 		return false;
 
 	//Clear Project
@@ -850,8 +852,11 @@ bool NEngineOp::LoadProject(char* _pszFullFileName)
 bool NEngineOp::SaveProject(char* _pszFullFileName)
 {
 	//Open Archive
-	NArchive ar;
-	if (!ar.Open(_pszFullFileName, true))
+        NFileStream fileStream;
+        fileStream.Open(_pszFullFileName, true);
+	
+        NArchive ar(&fileStream);
+	if (!ar.PrepareSave())
 		return false;
 
 	//Save Flag (Graph,Compiled...)
@@ -860,6 +865,9 @@ bool NEngineOp::SaveProject(char* _pszFullFileName)
 
 	//Save Groups and Pages
 	m_pRootGroup->Save(&ar);
+
+	if (!ar.FinalizeSave())
+		return false;
 
 	return true;
 }

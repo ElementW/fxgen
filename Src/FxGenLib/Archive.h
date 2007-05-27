@@ -1,9 +1,11 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //! \file		Archive.h
-//! \brief	Serializer for datas loading and saving
+//! \brief	Serializer for project archive loading and saving
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
+//!             Anders Stenberg (anders.stenberg@gmail.com)
+//!
 //!	\date		12-02-2007
 //!
 //!	\brief	This file applies the GNU LESSER GENERAL PUBLIC LICENSE
@@ -56,54 +58,43 @@ struct NSFHeader
 //	Prototypes
 //-----------------------------------------------------------------
 class NObject;
+class NStream;
+class NMemoryStream;
 
 //-----------------------------------------------------------------
 //!	\class	NArchive
-//!	\brief	Serializer for datas loading and saving
+//!	\brief	Serializer for data loading and saving
 //-----------------------------------------------------------------
 class FXGEN_API NArchive
 {
 public:
 	//Constructor-Destructor
-					NArchive();
+	NArchive(NStream *_stream);
 	virtual	~NArchive();
 
-	//File Methods
-	bool		Open(const char* _filename, bool _writing=false);
-	void		Close();
+	//Storage Methods
+	bool  PrepareSave();
+	bool  FinalizeSave();
+	bool  Read();
+        void  Clear();
 
 	//Writing Methods
 	void	PutClass(NObject* _c);
-	void	PutDatas(void* _buf, udword _length);
-
-	void operator<<( uword _val	)	{ PutDatas(&_val, sizeof(uword));}
-	void operator<<( sword _val	)	{ PutDatas(&_val, sizeof(sword));}
-	void operator<<( udword _val)	{ PutDatas(&_val, sizeof(udword));}
-	void operator<<( sdword _val)	{ PutDatas(&_val, sizeof(sdword));}
-	void operator<<( ubyte _val	)	{ PutDatas(&_val, sizeof(ubyte));}
-	void operator<<( sbyte _val	)	{ PutDatas(&_val, sizeof(sbyte));}
-	void operator<<( float _val	)	{ PutDatas(&_val, sizeof(float));}
-	void operator<<( bool _val	)	{ PutDatas(&_val, sizeof(bool));}
-	void operator<<( char* _val	)	{ uword l=(uword)strlen(_val); PutDatas(&l, sizeof(uword)); PutDatas(_val, l);}
-
+        NArchive &operator<<( const char* _val ); // Needed since the template tends to choose wrong overload on const char*
+        template <class T> NArchive &operator<<( const T &_val ) { *(m_pBufferedStream == null ? m_pStream : m_pBufferedStream) << _val; return *this; }
+        bool	PutData(void* _buf, udword _length);
 
 	//Reading Methods
 	NObject*	GetClass();
-	void			GetDatas(void* _buf, udword _length);
-
-	void operator>>( uword &_val	)	{ GetDatas(&_val, sizeof(uword));}
-	void operator>>( sword &_val	)	{ GetDatas(&_val, sizeof(sword));}
-	void operator>>( udword &_val)	{ GetDatas(&_val, sizeof(udword));}
-	void operator>>( sdword &_val)	{ GetDatas(&_val, sizeof(sdword));}
-	void operator>>( ubyte &_val	)	{ GetDatas(&_val, sizeof(ubyte));}
-	void operator>>( sbyte &_val	)	{ GetDatas(&_val, sizeof(sbyte));}
-	void operator>>( float &_val	)	{ GetDatas(&_val, sizeof(float));}
-	void operator>>( bool &_val	)	{ GetDatas(&_val, sizeof(bool));}
-	void operator>>( char* _val	)	{ uword l; GetDatas(&l, sizeof(uword)); GetDatas(_val, l); _val[l]=0;}
+        NArchive &operator>>( char* _val ); // Needed since the template tends to choose wrong overload on const char*
+        template <class T> NArchive &operator>>( T &_val ) { *(m_pBufferedStream == null ? m_pStream : m_pBufferedStream) >> _val; return *this; }
+        bool	GetData(void* _buf, udword _length);
 
 	//Mapped object Methods
 	void			PutMappedObj(NObject* _c);
 	NObject*	GetMappedObj();
+
+        NStream* GetStream() { return m_pStream; }
 
 protected:
 	//Methods
@@ -113,15 +104,11 @@ protected:
 
 
 	void		PutObj(NObject* _c);									//!< Write class datas to archive
-	bool		Save();
-	bool		Read();
 
 	//Datas
-	FILE*			m_pStream;		//###TOFIX###
+	NStream*	m_pStream;
+        NMemoryStream*  m_pBufferedStream;
 
-	ubyte*		m_pbyBuffer;
-	udword		m_dwBufSize;
-	udword		m_dwBufPos;
 	bool			m_bWriting;
 
 	uword					m_wGuidsCount;			//!< Unique Guids count

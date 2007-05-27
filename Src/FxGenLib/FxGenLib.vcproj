@@ -354,6 +354,14 @@
 				RelativePath=".\Maths.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Stream.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Stream.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Media Types"

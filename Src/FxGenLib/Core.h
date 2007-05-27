@@ -471,6 +471,7 @@ int					NFileTell(NFILEHANDLE *handle);
 //	Includes
 //-----------------------------------------------------------------
 	#include "Maths.h"
+	#include "Stream.h"
 	#include "Archive.h"
 	#include "Bitmap.h"
 	#include "Controllers.h"
