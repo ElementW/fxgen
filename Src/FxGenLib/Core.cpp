@@ -505,7 +505,7 @@ bool NObject::Save(NArchive* _s)
 	//Save object's name
 	ubyte len = (ubyte)strlen(m_szName);
 	*_s<<len;
-	_s->PutDatas(&m_szName, len);
+	_s->PutData(&m_szName, len);
 
 	//Save Variables Bloc's Values
 	NVarsBloc* pcurvarbloc = m_pcfirstVarsBloc;
@@ -529,7 +529,7 @@ bool NObject::Load(NArchive* _l)
 	//Load object's name
 	ubyte len;
 	*_l>>len;
-	_l->GetDatas(&m_szName, len);
+	_l->GetData(&m_szName, len);
 	m_szName[len]=0;
 
 	//Load Variables Bloc's Values
