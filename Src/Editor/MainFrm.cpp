@@ -205,12 +205,19 @@ void NMainFrm::OnOpenProject()
 	{
 		NString str = dlg.GetPathName();
 
+                gNFxGen_GetEngine()->Clear();
+
+		m_pprojectwnd->DisplayOperatorsProject(gNFxGen_GetEngine());
+		m_pprojectwnd->SelectFirstPage();
+
 		if (gNFxGen_GetEngine()->LoadProject(str.Buffer()))
 		{
 			NString strTitle(CAPTION);
 			strTitle+=str.Buffer();
 			SetWindowText(strTitle.Buffer());
-		}
+                } else {
+                  gNFxGen_GetEngine()->Clear();
+                }
 
 		//Display Projects's Pages
 		m_pprojectwnd->DisplayOperatorsProject(gNFxGen_GetEngine());
