@@ -32,17 +32,26 @@
 //-----------------------------------------------------------------
 IMPLEMENT_CLASS(NBlurOp, NOperator);
 
+static NMapVarsBlocDesc mapblocdescBlurOp[] =
+{
+	MAP(1,	eubyte,		"0",		""	)	//V1 => 0-Width
+	MAP(1,	eubyte,		"1",		""	)	//V1 => 1-Height
+	MAP(1,	eubyte,		"2",		""	)	//V1 => 2-Amplify
+};
+
 static NVarsBlocDesc blocdescBlurOp[] =
 {
 	VAR(eubyte,		true, "Width",		"4",		"NUbyteProp")	//0
 	VAR(eubyte,		true, "Height",		"4",		"NUbyteProp")	//1
 	VAR(eubyte,		true, "Amplify",	"16",		"NUbyteProp")	//2
+	VAR(eubyte,		false, "Type",	"0,[Box,Gaussian]",	"NUbyteComboProp")	//3
 };
 
 NBlurOp::NBlurOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(3, blocdescBlurOp, 1);
+	m_pcvarsBloc = AddVarsBloc(4, blocdescBlurOp, 2);
+        m_pcvarsBloc->SetMapVarBlocDesc(3, mapblocdescBlurOp);
 }
 
 udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts)
@@ -61,10 +70,15 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts)
 	pDst->SetSize(w,h);
 
 	//Get Variables Values
-	ubyte byWidth, byHeight, byAmplify;
+	ubyte byWidth, byHeight, byAmplify, byType;
 	m_pcvarsBloc->GetValue(0, _ftime, byWidth);
 	m_pcvarsBloc->GetValue(1, _ftime, byHeight);
 	m_pcvarsBloc->GetValue(2, _ftime, byAmplify);
+        m_pcvarsBloc->GetValue(3, _ftime, byType);
+
+        // Do three passes if gaussian...
+        // Don't change the number of passes if you don't know what you're doing :)
+        ubyte byPasses = byType == 1 ? 3 : 1; 
 
 	//Radius
 	float radiusW= (float)byWidth / 2.0f;
@@ -72,135 +86,187 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts)
 
 	//Amplify
 	float amplify= (float)byAmplify;
-	sdword amp = sdword(floor(amplify*16.0f));
+	sdword amp = sdword(floor(amplify*16.0f)/(float)byPasses);
+
+	sdword bw = (sdword) (floor(radiusW)*2+1);
+        sdword bh = (sdword) (floor(radiusH)*2+1);
+
+
+        if (bw == 0 && bh == 0)
+        {
+          CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), w*h*sizeof(RGBA));
+          return 0;
+        }
+
+        // Allocate a temporary buffer if needed
+	RGBA* pPxInter = null;
+        if (byPasses > 0 || (bw > 0 && bh > 0))
+        {
+	  pPxInter = (RGBA*)NMemAlloc(w*h*sizeof(RGBA));
+        }
 
 	/////////////////////////////////////////////////////////
 	// Blur Horizontal
-	sdword bw = (sdword) (floor(radiusW)*2);
 
-	if (bw>0)
-	{
+        for (int i=0; i<byPasses; ++i)
+        {
+          if (bw>0)
+          {
+            for(sdword y=0;y<h;y++)
+            {
+              // Make sure to use source, intermediate and destination in a pattern to avoid unnecessary copies
+              RGBA* pPxSrc;
+              if (i == 0)
+              {
+                pPxSrc = pSrc->GetPixels() + (y*w);
+              } else {
+                if (bh == 0)
+                {
+                  if (i % 2 == byPasses % 2)
+                    pPxSrc = pDst->GetPixels() + (y*w);
+                  else
+                    pPxSrc = pPxInter + (y*w);
+                } else {
+                  pPxSrc = pDst->GetPixels() + (y*w);
+                }
+              }
+              RGBA* pAccu		= pPxSrc;
+              RGBA* pPxDst;
+              if (bh == 0)
+              {
+                if (i % 2 == byPasses % 2)
+                  pPxDst = pPxInter + (y*w);
+                else
+                  pPxDst = pDst->GetPixels() + (y*w);
+              } else {
+                pPxDst = pPxInter + (y*w);
+              }
 
-		for(sdword y=0;y<h;y++)
-		{
-			RGBA* pPxSrc	= pSrc->GetPixels() + (y*w);
-			RGBA* pAccu		= pPxSrc;
-			RGBA* pPxDst	= pDst->GetPixels() + (y*w);
+              // Accumulation precalc
+              sdword x = 0;
+              RGBI sum;
+              ZeroMemory(&sum, sizeof(RGBI));
+              while (x<bw)
+              {
+                sum.r+=(sdword)pAccu->r;
+                sum.g+=(sdword)pAccu->g;
+                sum.b+=(sdword)pAccu->b;
+                pAccu++;
+                ++x;
+              }
 
-			// Accumulation precalc
-			sdword x = 0;
-			RGBI sum;
-			ZeroMemory(&sum, sizeof(RGBI));
-			while (x<bw)
-			{
-				sum.r+=(sdword)pAccu->r;
-				sum.g+=(sdword)pAccu->g;
-				sum.b+=(sdword)pAccu->b;
-				pAccu++;
-				++x;
-			}
+              pAccu = pPxSrc;
 
-			pAccu = pPxSrc;
+              // Blur
+              x=0;
+              while (x<w)
+              {
+                sdword r = (sum.r*amp)/(bw<<8);
+                sdword g = (sum.g*amp)/(bw<<8);
+                sdword b = (sum.b*amp)/(bw<<8);
 
-			// Blur
-			x=0;
-			while (x<w)
-			{
-				sdword r = (sum.r*amp)/(bw<<8);
-				sdword g = (sum.g*amp)/(bw<<8);
-				sdword b = (sum.b*amp)/(bw<<8);
+                pPxDst[(x+bw/2)%w].r= (ubyte) ((r<255)?r:255);
+                pPxDst[(x+bw/2)%w].g= (ubyte) ((g<255)?g:255);
+                pPxDst[(x+bw/2)%w].b= (ubyte) ((b<255)?b:255);
+                pPxDst[(x+bw/2)%w].a= 255;
 
-				pPxDst[(x+bw/2)%w].r= (ubyte) ((r<255)?r:255);
-				pPxDst[(x+bw/2)%w].g= (ubyte) ((g<255)?g:255);
-				pPxDst[(x+bw/2)%w].b= (ubyte) ((b<255)?b:255);
-				pPxDst[(x+bw/2)%w].a= 255;
+                sum.r-=(sdword)pPxSrc->r;
+                sum.g-=(sdword)pPxSrc->g;
+                sum.b-=(sdword)pPxSrc->b;
+                pPxSrc++;
 
-				sum.r-=(sdword)pPxSrc->r;
-				sum.g-=(sdword)pPxSrc->g;
-				sum.b-=(sdword)pPxSrc->b;
-				pPxSrc++;
+                sum.r+=(sdword)pAccu[(x+bw)%w].r;
+                sum.g+=(sdword)pAccu[(x+bw)%w].g;
+                sum.b+=(sdword)pAccu[(x+bw)%w].b;
 
-				sum.r+=(sdword)pAccu[(x+bw)%w].r;
-				sum.g+=(sdword)pAccu[(x+bw)%w].g;
-				sum.b+=(sdword)pAccu[(x+bw)%w].b;
-
-				++x;
-			}
+                ++x;
+              }
 
 
-		}
+            }
 
-	}
+          }
 
-	/////////////////////////////////////////////////////////
-	// Allocation d'un buffer intermediare//###TOFIX
-	RGBA* pPxInter = null;
-	if (bw>0)
-	{
-		pPxInter = (RGBA*)NMemAlloc(w*h*sizeof(RGBA));	//###TOFIX
+          /////////////////////////////////////////////////////////
+          // Blur Vertical
 
-		//Copy Destination to Intermediate buffer (used as source)
-		CopyMemory(pPxInter, pDst->GetPixels(), w*h*sizeof(RGBA));
-	} else {
-		pPxInter = pSrc->GetPixels();
-	}
+          if (bh>0)
+          {
 
-	/////////////////////////////////////////////////////////
-	// Blur Vertical
-	sdword bh = (sdword) (floor(radiusH)*2);
+            for(sdword x=0;x<w;x++)
+            {
+              // Make sure to use source, intermediate and destination in a pattern to avoid unnecessary copies
+              RGBA* pPxSrc;
+              if (bw == 0)
+              {
+                if (i == 0)
+                {
+                  pPxSrc = pSrc->GetPixels() + x;
+                } else {
+                  if (i % 2 == byPasses % 2)
+                    pPxSrc = pDst->GetPixels() + x;
+                  else
+                    pPxSrc = pPxInter + x;
+                }
+              } else {
+                pPxSrc = pPxInter + x;
+              }
+              RGBA* pAccu		= pPxSrc;
+              RGBA* pPxDst;
+              if (bw == 0)
+              {
+                if (i % 2 == byPasses % 2)
+                  pPxDst = pPxInter + x;
+                else
+                  pPxDst = pDst->GetPixels() + x;
+              } else {
+                pPxDst = pDst->GetPixels() + x;
+              }
 
-	if (bh>0)
-	{
+              // Accumulation Precalc
+              sdword y = 0;
+              RGBI sum;
+              ZeroMemory(&sum, sizeof(RGBI));
+              while (y<bh)
+              {
+                sum.r+=(sdword)pAccu->r;
+                sum.g+=(sdword)pAccu->g;
+                sum.b+=(sdword)pAccu->b;
+                pAccu+=w;
+                ++y;
+              }
 
-		for(sdword x=0;x<w;x++)
-		{
-			RGBA* pPxSrc	= pPxInter + x;
-			RGBA* pAccu		= pPxSrc;
-			RGBA* pPxDst	= pDst->GetPixels() + x;
+              pAccu = pPxSrc;
 
-			// Accumulation Precalc
-			sdword y = 0;
-			RGBI sum;
-			ZeroMemory(&sum, sizeof(RGBI));
-			while (y<bh)
-			{
-				sum.r+=(sdword)pAccu->r;
-				sum.g+=(sdword)pAccu->g;
-				sum.b+=(sdword)pAccu->b;
-				pAccu+=w;
-				++y;
-			}
+              // Blur
+              y=0;
+              while (y<h)
+              {
+                sdword r = (sum.r*amp)/(bh<<8);
+                sdword g = (sum.g*amp)/(bh<<8);
+                sdword b = (sum.b*amp)/(bh<<8);
 
-			pAccu = pPxSrc;
+                pPxDst[((y+bh/2)%h)*w].r= (ubyte) ((r<255)?r:255);
+                pPxDst[((y+bh/2)%h)*w].g= (ubyte) ((g<255)?g:255);
+                pPxDst[((y+bh/2)%h)*w].b= (ubyte) ((b<255)?b:255);
+                pPxDst[((y+bh/2)%h)*w].a= 255;
 
-			// Blur
-			y=0;
-			while (y<h)
-			{
-				sdword r = (sum.r*amp)/(bh<<8);
-				sdword g = (sum.g*amp)/(bh<<8);
-				sdword b = (sum.b*amp)/(bh<<8);
+                sum.r-=(sdword)pPxSrc->r;
+                sum.g-=(sdword)pPxSrc->g;
+                sum.b-=(sdword)pPxSrc->b;
+                pPxSrc+=w;
 
-				pPxDst[((y+bh/2)%h)*w].r= (ubyte) ((r<255)?r:255);
-				pPxDst[((y+bh/2)%h)*w].g= (ubyte) ((g<255)?g:255);
-				pPxDst[((y+bh/2)%h)*w].b= (ubyte) ((b<255)?b:255);
-				pPxDst[((y+bh/2)%h)*w].a= 255;
+                sum.r+=(sdword)pAccu[((y+bh)%h)*w].r;
+                sum.g+=(sdword)pAccu[((y+bh)%h)*w].g;
+                sum.b+=(sdword)pAccu[((y+bh)%h)*w].b;
 
-				sum.r-=(sdword)pPxSrc->r;
-				sum.g-=(sdword)pPxSrc->g;
-				sum.b-=(sdword)pPxSrc->b;
-				pPxSrc+=w;
+                ++y;
+              }
+            }
+          }
+        }
 
-				sum.r+=(sdword)pAccu[((y+bh)%h)*w].r;
-				sum.g+=(sdword)pAccu[((y+bh)%h)*w].g;
-				sum.b+=(sdword)pAccu[((y+bh)%h)*w].b;
-
-				++y;
-			}
-		}
-	}
-
-	if (pPxInter && bw>0)		NMemFree(pPxInter);		//###TOFIX###
+	if (pPxInter)		NMemFree(pPxInter);		//###TOFIX###
 
 	return 0;
 }
