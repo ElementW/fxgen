@@ -417,7 +417,7 @@ IMPLEMENT_CLASS(NLightOp, NOperator);
 
 static NVarsBlocDesc blocdescLightOp[] =
 {
-	VAR(eudword,	true, "Ambiant",		"0",				"NColorProp")	//0
+	VAR(eudword,	true, "Ambient",		"0",				"NColorProp")	//0
 	VAR(eudword,	true, "Diffuse",		"8421504",	"NColorProp")	//1
 	VAR(eudword,	true, "Specular",		"-1",				"NColorProp")	//2
 
@@ -440,15 +440,32 @@ NLightOp::NLightOp()
 udword NLightOp::Process(float _ftime, NOperator** _pOpsInts)
 {
 	//Two inputs (texture, normal)
-	if (m_byInputs!=2)		return (udword)-1;
+	if (m_byInputs < 2 || m_byInputs > 4)	return (udword)-1;
 
 	//Bitmap instance
 	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
 
-	//Get input Texture and Normal
+	//Get input Texture
 	NBitmap* pSrc	= (NBitmap*)(*_pOpsInts)->m_pObj;
 	_pOpsInts++;
-	NBitmap* pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
+        
+        NBitmap* pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
+        _pOpsInts++;
+
+        NBitmap* pSpec = null; // Specular color
+        if (m_byInputs>2)
+        {	
+          pSpec = (NBitmap*)(*_pOpsInts)->m_pObj;
+	  _pOpsInts++;
+        }
+
+        NBitmap* pAmb = null; // Ambient color
+        if (m_byInputs>3)
+        {	
+          pAmb = (NBitmap*)(*_pOpsInts)->m_pObj;
+	  _pOpsInts++;
+        }
+
 	NBitmap* pDst	= (NBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
@@ -457,10 +474,10 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts)
 
 	/////////////////////////////////////////
 	//Get Variables Values
-	RGBA Ambiant, Diffuse, Specular;
+	RGBA Ambient, Diffuse, Specular;
 	ubyte byPosX, byPosY, byPosZ;
 	ubyte bySpecPower, byBumpPower;
-	m_pcvarsBloc->GetValue(0, _ftime, (udword&)Ambiant);
+	m_pcvarsBloc->GetValue(0, _ftime, (udword&)Ambient);
 	m_pcvarsBloc->GetValue(1, _ftime, (udword&)Diffuse);
 	m_pcvarsBloc->GetValue(2, _ftime, (udword&)Specular);
 
@@ -484,11 +501,13 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts)
 	light.normalize();
 
 	float fSpecularPower	= ((float)bySpecPower) / 32.0f;
-	float fBumpPower			= ((float)byBumpPower) / 32.0f;
+	float fBumpPower			= ((float)byBumpPower) / 200.0f;
 
 	/////////////////////////////////////////
 	// DIRECTIONAL LIGHT TYPE
-	RGBA* pPxNorm = pNorm->GetPixels();
+        RGBA* pPxNorm = pNorm->GetPixels();
+	RGBA* pPxSpec = pSpec == null ? null : pSpec->GetPixels();
+	RGBA* pPxAmb = pAmb == null ? null : pAmb->GetPixels();
 	RGBA* pPxSrc	= pSrc->GetPixels();
 	RGBA* pPxDst	= pDst->GetPixels();
 
@@ -500,9 +519,9 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts)
 			vec3 n;
 			n.x = ((float)pPxNorm->x - 127.0f);
 			n.y = ((float)pPxNorm->y - 127.0f);
-			n.z = ((float)pPxNorm->z - 127.0f);
-
+			n.z = ((float)pPxNorm->z - 127.0f)/(0.01f+fBumpPower);
 			n.normalize();
+			pPxNorm++;
 
 			//compute the dot product between normal and light dir
 			float fdot;
@@ -510,7 +529,7 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts)
 			if (fdot<0.0f)	fdot=0.0f;
 
 			//Add bump on normal
-			fdot*=fBumpPower;
+			//fdot*=fBumpPower;
 
 			/*float fdotSpec=0.0;
 			if (dot > 0.0) {
@@ -521,19 +540,45 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts)
 				fdotSpec = pow(fdot, 64);
 			}*/
 
+                        RGBA localAmbient;
+                        if (pPxAmb != null)
+                        {
+                          localAmbient.r = Ambient.r + pPxAmb->r;
+                          localAmbient.g = Ambient.g + pPxAmb->g;
+                          localAmbient.b = Ambient.b + pPxAmb->b;
+                          pPxAmb++;
+                        } else {
+                          localAmbient.r = Ambient.r;
+                          localAmbient.g = Ambient.g;
+                          localAmbient.b = Ambient.b;
+                        }
+
+                        RGBA localSpecular;
+                        if (pPxSpec != null)
+                        {
+                          localSpecular.r = (Specular.r * pPxSpec->r) >> 8;
+                          localSpecular.g = (Specular.g * pPxSpec->g) >> 8;
+                          localSpecular.b = (Specular.b * pPxSpec->b) >> 8;
+                          pPxSpec++;
+                        } else {
+                          localSpecular.r = Specular.r;
+                          localSpecular.g = Specular.g;
+                          localSpecular.b = Specular.b;
+                        }
+
 			// Color = ambient + dif*dot + dot^2 * spec
-			sdword r	= (sdword) (Ambiant.r + (fdot*Diffuse.r) + (fdot*fdot*Specular.r*fSpecularPower));
-			sdword g	= (sdword) (Ambiant.g + (fdot*Diffuse.g) + (fdot*fdot*Specular.g*fSpecularPower));
-			sdword b	= (sdword) (Ambiant.b + (fdot*Diffuse.b) + (fdot*fdot*Specular.b*fSpecularPower));
+			sdword r	= (sdword) ((sdword(pPxSrc->r*(localAmbient.r + fdot*Diffuse.r)) >> 8) + (fdot*fdot*localSpecular.r*fSpecularPower));
+			sdword g	= (sdword) ((sdword(pPxSrc->g*(localAmbient.g + fdot*Diffuse.g)) >> 8) + (fdot*fdot*localSpecular.g*fSpecularPower));
+			sdword b	= (sdword) ((sdword(pPxSrc->b*(localAmbient.b + fdot*Diffuse.b)) >> 8) + (fdot*fdot*localSpecular.b*fSpecularPower));
 
 			//sdword r	= pPxSrc->r + (fdot * pPxSrc->r);
 			//sdword g	= pPxSrc->g + (fdot * pPxSrc->g);
 			//sdword b	= pPxSrc->b + (fdot * pPxSrc->b);
 
 			//Summ
-			r = (pPxSrc->r + r) / 2;
+			/*r = (pPxSrc->r + r) / 2;
 			g = (pPxSrc->g + g) / 2;
-			b = (pPxSrc->b + b) / 2;
+			b = (pPxSrc->b + b) / 2;*/
 
 			pPxDst->r = (ubyte) ((r<255)?r:255);
 			pPxDst->g = (ubyte) ((g<255)?g:255);
@@ -542,7 +587,6 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts)
 
 			pPxSrc++;
 			pPxDst++;
-			pPxNorm++;
 		}
 	}
 
