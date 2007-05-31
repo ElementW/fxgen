@@ -6,7 +6,7 @@ Next Version
 .a merge project command menu 
 .add an editor's icon
 .add C functions like for API
-...
+.
 
 
 Version 0.4 alpha
@@ -25,11 +25,14 @@ Main Changed
 New Operators
 	.NLerpOp	
 	.NThresholdOp
-
+	.NAlpha
+	
 Changed Operators
 	.AddOp support different texture size
 		.Addop's bitmap had the first input operator's bitmap size.
 		.Other inputs have their size cropped.
+		.Alpha mode now blend alpha sources values only
+		.Now More than 2 inputs can be managed  (source texture, normals, specular, ambiant)
 
 	.FlatOp, CellOp, CloudOp and GradientOp
 		.Added Width and Height
@@ -40,18 +43,15 @@ Changed Operators
 			.texture resize
 			.x and y zoom factors separated
 		.Can change texture size now
-
-	.SetSizeOp
-		.Deleted see RotoZoomOp
 		
 	.NColorOp
-		.Box and Gaussian Filters
+		.Box and Gaussian Filters Types
 
 	.NLightOp
 		Now support input Specular operators too
 		
 Removed Operator
-	.NSetSize
+	.NSetSize (now see RotoZoomOp)
 
 
 Version 0.3 alpha

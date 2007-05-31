@@ -2,7 +2,6 @@
 //-----------------------------------------------------------------
 //
 //									 FxGen synthesis texture generation
-//													version alpha 0.1
 //
 //	Author Johann Nadalutti (fxgen@free.fr)
 //----------------------------------------------------------------- 
@@ -87,3 +86,12 @@ void main()
 		NBitmap* pbmp = (NBitmap*)pop->m_pObj;
 		
 } 
+
+
+bool FxGen_LoadProject(char* pszName);
+void FxGen_ProcessOperators(float _ftime, FXGEN_PROCESSCB* ProcessCallBack);
+void FxGen_CompactMemory();	=> Keep just final result bitmaps
+udword FxGen_GetFinalResultCount();
+NBitmap* FxGen_GetFinalResultByIdx(udword _idx);
+
+FXGEN_PROCESSCB* void ProcessCallBack(udword _dwCurrentOp, udword _dwTotalOps);

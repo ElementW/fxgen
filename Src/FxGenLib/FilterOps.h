@@ -34,7 +34,7 @@
 //		NNormalsOp
 //		NInvertOp
 //		NThresholdOp
-//		NGaussianOp
+//		NAlphaOp
 
 //-----------------------------------------------------------------
 //!	\class		NBlurOp
@@ -156,21 +156,20 @@ public:
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
 };
 
-
 //-----------------------------------------------------------------
-//!	\class		NGaussianOp
-//!	\brief		Cuts all color information above or below a threshold
+//!	\class		NAlphaOp
+//!	\brief		Create alpha channel from RGB bitmap source
 //-----------------------------------------------------------------
-class FXGEN_API NGaussianOp : public NOperator
+class FXGEN_API NAlphaOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
 
-	NGaussianOp();
+	NAlphaOp();
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Gaussian"; }		//!< Operator's Name
+	virtual char*		GetName()			{ return "Alpha"; }		//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
