@@ -444,7 +444,7 @@ udword NGradientOp::Process(float _ftime, NOperator** _pOpsInts)
 	//Init
 	//A B
 	//C D
-	RGBI col;
+	RGBAI col;
 	float finv_WH = 1.0f / (float)(w*h);
 
 	//Process operator

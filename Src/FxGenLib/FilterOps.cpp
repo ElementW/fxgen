@@ -144,13 +144,14 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts)
 
               // Accumulation precalc
               sdword x = 0;
-              RGBI sum;
-              ZeroMemory(&sum, sizeof(RGBI));
+              RGBAI sum;
+              ZeroMemory(&sum, sizeof(RGBAI));
               while (x<bw)
               {
                 sum.r+=(sdword)pAccu->r;
                 sum.g+=(sdword)pAccu->g;
                 sum.b+=(sdword)pAccu->b;
+                sum.a+=(sdword)pAccu->a;
                 pAccu++;
                 ++x;
               }
@@ -164,20 +165,23 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts)
                 sdword r = (sum.r*amp)/(bw<<8);
                 sdword g = (sum.g*amp)/(bw<<8);
                 sdword b = (sum.b*amp)/(bw<<8);
+                sdword a = (sum.a*amp)/(bw<<8);
 
                 pPxDst[(x+bw/2)%w].r= (ubyte) ((r<255)?r:255);
                 pPxDst[(x+bw/2)%w].g= (ubyte) ((g<255)?g:255);
                 pPxDst[(x+bw/2)%w].b= (ubyte) ((b<255)?b:255);
-                pPxDst[(x+bw/2)%w].a= 255;
+                pPxDst[(x+bw/2)%w].a= (ubyte) ((a<255)?a:255);;
 
                 sum.r-=(sdword)pPxSrc->r;
                 sum.g-=(sdword)pPxSrc->g;
                 sum.b-=(sdword)pPxSrc->b;
+	              sum.a-=(sdword)pPxSrc->a;
                 pPxSrc++;
 
                 sum.r+=(sdword)pAccu[(x+bw)%w].r;
                 sum.g+=(sdword)pAccu[(x+bw)%w].g;
                 sum.b+=(sdword)pAccu[(x+bw)%w].b;
+                sum.a+=(sdword)pAccu[(x+bw)%w].a;
 
                 ++x;
               }
@@ -225,13 +229,14 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts)
 
               // Accumulation Precalc
               sdword y = 0;
-              RGBI sum;
-              ZeroMemory(&sum, sizeof(RGBI));
+              RGBAI sum;
+              ZeroMemory(&sum, sizeof(RGBAI));
               while (y<bh)
               {
                 sum.r+=(sdword)pAccu->r;
                 sum.g+=(sdword)pAccu->g;
                 sum.b+=(sdword)pAccu->b;
+                sum.a+=(sdword)pAccu->a;
                 pAccu+=w;
                 ++y;
               }
@@ -245,20 +250,23 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts)
                 sdword r = (sum.r*amp)/(bh<<8);
                 sdword g = (sum.g*amp)/(bh<<8);
                 sdword b = (sum.b*amp)/(bh<<8);
+                sdword a = (sum.a*amp)/(bh<<8);
 
                 pPxDst[((y+bh/2)%h)*w].r= (ubyte) ((r<255)?r:255);
                 pPxDst[((y+bh/2)%h)*w].g= (ubyte) ((g<255)?g:255);
                 pPxDst[((y+bh/2)%h)*w].b= (ubyte) ((b<255)?b:255);
-                pPxDst[((y+bh/2)%h)*w].a= 255;
+                pPxDst[((y+bh/2)%h)*w].a= (ubyte) ((a<255)?a:255);
 
                 sum.r-=(sdword)pPxSrc->r;
                 sum.g-=(sdword)pPxSrc->g;
                 sum.b-=(sdword)pPxSrc->b;
+								sum.a-=(sdword)pPxSrc->a;
                 pPxSrc+=w;
 
                 sum.r+=(sdword)pAccu[((y+bh)%h)*w].r;
                 sum.g+=(sdword)pAccu[((y+bh)%h)*w].g;
                 sum.b+=(sdword)pAccu[((y+bh)%h)*w].b;
+                sum.a+=(sdword)pAccu[((y+bh)%h)*w].a;
 
                 ++y;
               }
@@ -901,28 +909,21 @@ udword NThresholdOp::Process(float _ftime, NOperator** _pOpsInts)
 }
 
 
+
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
-//							NGaussianOp class implementation
+//							NAlphaOp class implementation
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NGaussianOp, NOperator);
+IMPLEMENT_CLASS(NAlphaOp, NOperator);
 
-static NVarsBlocDesc blocdescGaussianOp[] =
+NAlphaOp::NAlphaOp()
 {
-	VAR(eubyte,		true, "Size",		"16",		"NUbyteProp")	//0
-	VAR(eubyte,		true, "Amplify",	"16",		"NUbyteProp")	//1
-};
-
-NGaussianOp::NGaussianOp()
-{
-	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(2, blocdescGaussianOp, 1);
 }
 
-udword NGaussianOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -934,151 +935,30 @@ udword NGaussianOp::Process(float _ftime, NOperator** _pOpsInts)
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst = (NBitmap*)m_pObj;
 
-	sdword w = pSrc->GetWidth();
-	sdword h = pSrc->GetHeight();
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
 	pDst->SetSize(w,h);
 
-	//Get Variables Values
-	ubyte bySize, byAmplify;
-	m_pcvarsBloc->GetValue(0, _ftime, bySize);
-	m_pcvarsBloc->GetValue(1, _ftime, byAmplify);
+	RGBA*	pPxSrc = pSrc->GetPixels();
+	RGBA*	pPxDst = pDst->GetPixels();
 
-	//Radius
-	float radiusW= (float)bySize / 2.0f;
-	float radiusH= (float)bySize /2.0f;
+	//Process
+	for (udword y=0; y<h; y++)
+	{
+		for (udword x=0; x<w; x++)
+		{
+			float r = (float)pPxSrc->r * 0.299f;
+			float g = (float)pPxSrc->g * 0.587f;
+			float b = (float)pPxSrc->b * 0.114f;
 
-	//Amplify
-	float amplify= (float)byAmplify;
-	sdword amp = sdword(floor(amplify*16.0f));
+			pPxDst->a = (ubyte) (( (udword)pPxDst->a + (udword)(r+g+b) )>>1);
+			pPxDst->r=pPxDst->g=pPxDst->b=pPxDst->a;
 
-        if (bySize < 2)
-        {
-          // No blur, so just copy
-	  CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), w*h*sizeof(RGBA));
-        } else {
-	  /////////////////////////////////////////////////////////
-	  // Allocate an intermediate buffer
-	  RGBA* pPxInter = (RGBA*)NMemAlloc(w*h*sizeof(RGBA));    //###TOFIX### ?
+			pPxDst++;
+			pPxSrc++;
+		}
+	}
 
-	  sdword bw = (sdword) (floor(radiusW)*2);
-	  sdword bh = (sdword) (floor(radiusH)*2);
-
-          for (int i=0; i<3; ++i)
-          {
-	          /////////////////////////////////////////////////////////
-	          // Blur Horizontal
-		  for(sdword y=0;y<h;y++)
-		  {
-			  RGBA* pPxSrc;
-			  RGBA* pAccu;
-			  RGBA* pPxDst	= pPxInter + (y*w);
-
-                          if (i == 0)
-                          {
-                            pPxSrc = pSrc->GetPixels() + (y*w);
-                          } else {
-                            pPxSrc = pDst->GetPixels() + (y*w);
-                          }
-
-                          pAccu = pPxSrc;
-
-			  // Accumulation precalc
-			  sdword x = 0;
-			  RGBI sum;
-			  ZeroMemory(&sum, sizeof(RGBI));
-			  while (x<bw)
-			  {
-				  sum.r+=(sdword)pAccu->r;
-				  sum.g+=(sdword)pAccu->g;
-				  sum.b+=(sdword)pAccu->b;
-				  pAccu++;
-				  ++x;
-			  }
-
-			  pAccu = pPxSrc;
-
-			  // Blur
-			  x=0;
-			  while (x<w)
-			  {
-				  sdword r = (sum.r*amp)/(bw<<8);
-				  sdword g = (sum.g*amp)/(bw<<8);
-				  sdword b = (sum.b*amp)/(bw<<8);
-
-				  pPxDst[(x+bw/2)%w].r= (ubyte) ((r<255)?r:255);
-				  pPxDst[(x+bw/2)%w].g= (ubyte) ((g<255)?g:255);
-				  pPxDst[(x+bw/2)%w].b= (ubyte) ((b<255)?b:255);
-				  pPxDst[(x+bw/2)%w].a= 255;
-
-				  sum.r-=(sdword)pPxSrc->r;
-				  sum.g-=(sdword)pPxSrc->g;
-				  sum.b-=(sdword)pPxSrc->b;
-				  pPxSrc++;
-
-				  sum.r+=(sdword)pAccu[(x+bw)%w].r;
-				  sum.g+=(sdword)pAccu[(x+bw)%w].g;
-				  sum.b+=(sdword)pAccu[(x+bw)%w].b;
-
-				  ++x;
-			  }
-
-
-		  }
-
-	          /////////////////////////////////////////////////////////
-	          // Blur Vertical
-
-		  for(sdword x=0;x<w;x++)
-		  {
-			  RGBA* pPxSrc	= pPxInter + x;
-			  RGBA* pAccu		= pPxSrc;
-			  RGBA* pPxDst	= pDst->GetPixels() + x;
-
-			  // Accumulation Precalc
-			  sdword y = 0;
-			  RGBI sum;
-			  ZeroMemory(&sum, sizeof(RGBI));
-			  while (y<bh)
-			  {
-				  sum.r+=(sdword)pAccu->r;
-				  sum.g+=(sdword)pAccu->g;
-				  sum.b+=(sdword)pAccu->b;
-				  pAccu+=w;
-				  ++y;
-			  }
-
-			  pAccu = pPxSrc;
-
-			  // Blur
-			  y=0;
-			  while (y<h)
-			  {
-				  sdword r = (sum.r*amp)/(bh<<8);
-				  sdword g = (sum.g*amp)/(bh<<8);
-				  sdword b = (sum.b*amp)/(bh<<8);
-
-				  pPxDst[((y+bh/2)%h)*w].r= (ubyte) ((r<255)?r:255);
-				  pPxDst[((y+bh/2)%h)*w].g= (ubyte) ((g<255)?g:255);
-				  pPxDst[((y+bh/2)%h)*w].b= (ubyte) ((b<255)?b:255);
-				  pPxDst[((y+bh/2)%h)*w].a= 255;
-
-				  sum.r-=(sdword)pPxSrc->r;
-				  sum.g-=(sdword)pPxSrc->g;
-				  sum.b-=(sdword)pPxSrc->b;
-				  pPxSrc+=w;
-
-				  sum.r+=(sdword)pAccu[((y+bh)%h)*w].r;
-				  sum.g+=(sdword)pAccu[((y+bh)%h)*w].g;
-				  sum.b+=(sdword)pAccu[((y+bh)%h)*w].b;
-
-				  ++y;
-			  }
-		  }
-	  }
-
-	  if (pPxInter && bw>0)		NMemFree(pPxInter);		//###TOFIX###
-        }
 
 	return 0;
 }
-

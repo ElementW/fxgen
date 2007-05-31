@@ -126,7 +126,7 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts)
 	float	ys = s * -th2;
 	float	yc = c * -th2;
 
-	RGBI Color;
+	RGBAI Color;
 
 	RGBA* ptexelMax = pPxlSrc + (th*tw);// + tw;
 
@@ -155,6 +155,7 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts)
 			Color.r = ((udword)ptexel->r	* WeightFactors);
 			Color.g = ((udword)ptexel->g	* WeightFactors);
 			Color.b = ((udword)ptexel->b	* WeightFactors);
+			Color.a = ((udword)ptexel->a	* WeightFactors);
 			
 			//Texel2			
 			WeightFactors = uf * (1.0f-vf);
@@ -162,6 +163,7 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts)
 			Color.r+= ((udword)ptexel->r	* WeightFactors);
 			Color.g+= ((udword)ptexel->g	* WeightFactors);
 			Color.b+= ((udword)ptexel->b	* WeightFactors);
+			Color.a+= ((udword)ptexel->a	* WeightFactors);
 
 			//Texel3
 			WeightFactors = (1.0f-uf) * vf;			
@@ -169,6 +171,7 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts)
 			Color.r+= ((udword)ptexel->r	* WeightFactors);
 			Color.g+= ((udword)ptexel->g	* WeightFactors);
 			Color.b+= ((udword)ptexel->b	* WeightFactors);
+			Color.a+= ((udword)ptexel->a	* WeightFactors);
 
 			//Texel4
 			WeightFactors = uf * vf;			
@@ -176,12 +179,13 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts)
 			Color.r+= ((udword)ptexel->r	* WeightFactors);
 			Color.g+= ((udword)ptexel->g	* WeightFactors);
 			Color.b+= ((udword)ptexel->b	* WeightFactors);
+			Color.a+= ((udword)ptexel->a	* WeightFactors);
 
 			//Pixel
 			pPxlDst->r = (ubyte)Color.r;
 			pPxlDst->g = (ubyte)Color.g;
 			pPxlDst->b = (ubyte)Color.b;
-			pPxlDst->a = 255;
+			pPxlDst->a = (ubyte)Color.a;
 			pPxlDst++;
 
 			//Vectors

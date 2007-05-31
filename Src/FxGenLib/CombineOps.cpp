@@ -394,12 +394,10 @@ udword NAddOp::Process(float _ftime, NOperator** _pOpsInts)
 					udword r = (udword)pPxDst->r + (((udword)pPxSrc->r * rcolPercent)>>8);
 					udword g = (udword)pPxDst->g + (((udword)pPxSrc->g * gcolPercent)>>8);
 					udword b = (udword)pPxDst->b + (((udword)pPxSrc->b * bcolPercent)>>8);
-					//udword a = (udword)pPxDst->a + (((udword)pPxSrc->a * acolPercent)>>8);
 
 					pPxDst->r = (ubyte) (r >> 1);
 					pPxDst->g = (ubyte) (g >> 1);
 					pPxDst->b = (ubyte) (b >> 1);
-					//pPxDst->a = (ubyte) (((udword)pPxDst->a + a) >> 1);
 
 					pPxDst++;
 					pPxSrc++;
@@ -417,17 +415,15 @@ udword NAddOp::Process(float _ftime, NOperator** _pOpsInts)
 
 				for (udword x=0; x<ww; x++)
 				{
-					float r = (float)pPxSrc->r * 0.299f;
-					float g = (float)pPxSrc->g * 0.587f;
-					float b = (float)pPxSrc->b * 0.114f;
-
-					pPxDst->a = (ubyte) (( (udword)pPxDst->a + (udword)(r+g+b) )>>1);
-
+					udword a = (udword)pPxDst->a + (((udword)pPxSrc->a * bcolPercent)>>8);
+					pPxDst->a = (ubyte) (a >> 1);
 					pPxDst++;
 					pPxSrc++;
 				}
 			}
+
 		}
+
 	}
 	return 0;
 }
@@ -530,7 +526,7 @@ udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts)
 			pPxDst->r = (ubyte) ((r<255)?r:255);
 			pPxDst->g = (ubyte) ((g<255)?g:255);
 			pPxDst->b = (ubyte) ((b<255)?b:255);
-			pPxDst->a = 255;
+			pPxDst->a = pPxSrc->a;
 
 			pPxSrc++;
 			pPxDst++;
@@ -689,11 +685,11 @@ udword NLerpOp::Process(float _ftime, NOperator** _pOpsInts)
 			pPxDst->r = (pPxSrc1->r*(255-pPxBlend->r) + pPxSrc2->r*pPxBlend->r) >> 8;
 			pPxDst->g = (pPxSrc1->g*(255-pPxBlend->g) + pPxSrc2->g*pPxBlend->g) >> 8;
 			pPxDst->b = (pPxSrc1->b*(255-pPxBlend->b) + pPxSrc2->b*pPxBlend->b) >> 8;
-			pPxDst->a = 255;
+			pPxDst->a = pPxSrc1->a;
 
 			pPxSrc1++;
-                        pPxSrc2++;
-                        pPxBlend++;
+			pPxSrc2++;
+			pPxBlend++;
 			pPxDst++;
 		}
 	}
