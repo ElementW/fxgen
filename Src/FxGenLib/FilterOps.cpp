@@ -51,7 +51,7 @@ NBlurOp::NBlurOp()
 {
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(4, blocdescBlurOp, 2);
-        m_pcvarsBloc->SetMapVarBlocDesc(3, mapblocdescBlurOp);
+	m_pcvarsBloc->SetMapVarBlocDesc(3, mapblocdescBlurOp);
 }
 
 udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts)
@@ -74,11 +74,11 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts)
 	m_pcvarsBloc->GetValue(0, _ftime, byWidth);
 	m_pcvarsBloc->GetValue(1, _ftime, byHeight);
 	m_pcvarsBloc->GetValue(2, _ftime, byAmplify);
-        m_pcvarsBloc->GetValue(3, _ftime, byType);
+	m_pcvarsBloc->GetValue(3, _ftime, byType);
 
-        // Do three passes if gaussian...
-        // Don't change the number of passes if you don't know what you're doing :)
-        ubyte byPasses = byType == 1 ? 3 : 1; 
+	// Do three passes if gaussian...
+	// Don't change the number of passes if you don't know what you're doing :)
+	ubyte byPasses = byType == 1 ? 3 : 1; 
 
 	//Radius
 	float radiusW= (float)byWidth / 2.0f;
@@ -89,21 +89,21 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts)
 	sdword amp = sdword(floor(amplify*16.0f)/(float)byPasses);
 
 	sdword bw = (sdword) (floor(radiusW)*2+1);
-        sdword bh = (sdword) (floor(radiusH)*2+1);
+  sdword bh = (sdword) (floor(radiusH)*2+1);
 
 
-        if (bw == 0 && bh == 0)
-        {
-          CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), w*h*sizeof(RGBA));
-          return 0;
-        }
+	if (bw == 0 && bh == 0)
+	{
+		CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), w*h*sizeof(RGBA));
+		return 0;
+	}
 
-        // Allocate a temporary buffer if needed
+	// Allocate a temporary buffer if needed
 	RGBA* pPxInter = null;
-        if (byPasses > 0 || (bw > 0 && bh > 0))
-        {
-	  pPxInter = (RGBA*)NMemAlloc(w*h*sizeof(RGBA));
-        }
+	if (byPasses > 0 || (bw > 0 && bh > 0))
+	{
+		pPxInter = (RGBA*)NMemAlloc(w*h*sizeof(RGBA));
+	}
 
 	/////////////////////////////////////////////////////////
 	// Blur Horizontal
@@ -442,34 +442,37 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts)
 	//Two inputs (texture, normal)
 	if (m_byInputs < 2 || m_byInputs > 4)	return (udword)-1;
 
-	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
-
 	//Get input Texture
 	NBitmap* pSrc	= (NBitmap*)(*_pOpsInts)->m_pObj;
-	_pOpsInts++;
-        
-        NBitmap* pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
-        _pOpsInts++;
-
-        NBitmap* pSpec = null; // Specular color
-        if (m_byInputs>2)
-        {	
-          pSpec = (NBitmap*)(*_pOpsInts)->m_pObj;
-	  _pOpsInts++;
-        }
-
-        NBitmap* pAmb = null; // Ambient color
-        if (m_byInputs>3)
-        {	
-          pAmb = (NBitmap*)(*_pOpsInts)->m_pObj;
-	  _pOpsInts++;
-        }
-
-	NBitmap* pDst	= (NBitmap*)m_pObj;
-
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
+
+	_pOpsInts++;
+        
+	NBitmap* pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
+	if (pNorm->GetWidth()!=w || pNorm->GetHeight()!=h)			return (udword)-1;
+
+	_pOpsInts++;
+
+	NBitmap* pSpec = null; // Specular color
+	if (m_byInputs>2)
+	{	
+		pSpec = (NBitmap*)(*_pOpsInts)->m_pObj;
+		if (pSpec->GetWidth()!=w || pSpec->GetHeight()!=h)			return (udword)-1;
+		_pOpsInts++;
+	}
+
+	NBitmap* pAmb = null; // Ambient color
+	if (m_byInputs>3)
+	{	
+		pAmb = (NBitmap*)(*_pOpsInts)->m_pObj;
+		if (pAmb->GetWidth()!=w || pAmb->GetHeight()!=h)			return (udword)-1;
+		_pOpsInts++;
+	}
+
+	//Set Texture Size
+	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NBitmap* pDst	= (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
 
 	/////////////////////////////////////////
