@@ -168,7 +168,8 @@ void NColorProp::DrawItem(NGraphics* pdc, NRect& rcItem)
 	RGBA val;
 	val.dwCol = m_pvarValue->dwVal;
 
-	//Affichage des valeurs RGB
+	///////////////////////////////////////
+	//Display RGB Values
 	NString cstr;
 	NRect rc(rcItem);
 	udword w = rc.Width()/4;
@@ -176,37 +177,46 @@ void NColorProp::DrawItem(NGraphics* pdc, NRect& rcItem)
 	//Red
 	rc.right = rc.left + w;
 	cstr.Format("%d", val.r);
-//	pdc->Rectangle(rc);
 	pdc->DrawText(cstr.Buffer(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 
 	//Green
 	rc.Move(w,0);
 	cstr.Format("%d",  val.g);
-//	pdc->Rectangle(rc);
 	pdc->DrawText(cstr.Buffer(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 
 	//Blue
 	rc.Move(w,0);
 	cstr.Format("%d",  val.b);
-//	pdc->Rectangle(rc);
 	pdc->DrawText(cstr.Buffer(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 
-	//Affichage du rectangle de couleur
+	///////////////////////////////////////
+	//Display Color Rect
 	COLORREF col = RGB( val.r,  val.g,  val.b);
 	rc.left = rc.right;
 	rc.right = rcItem.right;
 	pdc->FillSolidRect(rc, col);
+
 }
 
 
 bool NColorProp::BeginEdit(NRect& rcItem)
 {
- return false;
+	//Color Picker
+	NColorDialog dlg;
+	dlg.Create("Choose a Color", m_pParent, NColor(m_pvarValue->dwVal));
+	if (1==dlg.DoModal())
+	{
+		m_pvarValue->dwVal = dlg.GetColor().GetARGB();
+	}
+
+	return true;	//End of Edition
+
+
 }
 
 bool NColorProp::EndEdit(bool bSaveChanged)
 {
-	return false;
+	return true;
 }
 
 bool NColorProp::AddValue(sdword dwDelta)
@@ -221,7 +231,6 @@ bool NColorProp::AddValue(sdword dwDelta)
 		if (dwVal<0)			dwVal = 0;
 		pval->col_array[m_dwRGBEditingIdx]=(ubyte)dwVal;
 	}
-
 	return true;
 }
 
@@ -343,7 +352,6 @@ bool NFileBrowserProp::BeginEdit(NRect& rcItem)
 	dlg.Create("Choose a JPEG File to Load", m_pParent);
 	if (1==dlg.DoModal())
 	{
-		//char* szval = ((char*)m_pObj + m_dwCPPPropOffset);
 		NString str = dlg.GetPathName(0);
 		strcpy_s(m_pvarValue->szVal, sizeof(m_pvarValue->szVal), str.Buffer());
 	}

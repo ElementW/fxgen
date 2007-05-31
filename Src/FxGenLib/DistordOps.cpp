@@ -223,18 +223,23 @@ udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts)
 	//Two inputs (texture, normal)
 	if (m_byInputs!=2)		return (udword)-1;
 
+	//Get input Texture and Normal
+	NBitmap* pSrc		= (NBitmap*)(*(_pOpsInts+0))->m_pObj;
+	NBitmap* pNorm	= (NBitmap*)(*(_pOpsInts+1))->m_pObj;
+
+	// Same inputs W and H sizes
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	if (w!=pNorm->GetWidth() )		return (udword)-1;
+	if (h!=pNorm->GetHeight())		return (udword)-1;
+
 	//Bitmap instance
 	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
 
-	//Get input Texture and Normal
-	NBitmap* pSrc	= (NBitmap*)(*_pOpsInts)->m_pObj;
-	_pOpsInts++;
-	NBitmap* pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
+	//Set Texture size
 	NBitmap* pDst	= (NBitmap*)m_pObj;
-
-	udword w = pSrc->GetWidth();
-	udword h = pSrc->GetHeight();
 	pDst->SetSize(w, h);
+	
 
 	/////////////////////////////////////////
 	//Get Variables Values

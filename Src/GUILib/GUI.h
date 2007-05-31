@@ -17,6 +17,15 @@
 #pragma once
 
 //-----------------------------------------------------------------
+//                   Macros
+//-----------------------------------------------------------------
+#ifdef GUI_EXPORTS
+	#define GUI_API __declspec(dllexport)
+#else
+	#define GUI_API __declspec(dllimport)
+#endif
+
+//-----------------------------------------------------------------
 // Includes
 //-----------------------------------------------------------------
 #include "Types.h"
@@ -61,7 +70,7 @@ struct NWNDCREATE
 //!	\class	NCmdTarget
 //!	\brief	Command Target
 //-----------------------------------------------------------------
-class  NCmdTarget : public NObject
+class  GUI_API NCmdTarget : public NObject
 {
 public:
 	virtual void Unused() {}
@@ -71,7 +80,7 @@ public:
 typedef void(NCmdTarget::*TDelegate)();
 
 // Simple bindings to an object and a member function of that object.
-struct  FDelegate
+struct GUI_API FDelegate
 {
 	NCmdTarget* TargetObject;
 	void (NCmdTarget::*TargetInvoke)();
@@ -88,7 +97,7 @@ struct  FDelegate
 //!	\class	NApplication
 //!	\brief	Application Class Definition
 //-----------------------------------------------------------------
-class NApplication
+class GUI_API NApplication
 {
 public:
 	//Constructor-Destructor
@@ -115,14 +124,14 @@ protected:
 	HMODULE			m_hRichEditMod;
 };
 
-extern		NApplication*			GetApp();
+extern	GUI_API	NApplication*			GetApp();
 
 
 //-----------------------------------------------------------------
 //!	\class	NGraphics
 //!	\brief	Graphics 2D
 //-----------------------------------------------------------------
-class NGraphics
+class GUI_API NGraphics
 {
 public:
 	//Constructor-Destructor
@@ -172,7 +181,7 @@ protected:
 //!	\class	NWnd
 //!	\brief	Windows Class Definition
 //-----------------------------------------------------------------
-class NWnd : public NCmdTarget
+class GUI_API NWnd : public NCmdTarget
 {
 public:
 	//Constructor-Destructor
@@ -238,7 +247,7 @@ protected:
 //!	\class	NFrmWnd
 //!	\brief	Frame Windows Class Definition
 //-----------------------------------------------------------------
-class  NFrmWnd : public NWnd
+class  GUI_API NFrmWnd : public NWnd
 {
 public:
 	//Constructor-Destructor
@@ -271,7 +280,7 @@ protected:
 //!	\class	NWControl
 //!	\brief	Control Class Definition
 //-----------------------------------------------------------------
-class  NWControl : public NWnd
+class  GUI_API NWControl : public NWnd
 {
 public:
 	//Constructor-Destructor
@@ -287,7 +296,7 @@ public:
 //!	\class	NEditCtrl
 //!	\brief	Edit Control Class Definition
 //-----------------------------------------------------------------
-class  NEditCtrl : public NWControl
+class  GUI_API NEditCtrl : public NWControl
 {
 public:
 	//Constructor-Destructor
@@ -329,7 +338,7 @@ protected:
 //!	\class	NTabCtrl
 //!	\brief	Tab Control Class Definition
 //-----------------------------------------------------------------
-class  NTabCtrl : public NWControl
+class GUI_API NTabCtrl : public NWControl
 {
 public:
 	//Constructor-Destructor
@@ -358,7 +367,7 @@ protected:
 //!	\class	NMenuBar
 //!	\brief	Menu Bar Class Definition
 //-----------------------------------------------------------------
-class  NMenuBar
+class GUI_API NMenuBar
 {
 public:
 	//Constructor-Destructor
@@ -389,7 +398,7 @@ protected:
 //!	\class	NStatusBar
 //!	\brief	Status Bar Class Definition
 //-----------------------------------------------------------------
-class  NStatusBar : public NWnd
+class GUI_API NStatusBar : public NWnd
 {
 public:
 	//Constructor-Destructor
@@ -408,7 +417,7 @@ public:
 //!	\class	NFileDialog
 //!	\brief	FileDialog Class Definition
 //-----------------------------------------------------------------
-class  NFileDialog
+class GUI_API NFileDialog
 {
 public:
 	//Constructor/Destructor
@@ -427,10 +436,40 @@ protected:
 	udword GetFileNumber();
 
 	//Datas
-	char		mFileName[_MAX_PATH];													//Contains full path name after filedialog return
-	NString	mTransfilter;																	//File filter (ex. "TLM Files (*.tlm)|*.tlm|All Files (*.*)|*.*||")
+	char		mFileName[_MAX_PATH];			//Contains full path name after filedialog return
+	NString	mTransfilter;							//File filter (ex. "TLM Files (*.tlm)|*.tlm|All Files (*.*)|*.*||")
 
 	//W32 Datas
-	OPENFILENAME	mOfn;																		//Win32 OPENFILENAME struct
-	bool					mOpenFileDialog;												//Open or Save Display
+	OPENFILENAME	mOfn;								//Win32 OPENFILENAME struct
+	bool					mOpenFileDialog;		//Open or Save Display
+};
+
+
+//-----------------------------------------------------------------
+//!	\class	NColorDialog
+//!	\brief	ColorDialog Class Definition
+//-----------------------------------------------------------------
+class GUI_API NColorDialog
+{
+public:
+	//Constructor/Destructor
+					NColorDialog();
+	virtual	~NColorDialog();
+
+	//Initialization
+	virtual bool Create(char* name, NWnd* parent, NColor& _color);
+
+	//Operations
+	virtual udword DoModal();		//Displays the dialog box and allows the user to make a selection
+																		//If the user clicks the OK button of the dialog box, the return value is nonzero
+	NColor	GetColor()								{ return m_Color;}
+	void		SetColor(NColor& _color);
+
+protected:
+	//Datas
+	NColor	m_Color;	//!< Current Color
+
+	//W32 Datas
+	CHOOSECOLOR		m_Cc;			//W32 Color Dialog Struct
+	COLORREF			m_acrCustClr[16]; // array of custom colors
 };

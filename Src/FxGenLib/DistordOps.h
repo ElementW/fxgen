@@ -34,7 +34,7 @@
 //!	\class		NRotoZoomOp
 //!	\brief		RotoZoom filtering
 //-----------------------------------------------------------------
-class NRotoZoomOp : public NOperator
+class FXGEN_API NRotoZoomOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -56,7 +56,7 @@ public:
 //!	\class		NDistordOp
 //!	\brief		Distort filtering
 //-----------------------------------------------------------------
-class NDistortOp : public NOperator
+class FXGEN_API NDistortOp : public NOperator
 {
 public:
 	DECLARE_CLASS();

@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\FxGenLib;..\GUILib;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;FXGEN_EXPORTS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"

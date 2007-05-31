@@ -17,10 +17,17 @@
 #pragma once
 
 //-----------------------------------------------------------------
+//                   Macros
+//-----------------------------------------------------------------
+#ifdef GUI_EXPORTS
+	#define GUI_API __declspec(dllexport)
+#else
+	#define GUI_API __declspec(dllimport)
+#endif
+
+//-----------------------------------------------------------------
 // Includes
 //-----------------------------------------------------------------
-#include "Core.h"
-
 typedef udword (NObject::*EVENTFNC)(udword dwParam1, udword dwParam2);
 
 #define EVT_REGISTER(id, fnc)											g_pceventsMgr->Register(id, this, (EVENTFNC)fnc);
@@ -33,7 +40,7 @@ typedef udword (NObject::*EVENTFNC)(udword dwParam1, udword dwParam2);
 //!	\class	NEventsMgr
 //!	\brief	Events manager
 //-----------------------------------------------------------------
-class NEventsMgr
+class GUI_API NEventsMgr
 {
 	//Structs
 	struct ST_EVENTHANDLERINFO
@@ -51,85 +58,15 @@ class NEventsMgr
 
 public:
 
-	//Constructor
-	NEventsMgr()
-	{
-	}
-
-	//Destructor
-	~NEventsMgr()
-	{
-		if (m_carrayEvents.Count())
-			TRACE("NEventsMgr warning exiting with events registered !\n");
-	}
+	//Constructor-Destructor
+	NEventsMgr();
+	~NEventsMgr();
 
 	//Methods
-	void Exec(uword wEventID, udword dwParam1, udword dwParam2)
-	{
-		ST_EVENTINFO* pei = GetEventFromID(wEventID);
-		if (pei)
-		{
-			for (udword i=0; i<pei->carrayHandlers.Count(); i++)
-			{
-				ST_EVENTHANDLERINFO pehi = pei->carrayHandlers[i];
-				(pehi.pObject->*pehi.pFnc)(dwParam1, dwParam2);
-			}
-		}
-	}
-
-	void Register(uword _wEventID, NObject* _pObject, EVENTFNC _pfnc)
-	{
-		ST_EVENTHANDLERINFO st_ehi;
-		st_ehi.pObject	= _pObject;
-		st_ehi.pFnc			= _pfnc;
-
-		ST_EVENTINFO* pei = GetEventFromID(_wEventID);
-		if (!pei)
-		{
-			pei = new ST_EVENTINFO;
-			pei->wID = _wEventID;
-			m_carrayEvents.AddItem(pei);
-		}
-		pei->carrayHandlers.AddItem(st_ehi);
-	}
-
-	void UnRegisterAllByObject(NObject* _pObject)
-	{
-		TRACE("NEventsMgr::UnRegisterAllByObject\n");
-
-		for (udword i=0; i<m_carrayEvents.Count(); i++)
-		{
-			ST_EVENTINFO* pei = m_carrayEvents[i];
-			for (udword j=0; j<pei->carrayHandlers.Count(); j++)
-			{
-				ST_EVENTHANDLERINFO* pehi = &pei->carrayHandlers[j];
-				if (pehi->pObject == _pObject)
-				{
-					pei->carrayHandlers.RemoveItem(j);
-					if (pei->carrayHandlers.Count()==0)
-					{
-						m_carrayEvents.RemoveItem(i);
-						i--;
-						delete pei;
-					}
-					break;
-				}
-			}
-		}
-
-	}
-
-	ST_EVENTINFO* GetEventFromID(uword _wEventID)
-	{
-		for (udword i=0; i<m_carrayEvents.Count(); i++)
-		{
-			if (m_carrayEvents[i]->wID == _wEventID)
-			{
-				return m_carrayEvents[i];
-			}
-		}
-		return null;
-	}
+	void Exec(uword wEventID, udword dwParam1, udword dwParam2);
+	void Register(uword _wEventID, NObject* _pObject, EVENTFNC _pfnc);
+	void UnRegisterAllByObject(NObject* _pObject);
+	ST_EVENTINFO* GetEventFromID(uword _wEventID);
 
 protected:
 	//Datas

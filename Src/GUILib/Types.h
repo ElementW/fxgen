@@ -16,12 +16,20 @@
 //-----------------------------------------------------------------
 #pragma once
 
+//-----------------------------------------------------------------
+//                   Macros
+//-----------------------------------------------------------------
+#ifdef GUI_EXPORTS
+	#define GUI_API __declspec(dllexport)
+#else
+	#define GUI_API __declspec(dllimport)
+#endif
 
 //-----------------------------------------------------------------
 //!	\class	NString
 //!	\brief	String class
 //-----------------------------------------------------------------
-class  NString
+class GUI_API NString
 {
 public:
 	//Constructors-Destructor
@@ -99,7 +107,7 @@ protected:
 //!	\class	NPoint
 //!	\brief	Point class
 //-----------------------------------------------------------------
-class  NPoint
+class GUI_API NPoint
 {
 public:
 	//Constructor-Destructor
@@ -137,7 +145,7 @@ public:
 //!	\class	NRect
 //!	\brief	Point class
 //-----------------------------------------------------------------
-class  NRect
+class GUI_API NRect
 {
 public:
 	//Constructors
@@ -189,7 +197,7 @@ public:
 //!	\class	NColor
 //!	\brief	Color class (0xAARRGGBB)
 //-----------------------------------------------------------------
-class  NColor
+class GUI_API NColor
 {
 public:
 	//Constructors

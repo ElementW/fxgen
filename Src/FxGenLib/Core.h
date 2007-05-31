@@ -95,7 +95,7 @@ public:
 
 #ifdef _DEBUG
 #define TRACE	gDebugLog
-void gDebugLog( char* fmt, ... );
+void FXGEN_API gDebugLog( char* fmt, ... );
 #else
 #define TRACE
 #endif

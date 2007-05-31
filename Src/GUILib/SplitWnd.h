@@ -17,6 +17,15 @@
 #pragma	once
 
 //-----------------------------------------------------------------
+//                   Macros
+//-----------------------------------------------------------------
+#ifdef GUI_EXPORTS
+	#define GUI_API __declspec(dllexport)
+#else
+	#define GUI_API __declspec(dllimport)
+#endif
+
+//-----------------------------------------------------------------
 // Includes
 //-----------------------------------------------------------------
 #include "Core.h"
@@ -71,7 +80,7 @@ struct  NSPLITBOX
 //!	\class	NSplitWnd
 //!	\brief	Splitter window Class Definition
 //-----------------------------------------------------------------
-class	 NSplitWnd : public NWnd
+class	GUI_API NSplitWnd : public NWnd
 {
 public:
 	//Constructor, destructor

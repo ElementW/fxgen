@@ -17,6 +17,15 @@
 #pragma once
 
 //-----------------------------------------------------------------
+//                   Macros
+//-----------------------------------------------------------------
+#ifdef GUI_EXPORTS
+	#define GUI_API __declspec(dllexport)
+#else
+	#define GUI_API __declspec(dllimport)
+#endif
+
+//-----------------------------------------------------------------
 // Includes
 //-----------------------------------------------------------------
 #include "Core.h"
@@ -26,7 +35,7 @@
 //!	\class	NDialog
 //!	\brief	Dialog Box
 //-----------------------------------------------------------------
-class NDialog : public NWnd
+class GUI_API NDialog : public NWnd
 {
 public:
 	NDialog(UINT _nResID, NWnd* _parent);

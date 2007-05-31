@@ -1301,8 +1301,8 @@ bool NFileDialog::Create(char* name, NWnd* parent, bool open, bool multiselect)
 	mOfn.lStructSize		= sizeof(OPENFILENAME);
 	mOfn.hInstance			= GetModuleHandle (null);
 
-    if (parent!=null)		mOfn.hwndOwner = parent->m_W32HWnd;
-	else					mOfn.hwndOwner = null;
+  if (parent!=null)		mOfn.hwndOwner = parent->m_W32HWnd;
+	else								mOfn.hwndOwner = null;
 
 	//To Do...
 	NString Filename	= "";
@@ -1471,4 +1471,59 @@ bool NStatusBar::Create(NWnd* parent)
 	NWnd::Create(wc);
 
 	return true;
+}
+
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//					Color Dialog Class Implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+
+//-----------------------------------------------------------------
+// Constructor
+//-----------------------------------------------------------------
+NColorDialog::NColorDialog()
+{
+}
+
+NColorDialog::~NColorDialog()
+{
+}
+
+bool NColorDialog::Create(char* name, NWnd* parent, NColor& _color)
+{
+	//Store Some Infos
+	m_Color = _color;
+
+	//Win32 Color Dialog Box Structure
+	memset( &m_Cc, 0,	  sizeof(CHOOSECOLOR));
+	m_Cc.lStructSize		= sizeof(CHOOSECOLOR);
+	m_Cc.Flags					= CC_ANYCOLOR|CC_FULLOPEN|CC_RGBINIT;
+	m_Cc.lpCustColors		= m_acrCustClr;
+	m_Cc.rgbResult			= m_Color.GetARGB();
+
+  if (parent!=null)		m_Cc.hwndOwner = parent->m_W32HWnd;
+	else								m_Cc.hwndOwner = null;
+
+	return true;
+}
+
+udword	NColorDialog::DoModal()
+{
+	//Call W32 Fct
+	udword Result = (udword)::ChooseColor(&m_Cc);
+
+	//Store some infos
+	m_Color	= NColor( m_Color.mA, (float)GetBValue(m_Cc.rgbResult)/255.0f, (float)GetGValue(m_Cc.rgbResult)/255.0f, (float)GetRValue(m_Cc.rgbResult)/255.0f);
+
+	return Result;
+}
+
+void NColorDialog::SetColor(NColor& _color)
+{
+	m_Cc.rgbResult = _color.GetARGB();
 }

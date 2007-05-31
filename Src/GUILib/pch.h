@@ -36,6 +36,9 @@
 #include <assert.h>
 #include <stdarg.h>
 
+//#define GUI_EXPORTS
+
+//FxGen API
 #include "Core.h"
 
 
