@@ -40,7 +40,7 @@
 //!	\class		NNopOp
 //!	\brief		Nop operator
 //-----------------------------------------------------------------
-class NNopOp : public NOperator
+class FXGEN_API NNopOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -59,7 +59,7 @@ public:
 //!	\class		NRectOp
 //!	\brief		Rectangle rendering
 //-----------------------------------------------------------------
-class NRectOp : public NOperator
+class FXGEN_API NRectOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -80,7 +80,7 @@ public:
 //!	\class		NPixelsOp
 //!	\brief		Pixels rendering
 //-----------------------------------------------------------------
-class NPixelsOp : public NOperator
+class FXGEN_API NPixelsOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -100,7 +100,7 @@ public:
 //!	\class		NAddOp
 //!	\brief		Add bitmaps
 //-----------------------------------------------------------------
-class NAddOp : public NOperator
+class FXGEN_API NAddOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -120,7 +120,7 @@ public:
 //!	\class		NGlowOp
 //!	\brief		Glow rendering
 //-----------------------------------------------------------------
-class NGlowOp : public NOperator
+class FXGEN_API NGlowOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -142,7 +142,7 @@ public:
 //!	\class		NCrackOp
 //!	\brief		Compute cracked bitmap
 //-----------------------------------------------------------------
-class NCrackOp : public NOperator
+class FXGEN_API NCrackOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -167,7 +167,7 @@ public:
 //!	\class		NLerpOp
 //!	\brief		Cuts all color information above or below a threshold
 //-----------------------------------------------------------------
-class NLerpOp : public NOperator
+class FXGEN_API NLerpOp : public NOperator
 {
 public:
 	DECLARE_CLASS();

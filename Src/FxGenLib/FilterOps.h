@@ -40,7 +40,7 @@
 //!	\class		NBlurOp
 //!	\brief		Blur filtering
 //-----------------------------------------------------------------
-class NBlurOp : public NOperator
+class FXGEN_API NBlurOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -60,7 +60,7 @@ public:
 //!	\class		NColorsOp
 //!	\brief		Colors filtering
 //-----------------------------------------------------------------
-class NColorsOp : public NOperator
+class FXGEN_API NColorsOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -81,7 +81,7 @@ public:
 //!	\class		NLightOp
 //!	\brief		Lighting rendering
 //-----------------------------------------------------------------
-class NLightOp : public NOperator
+class FXGEN_API NLightOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -101,7 +101,7 @@ public:
 //!	\class		NNormalsOp
 //!	\brief		Compute 2D Normals
 //-----------------------------------------------------------------
-class NNormalsOp : public NOperator
+class FXGEN_API NNormalsOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -122,7 +122,7 @@ public:
 //!	\class		NInvertOp
 //!	\brief		Inverts an image
 //-----------------------------------------------------------------
-class NInvertOp : public NOperator
+class FXGEN_API NInvertOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -140,7 +140,7 @@ public:
 //!	\class		NThresholdOp
 //!	\brief		Cuts all color information above or below a threshold
 //-----------------------------------------------------------------
-class NThresholdOp : public NOperator
+class FXGEN_API NThresholdOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -161,7 +161,7 @@ public:
 //!	\class		NGaussianOp
 //!	\brief		Cuts all color information above or below a threshold
 //-----------------------------------------------------------------
-class NGaussianOp : public NOperator
+class FXGEN_API NGaussianOp : public NOperator
 {
 public:
 	DECLARE_CLASS();

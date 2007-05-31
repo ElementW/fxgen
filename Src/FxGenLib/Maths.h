@@ -17,6 +17,15 @@
 #pragma once
 
 //-----------------------------------------------------------------
+//                   Macros
+//-----------------------------------------------------------------
+#ifdef FXGEN_EXPORTS
+	#define FXGEN_API __declspec(dllexport)
+#else
+	#define FXGEN_API __declspec(dllimport)
+#endif
+
+//-----------------------------------------------------------------
 //                   Defines
 //-----------------------------------------------------------------
 #define nv_zero			      float(0)
@@ -62,7 +71,7 @@ long _declspec () _ftol ();*/
 //! \struct vec3
 //! \brief	vector 3 dimensions
 //-----------------------------------------------------------------
-struct vec3
+struct FXGEN_API vec3
 {
 	vec3() { }
 
@@ -106,7 +115,7 @@ struct vec3
 //! \struct mat4
 //! \brief	matrix 4x4
 //-----------------------------------------------------------------
-struct mat4
+struct FXGEN_API mat4
 {
   mat4()	{ }
 
@@ -166,7 +175,7 @@ struct mat4
 //! \struct quat
 //! \brief	quaternion
 //-----------------------------------------------------------------
-struct quat
+struct FXGEN_API quat
 {
 public:
 	quat(float x = 0, float y = 0, float z = 0, float w = 1);
@@ -230,7 +239,7 @@ const mat4      mat4_scale_bias(array16_scale_bias);*/
 //	Vector
 
 // normalizes a vector and return a reference of itself
-extern vec3 & normalize(vec3 & u);
+extern FXGEN_API vec3 & normalize(vec3 & u);
 
 // Computes the squared magnitude
 inline float nv_sq_norm(const vec3 & n)
@@ -249,11 +258,11 @@ inline vec3 & lerp(vec3 & w, const float & t, const vec3 & u, const vec3 & v)
 
 // computes the cross product ( v cross w) and stores the result in u
 // i.e.     u = v cross w
-extern vec3 & cross(vec3 & u, const vec3 & v, const vec3 & w);
+extern FXGEN_API vec3 & cross(vec3 & u, const vec3 & v, const vec3 & w);
 
 // computes the dot product ( v dot w) and stores the result in u
 // i.e.     u = v dot w
-extern float & dot(float & u, const vec3 & v, const vec3 & w);
+extern FXGEN_API float & dot(float & u, const vec3 & v, const vec3 & w);
 
 // compute the reflected vector R of L w.r.t N - vectors need to be
 // normalized
@@ -265,26 +274,26 @@ extern float & dot(float & u, const vec3 & v, const vec3 & w);
 //                    \ | /
 //                     \|/
 //                      +
-extern vec3 & reflect(vec3 & r, const vec3 & n, const vec3 & l);
+extern FXGEN_API vec3 & reflect(vec3 & r, const vec3 & n, const vec3 & l);
 
 // Computes u = v * lambda + u
-extern vec3 & madd(vec3 & u, const vec3 & v, const float & lambda);
+extern FXGEN_API vec3 & madd(vec3 & u, const vec3 & v, const float & lambda);
 // Computes u = v * lambda
-extern vec3 & mult(vec3 & u, const vec3 & v, const float & lambda);
+extern FXGEN_API vec3 & mult(vec3 & u, const vec3 & v, const float & lambda);
 // Computes u = v * w
-extern vec3 & mult(vec3 & u, const vec3 & v, const vec3 & w);
+extern FXGEN_API vec3 & mult(vec3 & u, const vec3 & v, const vec3 & w);
 // Computes u = v + w
-extern vec3 & add(vec3 & u, const vec3 & v, const vec3 & w);
+extern FXGEN_API vec3 & add(vec3 & u, const vec3 & v, const vec3 & w);
 // Computes u = v - w
-extern vec3 & sub(vec3 & u, const vec3 & v, const vec3 & w);
+extern FXGEN_API vec3 & sub(vec3 & u, const vec3 & v, const vec3 & w);
 
 // Computes u = u * s
-extern vec3 & scale(vec3 & u, const float s);
+extern FXGEN_API vec3 & scale(vec3 & u, const float s);
 
 // Computes u = M(4x4) * v and devides by w
-extern vec3 & mult_pos(vec3 & u, const mat4 & M, const vec3 & v);
+extern FXGEN_API vec3 & mult_pos(vec3 & u, const mat4 & M, const vec3 & v);
 // Computes u = M(4x4) * v
-extern vec3 & mult_dir(vec3 & u, const mat4 & M, const vec3 & v);
+extern FXGEN_API vec3 & mult_dir(vec3 & u, const mat4 & M, const vec3 & v);
 
 
 
@@ -292,47 +301,47 @@ extern vec3 & mult_dir(vec3 & u, const mat4 & M, const vec3 & v);
 //	Matrix
 
 // Computes A += B
-extern mat4 & add(mat4 & A, const mat4 & B);
+extern FXGEN_API mat4 & add(mat4 & A, const mat4 & B);
 
 // Computes C = A * B
-extern mat4 & mult(mat4 & C, const mat4 & A, const mat4 & B);
+extern FXGEN_API mat4 & mult(mat4 & C, const mat4 & A, const mat4 & B);
 
 // Computes B = Transpose(A)
 //       T
 //  B = A
-extern mat4 & transpose(mat4 & B, const mat4 & A);
-extern mat4 & transpose(mat4 & B);
+extern FXGEN_API mat4 & transpose(mat4 & B, const mat4 & A);
+extern FXGEN_API mat4 & transpose(mat4 & B);
 
 // Computes B = inverse(A)
 //       -1
 //  B = A
-extern mat4 & invert(mat4 & B, const mat4 & A);
+extern FXGEN_API mat4 & invert(mat4 & B, const mat4 & A);
 
 // Computes B = inverse(A)
 //                                       T  T
 //                   (R t)             (R -R t)
 // assuming that A = (0 1) so that B = (0    1)
 //  B = A
-extern mat4 & invert_rot_trans(mat4 & B, const mat4 & A);
+extern FXGEN_API mat4 & invert_rot_trans(mat4 & B, const mat4 & A);
 
-extern mat4 & look_at(mat4 & M, const vec3 & eye, const vec3 & center, const vec3 & up);
-extern mat4 & frustum(mat4 & M, const float l, const float r, const float b,
+extern FXGEN_API mat4 & look_at(mat4 & M, const vec3 & eye, const vec3 & center, const vec3 & up);
+extern FXGEN_API mat4 & frustum(mat4 & M, const float l, const float r, const float b,
                const float t, const float n, const float f);
 
-extern mat4 & perspective(mat4 & M, const float fovy, const float aspect, const float n, const float f);
+extern FXGEN_API mat4 & perspective(mat4 & M, const float fovy, const float aspect, const float n, const float f);
 
-extern mat4	& ortho2D(mat4 & M, const float left, const float right, const float bottom, const float top);
+extern FXGEN_API mat4	& ortho2D(mat4 & M, const float left, const float right, const float bottom, const float top);
 
-extern bool	unproject(vec3& out, vec3& v, mat4& proj, mat4& view, mat4& world, int w, int h);
+extern FXGEN_API bool	unproject(vec3& out, vec3& v, mat4& proj, mat4& view, mat4& world, int w, int h);
 
 ///////////////////////////////////////////////////////////
 // quaternion
-extern quat & normalize(quat & p);
-extern quat & conj(quat & p);
-extern quat & conj(quat & p, const quat & q);
-extern quat & add_quats(quat & p, const quat & q1, const quat & q2);
-extern quat & axis_to_quat(quat & q, const vec3 & a, const float phi);
-extern quat & mat_2_quat(quat &q,const mat4 &M);
+extern FXGEN_API quat & normalize(quat & p);
+extern FXGEN_API quat & conj(quat & p);
+extern FXGEN_API quat & conj(quat & p, const quat & q);
+extern FXGEN_API quat & add_quats(quat & p, const quat & q1, const quat & q2);
+extern FXGEN_API quat & axis_to_quat(quat & q, const vec3 & a, const float phi);
+extern FXGEN_API quat & mat_2_quat(quat &q,const mat4 &M);
 
 ///////////////////////////////////////////////////////////
 // Utilities
@@ -351,11 +360,11 @@ inline float nv_max(const float & lambda, const float & n)
 inline float nv_clamp(float u, const float min, const float max)
 { u = (u < min) ? min : u; u = (u > max) ? max : u; return u; }
 
-extern float nv_random();
+extern FXGEN_API float nv_random();
 
 // fast cosine functions
-extern float fast_cos(const float x);
-extern float ffast_cos(const float x);
+extern FXGEN_API float fast_cos(const float x);
+extern FXGEN_API float ffast_cos(const float x);
 
 
 // At the assembly level the recommended workaround for the second FIST bug is the same for the first;
@@ -369,5 +378,5 @@ __forceinline void FloatToInt(int *int_pointer, float f)
 
 }
 
-extern void SetSeedValue(unsigned int dwSeedValue);
-extern unsigned int  myRandom();
+extern FXGEN_API void SetSeedValue(unsigned int dwSeedValue);
+extern FXGEN_API unsigned int  myRandom();

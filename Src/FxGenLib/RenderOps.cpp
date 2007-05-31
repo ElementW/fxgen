@@ -158,13 +158,13 @@ udword NCloudOp::Process(float _ftime, NOperator** _pOpsInts)
 
 	memset(m_pbyPxTps1, 0, w*h*sizeof(sdword)*2);
 
-        int octaves = logf(min(w,h))/logf(2)-0.5f;
+	sdword octaves = (sdword)(logf((float)min(w,h))/logf(2.0f)-0.5f);
 
 	m_dwWidth	= w >> octaves;
 	m_dwHeight	= h >> octaves;
 
-        //Process operator
-	Cloud(octaves, (float)byAmp/256.0f);
+  //Process operator
+	Cloud((ubyte)octaves, (float)byAmp/256.0f);
 	Normalize();
 
 	//Temporary buffeur to Texture
@@ -425,9 +425,9 @@ udword NGradientOp::Process(float _ftime, NOperator** _pOpsInts)
 	//Get Variables Values
 	ubyte byVal;
 	m_pcvarsBloc->GetValue(0, 0, byVal);
-	udword w=1<<((udword)byVal);
+	sdword w=1<<((udword)byVal);
 	m_pcvarsBloc->GetValue(1, 0, byVal);
-	udword h=1<<((udword)byVal);
+	sdword h=1<<((udword)byVal);
 
 	RGBA colA, colB, colC, colD;
 	m_pcvarsBloc->GetValue(2, _ftime, (udword&)colA);

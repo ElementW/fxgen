@@ -25,7 +25,7 @@
 //!	\class		NStoreOp
 //!	\brief		Store operator
 //-----------------------------------------------------------------
-class NStoreOp : public NOperator
+class FXGEN_API NStoreOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -48,7 +48,7 @@ public:
 //!	\class		NStoreResultOp
 //!	\brief		Store final result operator
 //-----------------------------------------------------------------
-class NStoreResultOp : public NOperator
+class FXGEN_API NStoreResultOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -71,7 +71,7 @@ public:
 //!	\class		NLoadOp
 //!	\brief		Load a stored operator
 //-----------------------------------------------------------------
-class NLoadOp : public NOperator
+class FXGEN_API NLoadOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -94,7 +94,7 @@ public:
 //!	\class		NChannelAnimFX1Op
 //!	\brief		Channel animation operator
 //-----------------------------------------------------------------
-class NChannelAnimFX1Op : public NOperator
+class FXGEN_API NChannelAnimFX1Op : public NOperator
 {
 public:
 	DECLARE_CLASS();

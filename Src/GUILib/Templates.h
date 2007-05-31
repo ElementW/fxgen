@@ -17,6 +17,15 @@
 #pragma once
 
 //-----------------------------------------------------------------
+//                   Macros
+//-----------------------------------------------------------------
+#ifdef GUI_EXPORTS
+	#define GUI_API __declspec(dllexport)
+#else
+	#define GUI_API __declspec(dllimport)
+#endif
+
+//-----------------------------------------------------------------
 //	Type def
 //-----------------------------------------------------------------
 typedef int( __cdecl *CompareFnc) (const void *elem1, const void *elem2);
@@ -32,163 +41,165 @@ typedef int( __cdecl *CompareFnc) (const void *elem1, const void *elem2);
 //!			  0		if elem1 identical to elem2
 //!			> 0		if elem1 greater than elem2
 //-----------------------------------------------------------------
-template < class T > class NArray
+template < class T >  class __declspec(dllexport) NArray
 {
 public:
 
 	NArray()
 	{
-		mBuffer = (T*)malloc(sizeof(T)*16); mSize=16; mCount=0; memset(mBuffer, 0, 16 * sizeof(T)); mGrow = 16;
+		m_pBuffer = (T*)malloc(sizeof(T)*16); m_dwSize=16; m_dwCount=0; memset(m_pBuffer, 0, 16 * sizeof(T)); m_dwGrow = 16;
 	}
 
 	NArray(udword size)
 	{
-		mBuffer = (T*)malloc(sizeof(T)*size); mSize=size; mCount=0; memset(mBuffer, 0, size * sizeof(T)); mGrow = 16;
+		m_pBuffer = (T*)malloc(sizeof(T)*size); m_dwSize=size; m_dwCount=0; memset(m_pBuffer, 0, size * sizeof(T)); m_dwGrow = 16;
 	}
 
-	virtual	~NArray()				{ if (mBuffer) free(mBuffer);	mBuffer=null; }
+	virtual	~NArray()				{ if (m_pBuffer) free(m_pBuffer);	m_pBuffer=null; }
 
 	//Methods
-			udword	Count()			{ return mCount;}	//Return used entries
-			udword	Size()			{ return mSize;	}	//Return array's buffer size
+			udword	Count()			{ return m_dwCount;}	//Return used entries
+			udword	Size()			{ return m_dwSize;	}	//Return array's buffer size
+			void		Clear()			{ memset(m_pBuffer, 0, m_dwSize * sizeof(T)); m_dwCount=0; }
+
+	//Operators
+			T&		operator[]	(udword index)			{ return m_pBuffer[index];		 }
+
+/*
 			udword	AddItem(T& item);							//Add an item at the end of the array (Returns the number of items in use)
 			void		RemoveItem(udword idx);				//Remove an item
 			udword	SetCount(udword c);						//Return count prior to SetCount
 			void		SetSize(udword s);
 			void		Sort(CompareFnc cmp);					//Sorts the array using the compare function
-			void		Clear()			{ memset(mBuffer, 0, mSize * sizeof(T)); mCount=0; }
 			void		AddArray(NArray& array);
 			udword	Find(T& item);								//Return index if found else -1
 			udword	InsertItem(udword idx, T& item);	//Add an item at index into the array (Returns the number of items in use)
 			void		SetAtGrow(udword idx, T& item);
+*/
 
-	//Operators
-			T&		operator[]	(udword index)			{ return mBuffer[index];		 }
+			//-----------------------------------------------------------------
+			//!	\brief	Add an item at the end of the array
+			//!	\return	Returns the number of items in use (prior to adding)
+			//-----------------------------------------------------------------
+			udword AddItem(T& item)
+			{
+				if (m_dwCount>=m_dwSize)
+				{
+					m_pBuffer = (T*)realloc(m_pBuffer, sizeof(T)*(m_dwSize+m_dwGrow));
+					m_dwSize+= m_dwGrow;
+				}
+				m_pBuffer[m_dwCount] = item;
+				return m_dwCount++;
+			}
 
-protected:
-	//Datas
-			T*			mBuffer;
-			udword	mCount;
-			udword	mSize;		//Taille en nombre d'elements
-			udword	mGrow;
+			//-----------------------------------------------------------------
+			//!	\brief	Set an item at a position and grow array if necessary
+			//-----------------------------------------------------------------
+			void SetAtGrow(udword idx, T& item)
+			{
+				if (idx>=m_dwSize)
+				{
+					m_dwSize = idx+m_dwGrow;
+					m_pBuffer = (T*)realloc(m_pBuffer, sizeof(T)*(m_dwSize));
+				}
+				m_pBuffer[idx] = item;
+				if (idx>=m_dwCount)	m_dwCount = idx+1;
+			}
+
+			//-----------------------------------------------------------------
+			//!	\brief	Add an array at the end of the array
+			//-----------------------------------------------------------------
+			void AddArray(NArray& array)
+			{
+				udword dwOldCount = m_dwCount;
+				SetSize(m_dwCount+array.Count()+m_dwGrow);
+				CopyMemory(m_pBuffer + dwOldCount, array.m_pBuffer, array.m_dwCount * sizeof(T));
+				m_dwCount+=array.m_dwCount;
+			}
+
+
+			//-----------------------------------------------------------------
+			//!	\brief	Remove an item
+			//-----------------------------------------------------------------
+			void RemoveItem(udword idx)
+			{
+				m_dwCount--;
+				T* pBuffer = m_pBuffer+idx;
+
+				CopyMemory(pBuffer, pBuffer+1, (m_dwSize-idx-1) * sizeof(T));
+			}
+
+			//-----------------------------------------------------------------
+			//!	\brief	Set count
+			//-----------------------------------------------------------------
+			udword SetCount(udword c)
+			{
+				if (c>=m_dwSize) {
+					m_pBuffer = (T*)realloc(m_pBuffer, sizeof(T)* (c + m_dwGrow));
+					m_dwSize = c + m_dwGrow;
+				}
+				return m_dwCount = c;
+			}
+
+
+			//-----------------------------------------------------------------
+			//!	\brief	Set size
+			//-----------------------------------------------------------------
+			void SetSize(udword s)
+			{
+				m_pBuffer = (T*)realloc(m_pBuffer, sizeof(T)* s);
+				m_dwSize = s;
+			}
+
+
+			//-----------------------------------------------------------------
+			//!	\brief	Sorts the array using the compare function
+			//-----------------------------------------------------------------
+			void Sort(CompareFnc cmp)
+			{
+				//Quicksort algorithm
+				qsort(m_pBuffer, m_dwCount, sizeof(T), cmp);
+			}
+
+			//-----------------------------------------------------------------
+			//!	\brief	Search an item in array
+			//-----------------------------------------------------------------
+			udword Find(T& item)
+			{
+				for (udword i=0; i<m_dwCount; i++)
+				{
+					if (m_pBuffer[i] == item)
+						return i;	//Found
+				}
+
+				return -1;	//Not found
+			}
+
+
+			//-----------------------------------------------------------------
+			//!	\brief	Add an item at index into the array
+			//-----------------------------------------------------------------
+			udword InsertItem(udword idx, T& item)
+			{
+				if (idx>=m_dwSize)
+				{
+					m_dwSize=idx+m_dwGrow;
+					m_pBuffer = (T*)realloc(m_pBuffer, sizeof(T)*m_dwSize);
+				}
+
+				T* pBuffer = m_pBuffer+idx;
+
+				CopyMemory(pBuffer+1, pBuffer, (m_dwSize-idx) * sizeof(T));
+
+				m_pBuffer[idx] = item;
+				return m_dwCount++;
+			}
+
+			protected:
+			//Datas
+			T*			m_pBuffer;
+			udword	m_dwCount;
+			udword	m_dwSize;		//Taille en nombre d'elements
+			udword	m_dwGrow;
+
 };
-
-
-//-----------------------------------------------------------------
-//!	\brief	Add an item at the end of the array
-//!	\return	Returns the number of items in use (prior to adding)
-//-----------------------------------------------------------------
-template <class T>	udword NArray<T>::AddItem(T& item)
-{
-	if (mCount>=mSize)
-	{
-		mBuffer = (T*)realloc(mBuffer, sizeof(T)*(mSize+mGrow));
-		mSize+= mGrow;
-	}
-	mBuffer[mCount] = item;
-	return mCount++;
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Set an item at a position and grow array if necessary
-//-----------------------------------------------------------------
-template <class T>	void NArray<T>::SetAtGrow(udword idx, T& item)
-{
-	if (idx>=mSize)
-	{
-		mSize = idx+mGrow;
-		mBuffer = (T*)realloc(mBuffer, sizeof(T)*(mSize));
-	}
-	mBuffer[idx] = item;
-	if (idx>=mCount)	mCount = idx+1;
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Add an array at the end of the array
-//-----------------------------------------------------------------
-template <class T>	void NArray<T>::AddArray(NArray& array)
-{
-	udword dwOldCount = mCount;
-	SetSize(mCount+array.Count()+mGrow);
-	CopyMemory(mBuffer + dwOldCount, array.mBuffer, array.mCount * sizeof(T));
-	mCount+=array.mCount;
-}
-
-
-//-----------------------------------------------------------------
-//!	\brief	Remove an item
-//-----------------------------------------------------------------
-template <class T>	void NArray<T>::RemoveItem(udword idx)
-{
-	mCount--;
-	T* pBuffer = mBuffer+idx;
-
-	CopyMemory(pBuffer, pBuffer+1, (mSize-idx-1) * sizeof(T));
-
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Set count
-//-----------------------------------------------------------------
-template <class T>	udword NArray<T>::SetCount(udword c)
-{
-	if (c>=mSize) {
-		mBuffer = (T*)realloc(mBuffer, sizeof(T)* (c + mGrow));
-		mSize = c + mGrow;
-	}
-	return mCount = c;
-}
-
-
-//-----------------------------------------------------------------
-//!	\brief	Set size
-//-----------------------------------------------------------------
-template <class T>	void NArray<T>::SetSize(udword s)
-{
-	mBuffer = (T*)realloc(mBuffer, sizeof(T)* s);
-	mSize = s;
-}
-
-
-//-----------------------------------------------------------------
-//!	\brief	Sorts the array using the compare function
-//-----------------------------------------------------------------
-template <class T>	void NArray<T>::Sort(CompareFnc cmp)
-{
-	//Quicksort algorithm
-	qsort(mBuffer, mCount, sizeof(T), cmp);
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Search an item in array
-//-----------------------------------------------------------------
-template <class T>	udword NArray<T>::Find(T& item)
-{
-	for (udword i=0; i<mCount; i++)
-	{
-		if (mBuffer[i] == item)
-			return i;	//Found
-	}
-
-	return -1;	//Not found
-}
-
-
-//-----------------------------------------------------------------
-//!	\brief	Add an item at index into the array
-//-----------------------------------------------------------------
-template <class T>	udword NArray<T>::InsertItem(udword idx, T& item)
-{
-	if (idx>=mSize)
-	{
-		mSize=idx+mGrow;
-		mBuffer = (T*)realloc(mBuffer, sizeof(T)*mSize);
-	}
-
-	T* pBuffer = mBuffer+idx;
-
-	CopyMemory(pBuffer+1, pBuffer, (mSize-idx) * sizeof(T));
-
-	mBuffer[idx] = item;
-	return mCount++;
-}

@@ -37,7 +37,7 @@
 //!	\class		NFlatOp
 //!	\brief		Flat rendering
 //-----------------------------------------------------------------
-class NFlatOp : public NOperator
+class FXGEN_API NFlatOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -57,7 +57,7 @@ public:
 //!	\class		NCloudOp
 //!	\brief		Render clouds
 //-----------------------------------------------------------------
-class NCloudOp : public NOperator
+class FXGEN_API NCloudOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -90,7 +90,7 @@ public:
 //!	\class		NGradientOp
 //!	\brief		Four corners gradient rendering
 //-----------------------------------------------------------------
-class NGradientOp : public NOperator
+class FXGEN_API NGradientOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -111,7 +111,7 @@ public:
 //!	\class		NCellOp
 //!	\brief		Render cells
 //-----------------------------------------------------------------
-class NCellOp : public NOperator
+class FXGEN_API NCellOp : public NOperator
 {
 public:
 	DECLARE_CLASS();

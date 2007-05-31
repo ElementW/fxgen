@@ -657,21 +657,25 @@ udword NLerpOp::Process(float _ftime, NOperator** _pOpsInts)
 	//Three inputs
 	if (m_byInputs!=3)		return (udword)-1;
 
-	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
-
 	//Get input textures
 	NBitmap* pSrc1 = (NBitmap*)(*(_pOpsInts+0))->m_pObj;
 	NBitmap* pSrc2 = (NBitmap*)(*(_pOpsInts+1))->m_pObj;
 	NBitmap* pBlend = (NBitmap*)(*(_pOpsInts+2))->m_pObj;
-	NBitmap* pDst = (NBitmap*)m_pObj;
 
-	sdword w = pSrc1->GetWidth();
-	sdword h = pSrc1->GetHeight();
+	// Same inputs W and H sizes
+	udword w = pSrc1->GetWidth();
+	udword h = pSrc1->GetHeight();
+	if (w!=pSrc2->GetWidth()	|| w!=pBlend->GetWidth()	)		return (udword)-1;
+	if (h!=pSrc2->GetHeight() || h!=pBlend->GetHeight() )		return (udword)-1;
+
+	//Bitmap instance
+	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+
+	//Set Bitmap Size
+	NBitmap* pDst = (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
 
-		//###TODO### multi sources size adjust
-
+	//Process
 	RGBA* pPxSrc1 = pSrc1->GetPixels();
 	RGBA* pPxSrc2 = pSrc2->GetPixels();
 	RGBA* pPxBlend = pBlend->GetPixels();
