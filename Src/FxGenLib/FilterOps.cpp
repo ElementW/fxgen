@@ -78,7 +78,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts)
 
 	// Do three passes if gaussian...
 	// Don't change the number of passes if you don't know what you're doing :)
-	ubyte byPasses = byType == 1 ? 3 : 1; 
+	ubyte byPasses = byType == 1 ? 7 : 1; 
 
 	//Radius
 	float radiusW= (float)byWidth / 2.0f;
@@ -86,7 +86,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts)
 
 	//Amplify
 	float amplify= (float)byAmplify;
-	sdword amp = sdword(floor(amplify*16.0f)/(float)byPasses);
+	sdword amp = sdword(powf(floor(amplify*16.0f)/256.0f, 1.0f/byPasses)*256.0f);
 
 	sdword bw = (sdword) (floor(radiusW)*2+1);
   sdword bh = (sdword) (floor(radiusH)*2+1);
