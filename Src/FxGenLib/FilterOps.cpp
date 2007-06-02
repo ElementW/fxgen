@@ -78,7 +78,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts)
 
 	// Do three passes if gaussian...
 	// Don't change the number of passes if you don't know what you're doing :)
-	ubyte byPasses = byType == 1 ? 7 : 1; 
+	ubyte byPasses = byType == 1 ? 3 : 1; 
 
 	//Radius
 	float radiusW= (float)byWidth / 2.0f;
@@ -511,7 +511,11 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts)
 
 	light.normalize();
 
-	float fSpecularPower	= ((float)bySpecPower) / 32.0f;
+        vec3 halfV = light;
+        halfV.z += 1;
+        halfV.normalize();
+
+	float fSpecularPower	= 256.0f/(float)bySpecPower;
 	float fBumpPower			= ((float)byBumpPower) / 200.0f;
 
 	/////////////////////////////////////////
@@ -521,6 +525,7 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts)
 	RGBA* pPxAmb = pAmb == null ? null : pAmb->GetPixels();
 	RGBA* pPxSrc	= pSrc->GetPixels();
 	RGBA* pPxDst	= pDst->GetPixels();
+
 
 	for (udword y=0; y<h; y++)
 	{
@@ -535,9 +540,15 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts)
 			pPxNorm++;
 
 			//compute the dot product between normal and light dir
-			float fdot;
-			dot(fdot, n, light);
-			if (fdot<0.0f)	fdot=0.0f;
+			float fDiffDot;
+			dot(fDiffDot, n, light);
+			if (fDiffDot<0.0f)	fDiffDot=0.0f;
+
+			//compute the dot product between normal and halfvector
+			float fSpecDot;
+			dot(fSpecDot, n, halfV);
+			if (fSpecDot<0.0f)	fSpecDot=0.0f;
+                        fSpecDot = powf(fSpecDot, fSpecularPower+0.000001f);
 
 			//Add bump on normal
 			//fdot*=fBumpPower;
@@ -578,9 +589,9 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts)
                         }
 
 			// Color = ambient + dif*dot + dot^2 * spec
-			sdword r	= (sdword) ((sdword(pPxSrc->r*(localAmbient.r + fdot*Diffuse.r)) >> 8) + (fdot*fdot*localSpecular.r*fSpecularPower));
-			sdword g	= (sdword) ((sdword(pPxSrc->g*(localAmbient.g + fdot*Diffuse.g)) >> 8) + (fdot*fdot*localSpecular.g*fSpecularPower));
-			sdword b	= (sdword) ((sdword(pPxSrc->b*(localAmbient.b + fdot*Diffuse.b)) >> 8) + (fdot*fdot*localSpecular.b*fSpecularPower));
+			sdword r	= (sdword) ((sdword(pPxSrc->r*(localAmbient.r + fDiffDot*Diffuse.r)) >> 8) + (fSpecDot*localSpecular.r));
+			sdword g	= (sdword) ((sdword(pPxSrc->g*(localAmbient.g + fDiffDot*Diffuse.g)) >> 8) + (fSpecDot*localSpecular.g));
+			sdword b	= (sdword) ((sdword(pPxSrc->b*(localAmbient.b + fDiffDot*Diffuse.b)) >> 8) + (fSpecDot*localSpecular.b));
 
 			//sdword r	= pPxSrc->r + (fdot * pPxSrc->r);
 			//sdword g	= pPxSrc->g + (fdot * pPxSrc->g);
