@@ -67,6 +67,7 @@ protected:
 	NPoint			m_ptStartPan;
 
 	bool				m_bTiling;
+	bool				m_bFiltering;
 
 	NObject*		m_pcurObject;		//!< Objet in visualisation
 };

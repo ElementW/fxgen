@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------
 #define ID_RESET			100
 #define ID_TILEONOFF	101
+#define ID_FILTERONOFF	102
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -48,6 +49,7 @@ NViewportsWnd::NViewportsWnd(void)
 	m_bPanning		= false;
 	m_vecTrans.x=m_vecTrans.y=m_vecTrans.z=0.0f;
 	m_bTiling			= false;
+	m_bFiltering			= true;
 }
 
 //-----------------------------------------------------------------
@@ -83,6 +85,7 @@ bool NViewportsWnd::Create(char* name, NRect& rect, NWnd* parent)
 	m_wndMenu.Create("Viewport:", this);
 	m_wndMenu.AddItem("Reset",				ID_RESET,			null);
 	m_wndMenu.AddItem("Tile On/Off",	ID_TILEONOFF,	null);
+	m_wndMenu.AddItem("Filter On/Off",	ID_FILTERONOFF,	null);
 
 	//Register Events
 	EVT_REGISTER(EVT_OPDELETING,	(EVENTFNC)&NViewportsWnd::OnOPDeleting	);
@@ -224,6 +227,14 @@ void NViewportsWnd::DisplayTexture(NObject* pobj)
 	//glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB_EXT, GL_MODULATE);
 	//glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB_EXT, GL_TEXTURE);
 	//glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB_EXT, GL_PRIMARY_COLOR_EXT);
+        if (m_bFiltering)
+        {
+          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,		GL_LINEAR);
+          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,		GL_LINEAR);
+        } else {
+          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,		GL_NEAREST);
+          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,		GL_NEAREST);
+        }
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,		GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,		GL_REPEAT);
 
@@ -256,10 +267,12 @@ void NViewportsWnd::DisplayTexture(NObject* pobj)
 //-----------------------------------------------------------------
 void NViewportsWnd::OnMouseWheel(udword flags, sword zDelta, NPoint point)
 {
-	if (zDelta>0)	m_fScale+=1.0f;
-	else					m_fScale-=1.0f;
+	if (zDelta>0) m_fScale*=2.0f;
+	else					m_fScale/=2.0f;
 
-	if (m_fScale<1.0f)	m_fScale=1.0f;
+        if (m_fScale>0.9f && m_fScale<1.1f) m_fScale = 1.0f; // Re-"normalize" when at 1, to avoid accumulating numerical errors
+
+	if (m_fScale<0.0625f)	m_fScale=0.0625f;
 }
 
 //-----------------------------------------------------------------
@@ -339,6 +352,12 @@ void NViewportsWnd::OnCommand(udword _id)
 			m_bTiling=!m_bTiling;
 			break;
 		}
-	}
+
+		case ID_FILTERONOFF:
+		{
+			m_bFiltering=!m_bFiltering;
+			break;
+		}
+        }
 
 }
