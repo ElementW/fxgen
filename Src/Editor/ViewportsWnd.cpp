@@ -20,6 +20,7 @@
 //-----------------------------------------------------------------
 #include "pch.h"
 #include "viewportswnd.h"
+#include "TGAWriter.h"
 
 //-----------------------------------------------------------------
 //                   Defines
@@ -27,6 +28,7 @@
 #define ID_RESET			100
 #define ID_TILEONOFF	101
 #define ID_FILTERONOFF	102
+#define ID_EXPORT	103
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -86,6 +88,7 @@ bool NViewportsWnd::Create(char* name, NRect& rect, NWnd* parent)
 	m_wndMenu.AddItem("Reset",				ID_RESET,			null);
 	m_wndMenu.AddItem("Tile On/Off",	ID_TILEONOFF,	null);
 	m_wndMenu.AddItem("Filter On/Off",	ID_FILTERONOFF,	null);
+	m_wndMenu.AddItem("Export TGA",	ID_EXPORT,	null);
 
 	//Register Events
 	EVT_REGISTER(EVT_OPDELETING,	(EVENTFNC)&NViewportsWnd::OnOPDeleting	);
@@ -358,6 +361,23 @@ void NViewportsWnd::OnCommand(udword _id)
 			m_bFiltering=!m_bFiltering;
 			break;
 		}
+
+                case ID_EXPORT:
+                {
+                        if (m_pcurObject != null && 
+                            strcmp(m_pcurObject->GetRTClass()->m_pszClassName, "NBitmap") == 0)
+                        {
+	                  //Save File Dialog
+	                  NFileDialog dlg;
+	                  dlg.Create("Export TGA...", this, false);
+	                  if (dlg.DoModal())
+	                  {
+		                  NString str = dlg.GetPathName();
+                                  WriteTGA((NBitmap*)m_pcurObject, str);
+	                  }
+                        }
+                        break;
+                }
         }
 
 }
