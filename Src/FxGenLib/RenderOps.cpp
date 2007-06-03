@@ -612,3 +612,71 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts)
 
 	return 0;
 }
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//							NNoiseOp class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+IMPLEMENT_CLASS(NNoiseOp, NOperator);
+
+static NVarsBlocDesc blocdescNoiseOp[] =
+{
+	VAR(eubyte,	false, "Width",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
+	VAR(eubyte,	false, "Height",	"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//1
+	VAR(eudword,	true, "Color",	"-1", "NColorProp")	//2
+	VAR(euword,		true, "Seed",				"5412",	"NUwordProp") //3
+};
+
+
+NNoiseOp::NNoiseOp()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(4, blocdescNoiseOp, 1);
+}
+
+udword NNoiseOp::Process(float _ftime, NOperator** _pOpsInts)
+{
+	//No Inputs!
+	if (m_byInputs!=0)		return (udword)-1;
+
+	//Get Variables Values
+	ubyte byVal;
+
+	m_pcvarsBloc->GetValue(0, 0, byVal);
+	udword w=1<<((udword)byVal);
+
+	m_pcvarsBloc->GetValue(1, 0, byVal);
+	udword h=1<<((udword)byVal);
+
+	RGBA col;
+	m_pcvarsBloc->GetValue(2, _ftime, (udword&)col);
+
+	uword wSeed;
+	m_pcvarsBloc->GetValue(3, _ftime, wSeed);
+	SetSeedValue(wSeed);
+
+	//Bitmap instance
+	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+
+	NBitmap* pDst = (NBitmap*)m_pObj;
+	pDst->SetSize(w,h);
+	RGBA* pPxDst = pDst->GetPixels();
+
+	//Process operator
+	for (udword y=0; y<w; y++)
+		for (udword x=0; x<h; x++)
+    {
+      udword noiseVal = myRandom() % 256;
+      pPxDst->r = (noiseVal*col.r)>>8;
+      pPxDst->g = (noiseVal*col.g)>>8;
+      pPxDst->b = (noiseVal*col.b)>>8;
+      pPxDst->a = 255;
+			*pPxDst++;
+    }
+
+	return 0;
+}
+

@@ -32,6 +32,7 @@
 //		NCloudOp
 //		NGradientOp
 //		NCellOp
+//		NNoiseOp
 
 //-----------------------------------------------------------------
 //!	\class		NFlatOp
@@ -127,3 +128,22 @@ public:
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
 };
 
+//-----------------------------------------------------------------
+//!	\class		NNoiseOp
+//!	\brief		Render noise
+//-----------------------------------------------------------------
+class NNoiseOp : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NNoiseOp();
+
+	//Methods
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Noise"; }		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts);
+};
