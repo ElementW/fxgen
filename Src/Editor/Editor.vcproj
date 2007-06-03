@@ -385,6 +385,14 @@
 				RelativePath=".\resource.h"
 				>
 			</File>
+			<File
+				RelativePath=".\TGAWriter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TGAWriter.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="GUI Ext"
