@@ -4,6 +4,7 @@
 //! \brief	Main frame
 //!
 //!	\author	Anders Stenberg (anders.stenberg@gmail.com)
+//!         Andrew Caudwell (acaudwell@gmail.com)
 //!	\date		02-06-2007
 //!
 //!	\brief	This file applies the GNU GENERAL PUBLIC LICENSE
