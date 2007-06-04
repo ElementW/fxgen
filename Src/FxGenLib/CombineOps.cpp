@@ -64,19 +64,31 @@ udword NNopOp::Process(float _ftime, NOperator** _pOpsInts)
 //-----------------------------------------------------------------
 IMPLEMENT_CLASS(NRectOp, NOperator);
 
+static NMapVarsBlocDesc mapblocdescRectOp[] =
+{
+	MAP(1, eudword,		"0",		""						)	//V1 => 0-Color
+	MAP(1, eubyte,		"1",		"*0.00390625"	)	//V1 => 1-X1
+	MAP(1, eubyte,		"2",		"*0.00390625"	)	//V1 => 2-Y1
+	MAP(1, eubyte,		"3",		"*0.00390625"	)	//V1 => 3-X2
+	MAP(1, eubyte,		"4",		"*0.00390625"	)	//V1 => 4-Y2
+};
+
+
 static NVarsBlocDesc blocdescRectOp[] =
 {
 	VAR(eudword,	true, "Color",	"-1",		"NColorProp")	//0
-	VAR(eubyte,		true, "x1",			"0",		"NUbyteProp")	//1
-	VAR(eubyte,		true, "y1",			"0",		"NUbyteProp")	//2
-	VAR(eubyte,		true, "x2",			"128",	"NUbyteProp")	//3
-	VAR(eubyte,		true, "y2",			"128",	"NUbyteProp")	//4
+	VAR(efloat,		true, "x1",			"0.0",	"NFloatProp")	//1
+	VAR(efloat,		true, "y1",			"0.0",	"NFloatProp")	//2
+	VAR(efloat,		true, "x2",			"0.5",	"NFloatProp")	//3
+	VAR(efloat,		true, "y2",			"0.5",	"NFloatProp")	//4
 };
 
 NRectOp::NRectOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(5, blocdescRectOp, 1);
+	m_pcvarsBloc = AddVarsBloc(5, blocdescRectOp, 2);
+	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
+	m_pcvarsBloc->SetMapVarBlocDesc(5, mapblocdescRectOp);
 }
 
 udword NRectOp::Process(float _ftime, NOperator** _pOpsInts)
@@ -96,21 +108,28 @@ udword NRectOp::Process(float _ftime, NOperator** _pOpsInts)
 
 	//Get Variables Values
 	RGBA col;
-	ubyte x1,y1,x2,y2;
+	float fx1,fy1,fx2,fy2;
 	m_pcvarsBloc->GetValue(0, _ftime, (udword&)col);
-	m_pcvarsBloc->GetValue(1, _ftime, x1);
-	m_pcvarsBloc->GetValue(2, _ftime, y1);
-	m_pcvarsBloc->GetValue(3, _ftime, x2);
-	m_pcvarsBloc->GetValue(4, _ftime, y2);
+	m_pcvarsBloc->GetValue(1, _ftime, fx1);
+	m_pcvarsBloc->GetValue(2, _ftime, fy1);
+	m_pcvarsBloc->GetValue(3, _ftime, fx2);
+	m_pcvarsBloc->GetValue(4, _ftime, fy2);
+
+	//Init
+	udword x1, x2, y1, y2;
+	x1 = max(0, fx1 * w);
+	x2 = min(w, fx2 * w);
+	y1 = max(0, fy1 * h);
+	y2 = min(h, fy2 * h);
 
 	//Copy Source to this bitmap
 	CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
 
 	//Process operator
-	for (udword y=y1; y<=y2; y++)
+	for (udword y=y1; y<y2; y++)
 	{
 		RGBA* pPixelsD = pDst->GetPixels() + (y*w) + x1;
-		for (udword x=x1; x<=x2; x++)
+		for (udword x=x1; x<x2; x++)
 			*pPixelsD++ = col;
 	}
 
@@ -437,15 +456,26 @@ udword NAddOp::Process(float _ftime, NOperator** _pOpsInts)
 //-----------------------------------------------------------------
 IMPLEMENT_CLASS(NGlowOp, NOperator);
 
+static NMapVarsBlocDesc mapblocdescGlowOp[] =
+{
+	MAP(1, eudword,		"0",		""						)	//V1 => 0-Color
+	MAP(1, eubyte,		"1",		"*0.00390625"	)	//V1 => 1-CenterX
+	MAP(1, eubyte,		"2",		"*0.00390625"	)	//V1 => 2-CenterY
+	MAP(1, eubyte,		"3",		"*0.00390625"	)	//V1 => 3-RayX
+	MAP(1, eubyte,		"4",		"*0.00390625"	)	//V1 => 4-RayY
+	MAP(1, eubyte,		"5",		"*0.0078125"	)	//V1 => 5-Alpha
+	MAP(1, eubyte,		"6",		"*0.0078125"	)	//V1 => 6-Gamma
+};
+
 static NVarsBlocDesc blocdescGlowOp[] =
 {
 	VAR(eudword,	true, "Color",		"-1",			"NColorProp")	//0
-	VAR(eubyte,		true, "CenterX",	"128",		"NUbyteProp")	//1
-	VAR(eubyte,		true, "CenterY",	"128",		"NUbyteProp")	//2
-	VAR(eubyte,		true, "RayX",			"64",			"NUbyteProp")	//3
-	VAR(eubyte,		true, "RayY",			"64",			"NUbyteProp")	//4
-	VAR(eubyte,		true, "Alpha",		"128",		"NUbyteProp")	//5
-	VAR(eubyte,		true, "Gamma",		"128",		"NUbyteProp")	//6
+	VAR(efloat,		true, "CenterX",	"0.5",		"NFloatProp")	//1
+	VAR(efloat,		true, "CenterY",	"0.5",		"NFloatProp")	//2
+	VAR(efloat,		true, "RayX",			"0.5",		"NFloatProp")	//3
+	VAR(efloat,		true, "RayY",			"0.5",		"NFloatProp")	//4
+	VAR(efloat,		true, "Alpha",		"1.0",		"NFloatProp")	//5
+	VAR(efloat,		true, "Gamma",		"1.0",		"NFloatProp")	//6
 };
 
 
@@ -453,7 +483,8 @@ NGlowOp::NGlowOp()
 {
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(7, blocdescGlowOp, 1);
-
+	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
+	m_pcvarsBloc->SetMapVarBlocDesc(7, mapblocdescGlowOp);
 }
 
 udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts)
@@ -474,22 +505,20 @@ udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts)
 
 	//Get Variables Values
 	RGBA col;
-	ubyte byCenterX, byCenterY, byRayX, byRayY, byAlpha, byGamma;
+	float fCenterX, fCenterY, fRayX, fRayY, fAlpha, fGamma;
 	m_pcvarsBloc->GetValue(0, _ftime, (udword&)col);
-	m_pcvarsBloc->GetValue(1, _ftime, byCenterX);
-	m_pcvarsBloc->GetValue(2, _ftime, byCenterY);
-	m_pcvarsBloc->GetValue(3, _ftime, byRayX);
-	m_pcvarsBloc->GetValue(4, _ftime, byRayY);
-	m_pcvarsBloc->GetValue(5, _ftime, byAlpha);
-	m_pcvarsBloc->GetValue(6, _ftime, byGamma);
+	m_pcvarsBloc->GetValue(1, _ftime, fCenterX);
+	m_pcvarsBloc->GetValue(2, _ftime, fCenterY);
+	m_pcvarsBloc->GetValue(3, _ftime, fRayX);
+	m_pcvarsBloc->GetValue(4, _ftime, fRayY);
+	m_pcvarsBloc->GetValue(5, _ftime, fAlpha);
+	m_pcvarsBloc->GetValue(6, _ftime, fGamma);
 
 	//Process operator
-	sdword	dwCenterX	= byCenterX;
-	sdword  dwCenterY	= byCenterY;
-	sdword  dwRadiusX	= byRayX;
-	sdword  dwRadiusY	= byRayY;
-	float		fAlpha		= (float)byAlpha/128.0f;
-	float		fGamma		= (float)byGamma/128.0f;
+	sdword	dwCenterX	= fCenterX*w;
+	sdword  dwCenterY	= fCenterY*h;
+	sdword  dwRadiusX	= fRayX*w;
+	sdword  dwRadiusY	= fRayY*h;
 
 	float fRed	= col.r;
 	float fGreen= col.g;

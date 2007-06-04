@@ -6,8 +6,7 @@ Next Version
 .a merge project command menu 
 .add an editor's icon
 .add C functions like for API
-.
-
+.SVG format import
 
 Version 0.4 alpha
 ----------------------------------
@@ -21,11 +20,14 @@ Main Changed
 .Compilation changed from Static Library to Dynamic (DLL)
 .NArchive now support Memory and File Stream
 .Added a color picker
+.Added TGA Writer at viewport context menu
+.Added Bilinear filtering On/Off at viewport context menu
 
 New Operators
 	.NLerpOp	
 	.NThresholdOp
-	.NAlpha
+	.NAlphaOp
+	.NNoiseOp
 	
 Changed Operators
 	.AddOp support different texture size
@@ -50,6 +52,11 @@ Changed Operators
 	.NLightOp
 		Now support input Specular operators too
 		
+	.NGlowOp, NRect
+		.All parameters changed
+			.ubyte to float
+	
+	
 Removed Operator
 	.NSetSize (now see RotoZoomOp)
 
