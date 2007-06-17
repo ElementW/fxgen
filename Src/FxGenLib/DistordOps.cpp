@@ -4,6 +4,8 @@
 //! \brief	Distord Operators
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
+//!	        Anders Stenberg (anders.stenberg@gmail.com)
+//!         Andrew Caudwell (acaudwell@gmail.com)
 //!	\date		17-05-2007
 //!
 //!	\brief	This file applies the GNU LESSER GENERAL PUBLIC LICENSE
@@ -327,3 +329,203 @@ udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts)
 	return 0;
 }
 
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//                                                      NVortexOp class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+IMPLEMENT_CLASS(NVortexOp, NOperator);
+
+static NVarsBlocDesc blocdescVortexOp[] =
+{
+	VAR(efloat,             true, "CenterX",        "0.5",          "NFloatProp")   //0
+	VAR(efloat,             true, "CenterY",        "0.5",          "NFloatProp")   //1
+	VAR(efloat,             true, "RayX",           "0.5",          "NFloatProp")   //2
+	VAR(efloat,             true, "RayY",           "0.5",          "NFloatProp")   //3
+	VAR(efloat,             true, "Twist",      "1.28",             "NFloatProp")   //4
+};
+
+
+NVortexOp::NVortexOp()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(5, blocdescVortexOp, 1);
+
+}
+
+udword NVortexOp::Process(float _ftime, NOperator** _pOpsInts)
+{
+	//Only one Input
+	if (m_byInputs!=1)              return (udword)-1;
+
+	//Bitmap instance
+	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+
+	//Get input texture
+	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
+	NBitmap* pDst = (NBitmap*)m_pObj;
+
+	sdword w = pSrc->GetWidth();
+	sdword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
+
+	//Get Variables Values
+	float byCenterX, byCenterY, byRayX, byRayY;
+	float byTwist;
+	m_pcvarsBloc->GetValue(0, _ftime, byCenterX);
+	m_pcvarsBloc->GetValue(1, _ftime, byCenterY);
+	m_pcvarsBloc->GetValue(2, _ftime, byRayX);
+	m_pcvarsBloc->GetValue(3, _ftime, byRayY);
+	m_pcvarsBloc->GetValue(4, _ftime, byTwist);
+
+	//Process operator
+	sdword  dwCenterX       = byCenterX*w;
+	sdword  dwCenterY       = byCenterY*h;
+	sdword  dwRadiusX       = byRayX*w;
+	sdword  dwRadiusY       = byRayY*h;
+
+	float   f1_RadiusX = 1.0f/(float)dwRadiusX;
+	float   f1_RadiusY = 1.0f/(float)dwRadiusY;
+
+	float radians = byTwist * 100.0f * nv_to_rad;
+
+	RGBA* pPxSrc = pSrc->GetPixels();
+	RGBA* baseSrc = pPxSrc;
+	RGBA* pPxDst = pDst->GetPixels();
+
+	RGBA* src;
+	//Process
+	for (sdword y=0; y<h; y++)
+	{
+
+		float dy = (float)(y-dwCenterY) * f1_RadiusY;
+		float dy_2 = dy*dy;
+
+		for (sdword x=0; x<w; x++)
+		{
+			//Calcul distance
+			float dx = (float)(x-dwCenterX) * f1_RadiusX;
+			float d = sqrt(dx*dx + dy_2);
+
+			if(d>1.0f) {
+				//not inside radius, just copy it
+				pPxDst->r = pPxSrc->r;
+				pPxDst->g = pPxSrc->g;
+				pPxDst->b = pPxSrc->b;
+				pPxDst->a = pPxSrc->a;
+			} else {
+				//twist more as closer to the middle
+				//d = sinf(d * nv_half_pi);
+				//this seems to give a good enough approximation of sinf
+				d = ffast_cos(d * nv_half_pi - nv_half_pi);
+				d=1.0f - d;
+
+				//rotate around middle
+				float nx = x - dwCenterX;
+				float ny = y - dwCenterY;
+
+				float rad = radians*d;
+
+				//todo: optimize this. cosf/sinf are slow
+				float bx = nx;
+				nx = bx*cosf(rad) - ny*sinf(rad) + dwCenterX;
+				ny = bx*sinf(rad) + ny*cosf(rad) + dwCenterY;
+
+				if(nx>=w) nx = nx - w;
+				if(ny>=h) ny = ny - h;
+				if(nx<0) nx = w + nx;
+				if(ny<0) ny = h + ny;
+
+				//bilinear sample nearest 4 pixels at rotated pos
+				int ix,iy;
+				ix = (int) nx;
+				iy = (int) ny;
+
+				float fracX = nx - ix;
+				float fracY = ny - iy;
+
+				float   ul = (1.0f - fracX) * (1.0f - fracY);
+				float   ll = (1.0f - fracX) * fracY;
+				float   ur = fracX * (1.0f - fracY);
+				float   lr = fracX * fracY;
+
+				int wrapx = (ix+1)%w;
+				int wrapy = (iy+1)%h;
+				RGBA* texelUL = baseSrc + ix + iy*w;
+				RGBA* texelUR = baseSrc + wrapx + iy*w;
+				RGBA* texelLL = baseSrc + ix + wrapy*w;
+				RGBA* texelLR = baseSrc + wrapx + wrapy*w;
+
+				pPxDst->r = (int)(ul * texelUL->r + ll * texelLL->r + ur * texelUR->r + lr * texelLR->r);
+				pPxDst->g = (int)(ul * texelUL->g + ll * texelLL->g + ur * texelUR->g + lr * texelLR->g);
+				pPxDst->b = (int)(ul * texelUL->b + ll * texelLL->b + ur * texelUR->b + lr * texelLR->b);
+				pPxDst->a = (int)(ul * texelUL->a + ll * texelLL->a + ur * texelUR->a + lr * texelLR->a);
+
+			}
+			pPxSrc++;
+			pPxDst++;
+		}
+	}
+
+	return 1;
+}
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//                                                      NLookupOp class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+IMPLEMENT_CLASS(NLookupOp, NOperator);
+
+NLookupOp::NLookupOp()
+{
+}
+
+udword NLookupOp::Process(float _ftime, NOperator** _pOpsInts)
+{
+	//Two inputs (texture, texcoords)
+	if (m_byInputs!=2) return (udword)-1;
+
+	//Get input Texture and TexCoords
+	NBitmap* pSrc = (NBitmap*)(*(_pOpsInts+0))->m_pObj;
+	NBitmap* pTexCoords = (NBitmap*)(*(_pOpsInts+1))->m_pObj;
+
+	udword w = pTexCoords->GetWidth();
+	udword h = pTexCoords->GetHeight();
+	udword tw = pSrc->GetWidth();
+	udword th = pSrc->GetHeight();
+
+	float scaleW = tw / 256.0f;
+	float scaleH = th / 256.0f;
+
+	//Bitmap instance
+	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+
+	//Set Texture size
+	NBitmap* pDst = (NBitmap*)m_pObj;
+	pDst->SetSize(w, h);
+
+	/////////////////////////////////////////
+	//Process operator
+	RGBA* pPxTexCoords = pTexCoords->GetPixels();
+	RGBA* pPxSrc = pSrc->GetPixels();
+	RGBA* pPxDst = pDst->GetPixels();
+
+	for (udword y=0; y < h; y++)
+	{
+		for (udword x=0; x < w; x++)
+		{
+			udword u = pPxTexCoords->r * scaleW;
+			udword v = pPxTexCoords->g * scaleH;
+			pPxTexCoords++;
+
+			*pPxDst++ = pPxSrc[(v*tw) + u];
+		}
+	}
+	return 0;
+}
