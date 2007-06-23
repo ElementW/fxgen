@@ -137,11 +137,11 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts)
 
 		for (udword x=0; x<w; x++)
 		{
-			float uf = fabsf(u - (sdword)u);	//Fraction
-			float vf = fabsf(v - (sdword)v);	//Fraction
+            float uf = u>=0 ? (u - (sdword)u) : 1+(u - (sdword)u);	//Fraction
+            float vf = v>=0 ? (v - (sdword)v) : 1+(v - (sdword)v);	//Fraction
 
-			udword ut = (udword)u;
-			udword vt = (udword)v;
+            udword ut = u>=0 ? (udword)u : (udword)u - 1;
+			udword vt = v>=0 ? (udword)v : (udword)v - 1;
 
 			//Texels
 			// 1 | 2
