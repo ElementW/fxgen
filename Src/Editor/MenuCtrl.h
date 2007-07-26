@@ -28,6 +28,14 @@
 #define ME_ITEMTEXTIDENT	16
 #define ME_ITEMIDENT			16
 
+//Items Styles
+#define ME_ITEMSTYLE_CHECKBOX		1
+
+//-----------------------------------------------------------------
+//                   Prototypes
+//-----------------------------------------------------------------
+class NMenuCtrl;
+
 //-----------------------------------------------------------------
 //! \struct NMEItemDesc
 //! \brief	Item description
@@ -37,13 +45,13 @@ struct NMEItemDesc
 	udword	dwID;
 	udword	dwUserData;
 	NString strName;
-	bool		bChecked;
-	bool		bEnabled;
-	
-	NArray<NMEItemDesc>	ChildItems;
+	udword	dwStyle;	//!< See ME_ITEMSTYLE_CHECKBOX...
 
 	//Datas RT
-	NRect						rcItem;			//!< Windows Pos
+	NRect		rcItem;			//!< Windows Pos
+	bool		bChecked;
+	bool		bEnabled;
+	NMenuCtrl*	ppopUpMenu;
 };
 
 
@@ -67,9 +75,13 @@ public:
 
 	NMEItemDesc*	TrackPopupMenu(NPoint _ptScreen);
 
-	NMEItemDesc* AddItem(char* _pszName, udword _id, NMEItemDesc* _pparent);
+	NMEItemDesc* AddItem(char* _pszName, udword _id, udword _dwStyle);
 
+	udword				GetItemsCount();
+	NMEItemDesc* GetItemDesc(udword _idx);
 
+	NMenuCtrl* CreatePopupMenu(char* _pszName, udword _idx);
+	NMenuCtrl* GetPopupMenu(udword _idx);
 
 	//Notification Messages
 //	FDelegate		OnSelChange;
@@ -86,7 +98,9 @@ protected:
 
 	NArray<NMEItemDesc>	m_carrayItems;
 	udword	m_dwItemHighLightedIdx;	//!< Idx from m_carrayItems
+	udword	m_dwTimerHide;
 
+	NMenuCtrl* m_pcurPopupMenu;
 
 protected:
 	//Win32 Messages Dispatching
@@ -100,6 +114,7 @@ protected:
 	virtual	void	OnLeftButtonDblClk(udword flags, NPoint point);
 	virtual void	OnRightButtonDown(udword flags, NPoint pos);
 	virtual	void	OnKeyUp(udword dwchar);
+	virtual	void	OnTimer(udword _dwTimerID);
 
 	//Windows Proc
 	virtual	LRESULT	WndProc( UINT msg, WPARAM wparam, LPARAM lparam);

@@ -85,10 +85,10 @@ bool NViewportsWnd::Create(char* name, NRect& rect, NWnd* parent)
 
 	//Create context menu
 	m_wndMenu.Create("Viewport:", this);
-	m_wndMenu.AddItem("Reset",				ID_RESET,			null);
-	m_wndMenu.AddItem("Tile On/Off",	ID_TILEONOFF,	null);
-	m_wndMenu.AddItem("Filter On/Off",	ID_FILTERONOFF,	null);
-	m_wndMenu.AddItem("Export TGA",	ID_EXPORT,	null);
+	m_wndMenu.AddItem("Reset",			ID_RESET,				0);
+	m_wndMenu.AddItem("Tiling",			ID_TILEONOFF,		ME_ITEMSTYLE_CHECKBOX);
+	m_wndMenu.AddItem("Filtering",	ID_FILTERONOFF,	ME_ITEMSTYLE_CHECKBOX);
+	m_wndMenu.AddItem("Export TGA",	ID_EXPORT,			0);
 
 	//Register Events
 	EVT_REGISTER(EVT_OPDELETING,	(EVENTFNC)&NViewportsWnd::OnOPDeleting	);

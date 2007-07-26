@@ -69,8 +69,14 @@ bool NOperatorsWnd::Create(char* name, NRect& rect, NWnd* parent)
 //-----------------------------------------------------------------
 void NOperatorsWnd::InitCtxMenu()
 {
+/*	m_wndMenu.Create("Project:", this);
+	m_wndMenu.AddItem("Add Group",		ID_ADDGROUP,	null, 0);
+	m_wndMenu.AddItem("Add Page",		ID_ADDPAGE,		null, 0);
+	m_wndMenu.AddItem("Delete",			ID_DELETE,		null, 0);
+	m_wndMenu.AddItem("Rename",			ID_RENAME,		null, 0);*/
+
 	//Creation du menu
-	m_hMenu = CreatePopupMenu();
+	m_wndMenu.Create("Operators:", this);
 
 	//Create Operators list sorted by category
 	NRTClass* prtc = GetFirstClassBySuperClass("NOperator");
@@ -80,14 +86,15 @@ void NOperatorsWnd::InitCtxMenu()
 		NOperator* pop = (NOperator*)prtc->m_pCreateCB();
 
 		//Search if category already exist in menu
-		HMENU popMenu =null;
-		sdword count = ::GetMenuItemCount(m_hMenu);
-		for (sdword j = 0; j < count; j++)
+		NMenuCtrl* popMenu = null;
+		udword count = m_wndMenu.GetItemsCount();
+		udword j = 0;
+		for (j = 0; j < count; j++)
 		{
-			char szBuf[256];
-			if (::GetMenuString(m_hMenu, j, szBuf, sizeof(szBuf), MF_BYPOSITION) && (strcmp(szBuf, pop->GetCategory()) == 0))
+			NMEItemDesc* pitem = m_wndMenu.GetItemDesc(j);
+			if (pitem->strName == NString(pop->GetCategory()))
 			{
-				popMenu = ::GetSubMenu(m_hMenu, j);
+				popMenu = m_wndMenu.GetPopupMenu(j);
 				break;
 			}
 		}
@@ -95,12 +102,12 @@ void NOperatorsWnd::InitCtxMenu()
 		//Create category if it doesn't exist
 		if (popMenu==null)
 		{
-			popMenu = CreateMenu();
-			::AppendMenu(m_hMenu, MF_POPUP, (UINT)popMenu, pop->GetCategory() );
+			popMenu = m_wndMenu.CreatePopupMenu(pop->GetCategory(), -1);
 		}
 
 		//Add new operator
-		::AppendMenu(popMenu, MF_STRING, (DWORD)prtc->CLASSID, pop->GetName() );	//+1 for class prefix 'N'
+		//::AppendMenu(popMenu, MF_STRING, (DWORD)prtc->CLASSID, pop->GetName() );
+		popMenu->AddItem(pop->GetName(), prtc->CLASSID, 0);
 
 		//Delete operator
 		delete pop;
@@ -116,12 +123,12 @@ void NOperatorsWnd::InitCtxMenu()
 //-----------------------------------------------------------------
 void NOperatorsWnd::OnRightButtonDown(udword flags, NPoint pos)
 {
-	if (m_hMenu && m_popsPage)
-	{
-		POINT pt;
-		::GetCursorPos(&pt);	//Cursor position even with keyboard 'Context key'
-		::TrackPopupMenu(m_hMenu, TPM_LEFTALIGN|TPM_LEFTBUTTON, pt.x, pt.y, null, m_W32HWnd, null);
-	}
+	SetFocus();
+
+	POINT pt;	::GetCursorPos(&pt);	//Cursor position even with keyboard 'Context key'
+
+	NPoint pT(pt.x, pt.y);
+	m_wndMenu.TrackPopupMenu(pT);
 
 }
 

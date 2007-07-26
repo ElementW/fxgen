@@ -109,10 +109,10 @@ void NProjectWnd::InitCtxMenu()
 {
 	//Menu creation
 	m_wndMenu.Create("Project:", this);
-	m_wndMenu.AddItem("Add Group",	ID_ADDGROUP,	null);
-	m_wndMenu.AddItem("Add Page",		ID_ADDPAGE,		null);
-	m_wndMenu.AddItem("Delete",			ID_DELETE,		null);
-	m_wndMenu.AddItem("Rename",			ID_RENAME,		null);
+	m_wndMenu.AddItem("Add Group",		ID_ADDGROUP, 0);
+	m_wndMenu.AddItem("Add Page",		ID_ADDPAGE,		 0);
+	m_wndMenu.AddItem("Delete",			ID_DELETE,		 0);
+	m_wndMenu.AddItem("Rename",			ID_RENAME,		 0);
 
 }
 
