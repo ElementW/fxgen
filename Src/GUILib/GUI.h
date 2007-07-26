@@ -145,9 +145,10 @@ public:
 	//Rect
 	void FillSolidRect(NRect& rc, COLORREF clr);
 	void Draw3dRect(NRect& rc, COLORREF clrTopLeft, COLORREF clrBottomRight);
-	void RoundRect(NRect& rc, sdword ellipseW, sdword ellipseH);
 	void GradientVRect(NRect& rc, COLORREF clrStart, COLORREF clrEnd);
+	void RoundRect(NRect& rc, sdword ellipseW, sdword ellipseH);
 	void RoundRect(int _roundboxtype, float _minx, float _miny, float _maxx, float _maxy, float _rad);
+
 
 	//Lines
 	void MoveTo(sdword x, sdword y);
@@ -224,6 +225,7 @@ protected:
 	virtual	void	OnKeyDown(udword dwchar)	{}
 	virtual	void	OnKeyUp(udword dwchar)		{}
 	virtual	void	OnKillFocus()							{}
+	virtual	void	OnTimer(udword _dwTimerID)		{}
 
 	virtual	udword	CatchControlCommand(uword notifycode, uword id)	{ return 0; }
 	virtual udword	CatchControlNotify(udword code)									{ return 0; }

@@ -1,12 +1,17 @@
 Next Version
 -------------
-.custom menu bar and popup menu
-.statusbar suppression ?
-.review animation controllers
+.add C++ methods for API
 .a merge project command menu 
+.review animation controllers
 .add an editor's icon
-.add C functions like for API
+.statusbar suppression ?
 .SVG format import
+
+Version 0.5 alpha (Release: Use FxGen in your Games !)
+----------------------------------
+.Custom popup menu (OpenGL GUI preparation)
+.
+
 
 Version 0.4 alpha
 ----------------------------------
