@@ -80,6 +80,7 @@ NOperator::NOperator()
 NOperator::~NOperator()
 {
 //	if (m_pObj)		delete m_pObj;
+	gNFxGen_GetEngine()->GetBitmapGarbage()->RemoveEntry(&m_pObj);
 }
 
 //-----------------------------------------------------------------
@@ -522,7 +523,7 @@ NEngineOp::~NEngineOp()
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Clear project to start
+//!	\brief	Clear current project
 //-----------------------------------------------------------------
 void NEngineOp::Clear()
 {
@@ -530,6 +531,8 @@ void NEngineOp::Clear()
 	m_pRootGroup = new NTreeNode;
 	m_pRootGroup->SetName("Root");
 
+	m_bitmapsAlloc.Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+	m_arrayFinalsOp.Clear();	//##NEW###
 }
 
 //-----------------------------------------------------------------
@@ -550,44 +553,50 @@ void NEngineOp::ComputeInvaliddOps(NOperator* _popFinal)
 	NOperator* pcRootOP = GetRootOperator(_popFinal);
 	//TRACE("Root operator for invalidation <%s>\n", pcRootOP->GetName());
 
+	//Clear Parsed Flags in order to optimize RefTarget that Must be invalided
+	ClearParsedOpsFlags(pcRootOP);
+
 	//Compute invalid
 	_ComputeInvaliddOps(pcRootOP);
 }
-
 
 //-----------------------------------------------------------------
 //!	\brief	Compute invalid operators from one operator
 //!	\param	_pop Start Operator
 //!	\note		If top stack is invalid, all the stack in the same branch
 //!					will been invalided
+//!					ClearParsedOpsFlags() must have been called first
 //-----------------------------------------------------------------
 void NEngineOp::_ComputeInvaliddOps(NOperator* _pop)
 {
 	NOperator* pccurOP = _pop;	//Start
 	while (pccurOP)
 	{
-
 		//Invalidate Referenced operators (refTarget)
 		udword dwRefCount = pccurOP->GetRefCount();
 		for (udword j=0; j<dwRefCount; j++)
 		{
 			NOperator* prefop = (NOperator*)pccurOP->GetRef(j);
-
-			//TRACE("RefTarget Must be invalided <%s> !\n", prefop->GetUserName());
-
-			NOperator* pcrootOpToProcess = GetRootOperator(prefop);
-			if (pcrootOpToProcess)
+			if (!prefop->m_bParsed)	//Only if not already parsed
 			{
-				//TRACE(".Jumping To <%s> !\n", pcrootOpToProcess->GetName());
-				m_nCurContext++;
-				_ComputeInvaliddOps(pcrootOpToProcess);
-				m_nCurContext--;
+				//TRACE("RefTarget Must be invalided <%s> !\n", prefop->GetUserName());
 
-				if (prefop->m_bInvalided)
+				NOperator* pcrootOpToProcess = GetRootOperator(prefop);
+				if (pcrootOpToProcess)
 				{
-					pccurOP->m_bInvalided=true;
+					//TRACE(".Jumping To <%s> !\n", pcrootOpToProcess->GetName());
+					m_nCurContext++;
+					_ComputeInvaliddOps(pcrootOpToProcess);
+					m_nCurContext--;
+
+					if (prefop->m_bInvalided)
+					{
+						pccurOP->m_bInvalided=true;
 					//TRACE("\t%s Invalided from RefTarget\n", pccurOP->GetName());
+					}
 				}
+
+				prefop->m_bParsed = true;
 			}
 		}
 
@@ -625,6 +634,30 @@ void NEngineOp::_ComputeInvaliddOps(NOperator* _pop)
 
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Clear Parsed Flags in order to optimize RefTarget that Must be invalided
+//! \param	_pop	Start operator
+//-----------------------------------------------------------------
+void NEngineOp::ClearParsedOpsFlags(NOperator* _pop)
+{
+	//Clear Parsed flags
+	NOperator* pccurOP = _pop;	//Start
+	while (pccurOP)
+	{
+		udword dwRefCount = pccurOP->GetRefCount();
+		for (udword j=0; j<dwRefCount; j++)
+		{
+			NOperator* prefop = (NOperator*)pccurOP->GetRef(j);
+			prefop->m_bParsed = false;
+		}
+
+		//Update Stack
+		m_aStacks[m_nCurContext][pccurOP->m_byDepth] = pccurOP;
+
+		pccurOP = pccurOP->m_pnextOpToProcess;
+	}
+}
+
 
 //-----------------------------------------------------------------
 //!	\brief	Execute this project from root of operator marked 'show'
@@ -636,13 +669,22 @@ void NEngineOp::Execute(float _ftime, NOperator* _popFinal)
 {
 	if (_popFinal!=null)
 	{
+		//Flag operators that need process 
 		ComputeInvaliddOps(_popFinal);
 
 		//Init
-		m_nCurContext = 0;
-		m_popFinal		= _popFinal;
-		m_bError			= false;
+		m_nCurContext							= 0;
+		m_dwCurProcessOpsCount		= 1;
+		m_dwTotalProcessOpsCount	= 0;
+		m_popFinal								= _popFinal;
+		m_bError									= false;
+		
 		ZeroMemory(m_aStacks, sizeof(m_aStacks));
+
+		//Operators count (just for statistic not need for runtime)
+		NOperator* pcRootOP = GetRootOperator(_popFinal);
+		ClearParsedOpsFlags(pcRootOP);
+		_ComputeToProcessOpsCount(_popFinal);
 
 		//Execute
 		_Execute(_ftime, _popFinal);
@@ -693,9 +735,13 @@ void NEngineOp::_Execute(float _ftime, NOperator* _popFinal)
 		{
 			if (!m_bError)
 			{
+				TRACE("Process %d/%d\n", m_dwCurProcessOpsCount, m_dwTotalProcessOpsCount);
+
 				NOperator** pOpsIns = &m_aStacks[m_nCurContext][pccurOP->m_byDepth];
 				if (pccurOP->Process(_ftime, pOpsIns)==-1)
 					m_bError = true;
+
+				m_dwCurProcessOpsCount++;
 			}
 
 			if (pccurOP->m_pcvarsBloc && pccurOP->m_pcvarsBloc->IsAnimated())
@@ -719,6 +765,57 @@ void NEngineOp::_Execute(float _ftime, NOperator* _popFinal)
 
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Compute operators number to process for final result
+//!	\param	_popFinal	final operator for result
+//!	\note		Invalid operators MUST have been computed first
+//!					Updating m_dwTotalProcessOpsCount variable
+//!					ClearParsedOpsFlags() must have been called first
+//-----------------------------------------------------------------
+void NEngineOp::_ComputeToProcessOpsCount(NOperator* _popFinal)
+{
+	if (_popFinal==null)		return;
+
+	//Get Root operator
+	NOperator* pccurOP = GetRootOperator(_popFinal);
+
+	//Execute from root
+	while (pccurOP && pccurOP != m_popFinal->m_pnextOpToProcess)
+	{
+		//Process Referenced operators (refTarget) if marked invalid
+		udword dwRefCount = pccurOP->GetRefCount();
+		for (udword j=0; j<dwRefCount; j++)
+		{
+			NOperator* prefop = (NOperator*)pccurOP->GetRef(j);
+			if (prefop->m_bInvalided && !prefop->m_bParsed)
+			{
+				//TRACE("RefTarget Must be executed <%s> !\n", prefop->GetName());
+				NOperator* pcrootOpToProcess = GetRootOperator(prefop);
+				if (pcrootOpToProcess)
+				{
+					//TRACE(".Jumping To <%s> !\n", pcrootOpToProcess->GetName());
+
+					m_nCurContext++;
+					_ComputeToProcessOpsCount(prefop);
+					m_nCurContext--;
+				}
+				prefop->m_bParsed = true;
+			}
+
+		}
+
+		//Process operator if marked invalid
+		if (pccurOP->m_bInvalided)
+		{
+			m_dwTotalProcessOpsCount++;
+		}
+
+		//Update Stack
+		m_aStacks[m_nCurContext][pccurOP->m_byDepth] = pccurOP;
+
+		pccurOP = pccurOP->m_pnextOpToProcess;
+	}
+}
 
 
 //-----------------------------------------------------------------
@@ -756,11 +853,12 @@ NOperator* NEngineOp::GetRootOperator(NOperator* pop)
 
 //-----------------------------------------------------------------
 //!	\brief	Return a bitmap from ressource management
-//!	\param	_ppobj	object pointeur
+//!	\param	_ppobj			object pointeur
+//!	\param	_byObjType	object allocation type
 //-----------------------------------------------------------------
-void NEngineOp::GetBitmap(NObject** _ppobj, bool _bPermanent)
+void NEngineOp::GetBitmap(NObject** _ppobj, ubyte _byObjType)
 {
-	m_bitmapsAlloc.GetInstance(_ppobj, _bPermanent);
+	m_bitmapsAlloc.GetInstance(_ppobj, _byObjType);
 }
 
 //-----------------------------------------------------------------
@@ -789,14 +887,14 @@ void NEngineOp::GetChannelValue(ubyte _byChannel, NVarValue& _outValue)
 
 //-----------------------------------------------------------------
 //!	\brief	Return finals ops from a treenode
-//!	\param	_pnode			root tree node
+//!	\param	_pnodeFrom	root tree node
 //!	\param	_finalsOp		finals operators array
 //!	\param	_bRecurse		true if recurse into sons
 //-----------------------------------------------------------------
-void NEngineOp::GetFinalOps(NTreeNode* _pnode, NObjectArray& _finalsOp, bool _bRecurse)
+void NEngineOp::GetFinalOps(NTreeNode* _pnodeFrom, NObjectArray& _finalsOp, bool _bRecurse)
 {
 	//Parse Alls Pages to add 'NStoreResultOp'
-	NObjectArray& arrayObjs = _pnode->GetObjsArray();
+	NObjectArray& arrayObjs = _pnodeFrom->GetObjsArray();
 	udword dwCount = arrayObjs.Count();
 	while (dwCount--)
 	{
@@ -807,9 +905,9 @@ void NEngineOp::GetFinalOps(NTreeNode* _pnode, NObjectArray& _finalsOp, bool _bR
 	//Childs
 	if (_bRecurse)
 	{
-		_pnode = _pnode->GetSon();
-		if (_pnode)
-			GetFinalOps(_pnode, _finalsOp, _bRecurse);
+		_pnodeFrom = _pnodeFrom->GetSon();
+		if (_pnodeFrom)
+			GetFinalOps(_pnodeFrom, _finalsOp, _bRecurse);
 	}
 }
 
@@ -849,23 +947,75 @@ bool NEngineOp::LoadProject(char* _pszFullFileName)
 //-----------------------------------------------------------------
 bool NEngineOp::SaveProject(char* _pszFullFileName)
 {
+	bool bRet = false;
+
 	//Open Archive
-        NFileStream fileStream;
-        fileStream.Open(_pszFullFileName, true);
+  NFileStream fileStream;
+  fileStream.Open(_pszFullFileName, true);
 	
-        NArchive ar(&fileStream);
-	if (!ar.PrepareSave())
-		return false;
+  NArchive ar(&fileStream);
+	if (ar.PrepareSave())
+	{
+		//Save Flag (Graph,Compiled...)
+		udword dwFlag=0;	//###RESERVED###
+		ar<<dwFlag;
 
-	//Save Flag (Graph,Compiled...)
-	udword dwFlag=0;	//###RESERVED###
-	ar<<dwFlag;
+		//Save Groups and Pages
+		m_pRootGroup->Save(&ar);
 
-	//Save Groups and Pages
-	m_pRootGroup->Save(&ar);
+		if (ar.FinalizeSave())			bRet = true;
+	}
 
-	if (!ar.FinalizeSave())
-		return false;
+	return bRet;
+}
 
-	return true;
+//-----------------------------------------------------------------
+//!	\brief	Keep just final result bitmaps in memory
+//-----------------------------------------------------------------
+void NEngineOp::CompactMemory()
+{
+	m_bitmapsAlloc.Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED,0);
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Process all operators
+//-----------------------------------------------------------------
+void NEngineOp::ProcessOperators(float _ftime, FXGEN_PROCESSCB* _cbProcess)
+{
+	//Get finals operators type from opened project (at first time only)
+	if (m_arrayFinalsOp.Count()==0)
+	{
+		m_arrayFinalsOp.SetManageDelete(false);
+		GetFinalOps(m_pRootGroup, m_arrayFinalsOp, true);
+	}
+
+	//Execute processing at time t
+	for (udword i=0; i<m_arrayFinalsOp.Count(); i++)
+	{
+		if (_cbProcess)	(*_cbProcess)(i+1, m_arrayFinalsOp.Count());
+		Execute(_ftime, (NOperator*)m_arrayFinalsOp[i]);
+	}
+
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Return Final result operator count //##NEW###
+//!	\return	operators count
+//-----------------------------------------------------------------
+udword NEngineOp::GetFinalResultCount()
+{
+	return (m_arrayFinalsOp.Count());
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Return Final result operator bitmap //##NEW###
+//! \param	_idx	operator indice
+//! \return	Bitmap Ptr if success else null
+//-----------------------------------------------------------------
+NBitmap* NEngineOp::GetFinalResultBitmapByIdx(udword _idx)
+{
+	if (_idx<m_arrayFinalsOp.Count())
+		return (NBitmap*) ((NOperator*)m_arrayFinalsOp[_idx])->m_pObj;
+
+	return null;
 }

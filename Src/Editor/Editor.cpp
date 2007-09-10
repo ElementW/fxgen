@@ -44,15 +44,9 @@ NFxGenApp		theNApp;
 //-----------------------------------------------------------------
 NFxGenApp::NFxGenApp()
 {
-/*	NNopOp op;		//Force Register	###TOFIX###
-	NStoreOp op1;	//Force Register	###TOFIX###
-	NCellOp	op2;	//Force Register	###TOFIX###
-	NRotoZoomOp	op3;	//Force Register	###TOFIX###
-	NBlurOp	op4;	//Force Register	###TOFIX###*/
-
 	g_pceventsMgr = new NEventsMgr;
 
-	//###TEST###
+	//###TEST### NTreeNode class
 /*	NTreeNode* proot	= new NTreeNode;
 	proot->SetName("Root");
 
@@ -73,6 +67,39 @@ NFxGenApp::NFxGenApp()
 	proot->AddSon(pgroup2, -1);
 	TRACE("");*/
 
+	//###TEST### NObject reference from variables
+/*
+	NObject* pobjRefTarget = new NObject();
+	pobjRefTarget->SetName(".Target");
+
+	NObject* pobjRefMaker01 = new NObject();
+	pobjRefMaker01->SetName(".Maker01");
+
+	NObject* pobjRefMaker02 = new NObject();
+	pobjRefMaker02->SetName(".Maker02");
+
+	NVarsBlocDesc blocdescOp[] =
+	{
+		VAR(erefobj,	false, "Load",	"0", "NUseStoredOpsProp")	//0
+	};
+
+	NVarsBloc* pcvarsBloc01 = pobjRefMaker01->AddVarsBloc(1, blocdescOp, 1);
+	NVarsBloc* pcvarsBloc02 = pobjRefMaker02->AddVarsBloc(1, blocdescOp, 1);
+
+	pcvarsBloc01->SetValue(0, 0.0, pobjRefTarget);
+	pcvarsBloc02->SetValue(0, 0.0, pobjRefTarget);
+
+	NOperator* popRef = null;
+	pcvarsBloc01->GetValue(0, 0.0, (NObject*&)popRef);
+	pcvarsBloc02->GetValue(0, 0.0, (NObject*&)popRef);
+
+	delete pobjRefTarget;
+
+	pcvarsBloc01->GetValue(0, 0.0, (NObject*&)popRef);
+	pcvarsBloc02->GetValue(0, 0.0, (NObject*&)popRef);
+
+	TRACE("");
+*/
 }
 
 //-----------------------------------------------------------------

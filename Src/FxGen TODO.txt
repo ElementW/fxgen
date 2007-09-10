@@ -10,7 +10,16 @@ Next Version
 Version 0.5 alpha (Release: Use FxGen in your Games !)
 ----------------------------------
 .Custom popup menu (OpenGL GUI preparation)
-.
+.NEngineOp::_ComputeInvaliddOps() optimisation (reftarget invalidation computed once)
+.new method NEngineOp::_ComputeToProcessOpsCount()
+.new method NObjectGarbage::Compact()
+.new method NObjectGarbage::RemoveEntry()
+
+.API
+	.NEngineOp::ProcessOperators()
+	.NEngineOp::GetFinalResultCount()
+	.NEngineOp::GetFinalResultBitmapByIdx()
+	.NEngineOp::CompactMemory()
 
 
 Version 0.4 alpha

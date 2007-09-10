@@ -53,7 +53,7 @@
 	typedef udword						ID;			// Identifier
 
 	//Runtime class
-	typedef	NObject* (__cdecl RTCLASS_HANDLER)(void);	//Callback pour la creation de la classe
+	typedef	NObject* (__cdecl RTCLASS_HANDLER)(void);	//Callback for class creation
 
 //-----------------------------------------------------------------
 //!	\class		NRTClass
@@ -421,7 +421,7 @@ protected:
 struct NObjGarbageDesc
 {
 	NObject** ppobj;
-	bool bPermanent;
+	ubyte			byType;
 };
 
 class FXGEN_API NObjectGarbage
@@ -431,8 +431,10 @@ public:
 	~NObjectGarbage();
 
 	void SetManagedClassID(ID _CLASSID);
-	void Compact();	//!< Delete all objects unused for a large time		//###TODO###
-	void GetInstance(NObject** _ppobj, bool _bPermanent=false);	//!< Return an instance
+	void Compact(ubyte _byTypeMask, udword _dwTimevalidityMs);
+	void GetInstance(NObject** _ppobj, ubyte _byAsType=1);	//!< Return an instance
+	void RemoveEntry(NObject** _ppobj);
+
 	//SetMaxUsedMemory()	//!< if max used memory reached, Compact() is called while GetInstance()
 
 	udword		GetCount()	{	return m_dwCount; }
