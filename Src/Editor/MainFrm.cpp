@@ -43,6 +43,13 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 
+//###TEST###
+void staticProcess(udword _dwCurrentOp, udword _dwTotalOps)
+{
+	TRACE("Current %d Total %d\n", _dwCurrentOp, _dwTotalOps);
+}
+
+
 //-----------------------------------------------------------------
 //		Constructor
 //-----------------------------------------------------------------
@@ -215,9 +222,13 @@ void NMainFrm::OnOpenProject()
 			NString strTitle(CAPTION);
 			strTitle+=str.Buffer();
 			SetWindowText(strTitle.Buffer());
-                } else {
-                  gNFxGen_GetEngine()->Clear();
-                }
+
+			//###TEST###
+			//gNFxGen_GetEngine()->ProcessOperators(0.0, staticProcess);
+
+		} else {
+			gNFxGen_GetEngine()->Clear();
+		}
 
 		//Display Projects's Pages
 		m_pprojectwnd->DisplayOperatorsProject(gNFxGen_GetEngine());
@@ -312,3 +323,5 @@ void NMainFrm::DeletedOperator(NOperator* pop)
 {
 	m_bExecuteLocked = false;
 }
+
+

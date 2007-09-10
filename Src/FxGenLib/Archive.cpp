@@ -92,7 +92,7 @@ bool NArchive::FinalizeSave()
 
 	//Add Mapped Objects To Archive
 	udword j;
-        udword dwUserDatasEndPos = m_pBufferedStream->Tell();
+	udword dwUserDatasEndPos = m_pBufferedStream->Tell();
 
 	for (j=0; j<m_carrayMappedObjs.Count(); j++)
 	{
@@ -110,13 +110,13 @@ bool NArchive::FinalizeSave()
 	m_pStream->PutData(&h, sizeof(NSFHeader));
 
 	//Save GUIDs Table
-        m_pStream->PutData(m_pGuidsArray, sizeof(ID)*m_wGuidsCount);
+	m_pStream->PutData(m_pGuidsArray, sizeof(ID)*m_wGuidsCount);
 
 	//Save Datas block
-        m_pStream->PutData(m_pBufferedStream->GetBuffer(), m_pBufferedStream->Tell());
+	m_pStream->PutData(m_pBufferedStream->GetBuffer(), m_pBufferedStream->Tell());
 
-        delete m_pBufferedStream;
-        m_pBufferedStream = null;
+	delete m_pBufferedStream;
+	m_pBufferedStream = null;
 
 	return true;
 }

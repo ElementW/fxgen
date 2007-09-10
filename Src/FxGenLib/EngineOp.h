@@ -28,6 +28,10 @@
 #define	MAX_DEPTH			64		//!< Max Stack Hierarchical depth
 #define	MAX_CHANNELS	256		//!< Max channels animation (1-256)
 
+#define	OBJRES_TYPE_INTERMEDIATE	1		//!< Intermediate allocated bitmaps
+#define	OBJRES_TYPE_STORED				2		//!< Stored bitmaps
+#define	OBJRES_TYPE_FINALSTORED		4		//!< Final Stored bitmaps
+
 //-----------------------------------------------------------------
 //                   Prototypes
 //-----------------------------------------------------------------
@@ -35,6 +39,11 @@ class NObject;
 	class NOperator;
 	class NOperatorsPage;
 	class NEngineOp;
+
+//-----------------------------------------------------------------
+//                   TypesDef
+//-----------------------------------------------------------------
+typedef	void (__cdecl FXGEN_PROCESSCB)(udword _dwCurrentOp, udword _dwTotalOps);
 
 //-----------------------------------------------------------------
 //!	\class		NOperator
@@ -66,13 +75,14 @@ public:
 
 	//Datas Execution
 	ubyte	m_byDepth;						//!< Depth in tree
-	ubyte	m_byInputs;						//!< Operators numbers in input
+	ubyte	m_byInputs;						//!< Input Operators numbers
 
 	//Datas RT
-	bool				m_bInvalided;				//!< Invalid operator
+	bool				m_bInvalided;				//!< Invalid operator (must be processed for result)
 	bool				m_bError;						//!< Error while process
+	bool				m_bParsed;					//!< Operators scan optimization
 	float				m_fProcessedTime;		//!< Time for last process() call
-	NObject*		m_pObj;							//!< Objet generated (Texture, Mesh ...)
+	NObject*		m_pObj;							//!< Object generated (Texture, Mesh ...)
 	NOperator*	m_pnextOpToProcess;	//!< Next operator to execute
 	NOperator*	m_pprevOpToProcess;	//!< Previous operator executed
 
@@ -125,7 +135,6 @@ public:
 	NObjectArray	m_arrayOpsUnlinked;		//!< Operators unlinked array
 };
 
-
 //-----------------------------------------------------------------
 //!	\class		NEngineOp
 //!	\brief		Engine operators process
@@ -137,15 +146,23 @@ public:
 	NEngineOp();
 	virtual ~NEngineOp();
 
-	//Methods
-	void Clear();	//!< clear this project
+	//API		###TODO###
+	void ProcessOperators(float _ftime, FXGEN_PROCESSCB* _cbProcess);
+	void CompactMemory();
 
+	udword		GetFinalResultCount();	//##NEW###
+	NBitmap*	GetFinalResultBitmapByIdx(udword _idx);	//##NEW###
+
+
+	//Methods
+	void Clear();
 	bool LoadProject(char* _pszFullFileName);
 	bool SaveProject(char* _pszFullFileName);
 
-	void GetFinalOps(NTreeNode* _pnode, NObjectArray& _finalsOp, bool _bRecurse);
+	//Operators access
+	void GetFinalOps(NTreeNode* _pnodeFrom, NObjectArray& _finalsOp, bool _bRecurse);
 
-	//Execution Methods
+	//Execution
 	void				InvalidateOp(NOperator* _pop);
 	void				Execute(float _ftime, NOperator* _popFinal);
 
@@ -153,20 +170,26 @@ public:
 	NTreeNode*	GetRootGroup()				{ return m_pRootGroup; }
 
 	//Resources management
-	void	GetBitmap(NObject** _ppobj, bool _bPermanent=false);
+	void	GetBitmap(NObject** _ppobj, ubyte _byObjType=OBJRES_TYPE_INTERMEDIATE);
 
 	//Channels methods
 	void SetChannelValue(ubyte _byChannel, NVarValue& _value);
 	void GetChannelValue(ubyte _byChannel, NVarValue& _outValue);
 
+	//Membres access
+	NObjectGarbage* GetBitmapGarbage()	{ return &m_bitmapsAlloc; }
+
 protected:
 	//Internal Methods
 	void _GetFinalOps(NTreeNode* _pnode, NObjectArray& _finalsOp, bool _bRecurse);
+	void ClearParsedOpsFlags(NOperator* _pop);
 
 	//Methods for execution
 	void _Execute(float _fTime, NOperator* _popFinal);
 	void ComputeInvaliddOps(NOperator* _popFinal);
 	void _ComputeInvaliddOps(NOperator* _pop);
+	void _ComputeToProcessOpsCount(NOperator* _popFinal);
+
 	NOperator* GetRootOperator(NOperator* _pop);
 
 	//Datas
@@ -178,9 +201,13 @@ protected:
 	udword			m_nCurContext;				//!< indice (see m_aStacks[m_nCurContext, dwCurLevel])
 	NOperator*	m_popFinal;
 	bool				m_bError;							//!< Error while process
+	udword			m_dwTotalProcessOpsCount, m_dwCurProcessOpsCount;
 
 	//Garbage
 	NObjectGarbage	m_bitmapsAlloc;
+
+	//Datas API Interface
+	NObjectArray m_arrayFinalsOp;		//##NEW###
 };
 
 

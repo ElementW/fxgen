@@ -669,7 +669,7 @@ void NObject::RemoveRefToMe(NObject* _pobj)
 		{
 			m_carrayRefMakers.RemoveItem(i);
 			_pobj->RemoveRef(this);
-			RemoveVarsRef( _pobj );
+			_pobj->RemoveVarsRef(this);		//###NEW###
 			break;
 		}
 	}
@@ -1211,20 +1211,41 @@ void NObjectGarbage::SetManagedClassID(ID _CLASSID)
 }
 
 //-----------------------------------------------------------------
-//!	\brief		Delete all objects unused for a large time
+//!	\brief		Delete all objects by types and time validity
+//!	\param		_byTypeMask					Delete objects if object type and bits masking is true
+//!	\param		_dwTimevalidityMs		Max time in milliseconds for objets's validities
 //-----------------------------------------------------------------
-void NObjectGarbage::Compact()
+void NObjectGarbage::Compact(ubyte _byTypeMask, udword _dwTimevalidityMs)
 {
-	//###TODO###
-	//-set referenced pointer at null
+	udword dwTick = GetTickCount();
+	udword	dwCompacted = 0;
+
+	for (udword i=0; i<m_dwCount; i++)
+	{
+		NObjGarbageDesc* pdesc = &m_aobjects[i];
+		if (*pdesc->ppobj!=null && (pdesc->byType&_byTypeMask))
+		{
+			udword dwDelta = dwTick - (*pdesc->ppobj)->m_dwLastUsedTime;
+			if (dwDelta > _dwTimevalidityMs)
+			{
+				delete *pdesc->ppobj;
+				*pdesc->ppobj = null;
+				dwCompacted++;
+			}
+		}
+
+	}
+
+	TRACE("NObjectGarbage::Compact Count<%d>\n", dwCompacted);
+	
 }
 
 //-----------------------------------------------------------------
 //!	\brief	Return an object instance
 //!	\param	_ppobj			object pointer
-//!	\param	_bPermanent	true if object must be permanent
+//!	\param	_byAsType		Set object of a type (let free to developer)
 //-----------------------------------------------------------------
-void NObjectGarbage::GetInstance(NObject** _ppobj, bool _bPermanent)
+void NObjectGarbage::GetInstance(NObject** _ppobj, ubyte _byAsType)
 {
 	if (m_aobjects)
 	{
@@ -1234,8 +1255,8 @@ void NObjectGarbage::GetInstance(NObject** _ppobj, bool _bPermanent)
 			*_ppobj = NRTClass::CreateByID(m_CLASSID);
 			if (*_ppobj!=null)
 			{
-				m_aobjects[m_dwCount].ppobj				= _ppobj;
-				m_aobjects[m_dwCount].bPermanent	= _bPermanent;
+				m_aobjects[m_dwCount].ppobj		= _ppobj;
+				m_aobjects[m_dwCount].byType	= _byAsType;
 
 				m_dwCount++;
 				if (m_dwCount>=m_dwSize)
@@ -1253,6 +1274,31 @@ void NObjectGarbage::GetInstance(NObject** _ppobj, bool _bPermanent)
 			(*_ppobj)->m_dwLastUsedTime = GetTickCount();
 
 	}
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Remove an object instance
+//!	\param	_ppobj			object pointer
+//-----------------------------------------------------------------
+void NObjectGarbage::RemoveEntry(NObject** _ppobj)
+{
+	for (udword i=0; i<m_dwCount; i++)
+	{
+		NObjGarbageDesc* pdesc = &m_aobjects[i];
+		if (pdesc->ppobj==_ppobj)
+		{
+			if (*pdesc->ppobj!=null)
+			{
+				delete *pdesc->ppobj;
+			}
+
+			CopyMemory(m_aobjects+i, m_aobjects+i+1, (m_dwSize-i-1) * sizeof(NObjGarbageDesc*));
+			m_dwCount--;
+			TRACE("NObjectGarbage::RemoveEntry Count<%d>\n", m_dwCount);
+			break;
+		}
+	}
+
 }
 
 

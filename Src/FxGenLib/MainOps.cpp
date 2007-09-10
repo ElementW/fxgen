@@ -58,7 +58,7 @@ udword NStoreOp::Process(float _ftime, NOperator** _pOpsInts)
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj, true);	//Get a permanent bitmap
+	gNFxGen_GetEngine()->GetBitmap(&m_pObj, OBJRES_TYPE_STORED);
 
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -113,7 +113,7 @@ udword NStoreResultOp::Process(float _ftime, NOperator** _pOpsInts)
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj, true);	//Get a permanent bitmap
+	gNFxGen_GetEngine()->GetBitmap(&m_pObj, OBJRES_TYPE_FINALSTORED);
 
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
