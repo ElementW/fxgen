@@ -669,7 +669,7 @@ void NEngineOp::Execute(float _ftime, NOperator* _popFinal)
 {
 	if (_popFinal!=null)
 	{
-		//Flag operators that need process 
+		//Flag operators that need process
 		ComputeInvaliddOps(_popFinal);
 
 		//Init
@@ -678,7 +678,7 @@ void NEngineOp::Execute(float _ftime, NOperator* _popFinal)
 		m_dwTotalProcessOpsCount	= 0;
 		m_popFinal								= _popFinal;
 		m_bError									= false;
-		
+
 		ZeroMemory(m_aStacks, sizeof(m_aStacks));
 
 		//Operators count (just for statistic not need for runtime)
@@ -922,7 +922,8 @@ bool NEngineOp::LoadProject(char* _pszFullFileName)
 {
 	//Open Archive
         NFileStream fileStream;
-        fileStream.Open(_pszFullFileName);
+	if(!fileStream.Open(_pszFullFileName)) // non-existing file
+		return false;
 	NArchive ar(&fileStream);
 	if (!ar.Read())
 		return false;
@@ -952,7 +953,7 @@ bool NEngineOp::SaveProject(char* _pszFullFileName)
 	//Open Archive
   NFileStream fileStream;
   fileStream.Open(_pszFullFileName, true);
-	
+
   NArchive ar(&fileStream);
 	if (ar.PrepareSave())
 	{

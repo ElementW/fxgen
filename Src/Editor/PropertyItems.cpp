@@ -290,7 +290,11 @@ void NUbyteComboProp::DrawItem(NGraphics* pdc, NRect& rcItem)
 	ubyte val = m_pvarValue->byVal;
 
 	if (val<(ubyte)m_carrayStringsList.Count())
+#ifdef __GNUC__
+		m_strValue.Format("%s", 	m_carrayStringsList[val].Buffer());
+#else
 		m_strValue.Format("%s", 	m_carrayStringsList[val]);
+#endif
 	else
 		m_strValue="?";
 

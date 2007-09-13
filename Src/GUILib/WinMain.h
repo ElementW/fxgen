@@ -29,6 +29,15 @@ int WINAPI	WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 	// Get Application
 	NApplication* pApp = GetApp();
 
+	// One and only file can be loaded at startup and may be enquoted
+	if(lpCmdLine[0] == '"')
+		lpCmdLine++;
+	char *tp = strchr(lpCmdLine, '"');
+	if(tp != NULL)
+		*tp = '\0';
+	pApp->lpCmdLine = lpCmdLine;
+
+
 	// Perform specific initializations
 	if (!pApp->Init())		pApp->Exit();
 

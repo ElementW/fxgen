@@ -72,7 +72,7 @@ NMainFrm::~NMainFrm(void)
 //!	\param	rect	windows rect
 //!	\return	True if success
 //-----------------------------------------------------------------
-bool NMainFrm::Create(char* name, NRect& rect)
+bool NMainFrm::Create(char* name, const NRect& rect)
 {
 	NFrmWnd::Create(name, rect);
 
@@ -197,22 +197,9 @@ void NMainFrm::OnNewProject()
 	m_bExecuteLocked = false;
 }
 
-//-----------------------------------------------------------------
-//!	\brief	Project loading
-//-----------------------------------------------------------------
-void NMainFrm::OnOpenProject()
+void NMainFrm::LoadProject(const NString& str)
 {
-	m_popMarkedShow = null;
-	m_bExecuteLocked = true;
-
-	//Open File Dialog
-	NFileDialog dlg;
-	dlg.Create("Opening Project...", this);
-	if (dlg.DoModal())
-	{
-		NString str = dlg.GetPathName();
-
-                gNFxGen_GetEngine()->Clear();
+		gNFxGen_GetEngine()->Clear();
 
 		m_pprojectwnd->DisplayOperatorsProject(gNFxGen_GetEngine());
 		m_pprojectwnd->SelectFirstPage();
@@ -234,7 +221,21 @@ void NMainFrm::OnOpenProject()
 		m_pprojectwnd->DisplayOperatorsProject(gNFxGen_GetEngine());
 		m_pprojectwnd->SelectFirstPage();
 
-	}
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Project loading
+//-----------------------------------------------------------------
+void NMainFrm::OnOpenProject()
+{
+	m_popMarkedShow = null;
+	m_bExecuteLocked = true;
+
+	//Open File Dialog
+	NFileDialog dlg;
+	dlg.Create("Opening Project...", this);
+	if (dlg.DoModal())
+		LoadProject(dlg.GetPathName());
 
 	m_bExecuteLocked = false;
 }

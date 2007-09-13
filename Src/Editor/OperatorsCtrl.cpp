@@ -60,12 +60,12 @@ NOperatorsCtrl::~NOperatorsCtrl()
 	ClearClipboard();
 }
 
-bool NOperatorsCtrl::Create(char* name, NRect& rect, NWnd* parent)
+bool NOperatorsCtrl::Create(const char* name, const NRect& rect, NWnd* parent)
 {
 	//Call Base class
 	NWNDCREATE			wc;
 	wc.Id						= 1;
-	wc.Name					= name;
+	wc.Name					= const_cast<char*>(name);
 	wc.Parent				= parent;
 	wc.Rect					= rect;
 	wc.W32ClassName	= "FXGen_WNDCLASS";

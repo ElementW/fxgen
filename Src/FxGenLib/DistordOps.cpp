@@ -149,15 +149,15 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts)
 			// 3 | 4
 
 			//Texel1
-			float WeightFactors = (1.0f-uf) * (1.0f-vf);						
+			float WeightFactors = (1.0f-uf) * (1.0f-vf);
 			RGBA* ptexel = pPxlSrc + ((vt%th)*tw) + (ut%tw);
 
 			Color.r = ((sdword)ptexel->r	* WeightFactors);
 			Color.g = ((sdword)ptexel->g	* WeightFactors);
 			Color.b = ((sdword)ptexel->b	* WeightFactors);
 			Color.a = ((sdword)ptexel->a	* WeightFactors);
-			
-			//Texel2			
+
+			//Texel2
 			WeightFactors = uf * (1.0f-vf);
 			ptexel = pPxlSrc + ((vt%th)*tw) + ((ut+1)%tw);
 			Color.r+= ((sdword)ptexel->r	* WeightFactors);
@@ -166,7 +166,7 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts)
 			Color.a+= ((sdword)ptexel->a	* WeightFactors);
 
 			//Texel3
-			WeightFactors = (1.0f-uf) * vf;			
+			WeightFactors = (1.0f-uf) * vf;
 			ptexel = pPxlSrc + (((vt+1)%th)*tw) + (ut%tw);
 			Color.r+= ((sdword)ptexel->r	* WeightFactors);
 			Color.g+= ((sdword)ptexel->g	* WeightFactors);
@@ -174,7 +174,7 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts)
 			Color.a+= ((sdword)ptexel->a	* WeightFactors);
 
 			//Texel4
-			WeightFactors = uf * vf;			
+			WeightFactors = uf * vf;
 			ptexel = pPxlSrc + (((vt+1)%th)*tw) + ((ut+1)%tw);
 			Color.r+= ((sdword)ptexel->r	* WeightFactors);
 			Color.g+= ((sdword)ptexel->g	* WeightFactors);
@@ -243,7 +243,7 @@ udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts)
 	//Set Texture size
 	NBitmap* pDst	= (NBitmap*)m_pObj;
 	pDst->SetSize(w, h);
-	
+
 
 	/////////////////////////////////////////
 	//Get Variables Values
@@ -288,7 +288,7 @@ udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts)
 			// 3 | 4
 
 			//Texel1
-			float WeightFactors = (1.0f-uf) * (1.0f-vf);						
+			float WeightFactors = (1.0f-uf) * (1.0f-vf);
 			RGBA* ptexel = pPxSrc + ((vt%h)*w) + (ut%w);
 
 			Color.r = ((sdword)ptexel->r	* WeightFactors);
@@ -296,7 +296,7 @@ udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts)
 			Color.b = ((sdword)ptexel->b	* WeightFactors);
 			Color.a = ((sdword)ptexel->a	* WeightFactors);
 
-			//Texel2			
+			//Texel2
 			WeightFactors = uf * (1.0f-vf);
 			ptexel = pPxSrc + ((vt%h)*w) + ((ut+1)%w);
 			Color.r+= ((sdword)ptexel->r	* WeightFactors);
@@ -305,7 +305,7 @@ udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts)
 			Color.a+= ((sdword)ptexel->a	* WeightFactors);
 
 			//Texel3
-			WeightFactors = (1.0f-uf) * vf;			
+			WeightFactors = (1.0f-uf) * vf;
 			ptexel = pPxSrc + (((vt+1)%h)*w) + (ut%w);
 			Color.r+= ((sdword)ptexel->r	* WeightFactors);
 			Color.g+= ((sdword)ptexel->g	* WeightFactors);
@@ -313,7 +313,7 @@ udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts)
 			Color.a+= ((sdword)ptexel->a	* WeightFactors);
 
 			//Texel4
-			WeightFactors = uf * vf;			
+			WeightFactors = uf * vf;
 			ptexel = pPxSrc + (((vt+1)%h)*w) + ((ut+1)%w);
 			Color.r+= ((sdword)ptexel->r	* WeightFactors);
 			Color.g+= ((sdword)ptexel->g	* WeightFactors);

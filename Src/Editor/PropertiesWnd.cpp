@@ -47,7 +47,7 @@ NPropertiesWnd::~NPropertiesWnd(void)
 //-----------------------------------------------------------------
 //!	\brief	Control creation
 //-----------------------------------------------------------------
-bool NPropertiesWnd::Create(char* name, NRect& rect, NWnd* parent)
+bool NPropertiesWnd::Create(const char* name, const NRect& rect, NWnd* parent)
 {
 	NPropertiesCtrl::Create(name, rect, parent);
 
