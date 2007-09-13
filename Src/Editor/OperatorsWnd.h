@@ -33,7 +33,7 @@ public:
 	virtual ~NOperatorsWnd(void);
 
 	//Methods
-	virtual	bool Create(char* name, NRect& rect, NWnd* parent);
+	virtual	bool Create(const char* name, const NRect& rect, NWnd* parent);
 	virtual void OnMarkShowOperator(NOperator* pop);
 
 	virtual void OnDeletingOperator(NOperator* pop);

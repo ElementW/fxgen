@@ -81,13 +81,13 @@ public:
 	//Writing Methods
 	void	PutClass(NObject* _c);
         NArchive &operator<<( const char* _val ); // Needed since the template tends to choose wrong overload on const char*
-        template <class T> NArchive &operator<<( const T &_val ) { *(m_pBufferedStream == null ? m_pStream : m_pBufferedStream) << _val; return *this; }
+        template <class T> NArchive &operator<<( const T &_val ) { *(m_pBufferedStream == null ? static_cast<NMemoryStream*>(m_pStream) : m_pBufferedStream) << _val; return *this; }
         bool	PutData(void* _buf, udword _length);
 
 	//Reading Methods
 	NObject*	GetClass();
         NArchive &operator>>( char* _val ); // Needed since the template tends to choose wrong overload on const char*
-        template <class T> NArchive &operator>>( T &_val ) { *(m_pBufferedStream == null ? m_pStream : m_pBufferedStream) >> _val; return *this; }
+        template <class T> NArchive &operator>>( T &_val ) { *(m_pBufferedStream == null ? static_cast<NMemoryStream*>(m_pStream) : m_pBufferedStream) >> _val; return *this; }
         bool	GetData(void* _buf, udword _length);
 
 	//Mapped object Methods

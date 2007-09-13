@@ -46,7 +46,7 @@ NString::NString(const char* string)
 }
 
 
-NString::NString(NString& string)
+NString::NString(const NString& string)
 {
 	udword len = string.Length();
 	mBuffer = (char*)malloc(len+1);
@@ -160,7 +160,7 @@ udword NString::ExtractToken(udword i, NString& strToken, char* pszSeparators)
 udword NString::SearchWord(udword i)
 {
 	udword l = Length();
-	
+
 	if (!l)				return (udword)-1;										//No string, no words...
 	if (l<=i)			return (udword)-1;										//Nothing at that index
 
@@ -176,7 +176,7 @@ udword NString::SearchWord(udword i)
 udword NString::Find(char c, udword index)
 {
 	udword l = Length();
-	
+
 	if (!l)				return (udword)-1;										//No string, no words...
 	if (l<=index)		return (udword)-1;										//Nothing at that index
 
@@ -202,7 +202,7 @@ udword NString::Find(const char* str, udword index)
 {
 	udword l  = Length();
 	udword sl = (udword)strlen(str);
-	
+
 	if (!l)				return (udword)-1;										//No string, no words...
 	if (l<=index)		return (udword)-1;										//Nothing at that index
 	if (!sl)			return (udword)-1;										//There's nothing to look for, it's an error
@@ -221,7 +221,7 @@ udword NString::Find(const char* str, udword index)
 		//Check if we've found the string
 		if (si==sl)			return index;
 	}
-	
+
 	//Not found
 	return (udword)-1;
 }

@@ -509,7 +509,7 @@ NRect NWnd::GetWindowRect()
 // Name:	SetWindowRect()
 // Desc:	...
 //-----------------------------------------------------------------
-void NWnd::SetWindowRect(NRect& r)
+void NWnd::SetWindowRect(const NRect& r)
 {
 	::MoveWindow(m_W32HWnd, r.left, r.top, r.Width(), r.Height(), true );
 }
@@ -671,7 +671,7 @@ NFrmWnd::~NFrmWnd()
 // Name:	Create()
 // Desc:	...
 //-----------------------------------------------------------------
-bool NFrmWnd::Create(char* name, NRect& rect)
+bool NFrmWnd::Create(char* name, const NRect& rect)
 {
 	NWNDCREATE			wc;
 	wc.Id						= 1;
@@ -770,7 +770,7 @@ bool NWControl::Create(NWNDCREATE &c)
 // Name:	Create()
 // Desc:	...
 //-----------------------------------------------------------------
-bool NEditCtrl::Create(char* name, NRect& rect, NWnd* parent, bool bMultiLine)
+bool NEditCtrl::Create(char* name, const NRect& rect, NWnd* parent, bool bMultiLine)
 {
 	udword dwStyle=0;
 	if (bMultiLine)		dwStyle=WS_VSCROLL|ES_AUTOVSCROLL|ES_MULTILINE;
@@ -844,7 +844,11 @@ NString NEditCtrl::GetText()
 		gt.flags			= GT_DEFAULT;
 		gt.codepage			= CP_ACP;
 		gt.lpDefaultChar	= null;
+#ifdef __GNUC__
+		gt.lpUsedDefaultChar= null;
+#else
 		gt.lpUsedDefChar	= null;
+#endif
 		udword len = ::SendMessage(m_W32HWnd, EM_GETTEXTEX, (WPARAM)&gt, (LPARAM)str.Buffer());
 		assert(len==length);
 		return str;
@@ -1495,7 +1499,7 @@ NColorDialog::~NColorDialog()
 {
 }
 
-bool NColorDialog::Create(char* name, NWnd* parent, NColor& _color)
+bool NColorDialog::Create(const char* name, NWnd* parent, const NColor& _color)
 {
 	//Store Some Infos
 	m_Color = _color;

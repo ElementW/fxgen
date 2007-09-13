@@ -16,6 +16,7 @@
 //-----------------------------------------------------------------
 #pragma once
 
+#include "gcccompat/gcccompat.h"
 //-----------------------------------------------------------------
 //                   Macros
 //-----------------------------------------------------------------
@@ -251,7 +252,7 @@ protected:
 
 	NVarsBloc*					m_pcnextVarsBloc;		//!< Pointer on next variables bloc
 
-	friend NObject;
+	friend class NObject;
 };
 
 

@@ -35,11 +35,11 @@ public:
 	//Constructors-Destructor
 			NString();
 			NString(const char* string);
-			NString(NString& string);
+			NString(const NString& string);
 			~NString();
 
 	//Methods
-			udword			Length		()						{ return mBuffer?(udword)strlen(mBuffer):0;	}		//Return lenght without null caracter.
+			udword			Length		()	const 				{ return mBuffer?(udword)strlen(mBuffer):0;	}		//Return lenght without null caracter.
 			void				SetLength	(udword length);													//lenght without null caracter.
 			udword			Find		(char c, udword index);
 			udword			Find		(const char* str, udword index);
@@ -55,10 +55,10 @@ public:
 			NString&		Format		(const char* str, ...);
 
 	//Members access
-			char*				Buffer()		{ return mBuffer;			}
+			char*				Buffer()	const 	{ return mBuffer;			}
 
 	//Operators
-			NString& operator=	(NString& string)	{
+			NString& operator=	(const NString& string)	{
 									if (mBuffer)	free(mBuffer);
 									udword len = string.Length();
 									mBuffer = (char*)malloc(len+1);
@@ -150,12 +150,12 @@ class GUI_API NRect
 public:
 	//Constructors
 	NRect()																					{ left = top = right = bottom = 0;					}
-	NRect(NRect& r)																	{ left = r.left; top = r.top; right = r.right; bottom = r.bottom;	}
+	NRect(const NRect& r)																	{ left = r.left; top = r.top; right = r.right; bottom = r.bottom;	}
 	NRect(sdword l, sdword t, sdword r, sdword b)		{ left = l; top = t; right = r; bottom = b;	}
 
 	//Methods
-	sdword Width()									{ return right-left;	}
-	sdword Height()									{ return bottom-top;	}
+	sdword Width() const 							{ return right-left;	}
+	sdword Height() const 							{ return bottom-top;	}
 
 	NPoint CenterPoint()						{ return NPoint(left + Width()/2, top + Height()/2);								}
 	NRect& Center(NRect& P)					{ Move( (P.Width() - Width()) / 2 + P.left - left, (P.Height() - Height()) / 2 + P.top - top);	return *this;	}
@@ -179,7 +179,7 @@ public:
 
 	inline	NRect&	Intersect(NRect& R);
 	inline	bool		IsIntersected(NRect& R);
-	inline	NRect&	Union(NRect& R);
+	inline	NRect&	Union(const NRect& R);
 
 	bool IsEmpty()		{ return (left==right || top==bottom); }
 
@@ -243,7 +243,7 @@ public:
 //-----------------------------------------------------------------
 
 //NString inlines methods
-inline	bool	operator== (NString& str1, NString& str2)	{ return strcmp(str1.Buffer(), str2.Buffer())==0;	}
+inline	bool	operator== (const NString& str1, const NString& str2)	{ return strcmp(str1.Buffer(), str2.Buffer())==0;	}
 
 
 //-----------------------------------------------------------------
@@ -312,7 +312,7 @@ bool NRect::IsIntersected(NRect& R)
 	return !tempRect.IsNormalized();
 }
 
-NRect& NRect::Union(NRect& R)
+NRect& NRect::Union(const NRect& R)
 {
 	if (left   > R.left  )	left	= R.left;
 	if (top    > R.top   )	top	= R.top;

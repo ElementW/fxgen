@@ -22,6 +22,10 @@
 #include "pch.h"
 #include "TreeNodeCtrl.h"
 
+#ifdef __GNUC__
+#include <limits.h>
+#endif
+
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
@@ -52,12 +56,12 @@ NTreeNodeCtrl::~NTreeNodeCtrl()
 //-----------------------------------------------------------------
 //!	\brief	Control creation
 //-----------------------------------------------------------------
-bool NTreeNodeCtrl::Create(char* name, NRect& rect, NWnd* parent)
+bool NTreeNodeCtrl::Create(const char* name, const NRect& rect, NWnd* parent)
 {
 	//Call Base class
 	NWNDCREATE			wc;
 	wc.Id						= 1;
-	wc.Name					= name;
+	wc.Name					= const_cast<char*>(name);
 	wc.Parent				= parent;
 	wc.Rect					= rect;
 	wc.W32ClassName	= "FXGen_WNDCLASS";

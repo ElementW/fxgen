@@ -123,6 +123,8 @@ bool NFxGenApp::Init()
 	NMainFrm* frame = new NMainFrm();
 	frame->Create(CAPTION, NRect(200,100,200+WIDTH,100+HEIGHT));
 	m_pMainWnd = frame;
+	if(lpCmdLine.Length())
+		frame->LoadProject(lpCmdLine);
 
 	return true;
 }

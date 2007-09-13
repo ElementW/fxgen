@@ -58,7 +58,7 @@ public:
 	virtual ~NTreeNodeCtrl();
 
 	// Methods
-	virtual	bool Create(char* name, NRect& rect, NWnd* parent);
+	virtual	bool Create(const char* name, const NRect& rect, NWnd* parent);
 
 	// Methods
 	void	Clear();

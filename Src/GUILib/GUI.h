@@ -117,6 +117,7 @@ public:
 
 	//Helpers
 	udword MessageBox(char* _pszText, uword dwType=MB_OK);
+	NString lpCmdLine;
 
 protected:
 	//Datas
@@ -198,7 +199,7 @@ public:
 	void	ScreenToClient(NPoint& _pt);
 	void	ClientToScreen(NPoint& _pt);
 
-	void	SetWindowRect(NRect& r);
+	void	SetWindowRect(const NRect& r);
 	void	SetFocus();
 	void	SetCapture();
 	void	ReleaseCapture();
@@ -257,7 +258,7 @@ public:
 	virtual	~NFrmWnd();
 
 	//Creation
-	virtual	bool Create(char* name, NRect& rect);
+	virtual	bool Create(char* name, const NRect& rect);
 
 	//Methods
 	void ReplaceWorkspace(NWnd* wnd);
@@ -306,7 +307,7 @@ public:
 	virtual		~NEditCtrl()			{}
 
 	//Windows Creation
-	virtual	bool	Create(char* name, NRect& rect, NWnd* parent, bool bMultiLine);
+	virtual	bool	Create(char* name, const NRect& rect, NWnd* parent, bool bMultiLine);
 
 	//General
 	void			SetText(char* text);
@@ -459,7 +460,7 @@ public:
 	virtual	~NColorDialog();
 
 	//Initialization
-	virtual bool Create(char* name, NWnd* parent, NColor& _color);
+	virtual bool Create(const char* name, NWnd* parent, const NColor& _color);
 
 	//Operations
 	virtual udword DoModal();		//Displays the dialog box and allows the user to make a selection

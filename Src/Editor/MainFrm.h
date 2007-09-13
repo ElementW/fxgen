@@ -33,7 +33,7 @@ public:
 	NMainFrm(void);
 	virtual ~NMainFrm(void);
 
-	virtual	bool Create(char* name, NRect& rect);
+	virtual	bool Create(char* name, const NRect& rect);
 	virtual	void	OnCommand(udword id);
 
 	//Methods
@@ -42,6 +42,8 @@ public:
 	void DeletedOperator(NOperator* pop);		//!< Notif deleted operator
 
 	NOperator* Execute(float _ftime);
+
+	void LoadProject(const NString& path);
 
 protected:
 	//Methods

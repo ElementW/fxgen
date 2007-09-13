@@ -34,7 +34,7 @@ public:
 	virtual ~NViewportsWnd(void);
 
 	//Methods
-	virtual	bool Create(char* name, NRect& rect, NWnd* parent);
+	virtual	bool Create(const char* name, const NRect& rect, NWnd* parent);
 
 protected:
 	//Messages

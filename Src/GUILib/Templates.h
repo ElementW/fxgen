@@ -81,7 +81,7 @@ public:
 			//!	\brief	Add an item at the end of the array
 			//!	\return	Returns the number of items in use (prior to adding)
 			//-----------------------------------------------------------------
-			udword AddItem(T& item)
+			udword AddItem(const T& item)
 			{
 				if (m_dwCount>=m_dwSize)
 				{

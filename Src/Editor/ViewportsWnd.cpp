@@ -65,7 +65,7 @@ NViewportsWnd::~NViewportsWnd(void)
 //-----------------------------------------------------------------
 //!	\brief	Control creation
 //-----------------------------------------------------------------
-bool NViewportsWnd::Create(char* name, NRect& rect, NWnd* parent)
+bool NViewportsWnd::Create(const char* name, const NRect& rect, NWnd* parent)
 {
 	NViewportsCtrl::Create(name, rect, parent);
 
@@ -364,7 +364,7 @@ void NViewportsWnd::OnCommand(udword _id)
 
                 case ID_EXPORT:
                 {
-                        if (m_pcurObject != null && 
+                        if (m_pcurObject != null &&
                             strcmp(m_pcurObject->GetRTClass()->m_pszClassName, "NBitmap") == 0)
                         {
 	                  //Save File Dialog

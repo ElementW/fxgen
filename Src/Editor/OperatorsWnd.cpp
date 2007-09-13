@@ -50,7 +50,7 @@ NOperatorsWnd::~NOperatorsWnd(void)
 //-----------------------------------------------------------------
 //!	\brief	Control creation
 //-----------------------------------------------------------------
-bool NOperatorsWnd::Create(char* name, NRect& rect, NWnd* parent)
+bool NOperatorsWnd::Create(const char* name, const NRect& rect, NWnd* parent)
 {
 	NOperatorsCtrl::Create(name, rect, parent);
 
