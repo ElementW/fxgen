@@ -29,10 +29,13 @@
 //-----------------------------------------------------------------
 //                   Defines
 //-----------------------------------------------------------------
+
 #define	MENU_NEWPROJECT		100
 #define	MENU_OPENPROJECT	101
-#define	MENU_SAVEPROJECT	102
-#define	MENU_EXIT					103
+#define	MENU_SAVEPROJECTAS	102
+#define	MENU_EXIT			103
+#define	MENU_SAVEPROJECT	104
+#define	MENU_RELOADPROJECT	105
 
 #define	MENU_DETAILLOW		200
 #define	MENU_DETAILNORMAL	201
@@ -126,10 +129,14 @@ bool NMainFrm::Create(char* name, const NRect& rect)
 	// Creation du Menu
 	NMenuBar*	pmenu = GetMenuBar();
 	udword dwParent = pmenu->InsertPopupItem(0, 0, "File");
+
 	pmenu->InsertItem(dwParent,1,"New Project...",	MENU_NEWPROJECT);
-	pmenu->InsertItem(dwParent,2,"Open Project...", MENU_OPENPROJECT);
-	pmenu->InsertItem(dwParent,3,"Save Project...", MENU_SAVEPROJECT);
-	pmenu->InsertItem(dwParent,4,"Exit...",					MENU_EXIT);
+	pmenu->InsertItem(dwParent,2,"Reload project", MENU_RELOADPROJECT);
+	pmenu->InsertItem(dwParent,3,"Open Project...", MENU_OPENPROJECT);
+	pmenu->InsertItem(dwParent,4,"Save Project...", MENU_SAVEPROJECTAS);
+	pmenu->InsertItem(dwParent,5,"Save Project", MENU_SAVEPROJECT);
+	pmenu->InsertItem(dwParent,6,"Exit...",					MENU_EXIT);
+
 
 	dwParent = pmenu->InsertPopupItem(0,				1, "Options");
 	dwParent = pmenu->InsertPopupItem(dwParent, 0, "Details");
@@ -156,10 +163,12 @@ void NMainFrm::OnCommand(udword id)
 	{
 		case MENU_NEWPROJECT:		OnNewProject();				break;
 		case MENU_OPENPROJECT:	OnOpenProject();			break;
-		case MENU_SAVEPROJECT:	OnSaveProject();			break;
+		case MENU_RELOADPROJECT:	LoadProject();			break;
+		case MENU_SAVEPROJECTAS:	OnSaveProject();			break;
+		case MENU_SAVEPROJECT:	SaveProject();			break;
 		case MENU_EXIT:					GetApp()->AskExit();	break;
 
-		case MENU_DETAILLOW:			
+		case MENU_DETAILLOW:
 			m_bExecuteLocked = true;
 			gNFxGen_GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
 			gNFxGen_GetEngine()->InvalidateAllOps();
@@ -175,7 +184,7 @@ void NMainFrm::OnCommand(udword id)
 			m_bExecuteLocked = false;
 			break;
 
-		case MENU_DETAILHIGH:	
+		case MENU_DETAILHIGH:
 			m_bExecuteLocked = true;
 			gNFxGen_GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
 			gNFxGen_GetEngine()->InvalidateAllOps();
@@ -204,6 +213,7 @@ void NMainFrm::OnNewProject()
 
 	m_popMarkedShow = null;
 	m_bExecuteLocked = true;
+	projectname = "";
 
 	//New project
 	gNFxGen_GetEngine()->Clear();
@@ -234,8 +244,17 @@ void NMainFrm::OnNewProject()
 	m_bExecuteLocked = false;
 }
 
-void NMainFrm::LoadProject(const NString& str)
+void NMainFrm::LoadProject(NString str)
 {
+	if(!str.Length())
+		str = projectname;
+	if(!str.Length())
+	{
+		OnOpenProject();
+		return;
+	}
+
+		m_popMarkedShow = null;
 		m_bExecuteLocked = true;
 
 		gNFxGen_GetEngine()->Clear();
@@ -245,6 +264,7 @@ void NMainFrm::LoadProject(const NString& str)
 
 		if (gNFxGen_GetEngine()->LoadProject(str.Buffer()))
 		{
+			projectname = str;
 			NString strTitle(CAPTION);
 			strTitle+=str.Buffer();
 			SetWindowText(strTitle.Buffer());
@@ -268,14 +288,32 @@ void NMainFrm::LoadProject(const NString& str)
 //-----------------------------------------------------------------
 void NMainFrm::OnOpenProject()
 {
-	m_popMarkedShow = null;
-	m_bExecuteLocked = true;
-
 	//Open File Dialog
 	NFileDialog dlg;
 	dlg.Create("Opening Project...", this);
 	if (dlg.DoModal())
 		LoadProject(dlg.GetPathName());
+}
+
+void NMainFrm::SaveProject(NString path)
+{
+	if(!path.Length())
+		path = projectname;
+	if(!path.Length())
+	{
+		OnSaveProject();
+		return;
+	}
+
+	m_bExecuteLocked = true;
+
+	if (gNFxGen_GetEngine()->SaveProject(path.Buffer()))
+	{
+		projectname = path;
+		NString strTitle(CAPTION);
+		strTitle+=path.Buffer();
+		SetWindowText(strTitle.Buffer());
+	}
 
 	m_bExecuteLocked = false;
 }
@@ -285,23 +323,11 @@ void NMainFrm::OnOpenProject()
 //-----------------------------------------------------------------
 void NMainFrm::OnSaveProject()
 {
-	m_bExecuteLocked = true;
-
 	//Save File Dialog
 	NFileDialog dlg;
 	dlg.Create("Saving Project...", this, false);
 	if (dlg.DoModal())
-	{
-		NString str = dlg.GetPathName();
-		if (gNFxGen_GetEngine()->SaveProject(str.Buffer()))
-		{
-			NString strTitle(CAPTION);
-			strTitle+=str.Buffer();
-			SetWindowText(strTitle.Buffer());
-		}
-	}
-
-	m_bExecuteLocked = false;
+		SaveProject(dlg.GetPathName());
 }
 
 
