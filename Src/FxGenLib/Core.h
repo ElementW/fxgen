@@ -65,17 +65,17 @@ class FXGEN_API NRTClass
 public:
 
 //Constructor
-	NRTClass(RTCLASS_HANDLER*	_pcreateCB, char* _pszClassName, char* _pszSuperClassName);
+	NRTClass(RTCLASS_HANDLER*	_pcreateCB, const char* _pszClassName, const char* _pszSuperClassName);
 
 //Methods
 	static NObject*		CreateByID(ID _CLASSID);
-	static NObject*		CreateByName(char* _pszClassName);
-	static ID					MakeClassID(char* _pszClassName);
+	static NObject*		CreateByName(const char* _pszClassName);
+	static ID					MakeClassID(const char* _pszClassName);
 
 //Datas
 	RTCLASS_HANDLER*	m_pCreateCB;		//!< CallBack for class creation
-	char*				m_pszClassName;				//!< Class's name
-	char*				m_pszSuperClassName;	//!< Super class's name
+	const char*				m_pszClassName;				//!< Class's name
+	const char*				m_pszSuperClassName;	//!< Super class's name
 
 	NRTClass*		m_pNextRTC;						//!< Next Run-Time class
 	ID					CLASSID;							//!< Class ID (Generate from name)
@@ -96,7 +96,7 @@ public:
 
 #ifdef _DEBUG
 #define TRACE	gDebugLog
-void FXGEN_API gDebugLog( char* fmt, ... );
+void FXGEN_API gDebugLog(const char* fmt, ... );
 #else
 #define TRACE
 #endif
@@ -231,14 +231,14 @@ public:
 	void	SetValue(udword _idx, float _fTime, udword		_val);	//!< Change variable value
 	void	SetValue(udword _idx, float _fTime, float			_val);	//!< Return variable value
 	void	SetValue(udword _idx, float _fTime, NObject*	_val);	//!< Change variable value
-	void	SetValue(udword _idx, float _fTime, char*			_val);	//!< Change variable value
+	void	SetValue(udword _idx, float _fTime, const char*			_val);	//!< Change variable value
 
 protected:
 	//Methods
 	void DoVarBlocVersion_Mapping(NArchive* _l, ubyte _byVersion);
-	void MapValueTo(double _val, udword _idx, char* _pszExpression);
+	void MapValueTo(double _val, udword _idx, const char* _pszExpression);
 	void MapValueTo(NObject* _val, udword _idx);
-	void MapValueTo(char* _val, udword _idx);
+	void MapValueTo(const char* _val, udword _idx);
 
 	//Datas
 	NObject*						m_powner;						//!< Object that contain this varsbloc
@@ -328,7 +328,7 @@ public:
 	DECLARE_CLASS();
 
 	//Methods
-	virtual void	SetName(char* _pszName)	{ strncpy_s(m_szName, sizeof(m_szName), _pszName, sizeof(m_szName)); }	//!< Affecte le nom de l'objet
+	virtual void	SetName(const char* _pszName)	{ strncpy_s(m_szName, sizeof(m_szName), _pszName, sizeof(m_szName)); }	//!< Affecte le nom de l'objet
 	virtual char*	GetName()								{ return m_szName;}	//!< Return object name
 
 	virtual NObject* Duplicate();

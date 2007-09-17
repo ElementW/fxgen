@@ -117,7 +117,7 @@ public:
 
 
 	//Methodes de recherche
-	void GetOpsFromClassName(char* _pszClassName, NObjectArray& _carray);
+	void GetOpsFromClassName(const char* _pszClassName, NObjectArray& _carray);
 
 	//Methodes pour la generation des liens entre les ops
 	void ComputeLinks();
@@ -156,8 +156,8 @@ public:
 
 	//Methods
 	void Clear();
-	bool LoadProject(char* _pszFullFileName);
-	bool SaveProject(char* _pszFullFileName);
+	bool LoadProject(const char* _pszFullFileName);
+	bool SaveProject(const char* _pszFullFileName);
 
 	//Operators access
 	void GetFinalOps(NTreeNode* _pnodeFrom, NObjectArray& _finalsOp, bool _bRecurse);
