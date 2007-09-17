@@ -996,7 +996,9 @@ bool NEngineOp::SaveProject(const char* _pszFullFileName)
 
 	//Open Archive
   NFileStream fileStream;
-  fileStream.Open(_pszFullFileName, true);
+
+  if(!fileStream.Open(_pszFullFileName, true))
+	return false;
 
   NArchive ar(&fileStream);
 	if (ar.PrepareSave())

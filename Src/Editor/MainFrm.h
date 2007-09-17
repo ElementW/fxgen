@@ -43,7 +43,8 @@ public:
 
 	NOperator* Execute(float _ftime);
 
-	void LoadProject(const NString& path);
+	void LoadProject(NString path = NString());
+	void SaveProject(NString path = NString());
 
 protected:
 	//Methods
@@ -57,5 +58,6 @@ protected:
 	NProjectWnd*		m_pprojectwnd;		//!< Pages Window
 	NStoredWnd*			m_pstoredwnd;			//!< Stored Window
 	NOperator*			m_popMarkedShow;	//!< Operator marked show for final result
+	NString projectname;
 	float						m_fDetailFactor;
 };

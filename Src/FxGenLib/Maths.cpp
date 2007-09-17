@@ -878,8 +878,31 @@ void SetSeedValue(unsigned int dwSeedValue)
 }
 
 
-unsigned int  myRandom()
+unsigned int myRandom(int mode)
 {
 	gdwSeedValue*=0x15a4e35;
-	return gdwSeedValue>>16;
+
+	const size_t esize = 256;
+	static unsigned int entropy[esize];
+	static size_t idx = 0;
+	switch(mode)
+	{
+		case 3:
+			srand(*entropy + gdwSeedValue);
+			return *entropy = (rand() * RAND_MAX +* entropy) % (1 << 16);
+		break;
+		case 2:
+			entropy[idx++] += gdwSeedValue;
+			entropy[idx++] *= entropy[gdwSeedValue % esize];
+			return entropy[idx %= esize] >> 16;
+		break;
+		case 1:
+			gdwSeedValue *= 19;
+			gdwSeedValue += gdwSeedValue % 17;
+			return gdwSeedValue>>16;
+		break;
+		case 0:	default:
+			return gdwSeedValue>>16;
+		break;
+	}
 }

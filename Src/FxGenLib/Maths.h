@@ -382,4 +382,4 @@ __forceinline void FloatToInt(int *int_pointer, float f)
 }
 
 extern FXGEN_API void SetSeedValue(unsigned int dwSeedValue);
-extern FXGEN_API unsigned int  myRandom();
+extern FXGEN_API unsigned int  myRandom(int=0);
