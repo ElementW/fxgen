@@ -479,7 +479,7 @@ NOperator* NOperatorsPage::GetFinalOpFrom(NOperator* pop)
 //!	\param	_pszClassName	class name
 //!	\param	_carray	operators returned
 //-----------------------------------------------------------------
-void NOperatorsPage::GetOpsFromClassName(char* _pszClassName, NObjectArray& _carray)
+void NOperatorsPage::GetOpsFromClassName(const char* _pszClassName, NObjectArray& _carray)
 {
 	for (udword i=0; i<m_arrayOps.Count(); i++)
 	{
@@ -918,7 +918,7 @@ void NEngineOp::GetFinalOps(NTreeNode* _pnodeFrom, NObjectArray& _finalsOp, bool
 //!	\param	_pszFullFileName	file name to load
 //!	\return	True if success
 //-----------------------------------------------------------------
-bool NEngineOp::LoadProject(char* _pszFullFileName)
+bool NEngineOp::LoadProject(const char* _pszFullFileName)
 {
 	//Open Archive
         NFileStream fileStream;
@@ -946,7 +946,7 @@ bool NEngineOp::LoadProject(char* _pszFullFileName)
 //!	\param	_pszFullFileName	file name for save
 //!	\return	True if success
 //-----------------------------------------------------------------
-bool NEngineOp::SaveProject(char* _pszFullFileName)
+bool NEngineOp::SaveProject(const char* _pszFullFileName)
 {
 	bool bRet = false;
 

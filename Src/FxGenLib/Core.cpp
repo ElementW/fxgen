@@ -75,7 +75,7 @@ bool NVarsBloc::Save(NArchive* _s)
 			case eudword:	*_s<<pval->dwVal;									break;
 			case efloat:	*_s<<pval->fVal;									break;
 			case erefobj:	_s->PutMappedObj(pval->pcRefObj);	break;
-			case estring:	*_s<<pval->szVal;									break;
+			case estring:	*_s<<(const char*)pval->szVal; /* cast for GCC - Olter */	break;
 			default:	assert(0);														break;
 		}
 
@@ -117,7 +117,7 @@ bool NVarsBloc::Load(NArchive* _l)
 				case eudword:	*_l>>pval->dwVal;										break;
 				case efloat:	*_l>>pval->fVal;										break;
 				case erefobj:	SetValue(i, 0, _l->GetMappedObj());	break;
-				case estring:	*_l>>pval->szVal;										break;
+				case estring:	*_l>>pval->szVal;					break;
 				default:	assert(0);															break;
 			}
 
@@ -298,7 +298,7 @@ void NVarsBloc::SetValue(udword _idx, float _fTime, NObject* _val)
 	if (_val)	m_powner->AddRef(_val);
 }
 
-void NVarsBloc::SetValue(udword _idx, float _fTime, char*	_val)
+void NVarsBloc::SetValue(udword _idx, float _fTime, const char*	_val)
 {
 	strcpy_s(m_paVarsValues[_idx].szVal, sizeof(m_paVarsValues[_idx].szVal), _val);
 }
@@ -414,7 +414,7 @@ void NVarsBloc::DoVarBlocVersion_Mapping(NArchive* _l, ubyte _byVersion)
 
 }
 
-void NVarsBloc::MapValueTo(double _fval, udword _idx, char* _pszExpression)
+void NVarsBloc::MapValueTo(double _fval, udword _idx, const char* _pszExpression)
 {
 	double fVal = _fval;
 
@@ -442,7 +442,7 @@ void NVarsBloc::MapValueTo(NObject* _val, udword _idx)
 	SetValue(_idx, 0.0f, _val);
 }
 
-void NVarsBloc::MapValueTo(char* _val, udword _idx)
+void NVarsBloc::MapValueTo(const char* _val, udword _idx)
 {
 	NVarValue* pval = m_paVarsValues + _idx;
 	NVarsBlocDesc* pdesc = m_pcvarsblocDesc + _idx;
@@ -899,7 +899,7 @@ void NObjectArray::Sort(CompareFnc _cmp)
 //!	\param	_pszClassName				Class name for object
 //!	\param	_pszSuperClassName	Super-Class name for object
 //-----------------------------------------------------------------
-NRTClass::NRTClass(RTCLASS_HANDLER*	_pcreateCB, char* _pszClassName, char* _pszSuperClassName)
+NRTClass::NRTClass(RTCLASS_HANDLER*	_pcreateCB, const char* _pszClassName, const char* _pszSuperClassName)
 {
 	if (m_pFirstRTClass==null)	m_pFirstRTClass = this;
 	if (m_pLastRTClass)					m_pLastRTClass->m_pNextRTC = this;
@@ -941,7 +941,7 @@ NObject* NRTClass::CreateByID(ID _CLASSID)
 //!	\param	_pszClassName	Class name
 //!	\return	Created object
 //-----------------------------------------------------------------
-NObject* NRTClass::CreateByName(char* _pszClassName)
+NObject* NRTClass::CreateByName(const char* _pszClassName)
 {
 	NRTClass* pcurRTC = m_pFirstRTClass;
 	while (pcurRTC!=null)
@@ -960,10 +960,10 @@ NObject* NRTClass::CreateByName(char* _pszClassName)
 //!	\param	_pszClassName	Class name
 //!	\return	generated class ID
 //-----------------------------------------------------------------
-ID NRTClass::MakeClassID(char* _pszClassName)
+ID NRTClass::MakeClassID(const char* _pszClassName)
 {
 	udword dwLen = (udword)strlen(_pszClassName);
-	char* pStr = _pszClassName;
+	const char* pStr = _pszClassName;
 	udword dwKey = 0;
 	for (udword i = 0; i < dwLen; ++i, ++pStr)
 		dwKey = (dwKey << 2) + *pStr;
@@ -1237,7 +1237,7 @@ void NObjectGarbage::Compact(ubyte _byTypeMask, udword _dwTimevalidityMs)
 	}
 
 	TRACE("NObjectGarbage::Compact Count<%d>\n", dwCompacted);
-	
+
 }
 
 //-----------------------------------------------------------------
@@ -1315,7 +1315,7 @@ void NObjectGarbage::RemoveEntry(NObject** _ppobj)
 //!	\brief	Write text into visual C++ debug output window
 //!	\param	_fmt	format
 //-----------------------------------------------------------------
-void gDebugLog( char* _fmt, ... )
+void gDebugLog(const char* _fmt, ... )
 {
 	char buf[256];
 	wvsprintf(buf, _fmt, (char *)(&_fmt+1));
