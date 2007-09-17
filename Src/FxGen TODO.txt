@@ -14,7 +14,12 @@ Version 0.5 alpha (Release: Use FxGen in your Games !)
 .new method NEngineOp::_ComputeToProcessOpsCount()
 .new method NObjectGarbage::Compact()
 .new method NObjectGarbage::RemoveEntry()
-
+.GCC compilation...
+.Fixed Crash when Referenced variable<->object are broken
+.Engine resources detail factor (x0.5, x1.0, x2.0)
+	.i.e For textures, process them for size * detail factor
+.New main submenu items "options"
+	
 .API
 	.NEngineOp::ProcessOperators()
 	.NEngineOp::GetFinalResultCount()

@@ -54,7 +54,7 @@ NFlatOp::NFlatOp()
 
 }
 
-udword NFlatOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NFlatOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//No Inputs!
 	if (m_byInputs!=0)		return (udword)-1;
@@ -67,6 +67,9 @@ udword NFlatOp::Process(float _ftime, NOperator** _pOpsInts)
 
 	m_pcvarsBloc->GetValue(1, 0, byVal);
 	udword h=1<<((udword)byVal);
+
+	w=(udword) ((float)w*_fDetailFactor);
+	h=(udword) ((float)h*_fDetailFactor);
 
 	RGBA col;
 	m_pcvarsBloc->GetValue(2, _ftime, (udword&)col);
@@ -122,7 +125,7 @@ NCloudOp::NCloudOp()
 	m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescCloudOp);
 }
 
-udword NCloudOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NCloudOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//No Inputs
 	if (m_byInputs!=0)		return (udword)-1;
@@ -143,6 +146,9 @@ udword NCloudOp::Process(float _ftime, NOperator** _pOpsInts)
 	udword w=1<<((udword)byVal);
 	m_pcvarsBloc->GetValue(1, 0, byVal);
 	udword h=1<<((udword)byVal);
+
+	w=(udword) ((float)w*_fDetailFactor);
+	h=(udword) ((float)h*_fDetailFactor);
 
 	//Bitmap instance
 	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
@@ -417,7 +423,7 @@ NGradientOp::NGradientOp()
 	m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescGradientOp);
 }
 
-udword NGradientOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NGradientOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//No Inputs!
 	if (m_byInputs!=0)		return (udword)-1;
@@ -428,6 +434,9 @@ udword NGradientOp::Process(float _ftime, NOperator** _pOpsInts)
 	sdword w=1<<((udword)byVal);
 	m_pcvarsBloc->GetValue(1, 0, byVal);
 	sdword h=1<<((udword)byVal);
+
+	w=(sdword) ((float)w*_fDetailFactor);
+	h=(sdword) ((float)h*_fDetailFactor);
 
 	RGBA colA, colB, colC, colD;
 	m_pcvarsBloc->GetValue(2, _ftime, (udword&)colA);
@@ -510,7 +519,7 @@ NCellOp::NCellOp()
 	m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescCellOp);
 }
 
-udword NCellOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//No Inputs
 	if (m_byInputs!=0)		return (udword)-1;
@@ -521,6 +530,9 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts)
 	udword w=1<<((udword)byVal);
 	m_pcvarsBloc->GetValue(1, 0, byVal);
 	udword h=1<<((udword)byVal);
+
+	w=(udword) ((float)w*_fDetailFactor);
+	h=(udword) ((float)h*_fDetailFactor);
 
 	ubyte byRegularity;
 	ubyte byDensity;
@@ -637,7 +649,7 @@ NNoiseOp::NNoiseOp()
 	m_pcvarsBloc = AddVarsBloc(4, blocdescNoiseOp, 1);
 }
 
-udword NNoiseOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NNoiseOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//No Inputs!
 	if (m_byInputs!=0)		return (udword)-1;
@@ -650,6 +662,9 @@ udword NNoiseOp::Process(float _ftime, NOperator** _pOpsInts)
 
 	m_pcvarsBloc->GetValue(1, 0, byVal);
 	udword h=1<<((udword)byVal);
+
+	w=(udword) ((float)w*_fDetailFactor);
+	h=(udword) ((float)h*_fDetailFactor);
 
 	RGBA col;
 	m_pcvarsBloc->GetValue(2, _ftime, (udword&)col);

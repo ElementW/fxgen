@@ -53,7 +53,7 @@ public:
 
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts);
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 };
 
 //-----------------------------------------------------------------
@@ -73,7 +73,7 @@ public:
 	virtual char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts);
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 
 };
 
@@ -94,7 +94,7 @@ public:
 	virtual char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts);
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 
 };
 
@@ -115,6 +115,6 @@ public:
 	virtual char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts);
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 
 };

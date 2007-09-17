@@ -32,7 +32,7 @@
 //-----------------------------------------------------------------
 IMPLEMENT_CLASS(NNopOp,	NOperator);
 
-udword NNopOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NNopOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -91,7 +91,7 @@ NRectOp::NRectOp()
 	m_pcvarsBloc->SetMapVarBlocDesc(5, mapblocdescRectOp);
 }
 
-udword NRectOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NRectOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -159,7 +159,7 @@ NPixelsOp::NPixelsOp()
 
 }
 
-udword NPixelsOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NPixelsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -221,7 +221,7 @@ NAddOp::NAddOp()
 	m_pcvarsBloc = AddVarsBloc(2, blocdescAddOp, 1);
 }
 
-udword NAddOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NAddOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//x Inputs
 	if (m_byInputs<1)		return (udword)-1;
@@ -487,7 +487,7 @@ NGlowOp::NGlowOp()
 	m_pcvarsBloc->SetMapVarBlocDesc(7, mapblocdescGlowOp);
 }
 
-udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -590,7 +590,7 @@ NCrackOp::NCrackOp()
 
 }
 
-udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -677,7 +677,7 @@ NLerpOp::NLerpOp()
 {
 }
 
-udword NLerpOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NLerpOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Three inputs
 	if (m_byInputs!=3)		return (udword)-1;
