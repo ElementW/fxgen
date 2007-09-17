@@ -51,7 +51,7 @@ public:
 	virtual char*		GetCategory()	{ return "Misc"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts);
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 };
 
 
@@ -72,7 +72,7 @@ public:
 	virtual char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts);
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 };
 
 
@@ -93,7 +93,7 @@ public:
 	virtual char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts);
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 };
 
 //-----------------------------------------------------------------
@@ -113,7 +113,7 @@ public:
 	virtual char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts);
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 };
 
 //-----------------------------------------------------------------
@@ -134,7 +134,7 @@ public:
 
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts);
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 
 };
 
@@ -155,7 +155,7 @@ public:
 	virtual char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts);
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 
 	//Methods
 	float myfRandom();
@@ -180,5 +180,5 @@ public:
 	virtual char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts);
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 };

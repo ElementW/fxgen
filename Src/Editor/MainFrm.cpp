@@ -34,6 +34,10 @@
 #define	MENU_SAVEPROJECT	102
 #define	MENU_EXIT					103
 
+#define	MENU_DETAILLOW		200
+#define	MENU_DETAILNORMAL	201
+#define	MENU_DETAILHIGH		202
+
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -44,10 +48,10 @@
 //-----------------------------------------------------------------
 
 //###TEST###
-void staticProcess(udword _dwCurrentOp, udword _dwTotalOps)
+/*void staticProcess(udword _dwCurrentOp, udword _dwTotalOps)
 {
 	TRACE("Current %d Total %d\n", _dwCurrentOp, _dwTotalOps);
-}
+}*/
 
 
 //-----------------------------------------------------------------
@@ -57,6 +61,7 @@ NMainFrm::NMainFrm(void)
 {
 	m_bExecuteLocked	= false;
 	m_popMarkedShow		= null;
+	m_fDetailFactor		= 1.0f;
 }
 
 //-----------------------------------------------------------------
@@ -126,6 +131,13 @@ bool NMainFrm::Create(char* name, const NRect& rect)
 	pmenu->InsertItem(dwParent,3,"Save Project...", MENU_SAVEPROJECT);
 	pmenu->InsertItem(dwParent,4,"Exit...",					MENU_EXIT);
 
+	dwParent = pmenu->InsertPopupItem(0,				1, "Options");
+	dwParent = pmenu->InsertPopupItem(dwParent, 0, "Details");
+
+	pmenu->InsertItem(dwParent, 1, "Low\t50%",			MENU_DETAILLOW);
+	pmenu->InsertItem(dwParent, 2, "Normal\t100%",	MENU_DETAILNORMAL);
+	pmenu->InsertItem(dwParent, 3, "High\t200%",		MENU_DETAILHIGH);
+
 	///////////////////////////////////////////////
 	// Creation d'un nouveau projet par defaut
 	//				###TEST###
@@ -146,6 +158,31 @@ void NMainFrm::OnCommand(udword id)
 		case MENU_OPENPROJECT:	OnOpenProject();			break;
 		case MENU_SAVEPROJECT:	OnSaveProject();			break;
 		case MENU_EXIT:					GetApp()->AskExit();	break;
+
+		case MENU_DETAILLOW:			
+			m_bExecuteLocked = true;
+			gNFxGen_GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			gNFxGen_GetEngine()->InvalidateAllOps();
+			m_fDetailFactor = 0.5f;
+			m_bExecuteLocked = false;
+			break;
+
+		case MENU_DETAILNORMAL:
+			m_bExecuteLocked = true;
+			gNFxGen_GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			gNFxGen_GetEngine()->InvalidateAllOps();
+			m_fDetailFactor = 1.0f;
+			m_bExecuteLocked = false;
+			break;
+
+		case MENU_DETAILHIGH:	
+			m_bExecuteLocked = true;
+			gNFxGen_GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			gNFxGen_GetEngine()->InvalidateAllOps();
+			m_fDetailFactor = 2.0f;
+			m_bExecuteLocked = false;
+			break;
+
 	};
 
 }
@@ -199,6 +236,8 @@ void NMainFrm::OnNewProject()
 
 void NMainFrm::LoadProject(const NString& str)
 {
+		m_bExecuteLocked = true;
+
 		gNFxGen_GetEngine()->Clear();
 
 		m_pprojectwnd->DisplayOperatorsProject(gNFxGen_GetEngine());
@@ -221,6 +260,7 @@ void NMainFrm::LoadProject(const NString& str)
 		m_pprojectwnd->DisplayOperatorsProject(gNFxGen_GetEngine());
 		m_pprojectwnd->SelectFirstPage();
 
+		m_bExecuteLocked = false;
 }
 
 //-----------------------------------------------------------------
@@ -275,7 +315,7 @@ NOperator* NMainFrm::Execute(float _ftime)
 	if (!m_bExecuteLocked)
 	{
 		m_bExecuteLocked = true;
-		gNFxGen_GetEngine()->Execute(_ftime, m_popMarkedShow);
+		gNFxGen_GetEngine()->Execute(_ftime, m_popMarkedShow, m_fDetailFactor);
 		//Rendering
 		EVT_EXECUTE(EVT_RENDER, (udword)m_popMarkedShow, (udword)&_ftime);
 		m_bExecuteLocked = false;

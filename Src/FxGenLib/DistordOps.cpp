@@ -66,7 +66,7 @@ NRotoZoomOp::~NRotoZoomOp()
 {
 }
 
-udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -88,10 +88,18 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts)
 	ubyte byVal;
 
 	m_pcvarsBloc->GetValue(0, 0, byVal);
-	if (byVal!=0)		w=1<<((udword)(byVal-1));
+	if (byVal!=0)
+	{
+		w=1<<((udword)(byVal-1));
+		w=(udword) ((float)w*_fDetailFactor);
+	}
 
 	m_pcvarsBloc->GetValue(1, 0, byVal);
-	if (byVal!=0)		h=1<<((udword)(byVal-1));
+	if (byVal!=0)
+	{
+		h=1<<((udword)(byVal-1));
+		h=(udword) ((float)h*_fDetailFactor);
+	}
 
 	pDst->SetSize(w, h);
 
@@ -137,10 +145,10 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts)
 
 		for (udword x=0; x<w; x++)
 		{
-            float uf = u>=0 ? (u - (sdword)u) : 1+(u - (sdword)u);	//Fraction
-            float vf = v>=0 ? (v - (sdword)v) : 1+(v - (sdword)v);	//Fraction
+      float uf = u>=0 ? (u - (sdword)u) : 1+(u - (sdword)u);	//Fraction
+      float vf = v>=0 ? (v - (sdword)v) : 1+(v - (sdword)v);	//Fraction
 
-            udword ut = u>=0 ? (udword)u : (udword)u - 1;
+      udword ut = u>=0 ? (udword)u : (udword)u - 1;
 			udword vt = v>=0 ? (udword)v : (udword)v - 1;
 
 			//Texels
@@ -222,7 +230,7 @@ NDistortOp::NDistortOp()
 
 }
 
-udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Two inputs (texture, normal)
 	if (m_byInputs!=2)		return (udword)-1;
@@ -355,7 +363,7 @@ NVortexOp::NVortexOp()
 
 }
 
-udword NVortexOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NVortexOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)              return (udword)-1;
@@ -486,7 +494,7 @@ NLookupOp::NLookupOp()
 {
 }
 
-udword NLookupOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NLookupOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Two inputs (texture, texcoords)
 	if (m_byInputs!=2) return (udword)-1;

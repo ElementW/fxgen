@@ -32,6 +32,7 @@
 #define	OBJRES_TYPE_STORED				2		//!< Stored bitmaps
 #define	OBJRES_TYPE_FINALSTORED		4		//!< Final Stored bitmaps
 
+
 //-----------------------------------------------------------------
 //                   Prototypes
 //-----------------------------------------------------------------
@@ -67,7 +68,7 @@ public:
 	virtual	bool Load(NArchive* _l);	//!< Load object
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts) = 0;	//!< object processing (texture, mesh ...)
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor) = 0;	//!< object processing (texture, mesh ...)
 
 	//Datas GUI
 	sword	m_wPosX, m_wPosY;			//!< Position (grid unit)
@@ -114,7 +115,7 @@ public:
 	void				DeleteAllOps();
 	udword			DeleteOp(NOperator* _pop);
 	void				MoveOp(NOperator* _pop, sword _x, sword _y);
-
+	void				InvalidateAllOps();
 
 	//Methodes de recherche
 	void GetOpsFromClassName(const char* _pszClassName, NObjectArray& _carray);
@@ -147,8 +148,8 @@ public:
 	virtual ~NEngineOp();
 
 	//API		###TODO###
-	void ProcessOperators(float _ftime, FXGEN_PROCESSCB* _cbProcess);
-	void CompactMemory();
+	void ProcessOperators(float _ftime, float _fDetailFactor=1.0f, FXGEN_PROCESSCB* _cbProcess=NULL);
+	void CompactMemory();	//!< Keep just final result bitmaps in memory
 
 	udword		GetFinalResultCount();	//##NEW###
 	NBitmap*	GetFinalResultBitmapByIdx(udword _idx);	//##NEW###
@@ -163,8 +164,9 @@ public:
 	void GetFinalOps(NTreeNode* _pnodeFrom, NObjectArray& _finalsOp, bool _bRecurse);
 
 	//Execution
+	void				InvalidateAllOps();
 	void				InvalidateOp(NOperator* _pop);
-	void				Execute(float _ftime, NOperator* _popFinal);
+	void				Execute(float _ftime, NOperator* _popFinal, float _fDetailFactor=1.0f);
 
 	//Page's Group Methods
 	NTreeNode*	GetRootGroup()				{ return m_pRootGroup; }
@@ -183,9 +185,10 @@ protected:
 	//Internal Methods
 	void _GetFinalOps(NTreeNode* _pnode, NObjectArray& _finalsOp, bool _bRecurse);
 	void ClearParsedOpsFlags(NOperator* _pop);
+	void _InvalidateAllOps(NTreeNode* _pnode);
 
 	//Methods for execution
-	void _Execute(float _fTime, NOperator* _popFinal);
+	void _Execute(float _fTime, NOperator* _popFinal, float _fDetailFactor);
 	void ComputeInvaliddOps(NOperator* _popFinal);
 	void _ComputeInvaliddOps(NOperator* _pop);
 	void _ComputeToProcessOpsCount(NOperator* _popFinal);

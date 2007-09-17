@@ -54,7 +54,7 @@ NBlurOp::NBlurOp()
 	m_pcvarsBloc->SetMapVarBlocDesc(3, mapblocdescBlurOp);
 }
 
-udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -304,7 +304,7 @@ NColorsOp::NColorsOp()
 	m_pcvarsBloc = AddVarsBloc(4, blocdescColorsOp, 1);
 }
 
-udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -445,7 +445,7 @@ NLightOp::NLightOp()
 
 }
 
-udword NLightOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Two inputs (texture, normal)
 	if (m_byInputs < 2 || m_byInputs > 4)	return (udword)-1;
@@ -639,7 +639,7 @@ NNormalsOp::NNormalsOp()
 
 }
 
-udword NNormalsOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NNormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -744,7 +744,7 @@ udword NNormalsOp::Process(float _ftime, NOperator** _pOpsInts)
 //-----------------------------------------------------------------
 IMPLEMENT_CLASS(NInvertOp, NOperator);
 
-udword NInvertOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NInvertOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//One input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -826,7 +826,7 @@ static inline ubyte compressIntensity(ubyte intensity, float ratio, ubyte thresh
   }
 }
 
-udword NThresholdOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NThresholdOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//One input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -934,7 +934,7 @@ NAlphaOp::NAlphaOp()
 {
 }
 
-udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;

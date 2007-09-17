@@ -40,7 +40,7 @@ public:
 	virtual char*		GetUserName();											//!< Operator's User Name
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts);
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 
 };
 
@@ -63,7 +63,7 @@ public:
 	virtual char*		GetUserName();														//!< Operator's User Name
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts);
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 
 };
 
@@ -85,7 +85,7 @@ public:
 	virtual char*		GetUserName();											//!< Operator's User Name
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts);
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 
 };
 
@@ -107,6 +107,6 @@ public:
 	virtual char*		GetCategory()	{ return "Animation"; }		//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts);
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 
 };

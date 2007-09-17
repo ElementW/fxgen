@@ -489,6 +489,21 @@ void NOperatorsPage::GetOpsFromClassName(const char* _pszClassName, NObjectArray
 	}
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Invalidate all operators to force re-processing
+//-----------------------------------------------------------------
+void NOperatorsPage::InvalidateAllOps()
+{
+	for (udword i=0; i<m_arrayOps.Count(); i++)
+	{
+		NOperator* pccurOP = (NOperator*)m_arrayOps[i];
+		pccurOP->m_bInvalided			= true;
+		pccurOP->m_dwLastUsedTime	= 0;
+	}
+}
+
+
+
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -663,13 +678,14 @@ void NEngineOp::ClearParsedOpsFlags(NOperator* _pop)
 //!	\brief	Execute this project from root of operator marked 'show'
 //!	\param	_ftime time in ms
 //!	\param	_popFinal	final operator for result
+//!	\param	_fDetailFactor	Result Detail (Factor x0.5, x1 , x2)
 //!	\note		Invalid operators are computed first
 //-----------------------------------------------------------------
-void NEngineOp::Execute(float _ftime, NOperator* _popFinal)
+void NEngineOp::Execute(float _ftime, NOperator* _popFinal, float _fDetailFactor/*=1.0f*/)
 {
 	if (_popFinal!=null)
 	{
-		//Flag operators that need process
+		//Flag operators that need process calls
 		ComputeInvaliddOps(_popFinal);
 
 		//Init
@@ -681,13 +697,13 @@ void NEngineOp::Execute(float _ftime, NOperator* _popFinal)
 
 		ZeroMemory(m_aStacks, sizeof(m_aStacks));
 
-		//Operators count (just for statistic not need for runtime)
+		//Operators count (just for editor not really need for game...) ###TOFIX###
 		NOperator* pcRootOP = GetRootOperator(_popFinal);
 		ClearParsedOpsFlags(pcRootOP);
 		_ComputeToProcessOpsCount(_popFinal);
 
 		//Execute
-		_Execute(_ftime, _popFinal);
+		_Execute(_ftime, _popFinal, _fDetailFactor);
 	}
 
 }
@@ -696,9 +712,10 @@ void NEngineOp::Execute(float _ftime, NOperator* _popFinal)
 //!	\brief	Execute this project from root and until final operator
 //!	\param	_ftime		time in ms
 //!	\param	_popFinal	final operator for result
+//!	\param	_fDetailFactor	Result Detail (Factor x0.5, x1 , x2)
 //!	\note		Invalid operators MUST have been computed first
 //-----------------------------------------------------------------
-void NEngineOp::_Execute(float _ftime, NOperator* _popFinal)
+void NEngineOp::_Execute(float _ftime, NOperator* _popFinal, float _fDetailFactor)
 {
 	if (_popFinal==null)		return;
 
@@ -723,7 +740,7 @@ void NEngineOp::_Execute(float _ftime, NOperator* _popFinal)
 					//TRACE(".Jumping To <%s> !\n", pcrootOpToProcess->GetName());
 
 					m_nCurContext++;
-					_Execute(_ftime, prefop);
+					_Execute(_ftime, prefop, _fDetailFactor);
 					m_nCurContext--;
 				}
 			}
@@ -735,10 +752,10 @@ void NEngineOp::_Execute(float _ftime, NOperator* _popFinal)
 		{
 			if (!m_bError)
 			{
-				TRACE("Process %d/%d\n", m_dwCurProcessOpsCount, m_dwTotalProcessOpsCount);
+				//TRACE("Process %d/%d\n", m_dwCurProcessOpsCount, m_dwTotalProcessOpsCount);
 
 				NOperator** pOpsIns = &m_aStacks[m_nCurContext][pccurOP->m_byDepth];
-				if (pccurOP->Process(_ftime, pOpsIns)==-1)
+				if (pccurOP->Process(_ftime, pOpsIns, _fDetailFactor)==-1)
 					m_bError = true;
 
 				m_dwCurProcessOpsCount++;
@@ -833,6 +850,33 @@ void NEngineOp::InvalidateOp(NOperator* _pop)
 }
 
 //-----------------------------------------------------------------
+//!	\brief	Invalidate all operators to force re-processing
+//-----------------------------------------------------------------
+void NEngineOp::InvalidateAllOps()
+{
+	NTreeNode* pnode = GetRootGroup();
+	_InvalidateAllOps(pnode);
+}
+
+void NEngineOp::_InvalidateAllOps(NTreeNode* _pnode)
+{
+	//Parse Alls Pages to add 'NStoreOp'
+	NObjectArray& arrayObjs = _pnode->GetObjsArray();
+	udword dwCount = arrayObjs.Count();
+	while (dwCount--)
+	{
+		NOperatorsPage* ppage = (NOperatorsPage*)arrayObjs[dwCount];
+		ppage->InvalidateAllOps();
+	}
+
+	_pnode = _pnode->GetSon();
+	if (_pnode)
+		_InvalidateAllOps(_pnode);
+	
+}
+
+
+//-----------------------------------------------------------------
 //!	\brief	Return root operator from an operator
 //!	\param	_pop operator
 //!	\return root operator
@@ -921,7 +965,7 @@ void NEngineOp::GetFinalOps(NTreeNode* _pnodeFrom, NObjectArray& _finalsOp, bool
 bool NEngineOp::LoadProject(const char* _pszFullFileName)
 {
 	//Open Archive
-        NFileStream fileStream;
+	NFileStream fileStream;
 	if(!fileStream.Open(_pszFullFileName)) // non-existing file
 		return false;
 	NArchive ar(&fileStream);
@@ -981,7 +1025,7 @@ void NEngineOp::CompactMemory()
 //-----------------------------------------------------------------
 //!	\brief	Process all operators
 //-----------------------------------------------------------------
-void NEngineOp::ProcessOperators(float _ftime, FXGEN_PROCESSCB* _cbProcess)
+void NEngineOp::ProcessOperators(float _ftime, float _fDetailFactor/*=1.0f*/, FXGEN_PROCESSCB* _cbProcess/*=NULL*/)
 {
 	//Get finals operators type from opened project (at first time only)
 	if (m_arrayFinalsOp.Count()==0)
@@ -994,13 +1038,13 @@ void NEngineOp::ProcessOperators(float _ftime, FXGEN_PROCESSCB* _cbProcess)
 	for (udword i=0; i<m_arrayFinalsOp.Count(); i++)
 	{
 		if (_cbProcess)	(*_cbProcess)(i+1, m_arrayFinalsOp.Count());
-		Execute(_ftime, (NOperator*)m_arrayFinalsOp[i]);
+		Execute(_ftime, (NOperator*)m_arrayFinalsOp[i], _fDetailFactor);
 	}
 
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Return Final result operator count //##NEW###
+//!	\brief	Return Final result operator count
 //!	\return	operators count
 //-----------------------------------------------------------------
 udword NEngineOp::GetFinalResultCount()
@@ -1009,7 +1053,7 @@ udword NEngineOp::GetFinalResultCount()
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Return Final result operator bitmap //##NEW###
+//!	\brief	Return Final result operator bitmap
 //! \param	_idx	operator indice
 //! \return	Bitmap Ptr if success else null
 //-----------------------------------------------------------------

@@ -52,7 +52,7 @@ char* NStoreOp::GetUserName()
 	return pszname;
 }
 
-udword NStoreOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NStoreOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -107,7 +107,7 @@ char* NStoreResultOp::GetUserName()
 }
 
 
-udword NStoreResultOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NStoreResultOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -164,7 +164,7 @@ char* NLoadOp::GetUserName()
 	return "";
 }
 
-udword NLoadOp::Process(float _ftime, NOperator** _pOpsInts)
+udword NLoadOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	if (m_byInputs!=0)	//Load operator must'n have one input !
 		return (udword)-1;
@@ -220,7 +220,7 @@ NChannelAnimFX1Op::NChannelAnimFX1Op()
 	m_pcvarsBloc = AddVarsBloc(6, blocdescChanAnimFX1Op, 1);
 }
 
-udword NChannelAnimFX1Op::Process(float _ftime, NOperator** _pOpsInts)
+udword NChannelAnimFX1Op::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	if (m_byInputs!=0)
 	{

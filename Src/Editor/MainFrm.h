@@ -57,4 +57,5 @@ protected:
 	NProjectWnd*		m_pprojectwnd;		//!< Pages Window
 	NStoredWnd*			m_pstoredwnd;			//!< Stored Window
 	NOperator*			m_popMarkedShow;	//!< Operator marked show for final result
+	float						m_fDetailFactor;
 };
