@@ -90,6 +90,7 @@ public:
 	// Variables Bloc
 	NVarsBloc* m_pcvarsBloc;
 	void InsureCommonInputsSize(NOperator** _pOpsInts, float _fDetailFactor);
+	static bool useInsureCommonInputsSize; //!< the function is useful in the editor only
 };
 
 

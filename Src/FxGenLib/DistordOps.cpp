@@ -71,8 +71,6 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
 
-	InsureCommonInputsSize(_pOpsInts, _fDetailFactor);
-
 	//Bitmap instance
 	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
 

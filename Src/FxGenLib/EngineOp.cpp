@@ -139,8 +139,13 @@ bool NOperator::Load(NArchive* _l)
 	return true;
 }
 
+bool NOperator::useInsureCommonInputsSize(false);
+
 void NOperator::InsureCommonInputsSize(NOperator** _pOpsInts, float _fDetailFactor)
 {
+	if(!useInsureCommonInputsSize)
+		return;
+
 	if(_fDetailFactor != 1.) // does not cooperate with detail mgmt
 		return;
 
