@@ -372,7 +372,7 @@ extern FXGEN_API float ffast_cos(const float x);
 __forceinline void FloatToInt(int *int_pointer, float f)
 {
 #ifdef __GNUC__
-	*int_pointer = f + .5;
+	*int_pointer = int(f + .5);
 #else
 	__asm  fld  f
   __asm  mov  edx,int_pointer

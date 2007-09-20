@@ -521,9 +521,8 @@ void NOperatorsCtrl::OnKeyDown(udword dwchar)
 		PasteOperatorsFromClipboard();
 
 	}
-
-
-
+	else
+		GetApp()->GetMainWnd()->OnKeyDown(dwchar);
 }
 
 

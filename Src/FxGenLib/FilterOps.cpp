@@ -78,7 +78,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 
 	// Do three passes if gaussian...
 	// Don't change the number of passes if you don't know what you're doing :)
-	ubyte byPasses = byType == 1 ? 3 : 1; 
+	ubyte byPasses = byType == 1 ? 3 : 1;
 
 	//Radius
 	float radiusW= (float)byWidth / 2.0f;
@@ -450,13 +450,15 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	//Two inputs (texture, normal)
 	if (m_byInputs < 2 || m_byInputs > 4)	return (udword)-1;
 
+	InsureCommonInputsSize(_pOpsInts);
+
 	//Get input Texture
 	NBitmap* pSrc	= (NBitmap*)(*_pOpsInts)->m_pObj;
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
 
 	_pOpsInts++;
-        
+
 	NBitmap* pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
 	if (pNorm->GetWidth()!=w || pNorm->GetHeight()!=h)			return (udword)-1;
 
@@ -464,7 +466,7 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 	NBitmap* pSpec = null; // Specular color
 	if (m_byInputs>2)
-	{	
+	{
 		pSpec = (NBitmap*)(*_pOpsInts)->m_pObj;
 		if (pSpec->GetWidth()!=w || pSpec->GetHeight()!=h)			return (udword)-1;
 		_pOpsInts++;
@@ -472,7 +474,7 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 	NBitmap* pAmb = null; // Ambient color
 	if (m_byInputs>3)
-	{	
+	{
 		pAmb = (NBitmap*)(*_pOpsInts)->m_pObj;
 		if (pAmb->GetWidth()!=w || pAmb->GetHeight()!=h)			return (udword)-1;
 		_pOpsInts++;
