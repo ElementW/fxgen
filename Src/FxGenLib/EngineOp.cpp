@@ -137,6 +137,30 @@ bool NOperator::Load(NArchive* _l)
 	return true;
 }
 
+void NOperator::InsureCommonInputsSize(NOperator** _pOpsInts)
+{
+	udword w = 0, h = 0;
+	for(NOperator** op = _pOpsInts; op && *op; op++)
+	{
+		NBitmap* bitmap = (NBitmap*)(*op)->m_pObj;
+		if(bitmap)
+		{
+			w = max(w, bitmap->GetWidth());
+			h = max(h, bitmap->GetHeight());
+		}
+	}
+
+	for(NOperator** op = _pOpsInts; op && *op; op++)
+	{
+		NOperator* root = gNFxGen_GetEngine()->GetRootOperator(*op);
+		for(NOperator* prev = root; prev && prev != this; prev = prev->m_pnextOpToProcess)
+		{
+			NBitmap* bitmap = (NBitmap*)prev->m_pObj;
+			if(bitmap && (bitmap->GetWidth() != w || bitmap->GetHeight() != h))
+				bitmap->SetSize(w, h);
+		}
+	}
+}
 
 
 //-----------------------------------------------------------------
@@ -872,7 +896,7 @@ void NEngineOp::_InvalidateAllOps(NTreeNode* _pnode)
 	_pnode = _pnode->GetSon();
 	if (_pnode)
 		_InvalidateAllOps(_pnode);
-	
+
 }
 
 

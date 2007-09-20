@@ -52,6 +52,7 @@ protected:
 	void	OnOpenProject();
 	void	OnSaveProject();
 
+	void OnKeyDown(udword dwchar);
 	//Datas
 	bool						m_bExecuteLocked;	//!< Lock-Unlock operators execution
 	NOperatorsWnd*	m_opswnd;					//!< Operators Window

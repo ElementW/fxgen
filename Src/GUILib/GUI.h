@@ -209,6 +209,10 @@ public:
 	//Datas
 	HWND m_W32HWnd;
 
+	virtual	void	OnKeyDown(udword dwchar)
+	{
+		GetApp()->GetMainWnd()->OnKeyDown(dwchar);
+	}
 protected:
 	//Messages
 	virtual	void	OnPaint()		{}
@@ -223,7 +227,6 @@ protected:
 	virtual	void	OnLeftButtonDblClk(udword flags, NPoint point){}
 	virtual	void	OnMouseWheel(udword flags, sword zDelta, NPoint point)			{}
 	virtual	void	OnCommand(udword id)			{}
-	virtual	void	OnKeyDown(udword dwchar)	{}
 	virtual	void	OnKeyUp(udword dwchar)		{}
 	virtual	void	OnKillFocus()							{}
 	virtual	void	OnTimer(udword _dwTimerID)		{}

@@ -372,6 +372,7 @@ void NPropertiesCtrl::OnMButtonUp(udword flags, NPoint pos)
 //-----------------------------------------------------------------
 void NPropertiesCtrl::OnKeyDown(udword dwchar)
 {
+	GetApp()->GetMainWnd()->OnKeyDown(dwchar);
 }
 
 //-----------------------------------------------------------------

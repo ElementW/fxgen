@@ -89,6 +89,8 @@ public:
 
 	// Variables Bloc
 	NVarsBloc* m_pcvarsBloc;
+protected:
+	void InsureCommonInputsSize(NOperator** _pOpsInts);
 };
 
 
@@ -181,6 +183,8 @@ public:
 	//Membres access
 	NObjectGarbage* GetBitmapGarbage()	{ return &m_bitmapsAlloc; }
 
+	NOperator* GetRootOperator(NOperator* _pop);
+
 protected:
 	//Internal Methods
 	void _GetFinalOps(NTreeNode* _pnode, NObjectArray& _finalsOp, bool _bRecurse);
@@ -193,7 +197,6 @@ protected:
 	void _ComputeInvaliddOps(NOperator* _pop);
 	void _ComputeToProcessOpsCount(NOperator* _popFinal);
 
-	NOperator* GetRootOperator(NOperator* _pop);
 
 	//Datas
 	NTreeNode*		m_pRootGroup;								//!< Root	Groups

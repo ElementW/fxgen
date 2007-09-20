@@ -130,11 +130,11 @@ bool NMainFrm::Create(char* name, const NRect& rect)
 	NMenuBar*	pmenu = GetMenuBar();
 	udword dwParent = pmenu->InsertPopupItem(0, 0, "File");
 
-	pmenu->InsertItem(dwParent,1,"New Project...",	MENU_NEWPROJECT);
-	pmenu->InsertItem(dwParent,2,"Reload project", MENU_RELOADPROJECT);
-	pmenu->InsertItem(dwParent,3,"Open Project...", MENU_OPENPROJECT);
-	pmenu->InsertItem(dwParent,4,"Save Project...", MENU_SAVEPROJECTAS);
-	pmenu->InsertItem(dwParent,5,"Save Project", MENU_SAVEPROJECT);
+	pmenu->InsertItem(dwParent,1,"New...",	MENU_NEWPROJECT);
+	pmenu->InsertItem(dwParent,2,"Reload	F9", MENU_RELOADPROJECT);
+	pmenu->InsertItem(dwParent,3,"Open...	F3", MENU_OPENPROJECT);
+	pmenu->InsertItem(dwParent,4,"Save	F6", MENU_SAVEPROJECT);
+	pmenu->InsertItem(dwParent,5,"Save...	F2", MENU_SAVEPROJECTAS);
 	pmenu->InsertItem(dwParent,6,"Exit...",					MENU_EXIT);
 
 
@@ -391,4 +391,14 @@ void NMainFrm::DeletedOperator(NOperator* pop)
 	m_bExecuteLocked = false;
 }
 
-
+void NMainFrm::OnKeyDown(udword dwchar)
+{
+	switch(dwchar)
+	{
+		case VK_F6:	SaveProject(); break;
+		case VK_F9:	LoadProject(); break;
+		case VK_F2:	OnSaveProject(); break;
+		case VK_F3:	OnOpenProject(); break;
+		default: break;
+	}
+}

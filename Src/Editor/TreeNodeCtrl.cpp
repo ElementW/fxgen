@@ -312,7 +312,7 @@ void NTreeNodeCtrl::OnMButtonUp(udword flags, NPoint pos)
 
 void NTreeNodeCtrl::OnKeyDown(udword dwchar)
 {
-
+	GetApp()->GetMainWnd()->OnKeyDown(dwchar);
 }
 
 void NTreeNodeCtrl::Clear()
