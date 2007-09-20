@@ -73,5 +73,22 @@ inline int _vsnprintf_s(
 
 #define __forceinline inline
 
+#define FIGOFAGO 0
+#if FIGOFAGO
+#include <string>
+using std::string;
+#include <boost/lexical_cast.hpp>
+using boost::lexical_cast;
+using std::min;
+using std::max;
+
+int MessageBox(string text, int type = MB_OK)
+{
+	return ::MessageBox(NULL, text.c_str(), "", type);
+}
+#endif
+
+#else // not __GNUC__
+template<class T> T log2(T t) {return static_cast<T>(log(1. * t) / log(2.)); }
 #endif // __GNUC__
 #endif // GCCCOMPAT_WAS_HERE

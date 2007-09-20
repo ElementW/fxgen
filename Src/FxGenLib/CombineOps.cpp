@@ -226,10 +226,11 @@ udword NAddOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 	//x Inputs
 	if (m_byInputs<1)		return (udword)-1;
 
+	InsureCommonInputsSize(_pOpsInts, _fDetailFactor);
+
 	//Bitmap instance
 	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
 
-	InsureCommonInputsSize(_pOpsInts);
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
@@ -683,7 +684,7 @@ udword NLerpOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	//Three inputs
 	if (m_byInputs!=3)		return (udword)-1;
 
-	InsureCommonInputsSize(_pOpsInts);
+	InsureCommonInputsSize(_pOpsInts, _fDetailFactor);
 
 	//Get input textures
 	NBitmap* pSrc1 = (NBitmap*)(*(_pOpsInts+0))->m_pObj;

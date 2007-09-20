@@ -57,6 +57,8 @@ udword NStoreOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
 
+	InsureCommonInputsSize(_pOpsInts, _fDetailFactor);
+
 	//Bitmap instance
 	gNFxGen_GetEngine()->GetBitmap(&m_pObj, OBJRES_TYPE_STORED);
 

@@ -4,7 +4,8 @@
 //! \brief	Operators Engine
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
-//!	\date		12-02-2007
+//!				Sebastian Olter (qduaty@gmail.com)
+//!	\date		20-09-2007
 //!
 //!	\brief	This file applies the GNU LESSER GENERAL PUBLIC LICENSE
 //!					Version 2.1 , read file COPYING.
@@ -20,6 +21,7 @@
 //-----------------------------------------------------------------
 #include "pch.h"
 #include "EngineOp.h"
+#include "gcccompat/gcccompat.h"
 
 //-----------------------------------------------------------------
 //                   Variables
@@ -137,9 +139,24 @@ bool NOperator::Load(NArchive* _l)
 	return true;
 }
 
-void NOperator::InsureCommonInputsSize(NOperator** _pOpsInts)
+void NOperator::InsureCommonInputsSize(NOperator** _pOpsInts, float _fDetailFactor)
 {
+	if(_fDetailFactor != 1.) // does not cooperate with detail mgmt
+		return;
+
 	udword w = 0, h = 0;
+
+	if(!strcmp(GetName(), "Store"))
+	{
+		NBitmap* bitmap = (NBitmap*)m_pObj;
+		if(bitmap)
+		{
+			w = bitmap->GetWidth();
+			h = bitmap->GetHeight();
+		}
+	}
+
+	// Find largest input bitmap
 	for(NOperator** op = _pOpsInts; op && *op; op++)
 	{
 		NBitmap* bitmap = (NBitmap*)(*op)->m_pObj;
@@ -150,14 +167,53 @@ void NOperator::InsureCommonInputsSize(NOperator** _pOpsInts)
 		}
 	}
 
+	// Resize bitmaps of all Render operators to the largest
 	for(NOperator** op = _pOpsInts; op && *op; op++)
 	{
 		NOperator* root = gNFxGen_GetEngine()->GetRootOperator(*op);
 		for(NOperator* prev = root; prev && prev != this; prev = prev->m_pnextOpToProcess)
 		{
-			NBitmap* bitmap = (NBitmap*)prev->m_pObj;
-			if(bitmap && (bitmap->GetWidth() != w || bitmap->GetHeight() != h))
-				bitmap->SetSize(w, h);
+			if(strcmp(prev->GetCategory(), "Render") && strcmp(prev->GetCategory(), "Misc"))
+				continue;
+
+			// Jump to Store operator and resize its bitmap
+ 			if(!strcmp(prev->GetName(), "Load"))
+			{
+				NOperator* popRef;
+				prev->m_pcvarsBloc->GetValue(0, 0, (NObject*&)popRef);
+				if(!popRef)
+					continue;
+				NBitmap* bitmap = (NBitmap*)popRef->m_pObj;
+				if(bitmap)
+				{
+					bitmap->SetSize(w, h);
+					popRef->m_bInvalided = true;
+				}
+			}
+
+			// Detect if bitmap is too small and resize it if necessary
+			NVarsBloc* m_pcvarsBloc = prev->m_pcvarsBloc;
+			if(!m_pcvarsBloc)
+				continue;
+
+			NVarsBlocDesc* m_pcvarsblocDesc = m_pcvarsBloc->GetBlocDesc();
+
+			for(udword i = 0; i < m_pcvarsBloc->Count(); i++)
+			{
+				udword u, hp = log2(h), wp = log2(w);
+				m_pcvarsBloc->GetValue(i, 0., u);
+
+				if(u < hp && !strcmp(m_pcvarsblocDesc[i].pszName, "Height"))
+				{
+					m_pcvarsBloc->SetValue(i, 0., hp);
+					prev->m_bInvalided = true;
+				}
+				else if(u < wp && !strcmp(m_pcvarsblocDesc[i].pszName, "Width"))
+				{
+					m_pcvarsBloc->SetValue(i, 0., wp);
+					prev->m_bInvalided = true;
+				}
+			}
 		}
 	}
 }

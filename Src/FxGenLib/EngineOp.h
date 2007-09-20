@@ -89,8 +89,7 @@ public:
 
 	// Variables Bloc
 	NVarsBloc* m_pcvarsBloc;
-protected:
-	void InsureCommonInputsSize(NOperator** _pOpsInts);
+	void InsureCommonInputsSize(NOperator** _pOpsInts, float _fDetailFactor);
 };
 
 
