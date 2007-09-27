@@ -450,7 +450,7 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	//Two inputs (texture, normal)
 	if (m_byInputs < 2 || m_byInputs > 4)	return (udword)-1;
 
-	InsureCommonInputsSize(_pOpsInts, _fDetailFactor);
+	//InsureCommonInputsSize(_pOpsInts, _fDetailFactor);
 
 	//Get input Texture
 	NBitmap* pSrc	= (NBitmap*)(*_pOpsInts)->m_pObj;

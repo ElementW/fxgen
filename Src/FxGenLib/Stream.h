@@ -30,7 +30,7 @@ class NObject;
 
 //-----------------------------------------------------------------
 //!	\class	NStream
-//!	\brief	Serializer for loading and saving data
+//!	\brief	Base class for loading and saving datas
 //-----------------------------------------------------------------
 class NStream
 {
@@ -38,8 +38,8 @@ public:
 	virtual bool	PutData(const void* _buf, udword _length) = 0;
 	virtual bool	GetData(void* _buf, udword _length) = 0;
 
-        virtual bool Seek(udword _position) = 0;
-        virtual udword Tell() = 0;
+	virtual bool Seek(udword _position) = 0;
+	virtual udword Tell() = 0;
 
 	NStream &operator<<( const uword &_val	)	{ PutData(&_val, sizeof(uword)); return *this;}
 	NStream &operator<<( const sword &_val	)	{ PutData(&_val, sizeof(sword)); return *this;}
@@ -69,8 +69,8 @@ public:
 class NFileStream : public NStream
 {
 public:
-        NFileStream();
-        virtual ~NFileStream();
+  NFileStream();
+  virtual ~NFileStream();
 
 	//File Methods
 	bool		Open(const char* _filename, bool _writing=false);
@@ -79,12 +79,11 @@ public:
 	virtual bool	PutData(const void* _buf, udword _length);
 	virtual bool	GetData(void* _buf, udword _length);
 
-        virtual bool Seek(udword _position);
-        virtual udword Tell();
+  virtual bool		Seek(udword _position);
+  virtual udword	Tell();
 
 protected:
-
-  	//Data
+ 	//Data
 	FILE*			m_pFile;
 };
 
@@ -95,26 +94,25 @@ protected:
 class NMemoryStream : public NStream
 {
 public:
-
-        NMemoryStream();
-        virtual ~NMemoryStream();
+	NMemoryStream();
+	virtual ~NMemoryStream();
 
 	bool    Open(ubyte *_buffer = null, udword _bufferSize = 0);
-        void    Close();
+	void    Close();
         
 	bool	PutData(const void* _buf, udword _length);
 	bool	GetData(void* _buf, udword _length);
 
-        virtual bool Seek(udword position);
-        virtual udword Tell();
+	virtual bool Seek(udword position);
+	virtual udword Tell();
 
-        ubyte* GetBuffer() { return m_pbyBuffer; }
-        udword GetBufferSize() { return m_dwBufSize; }
+	ubyte* GetBuffer() { return m_pbyBuffer; }
+	udword GetBufferSize() { return m_dwBufSize; }
 
 protected:
 	ubyte*		m_pbyBuffer;
 	udword		m_dwBufSize;
 	udword		m_dwBufPos;
-        bool            m_bManagedBuffer;
+	bool      m_bManagedBuffer;
 };
 

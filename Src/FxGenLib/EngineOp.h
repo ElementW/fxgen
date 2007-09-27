@@ -89,8 +89,8 @@ public:
 
 	// Variables Bloc
 	NVarsBloc* m_pcvarsBloc;
-	void InsureCommonInputsSize(NOperator** _pOpsInts, float _fDetailFactor);
-	static bool useInsureCommonInputsSize; //!< the function is useful in the editor only
+	//void InsureCommonInputsSize(NOperator** _pOpsInts, float _fDetailFactor);
+	//static bool useInsureCommonInputsSize; //!< the function is useful in the editor only
 };
 
 
@@ -149,47 +149,40 @@ public:
 	NEngineOp();
 	virtual ~NEngineOp();
 
-	//API		###TODO###
-	void ProcessOperators(float _ftime, float _fDetailFactor=1.0f, FXGEN_PROCESSCB* _cbProcess=NULL);
-	void CompactMemory();	//!< Keep just final result bitmaps in memory
+	//API Methods
+	void			Clear();
+	bool			LoadProject(const char* _pszFullFileName);
+	void			ProcessOperators(float _ftime, float _fDetailFactor=1.0f, FXGEN_PROCESSCB* _cbProcess=NULL);
+	void			CompactMemory();
+	udword		GetFinalResultCount();
+	NBitmap*	GetFinalResultBitmapByIdx(udword _idx);
 
-	udword		GetFinalResultCount();	//##NEW###
-	NBitmap*	GetFinalResultBitmapByIdx(udword _idx);	//##NEW###
-
-
-	//Methods
-	void Clear();
-	bool LoadProject(const char* _pszFullFileName);
+	//Editor Methods
 	bool SaveProject(const char* _pszFullFileName);
 
-	//Operators access
-	void GetFinalOps(NTreeNode* _pnodeFrom, NObjectArray& _finalsOp, bool _bRecurse);
+	//Editor Execution
+	void InvalidateAllOps();
+	void InvalidateOp(NOperator* _pop);
+	void Execute(float _ftime, NOperator* _popFinal, float _fDetailFactor=1.0f);
 
-	//Execution
-	void				InvalidateAllOps();
-	void				InvalidateOp(NOperator* _pop);
-	void				Execute(float _ftime, NOperator* _popFinal, float _fDetailFactor=1.0f);
-
-	//Page's Group Methods
-	NTreeNode*	GetRootGroup()				{ return m_pRootGroup; }
-
-	//Resources management
-	void	GetBitmap(NObject** _ppobj, ubyte _byObjType=OBJRES_TYPE_INTERMEDIATE);
-
-	//Channels methods
+	//Editor Channels methods
 	void SetChannelValue(ubyte _byChannel, NVarValue& _value);
 	void GetChannelValue(ubyte _byChannel, NVarValue& _outValue);
 
-	//Membres access
-	NObjectGarbage* GetBitmapGarbage()	{ return &m_bitmapsAlloc; }
+	//Editor Membres access
+	NTreeNode*			GetRootGroup()				{ return m_pRootGroup;		}
+	NObjectGarbage* GetBitmapGarbage()		{ return &m_bitmapsAlloc; }
 
-	NOperator* GetRootOperator(NOperator* _pop);
+	//Editor Operators Resources management
+	void GetBitmap(NObject** _ppobj, ubyte _byObjType=OBJRES_TYPE_INTERMEDIATE);
 
 protected:
 	//Internal Methods
+	void GetFinalOps(NTreeNode* _pnodeFrom, NObjectArray& _finalsOp, bool _bRecurse);
 	void _GetFinalOps(NTreeNode* _pnode, NObjectArray& _finalsOp, bool _bRecurse);
 	void ClearParsedOpsFlags(NOperator* _pop);
 	void _InvalidateAllOps(NTreeNode* _pnode);
+	NOperator* GetRootOperator(NOperator* _pop);
 
 	//Methods for execution
 	void _Execute(float _fTime, NOperator* _popFinal, float _fDetailFactor);
@@ -197,10 +190,9 @@ protected:
 	void _ComputeInvaliddOps(NOperator* _pop);
 	void _ComputeToProcessOpsCount(NOperator* _popFinal);
 
-
 	//Datas
-	NTreeNode*		m_pRootGroup;								//!< Root	Groups
-	NVarValue			m_achannels[MAX_CHANNELS];	//!< Values for animation channels
+	NTreeNode* m_pRootGroup;							//!< Root	Groups
+	NVarValue  m_achannels[MAX_CHANNELS];	//!< Values for animation channels
 
 	//Datas for compilation and execution
 	NOperator*	m_aStacks[MAX_CONTEXTS][MAX_DEPTH];	//!< Inputs Stack for operators process
@@ -209,11 +201,11 @@ protected:
 	bool				m_bError;							//!< Error while process
 	udword			m_dwTotalProcessOpsCount, m_dwCurProcessOpsCount;
 
-	//Garbage
+	//Garbages for media (bitmaps ...)
 	NObjectGarbage	m_bitmapsAlloc;
 
 	//Datas API Interface
-	NObjectArray m_arrayFinalsOp;		//##NEW###
+	NObjectArray m_arrayFinalsOp;
 };
 
 

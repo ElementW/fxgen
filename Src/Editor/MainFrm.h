@@ -50,7 +50,7 @@ protected:
 	//Methods
 	void	OnNewProject();
 	void	OnOpenProject();
-	void	OnSaveProject();
+	void	OnSaveProjectAs();
 
 	void OnKeyDown(udword dwchar);
 	//Datas

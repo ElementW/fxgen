@@ -127,43 +127,73 @@ void NPropertiesCtrl::OnPaint()
 
 	sdword dwMaxDepth=INT_MAX;
 	sdword dwPosY=0;
+	bool bDrawGroupEnd=false;
 
 	for (udword i=0; i<m_carrayRowsDesc.Count(); i++)
 	{
 		NRowDesc* prd = &m_carrayRowsDesc[i];
 
 		/////////////////////////////////////////////
-		//Group
+		//Draw Group Header
 		if (prd->pItem==null && prd->dwDepth<=dwMaxDepth)
 		{
 			dc.SetTextColor(RGB(255,255,255));
 			dc.SetFont(m_hfontBold);
-			if (i!=0)				dwPosY+=PC_ROWGROUPIDENT;
 
-			NRect rcRow;
-			rcRow.left  = rc.left;	rcRow.top			= dwPosY;
-			rcRow.right = rc.right;	rcRow.bottom	= dwPosY+ PC_ROWSHEIGHT - 1;
-			rcRow.left+=(prd->dwDepth*PC_ROWDEPTHIDENT);
+			//End Group Part
+			if (bDrawGroupEnd==true)
+			{
+				NRect rcRow;
+				rcRow.left  = rc.left;	rcRow.top			= dwPosY;
+				rcRow.right = rc.right;	rcRow.bottom	= dwPosY+ PC_ROWGROUPENDHEIGHT ;
+				rcRow.left+=(prd->dwDepth*PC_ROWDEPTHIDENT);
 
-			prd->rcItem = rcRow;
+				prd->rcItem = rcRow;
 
-			dc.SetPen(1,RGB(0,0,0));
-			dc.SetBrush(RGB(0,0,0));
-			dc.RoundRect(rcRow, PC_ROWSHEIGHT,PC_ROWSHEIGHT);
+				dc.SetPen(1,RGB(0,0,0));
+				dc.SetBrush(RGB(0,0,0));
+				dc.RoundRect(rcRow, PC_ROWSHEIGHT,PC_ROWGROUPENDHEIGHT);
 
-			rcRow.top+=PC_ROWSHEIGHT/2;
-			dc.FillSolidRect(rcRow, RGB(0,0,0));
+				rcRow.bottom-=PC_ROWGROUPENDHEIGHT/2;
+				dc.FillSolidRect(rcRow, RGB(0,0,0));
 
-			rcRow.top-=(PC_ROWSHEIGHT/2)-2;
-			rcRow.left+=PC_ROWTEXTIDENT;
-			dc.DrawText(prd->strName.Buffer(), rcRow, DT_END_ELLIPSIS|DT_VCENTER|DT_SINGLELINE);
+				dwPosY+=PC_ROWGROUPENDHEIGHT;
 
-			dwPosY+=PC_ROWSHEIGHT;
+				bDrawGroupEnd = false;
+			}
+
+			//Start Group Part
+			{
+				if (i!=0)				dwPosY+=PC_ROWGROUPIDENT;
+
+				NRect rcRow;
+				rcRow.left  = rc.left;	rcRow.top			= dwPosY;
+				rcRow.right = rc.right;	rcRow.bottom	= dwPosY+ PC_ROWSHEIGHT ;
+				rcRow.left+=(prd->dwDepth*PC_ROWDEPTHIDENT);
+
+				prd->rcItem = rcRow;
+
+				dc.SetPen(1,RGB(0,0,0));
+				dc.SetBrush(RGB(0,0,0));
+				dc.RoundRect(rcRow, PC_ROWSHEIGHT,PC_ROWSHEIGHT);
+
+				rcRow.top+=PC_ROWSHEIGHT/2;
+				dc.FillSolidRect(rcRow, RGB(0,0,0));
+
+				rcRow.top-=(PC_ROWSHEIGHT/2)-2;
+				rcRow.left+=PC_ROWTEXTIDENT;
+
+				dc.DrawText(prd->strName.Buffer(), rcRow, DT_END_ELLIPSIS|DT_VCENTER|DT_SINGLELINE);
+				dwPosY+=PC_ROWSHEIGHT;
+
+				bDrawGroupEnd = true;
+			}
 
 			dwMaxDepth=INT_MAX;
+			
 
 		/////////////////////////////////////////////
-		//Variable
+		// Draw Variable Properties
 		} else if (prd->pItem!=null && prd->dwDepth<=dwMaxDepth) {
 
 			dc.SetTextColor(RGB(0,0,0));
@@ -222,6 +252,26 @@ void NPropertiesCtrl::OnPaint()
 			dwMaxDepth = prd->dwDepth;
 
 	}
+
+			//End Group Part ###TOFIX###
+			if (bDrawGroupEnd==true)
+			{
+				NRect rcRow;
+				rcRow.left  = rc.left;	rcRow.top			= dwPosY;
+				rcRow.right = rc.right;	rcRow.bottom	= dwPosY+ PC_ROWGROUPENDHEIGHT ;
+				rcRow.left+=(dwMaxDepth*PC_ROWDEPTHIDENT);
+
+				dc.SetPen(1,RGB(0,0,0));
+				dc.SetBrush(RGB(0,0,0));
+				dc.RoundRect(rcRow, PC_ROWSHEIGHT,PC_ROWGROUPENDHEIGHT);
+
+				rcRow.bottom-=PC_ROWGROUPENDHEIGHT/2;
+				dc.FillSolidRect(rcRow, RGB(0,0,0));
+
+				dwPosY+=PC_ROWGROUPENDHEIGHT;
+
+				bDrawGroupEnd = false;
+			}
 
 
 }
@@ -372,7 +422,6 @@ void NPropertiesCtrl::OnMButtonUp(udword flags, NPoint pos)
 //-----------------------------------------------------------------
 void NPropertiesCtrl::OnKeyDown(udword dwchar)
 {
-	GetApp()->GetMainWnd()->OnKeyDown(dwchar);
 }
 
 //-----------------------------------------------------------------
@@ -679,7 +728,8 @@ bool NPropertiesCtrl::IsAnimButtonUnderPoint(NPoint& _pt)
 void NPropertiesCtrl::AddRemoveAnimControlToRow(udword _dwRowIdx)
 {
 	NRowDesc* prd = &m_carrayRowsDesc[_dwRowIdx];
-	bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc[prd->pItem->m_dwvarIdx].bCanBeAnimate;
+	//bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc[prd->pItem->m_dwvarIdx].bCanBeAnimate;
+	bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc->bCanBeAnimate;
 	if (bCanBeAnimate && prd->pItem->m_pvarValue->pcCtrlObj==null)
 	{
 		prd->pItem->m_pvarValue->pcCtrlObj = new NController();
