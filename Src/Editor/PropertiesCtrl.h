@@ -25,10 +25,11 @@
 //-----------------------------------------------------------------
 //                   Defines
 //-----------------------------------------------------------------
-#define PC_ROWSHEIGHT			16
-#define PC_ROWTEXTIDENT		16
-#define PC_ROWGROUPIDENT	8
-#define PC_ROWDEPTHIDENT	8
+#define PC_ROWSHEIGHT					16
+#define PC_ROWTEXTIDENT				16
+#define PC_ROWGROUPIDENT			8
+#define PC_ROWDEPTHIDENT			8
+#define PC_ROWGROUPENDHEIGHT	4
 
 //-----------------------------------------------------------------
 //! \struct NRowDesc

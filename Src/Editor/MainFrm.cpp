@@ -134,7 +134,7 @@ bool NMainFrm::Create(char* name, const NRect& rect)
 	pmenu->InsertItem(dwParent,2,"Reload	F9", MENU_RELOADPROJECT);
 	pmenu->InsertItem(dwParent,3,"Open...	F3", MENU_OPENPROJECT);
 	pmenu->InsertItem(dwParent,4,"Save	F6", MENU_SAVEPROJECT);
-	pmenu->InsertItem(dwParent,5,"Save...	F2", MENU_SAVEPROJECTAS);
+	pmenu->InsertItem(dwParent,5,"Save as...	F2", MENU_SAVEPROJECTAS);
 	pmenu->InsertItem(dwParent,6,"Exit...",					MENU_EXIT);
 
 
@@ -161,12 +161,12 @@ void NMainFrm::OnCommand(udword id)
 {
 	switch (id)
 	{
-		case MENU_NEWPROJECT:		OnNewProject();				break;
-		case MENU_OPENPROJECT:	OnOpenProject();			break;
+		case MENU_NEWPROJECT:			OnNewProject();				break;
+		case MENU_OPENPROJECT:		OnOpenProject();			break;
 		case MENU_RELOADPROJECT:	LoadProject();			break;
-		case MENU_SAVEPROJECTAS:	OnSaveProject();			break;
-		case MENU_SAVEPROJECT:	SaveProject();			break;
-		case MENU_EXIT:					GetApp()->AskExit();	break;
+		case MENU_SAVEPROJECTAS:	OnSaveProjectAs();		break;
+		case MENU_SAVEPROJECT:		SaveProject();				break;
+		case MENU_EXIT:						GetApp()->AskExit();	break;
 
 		case MENU_DETAILLOW:
 			m_bExecuteLocked = true;
@@ -301,7 +301,7 @@ void NMainFrm::SaveProject(NString path)
 		path = projectname;
 	if(!path.Length())
 	{
-		OnSaveProject();
+		OnSaveProjectAs();
 		return;
 	}
 
@@ -321,7 +321,7 @@ void NMainFrm::SaveProject(NString path)
 //-----------------------------------------------------------------
 //!	\brief	Project saving
 //-----------------------------------------------------------------
-void NMainFrm::OnSaveProject()
+void NMainFrm::OnSaveProjectAs()
 {
 	//Save File Dialog
 	NFileDialog dlg;
@@ -395,10 +395,10 @@ void NMainFrm::OnKeyDown(udword dwchar)
 {
 	switch(dwchar)
 	{
-		case VK_F6:	SaveProject(); break;
-		case VK_F9:	LoadProject(); break;
-		case VK_F2:	OnSaveProject(); break;
-		case VK_F3:	OnOpenProject(); break;
+		case VK_F6:	SaveProject();			break;
+		case VK_F9:	LoadProject();			break;
+		case VK_F2:	OnSaveProjectAs();	break;
+		case VK_F3:	OnOpenProject();		break;
 		default: break;
 	}
 }

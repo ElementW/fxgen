@@ -1219,9 +1219,15 @@ void NObjectGarbage::Compact(ubyte _byTypeMask, udword _dwTimevalidityMs)
 {
 	udword dwTick = GetTickCount();
 	udword	dwCompacted = 0;
+	udword	dwCount = 0;
+	bool bToKeep = false;
 
+	NObjGarbageDesc*	aobjectsCompact = (NObjGarbageDesc*)NMemAlloc(m_dwSize*sizeof(NObjGarbageDesc));
+
+	//Delete un-used entries and keep needed entries
 	for (udword i=0; i<m_dwCount; i++)
 	{
+		bToKeep = true;
 		NObjGarbageDesc* pdesc = &m_aobjects[i];
 		if (*pdesc->ppobj!=null && (pdesc->byType&_byTypeMask))
 		{
@@ -1231,12 +1237,25 @@ void NObjectGarbage::Compact(ubyte _byTypeMask, udword _dwTimevalidityMs)
 				delete *pdesc->ppobj;
 				*pdesc->ppobj = null;
 				dwCompacted++;
+				bToKeep = false;
 			}
+		}
+		
+		if (bToKeep)
+		{
+			CopyMemory(aobjectsCompact+dwCount, pdesc, sizeof(NObjGarbageDesc));
+			dwCount++;
 		}
 
 	}
 
-	TRACE("NObjectGarbage::Compact Count<%d>\n", dwCompacted);
+	//Switching Arrays
+	NObjGarbageDesc* ptoFree = m_aobjects;
+	m_aobjects = aobjectsCompact;
+	NMemFree(ptoFree);
+	m_dwCount = dwCount;
+
+	TRACE("NObjectGarbage::Compact CompactedCount<%d> NewCount<%d>\n", dwCompacted, dwCount);
 
 }
 
@@ -1265,7 +1284,7 @@ void NObjectGarbage::GetInstance(NObject** _ppobj, ubyte _byAsType)
 					m_aobjects = (NObjGarbageDesc*)NMemRealloc(m_aobjects, m_dwSize*sizeof(NObjGarbageDesc));
 				}
 
-				TRACE("NObjectGarbage::GetInstance Count<%d>\n", m_dwCount);
+				TRACE("NObjectGarbage::GetInstance Count<%d> ObjPtr<0x%X>\n", m_dwCount, _ppobj);
 			}
 		}
 

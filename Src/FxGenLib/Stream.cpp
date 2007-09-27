@@ -36,10 +36,10 @@
 //-----------------------------------------------------------------
 NMemoryStream::NMemoryStream()
 {
-	m_pbyBuffer		= null;
-        m_dwBufSize             = 0;
-        m_dwBufPos              = 0;
-        m_bManagedBuffer        = true;
+	m_pbyBuffer			= null;
+	m_dwBufSize     = 0;
+	m_dwBufPos      = 0;
+	m_bManagedBuffer= true;
 }
 
 //-----------------------------------------------------------------
@@ -103,21 +103,22 @@ void NMemoryStream::Close()
 bool NMemoryStream::PutData(const void* _buf, udword _length)
 {
 	//Grow buffer size if necessary, and we're managing it
-	if ((m_dwBufPos+_length)>=m_dwBufSize){
-          if (m_bManagedBuffer)
-          {
-		m_dwBufSize+=NSF_BUFGROWSIZE+_length;
-		m_pbyBuffer=(ubyte*)NMemRealloc(m_pbyBuffer,m_dwBufSize);
-          } else {
-            return false;
-          }
+	if ((m_dwBufPos+_length)>=m_dwBufSize)
+	{
+		if (m_bManagedBuffer)
+		{
+			m_dwBufSize+=NSF_BUFGROWSIZE+_length;
+			m_pbyBuffer=(ubyte*)NMemRealloc(m_pbyBuffer,m_dwBufSize);
+		} else {
+			return false;
+		}
 	}
 
 	//Save datas
 	CopyMemory(m_pbyBuffer+m_dwBufPos, _buf, _length);
 	m_dwBufPos+=_length;
 
-        return true;
+	return true;
 }
 
 

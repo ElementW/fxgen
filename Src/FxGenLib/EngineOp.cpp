@@ -21,7 +21,10 @@
 //-----------------------------------------------------------------
 #include "pch.h"
 #include "EngineOp.h"
+
+#ifdef __GNUC__
 #include "gcccompat/gcccompat.h"
+#endif
 
 //-----------------------------------------------------------------
 //                   Variables
@@ -81,8 +84,7 @@ NOperator::NOperator()
 //-----------------------------------------------------------------
 NOperator::~NOperator()
 {
-//	if (m_pObj)		delete m_pObj;
-	gNFxGen_GetEngine()->GetBitmapGarbage()->RemoveEntry(&m_pObj);
+ gNFxGen_GetEngine()->GetBitmapGarbage()->RemoveEntry(&m_pObj);
 }
 
 //-----------------------------------------------------------------
@@ -139,7 +141,7 @@ bool NOperator::Load(NArchive* _l)
 	return true;
 }
 
-bool NOperator::useInsureCommonInputsSize(false);
+/*bool NOperator::useInsureCommonInputsSize(false);
 
 void NOperator::InsureCommonInputsSize(NOperator** _pOpsInts, float _fDetailFactor)
 {
@@ -222,7 +224,7 @@ void NOperator::InsureCommonInputsSize(NOperator** _pOpsInts, float _fDetailFact
 		}
 	}
 }
-
+*/
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -624,14 +626,16 @@ NEngineOp::~NEngineOp()
 
 //-----------------------------------------------------------------
 //!	\brief	Clear current project
+//! \note	Warning clear delete generated medias (bitmaps...)
 //-----------------------------------------------------------------
 void NEngineOp::Clear()
 {
+	m_bitmapsAlloc.Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+
 	if (m_pRootGroup)		delete m_pRootGroup;
 	m_pRootGroup = new NTreeNode;
 	m_pRootGroup->SetName("Root");
 
-	m_bitmapsAlloc.Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
 	m_arrayFinalsOp.Clear();	//##NEW###
 }
 
@@ -945,7 +949,7 @@ void NEngineOp::InvalidateAllOps()
 
 void NEngineOp::_InvalidateAllOps(NTreeNode* _pnode)
 {
-	//Parse Alls Pages to add 'NStoreOp'
+	//Parse Alls Pages...
 	NObjectArray& arrayObjs = _pnode->GetObjsArray();
 	udword dwCount = arrayObjs.Count();
 	while (dwCount--)
@@ -1102,7 +1106,7 @@ bool NEngineOp::SaveProject(const char* _pszFullFileName)
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Keep just final result bitmaps in memory
+//!	\brief	Keep just final result medias in memory (bitmaps ...)
 //-----------------------------------------------------------------
 void NEngineOp::CompactMemory()
 {
@@ -1147,7 +1151,12 @@ udword NEngineOp::GetFinalResultCount()
 NBitmap* NEngineOp::GetFinalResultBitmapByIdx(udword _idx)
 {
 	if (_idx<m_arrayFinalsOp.Count())
-		return (NBitmap*) ((NOperator*)m_arrayFinalsOp[_idx])->m_pObj;
+	{
+		NOperator* pop = (NOperator*)m_arrayFinalsOp[_idx];
+		NBitmap* bmp = (NBitmap*)pop->m_pObj;
+		bmp->SetName(pop->GetUserName());
+		return bmp;
+	}
 
 	return null;
 }

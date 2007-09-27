@@ -235,7 +235,7 @@ udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 	//Two inputs (texture, normal)
 	if (m_byInputs!=2)		return (udword)-1;
 
-	InsureCommonInputsSize(_pOpsInts, _fDetailFactor);
+	//InsureCommonInputsSize(_pOpsInts, _fDetailFactor);
 
 	//Get input Texture and Normal
 	NBitmap* pSrc		= (NBitmap*)(*(_pOpsInts+0))->m_pObj;
@@ -370,7 +370,7 @@ udword NVortexOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	//Only one Input
 	if (m_byInputs!=1)              return (udword)-1;
 
-	InsureCommonInputsSize(_pOpsInts, _fDetailFactor);
+	//InsureCommonInputsSize(_pOpsInts, _fDetailFactor);
 
 	//Bitmap instance
 	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
@@ -503,7 +503,7 @@ udword NLookupOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	//Two inputs (texture, texcoords)
 	if (m_byInputs!=2) return (udword)-1;
 
-	InsureCommonInputsSize(_pOpsInts, _fDetailFactor);
+	//InsureCommonInputsSize(_pOpsInts, _fDetailFactor);
 
 	//Get input Texture and TexCoords
 	NBitmap* pSrc = (NBitmap*)(*(_pOpsInts+0))->m_pObj;
