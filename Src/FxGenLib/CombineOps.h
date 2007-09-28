@@ -46,7 +46,7 @@ public:
 	DECLARE_CLASS();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Nop"; }		//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Misc"; }	//!< Operator's Category
 
@@ -67,7 +67,7 @@ public:
 	NRectOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Rect"; }			//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
@@ -88,7 +88,7 @@ public:
 	NPixelsOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Pixels"; }	//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
@@ -108,7 +108,7 @@ public:
 	NAddOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Add"; }			//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
@@ -128,7 +128,7 @@ public:
 	NGlowOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Glow"; }		//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
@@ -150,7 +150,7 @@ public:
 	NCrackOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Crack"; }		//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
@@ -175,7 +175,7 @@ public:
 	NLerpOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Lerp"; }		//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 

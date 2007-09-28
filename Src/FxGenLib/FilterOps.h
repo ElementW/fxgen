@@ -48,7 +48,7 @@ public:
 	NBlurOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Blur"; }			//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Filter"; }		//!< Operator's Category
 
@@ -68,7 +68,7 @@ public:
 	NColorsOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Colors"; }	//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
@@ -89,7 +89,7 @@ public:
 	NLightOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Light"; }	//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
@@ -109,7 +109,7 @@ public:
 	NNormalsOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Normals"; }	//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
@@ -128,7 +128,7 @@ public:
 	DECLARE_CLASS();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Invert"; }		//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
@@ -148,7 +148,7 @@ public:
 	NThresholdOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Threshold"; }		//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
@@ -168,7 +168,7 @@ public:
 	NAlphaOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Alpha"; }		//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 

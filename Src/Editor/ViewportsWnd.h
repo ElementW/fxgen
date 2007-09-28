@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------
 //                   Includes
 //-----------------------------------------------------------------
-#include "viewportsctrl.h"
+#include "ViewportsCtrl.h"
 #include "Editor.h"
 #include "Renderer.h"
 

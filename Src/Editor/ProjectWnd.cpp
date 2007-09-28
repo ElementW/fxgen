@@ -19,7 +19,7 @@
 //			Includes
 //-----------------------------------------------------------------
 #include "pch.h"
-#include "projectwnd.h"
+#include "ProjectWnd.h"
 #include "resource.h"
 #include "EnterNameDlg.h"
 

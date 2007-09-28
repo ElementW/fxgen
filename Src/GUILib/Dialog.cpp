@@ -19,7 +19,7 @@
 // Includes
 //-----------------------------------------------------------------
 #include "pch.h"
-#include "dialog.h"
+#include "Dialog.h"
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -171,7 +171,7 @@ POINT NDialog::Center()
 }
 
 
-BOOL CALLBACK NDialog::StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK NDialog::StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if (uMsg==WM_INITDIALOG)
 	{

@@ -1336,7 +1336,11 @@ void NObjectGarbage::RemoveEntry(NObject** _ppobj)
 //-----------------------------------------------------------------
 void gDebugLog(const char* _fmt, ... )
 {
+#ifndef __WINE__
 	char buf[256];
 	wvsprintf(buf, _fmt, (char *)(&_fmt+1));
 	OutputDebugString(buf);
+#else
+#warning Empty function
+#endif
 }

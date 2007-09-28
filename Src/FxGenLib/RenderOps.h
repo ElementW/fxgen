@@ -46,7 +46,7 @@ public:
 	NFlatOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Flat"; }			//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
@@ -66,7 +66,7 @@ public:
 	NCloudOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Cloud"; }		//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
@@ -99,7 +99,7 @@ public:
 	NGradientOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Gradient"; }	//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Render"; }		//!< Operator's Category
 
@@ -120,7 +120,7 @@ public:
 	NCellOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Cell"; }		//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
@@ -140,7 +140,7 @@ public:
 	NNoiseOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual char*		GetName()			{ return "Noise"; }		//!< Operator's Name
 	virtual char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 

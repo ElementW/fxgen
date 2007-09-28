@@ -19,7 +19,7 @@
 //                   Includes
 //-----------------------------------------------------------------
 #include "pch.h"
-#include "viewportswnd.h"
+#include "ViewportsWnd.h"
 #include "TGAWriter.h"
 
 //-----------------------------------------------------------------

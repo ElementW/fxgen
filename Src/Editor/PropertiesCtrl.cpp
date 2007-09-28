@@ -190,7 +190,7 @@ void NPropertiesCtrl::OnPaint()
 			}
 
 			dwMaxDepth=INT_MAX;
-			
+
 
 		/////////////////////////////////////////////
 		// Draw Variable Properties
@@ -422,6 +422,7 @@ void NPropertiesCtrl::OnMButtonUp(udword flags, NPoint pos)
 //-----------------------------------------------------------------
 void NPropertiesCtrl::OnKeyDown(udword dwchar)
 {
+//	GetApp()->GetMainWnd()->OnKeyDown(dwchar);
 }
 
 //-----------------------------------------------------------------
