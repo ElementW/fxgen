@@ -684,7 +684,7 @@ udword NNoiseOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	for (udword y=0; y<w; y++)
 		for (udword x=0; x<h; x++)
     {
-      udword noiseVal = myRandom() % 256;
+      udword noiseVal = myRandom(1)%256;
       pPxDst->r = (noiseVal*col.r)>>8;
       pPxDst->g = (noiseVal*col.g)>>8;
       pPxDst->b = (noiseVal*col.b)>>8;

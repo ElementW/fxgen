@@ -22,8 +22,12 @@
 #include "Core.h"
 
 #include <windows.h>
-#include <gl\gl.h>				// Header File For The OpenGL32 Library
-#include <gl\glext.h>			// Header File For The OpenGL32 Library extensions
+
+#ifdef __WINE__
+#define WINGDIAPI /* linux GL/gl.h has this thing, whatever it is */
+#endif
+#include <GL/gl.h>				// Header File For The OpenGL32 Library
+#include <GL/glext.h>			// Header File For The OpenGL32 Library extensions
 
 //-----------------------------------------------------------------
 // Defines

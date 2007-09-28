@@ -19,7 +19,7 @@
 //                   Includes
 //-----------------------------------------------------------------
 #include "pch.h"
-#include ".\mainfrm.h"
+#include "MainFrm.h"
 
 #include "OperatorsWnd.h"
 #include "PropertiesWnd.h"
@@ -40,6 +40,7 @@
 #define	MENU_DETAILLOW		200
 #define	MENU_DETAILNORMAL	201
 #define	MENU_DETAILHIGH		202
+//#define	MENU_AUTOSIZE		210
 
 
 //-----------------------------------------------------------------
@@ -139,11 +140,13 @@ bool NMainFrm::Create(char* name, const NRect& rect)
 
 
 	dwParent = pmenu->InsertPopupItem(0,				1, "Options");
-	dwParent = pmenu->InsertPopupItem(dwParent, 0, "Details");
-
-	pmenu->InsertItem(dwParent, 1, "Low\t50%",			MENU_DETAILLOW);
-	pmenu->InsertItem(dwParent, 2, "Normal\t100%",	MENU_DETAILNORMAL);
-	pmenu->InsertItem(dwParent, 3, "High\t200%",		MENU_DETAILHIGH);
+//	pmenu->InsertItem(dwParent, 1, "Use bitmaps autoscaling", MENU_AUTOSIZE);
+//	{
+		dwParent = pmenu->InsertPopupItem(dwParent, 0, "Details");
+		pmenu->InsertItem(dwParent, 1, "Low\t50%",			MENU_DETAILLOW);
+		pmenu->InsertItem(dwParent, 2, "Normal\t100%",	MENU_DETAILNORMAL);
+		pmenu->InsertItem(dwParent, 3, "High\t200%",		MENU_DETAILHIGH);
+//	}
 
 	///////////////////////////////////////////////
 	// Creation d'un nouveau projet par defaut
@@ -192,6 +195,10 @@ void NMainFrm::OnCommand(udword id)
 			m_bExecuteLocked = false;
 			break;
 
+//		case MENU_AUTOSIZE:
+//			bool &toggle = NOperator::useInsureCommonInputsSize;
+//			toggle = toggle ? false : true;
+//			break;
 	};
 
 }

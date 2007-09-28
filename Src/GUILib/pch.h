@@ -23,8 +23,8 @@
 #include <windows.h>
 #include <windowsx.h>
 #include <commctrl.h>
-#include <Commdlg.h>
-#include <Richedit.h>
+#include <commdlg.h>
+#include <richedit.h>
 
 // C RunTime Header Files
 #include <stdlib.h>
