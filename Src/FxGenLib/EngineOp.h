@@ -44,7 +44,8 @@ class NObject;
 //-----------------------------------------------------------------
 //                   TypesDef
 //-----------------------------------------------------------------
-typedef	void (__cdecl FXGEN_PROCESSCB)(udword _dwCurrentOp, udword _dwTotalOps);
+typedef	void (__cdecl FXGEN_OPSPROCESSCB)(udword _dwCurrentOp, udword _dwTotalOps);
+typedef	void (__cdecl FXGEN_RESULTSPROCESSCB)(udword _dwCurrentResult, udword _dwTotalResults);
 
 //-----------------------------------------------------------------
 //!	\class		NOperator
@@ -149,10 +150,13 @@ public:
 	NEngineOp();
 	virtual ~NEngineOp();
 
+	//Get unique Engine Instance
+	static	NEngineOp* GetEngine();
+
 	//API Methods
 	void			Clear();
 	bool			LoadProject(const char* _pszFullFileName);
-	void			ProcessOperators(float _ftime, float _fDetailFactor=1.0f, FXGEN_PROCESSCB* _cbProcess=NULL);
+	void			ProcessOperators(float _ftime, float _fDetailFactor=1.0f, FXGEN_RESULTSPROCESSCB* _cbResultsProcess=NULL, FXGEN_OPSPROCESSCB* _cbOpsProcess=NULL);
 	void			CompactMemory();
 	udword		GetFinalResultCount();
 	NBitmap*	GetFinalResultBitmapByIdx(udword _idx);
@@ -163,7 +167,7 @@ public:
 	//Editor Execution
 	void InvalidateAllOps();
 	void InvalidateOp(NOperator* _pop);
-	void Execute(float _ftime, NOperator* _popFinal, float _fDetailFactor=1.0f);
+	void Execute(float _ftime, NOperator* _popFinal, float _fDetailFactor=1.0f, FXGEN_OPSPROCESSCB* _cbProcess=NULL);
 
 	//Editor Channels methods
 	void SetChannelValue(ubyte _byChannel, NVarValue& _value);
@@ -200,6 +204,7 @@ protected:
 	NOperator*	m_popFinal;
 	bool				m_bError;							//!< Error while process
 	udword			m_dwTotalProcessOpsCount, m_dwCurProcessOpsCount;
+	FXGEN_OPSPROCESSCB* m_cbOpsProcess;
 
 	//Garbages for media (bitmaps ...)
 	NObjectGarbage	m_bitmapsAlloc;
@@ -207,9 +212,3 @@ protected:
 	//Datas API Interface
 	NObjectArray m_arrayFinalsOp;
 };
-
-
-//-----------------------------------------------------------------
-//	Externs
-//-----------------------------------------------------------------
-FXGEN_API extern NEngineOp* gNFxGen_GetEngine();

@@ -75,7 +75,7 @@ udword NFlatOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	m_pcvarsBloc->GetValue(2, _ftime, (udword&)col);
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	NBitmap* pDst = (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
@@ -151,7 +151,7 @@ udword NCloudOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	h=(udword) ((float)h*_fDetailFactor);
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	NBitmap* pDst	= (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
@@ -445,7 +445,7 @@ udword NGradientOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 	m_pcvarsBloc->GetValue(5, _ftime, (udword&)colD);
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 	NBitmap* pDst = (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
 	RGBA* pPxDst = pDst->GetPixels();
@@ -548,7 +548,7 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	SetSeedValue(wSeed);
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 	NBitmap* pDst = (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
 	RGBA* pPxDst = pDst->GetPixels();
@@ -674,7 +674,7 @@ udword NNoiseOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	SetSeedValue(wSeed);
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	NBitmap* pDst = (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);

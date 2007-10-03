@@ -599,7 +599,7 @@ LRESULT NWnd::WndProc( UINT msg, WPARAM wparam, LPARAM lparam)
 		case WM_MOUSEWHEEL:		OnMouseWheel(wparam, (sword)HIWORD(wparam), NPoint(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam)));			break;
 		case WM_KEYDOWN:			OnKeyDown(wparam);	break;
 		case WM_KEYUP:				OnKeyUp(wparam);		break;
-		case WM_KILLFOCUS:		OnKillFocus();			break;
+		case WM_KILLFOCUS:		OnKillFocus((NWnd*)::GetWindowLong((HWND)wparam, GWL_USERDATA));			break;
 		case WM_TIMER:				OnTimer(wparam);		break;
 
 		case WM_COMMAND: {

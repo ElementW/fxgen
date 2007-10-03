@@ -68,7 +68,7 @@ float NController::GetValue(float _fTime)
 
 	//Get Channel Value
 	NVarValue value;
-	gNFxGen_GetEngine()->GetChannelValue(byChannel, value);
+	NEngineOp::GetEngine()->GetChannelValue(byChannel, value);
 
 	//Calcul
 	return value.fVal*fFactor;

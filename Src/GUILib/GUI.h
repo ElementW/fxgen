@@ -232,7 +232,7 @@ protected:
 	virtual	void	OnMouseWheel(udword flags, sword zDelta, NPoint point)			{}
 	virtual	void	OnCommand(udword id)			{}
 	virtual	void	OnKeyUp(udword dwchar)		{}
-	virtual	void	OnKillFocus()							{}
+	virtual	void	OnKillFocus(NWnd* pNewWnd)		{}
 	virtual	void	OnTimer(udword _dwTimerID)		{}
 
 	virtual	udword	CatchControlCommand(uword notifycode, uword id)	{ return 0; }

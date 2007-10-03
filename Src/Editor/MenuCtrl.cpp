@@ -44,7 +44,9 @@ NMenuCtrl::NMenuCtrl()
 	m_hfontNormal = m_hfontBold = null;
 	m_dwItemHighLightedIdx = -1;
 	m_pcurPopupMenu = null;
-	m_dwTimerHide = 0;
+	m_pcurParentMenu = null;
+	//m_dwTimerHide = 0;
+	m_bEntered = false;
 }
 
 //-----------------------------------------------------------------
@@ -213,7 +215,7 @@ void NMenuCtrl::OnSize()
 void NMenuCtrl::OnLeftButtonDown(udword flags, NPoint _point)
 {
 	//TRACE("OnLeftButtonDown\n");
-	SetFocus();
+	//SetFocus();
 
 	if (m_dwItemHighLightedIdx!=-1)
 	{
@@ -223,23 +225,9 @@ void NMenuCtrl::OnLeftButtonDown(udword flags, NPoint _point)
 		if (pitem->dwStyle&ME_ITEMSTYLE_CHECKBOX)
 			pitem->bChecked=!pitem->bChecked;
 
-		//Open Popup Menu
-		if (pitem->ppopUpMenu)
-		{
-			//Hide old popup
-			if (m_pcurPopupMenu)
-			{
-				m_pcurPopupMenu->ShowMenu(false);
-			}
-
-			NPoint pT(pitem->rcItem.right, pitem->rcItem.top);
-			ClientToScreen(pT);
-			pitem->ppopUpMenu->TrackPopupMenu(pT);
-
-			m_pcurPopupMenu = pitem->ppopUpMenu;
-
 		//Notify selected item ID
-		} else {
+		if (pitem->ppopUpMenu==null)
+		{
 			udword id = pitem->dwID;
 			::SendMessage(m_pParentWnd->m_W32HWnd, WM_COMMAND, id, 0);
 			ShowMenu(false);
@@ -269,8 +257,30 @@ void NMenuCtrl::OnMouseMove(udword flags, NPoint point )
 	udword idx = GetItemIdxUnderPt(point);
 	if (idx!=m_dwItemHighLightedIdx)
 	{
+		m_bEntered = true;
 		//Change highLighted item
 		m_dwItemHighLightedIdx = idx;
+
+		if (m_dwItemHighLightedIdx!=-1)
+		{
+			NMEItemDesc* pitem = &m_carrayItems[m_dwItemHighLightedIdx];
+
+			//Open Popup Menu
+			if (pitem->ppopUpMenu)
+			{
+				//Hide old popup
+				if (m_pcurPopupMenu)
+					m_pcurPopupMenu->ShowMenu(false, NULL);
+
+				//Show new popup Menu
+				NPoint pT(pitem->rcItem.right, pitem->rcItem.top);
+				ClientToScreen(pT);
+				pitem->ppopUpMenu->TrackPopupMenu(pT, this);
+
+				m_pcurPopupMenu = pitem->ppopUpMenu;
+			}
+		}
+
 		//Repaint
 		Update();
 	}
@@ -280,7 +290,7 @@ void NMenuCtrl::OnMouseMove(udword flags, NPoint point )
 
 void NMenuCtrl::OnMButtonDown(udword flags, NPoint pos)
 {
-	SetFocus();
+	//SetFocus();
 }
 
 void NMenuCtrl::OnMButtonUp(udword flags, NPoint pos)
@@ -301,24 +311,33 @@ void NMenuCtrl::OnKeyUp(udword dwchar)
 //!	\brief	Show menu
 //!	\param	if true show menu else hide it
 //-----------------------------------------------------------------
-void NMenuCtrl::ShowMenu(bool _bShow)
+void NMenuCtrl::ShowMenu(bool _bShow, NMenuCtrl* _pParentMenu/*=null*/)
 {
 	if (_bShow)
 	{
-		::ShowWindow(m_W32HWnd, SW_SHOW);
-		SetFocus();
+		m_bEntered = false;
+		m_pcurParentMenu = _pParentMenu;
+		::ShowWindow(m_W32HWnd, SW_SHOWNOACTIVATE);
 
-		if (m_dwTimerHide)	KillTimer(m_W32HWnd, m_dwTimerHide);
-		m_dwTimerHide = ::SetTimer(m_W32HWnd, IDTIMER_HIDE, DELAY_TIMER_HIDE, NULL);
+		//if (_pParentMenu==null)			SetFocus();
+
+		//if (m_dwTimerHide)	KillTimer(m_W32HWnd, m_dwTimerHide);
+		//m_dwTimerHide = ::SetTimer(m_W32HWnd, IDTIMER_HIDE, DELAY_TIMER_HIDE, NULL);
 		//SetCapture();
 	} else {
 
-		if (m_dwTimerHide)
-		{
-			KillTimer(m_W32HWnd, m_dwTimerHide);
-			m_dwTimerHide = 0;
-		}
+		//if (m_pcurParentMenu)			m_pcurParentMenu->ShowMenu(false);
+		//if (m_dwTimerHide)
+		//{
+			//KillTimer(m_W32HWnd, m_dwTimerHide);
+			//m_dwTimerHide = 0;
+		//}
 
+		//Hide popup
+		if (m_pcurPopupMenu)
+			m_pcurPopupMenu->ShowMenu(false, NULL);
+
+		m_dwItemHighLightedIdx = -1;
 		::ShowWindow(m_W32HWnd, SW_HIDE);
 		//ReleaseCapture();
 	}
@@ -380,7 +399,7 @@ NMenuCtrl* NMenuCtrl::CreatePopupMenu(char* _pszName, udword _idx)
 //!	\brief	Display menu at screen position
 //!	\return	Pointer to selected Item Desc
 //-----------------------------------------------------------------
-NMEItemDesc* NMenuCtrl::TrackPopupMenu(NPoint _ptScreen)
+NMEItemDesc* NMenuCtrl::TrackPopupMenu(NPoint _ptScreen, NMenuCtrl* _pParentMenu/*=null*/)
 {
 	//Calc Menu rect
 	NRect rc;
@@ -388,8 +407,11 @@ NMEItemDesc* NMenuCtrl::TrackPopupMenu(NPoint _ptScreen)
 	rc.Move(_ptScreen);
 	SetWindowRect(rc);
 
+	//TRACE("_pParentMenu %d\n", _pParentMenu);
+	if (_pParentMenu==null)			SetFocus();
+
 	//Display menu window
-	ShowMenu(true);
+	ShowMenu(true, _pParentMenu);
 
 	//Graphic update
 	Update();
@@ -471,18 +493,33 @@ NMenuCtrl* NMenuCtrl::GetPopupMenu(udword _idx)
 	return null;
 }
 
-void NMenuCtrl::OnTimer(udword _dwTimerID)
+/*void NMenuCtrl::OnTimer(udword _dwTimerID)
 {
 	if (_dwTimerID==IDTIMER_HIDE)
 	{
 		POINT pt;		::GetCursorPos(&pt);
 		NPoint point(pt.x, pt.y);
 
-		NRect rc = GetWindowRect();
-		if (!rc.Contain(point))
+		NRect rc	= GetWindowRect();
+		NRect rcPM;
+		if (m_pcurPopupMenu)
+			rcPM = m_pcurPopupMenu->GetWindowRect();
+
+		if (!rc.Contain(point) && !rcPM.Contain(point) && m_bEntered)
 		{
 			ShowMenu(false);
 		}
 	}
+}*/
 
+void NMenuCtrl::OnKillFocus(NWnd* pNewWnd)
+{
+	TRACE("NMenuCtrl::OnKillFocus\n");
+	if ((pNewWnd==NULL || pNewWnd!=m_pcurPopupMenu))
+	{
+		if (m_pcurParentMenu)
+			m_pcurParentMenu->ShowMenu(false, NULL);
+		else 
+			ShowMenu(false, NULL);
+	}
 }

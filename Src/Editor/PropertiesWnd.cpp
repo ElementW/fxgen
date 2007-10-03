@@ -64,7 +64,7 @@ void NPropertiesWnd::OnPropertiesChanged()
 {
 	//Set Operator Invalid
 	if (m_pcurOp)
-		gNFxGen_GetEngine()->InvalidateOp(m_pcurOp);
+		NEngineOp::GetEngine()->InvalidateOp(m_pcurOp);
 
 }
 
