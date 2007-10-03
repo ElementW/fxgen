@@ -304,18 +304,18 @@ bool NUbyteComboProp::BeginEdit(NRect& rcItem)
 	NFxGenApp* papp = (NFxGenApp*)GetApp();
 	NMainFrm* pfrm = (NMainFrm*)papp->GetMainWnd();
 
-	m_hMenu = CreatePopupMenu();
+	m_wndMenu.Create("", m_pParent);
 
 	for (udword i=0; i<m_carrayStringsList.Count(); i++)
 	{
-		::AppendMenu(m_hMenu, MF_STRING, (DWORD)i+1, m_carrayStringsList[i].Buffer());
+		m_wndMenu.AddItem(m_carrayStringsList[i].Buffer(), i+1, 0);
 	}
 
 	POINT pt;
 	::GetCursorPos(&pt);	//Cursor position even with keyboard 'Context key'
-	ubyte byVal = (ubyte)::TrackPopupMenu(m_hMenu, TPM_LEFTALIGN|TPM_LEFTBUTTON|TPM_RETURNCMD, pt.x, pt.y, null, pfrm->m_W32HWnd, null);
-
-	::DestroyMenu(m_hMenu);
+	ubyte byVal = 0;
+	//ubyte byVal = (ubyte)m_wndMenu.TrackPopupMenu(m_hMenu, TPM_LEFTALIGN|TPM_LEFTBUTTON|TPM_RETURNCMD, pt.x, pt.y, null, pfrm->m_W32HWnd, null);
+	//###TODO###
 
 	if (byVal!=0)
 		m_pvarValue->byVal = byVal-1;
@@ -399,16 +399,16 @@ bool NUseStoredOpsProp::BeginEdit(NRect& rcItem)
 	NMainFrm* pfrm = (NMainFrm*)papp->GetMainWnd();
 
 	//Creation du menu
-	m_hMenu = CreatePopupMenu();
+	m_wndMenu.Create("", m_pParent);
 
-	NTreeNode* pnode = gNFxGen_GetEngine()->GetRootGroup();
+	NTreeNode* pnode = NEngineOp::GetEngine()->GetRootGroup();
 	BuildMenu(pnode);
 
 	POINT pt;
 	::GetCursorPos(&pt);	//Cursor position even with keyboard 'Context key'
-	NOperator* popSel = (NOperator*)::TrackPopupMenu(m_hMenu, TPM_LEFTALIGN|TPM_LEFTBUTTON|TPM_RETURNCMD, pt.x, pt.y, null, pfrm->m_W32HWnd, null);
-
-	::DestroyMenu(m_hMenu);
+	NOperator* popSel = null;
+		//###TODO###
+	//NOperator* popSel = (NOperator*)::TrackPopupMenu(m_hMenu, TPM_LEFTALIGN|TPM_LEFTBUTTON|TPM_RETURNCMD, pt.x, pt.y, null, pfrm->m_W32HWnd, null);
 
 	//Affect selected 'stored operator'
 	if (popSel!=null)
@@ -424,8 +424,9 @@ bool NUseStoredOpsProp::EndEdit(bool bSaveChanged)
 
 void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 {
+	//###TODO###
 	//Parse Alls Pages to add 'NStoreOp'
-	NObjectArray& arrayObjs = _pnode->GetObjsArray();
+/*	NObjectArray& arrayObjs = _pnode->GetObjsArray();
 	udword dwCount = arrayObjs.Count();
 	while (dwCount--)
 	{
@@ -450,7 +451,7 @@ void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 	_pnode = _pnode->GetSon();
 	if (_pnode)
 		BuildMenu(_pnode);
-
+*/
 }
 
 

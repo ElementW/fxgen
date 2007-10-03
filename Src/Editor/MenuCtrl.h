@@ -73,7 +73,7 @@ public:
 	// Methods
 	void	Update();
 
-	NMEItemDesc*	TrackPopupMenu(NPoint _ptScreen);
+	NMEItemDesc*	TrackPopupMenu(NPoint _ptScreen, NMenuCtrl* _pParentMenu=null);
 
 	NMEItemDesc* AddItem(char* _pszName, udword _id, udword _dwStyle);
 
@@ -91,16 +91,17 @@ protected:
 	void CalcMenuSize(NRect& _rcOut);
 	udword GetItemIdxUnderPt(NPoint& _point);
 
-	void ShowMenu(bool _bShow=true);
+	void ShowMenu(bool _bShow=true, NMenuCtrl* _pParentMenu=null);
 
 	// Datas
 	HFONT		m_hfontNormal, m_hfontBold;
 
 	NArray<NMEItemDesc>	m_carrayItems;
 	udword	m_dwItemHighLightedIdx;	//!< Idx from m_carrayItems
-	udword	m_dwTimerHide;
+	//udword	m_dwTimerHide;
+	bool		m_bEntered;
 
-	NMenuCtrl* m_pcurPopupMenu;
+	NMenuCtrl* m_pcurPopupMenu, *m_pcurParentMenu;
 
 protected:
 	//Win32 Messages Dispatching
@@ -114,7 +115,8 @@ protected:
 	virtual	void	OnLeftButtonDblClk(udword flags, NPoint point);
 	virtual void	OnRightButtonDown(udword flags, NPoint pos);
 	virtual	void	OnKeyUp(udword dwchar);
-	virtual	void	OnTimer(udword _dwTimerID);
+	virtual	void	OnKillFocus(NWnd* pNewWnd);
+	//virtual	void	OnTimer(udword _dwTimerID);
 
 	//Windows Proc
 	virtual	LRESULT	WndProc( UINT msg, WPARAM wparam, LPARAM lparam);

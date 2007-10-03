@@ -46,7 +46,7 @@ udword NNopOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	//Copy Source to This
 	CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
@@ -97,7 +97,7 @@ udword NRectOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -165,7 +165,7 @@ udword NPixelsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -229,7 +229,7 @@ udword NAddOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 	//InsureCommonInputsSize(_pOpsInts, _fDetailFactor);
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	udword w = pSrc->GetWidth();
@@ -495,7 +495,7 @@ udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -598,7 +598,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -698,7 +698,7 @@ udword NLerpOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	if (h!=pSrc2->GetHeight() || h!=pBlend->GetHeight() )		return (udword)-1;
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	//Set Bitmap Size
 	NBitmap* pDst = (NBitmap*)m_pObj;

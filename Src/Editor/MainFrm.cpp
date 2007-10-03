@@ -173,24 +173,24 @@ void NMainFrm::OnCommand(udword id)
 
 		case MENU_DETAILLOW:
 			m_bExecuteLocked = true;
-			gNFxGen_GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-			gNFxGen_GetEngine()->InvalidateAllOps();
+			NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			NEngineOp::GetEngine()->InvalidateAllOps();
 			m_fDetailFactor = 0.5f;
 			m_bExecuteLocked = false;
 			break;
 
 		case MENU_DETAILNORMAL:
 			m_bExecuteLocked = true;
-			gNFxGen_GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-			gNFxGen_GetEngine()->InvalidateAllOps();
+			NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			NEngineOp::GetEngine()->InvalidateAllOps();
 			m_fDetailFactor = 1.0f;
 			m_bExecuteLocked = false;
 			break;
 
 		case MENU_DETAILHIGH:
 			m_bExecuteLocked = true;
-			gNFxGen_GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-			gNFxGen_GetEngine()->InvalidateAllOps();
+			NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			NEngineOp::GetEngine()->InvalidateAllOps();
 			m_fDetailFactor = 2.0f;
 			m_bExecuteLocked = false;
 			break;
@@ -209,7 +209,7 @@ void NMainFrm::OnCommand(udword id)
 //-----------------------------------------------------------------
 void NMainFrm::OnNewProject()
 {
-	NTreeNode* prootNode = gNFxGen_GetEngine()->GetRootGroup();
+	NTreeNode* prootNode = NEngineOp::GetEngine()->GetRootGroup();
 	udword dwCount = prootNode->GetSonsCount();
 
 	if (dwCount!=0)
@@ -223,10 +223,10 @@ void NMainFrm::OnNewProject()
 	projectname = "";
 
 	//New project
-	gNFxGen_GetEngine()->Clear();
+	NEngineOp::GetEngine()->Clear();
 
 	//Create empty project
-	prootNode = gNFxGen_GetEngine()->GetRootGroup();
+	prootNode = NEngineOp::GetEngine()->GetRootGroup();
 
 	NTreeNode* pNewGrpNode = new NTreeNode;
 	pNewGrpNode->SetName("Group");
@@ -238,7 +238,7 @@ void NMainFrm::OnNewProject()
 
 
 	//Display Projects's Pages
-	m_pprojectwnd->DisplayOperatorsProject(gNFxGen_GetEngine());
+	m_pprojectwnd->DisplayOperatorsProject(NEngineOp::GetEngine());
 	m_pprojectwnd->SelectFirstPage();
 
 	//m_opswnd->DisplayOperatorsPage(null);
@@ -264,12 +264,12 @@ void NMainFrm::LoadProject(NString str)
 		m_popMarkedShow = null;
 		m_bExecuteLocked = true;
 
-		gNFxGen_GetEngine()->Clear();
+		NEngineOp::GetEngine()->Clear();
 
-		m_pprojectwnd->DisplayOperatorsProject(gNFxGen_GetEngine());
+		m_pprojectwnd->DisplayOperatorsProject(NEngineOp::GetEngine());
 		m_pprojectwnd->SelectFirstPage();
 
-		if (gNFxGen_GetEngine()->LoadProject(str.Buffer()))
+		if (NEngineOp::GetEngine()->LoadProject(str.Buffer()))
 		{
 			projectname = str;
 			NString strTitle(CAPTION);
@@ -277,14 +277,14 @@ void NMainFrm::LoadProject(NString str)
 			SetWindowText(strTitle.Buffer());
 
 			//###TEST###
-			//gNFxGen_GetEngine()->ProcessOperators(0.0, staticProcess);
+			//NEngineOp::GetEngine()->ProcessOperators(0.0, staticProcess);
 
 		} else {
-			gNFxGen_GetEngine()->Clear();
+			NEngineOp::GetEngine()->Clear();
 		}
 
 		//Display Projects's Pages
-		m_pprojectwnd->DisplayOperatorsProject(gNFxGen_GetEngine());
+		m_pprojectwnd->DisplayOperatorsProject(NEngineOp::GetEngine());
 		m_pprojectwnd->SelectFirstPage();
 
 		m_bExecuteLocked = false;
@@ -314,7 +314,7 @@ void NMainFrm::SaveProject(NString path)
 
 	m_bExecuteLocked = true;
 
-	if (gNFxGen_GetEngine()->SaveProject(path.Buffer()))
+	if (NEngineOp::GetEngine()->SaveProject(path.Buffer()))
 	{
 		projectname = path;
 		NString strTitle(CAPTION);
@@ -348,7 +348,7 @@ NOperator* NMainFrm::Execute(float _ftime)
 	if (!m_bExecuteLocked)
 	{
 		m_bExecuteLocked = true;
-		gNFxGen_GetEngine()->Execute(_ftime, m_popMarkedShow, m_fDetailFactor);
+		NEngineOp::GetEngine()->Execute(_ftime, m_popMarkedShow, m_fDetailFactor);
 		//Rendering
 		EVT_EXECUTE(EVT_RENDER, (udword)m_popMarkedShow, (udword)&_ftime);
 		m_bExecuteLocked = false;

@@ -32,17 +32,6 @@
 NEngineOp* gpengineOp = null;
 
 //-----------------------------------------------------------------
-//!	\brief	Return Engine instance
-//-----------------------------------------------------------------
-NEngineOp* gNFxGen_GetEngine()
-{
-	if (gpengineOp==null)
-		gpengineOp = new NEngineOp;
-
-	return gpengineOp;
-}
-
-//-----------------------------------------------------------------
 //!	\brief	Sort operators from left to right position
 //-----------------------------------------------------------------
 int SortOpsLeftToRight(const void *elem1, const void *elem2)
@@ -84,7 +73,7 @@ NOperator::NOperator()
 //-----------------------------------------------------------------
 NOperator::~NOperator()
 {
- gNFxGen_GetEngine()->GetBitmapGarbage()->RemoveEntry(&m_pObj);
+ NEngineOp::GetEngine()->GetBitmapGarbage()->RemoveEntry(&m_pObj);
 }
 
 //-----------------------------------------------------------------
@@ -177,7 +166,7 @@ void NOperator::InsureCommonInputsSize(NOperator** _pOpsInts, float _fDetailFact
 	// Resize bitmaps of all Render operators to the largest
 	for(NOperator** op = _pOpsInts; op && *op; op++)
 	{
-		NOperator* root = gNFxGen_GetEngine()->GetRootOperator(*op);
+		NOperator* root = NEngineOp::GetEngine()->GetRootOperator(*op);
 		for(NOperator* prev = root; prev && prev != this; prev = prev->m_pnextOpToProcess)
 		{
 			if(strcmp(prev->GetCategory(), "Render") && strcmp(prev->GetCategory(), "Misc"))
@@ -625,6 +614,17 @@ NEngineOp::~NEngineOp()
 }
 
 //-----------------------------------------------------------------
+//!	\brief	Static Methods that return an unique Engine Instance
+//-----------------------------------------------------------------
+NEngineOp*	NEngineOp::GetEngine()
+{
+	if (gpengineOp==null)
+		gpengineOp = new NEngineOp;
+
+	return gpengineOp;
+}
+
+//-----------------------------------------------------------------
 //!	\brief	Clear current project
 //! \note	Warning clear delete generated medias (bitmaps...)
 //-----------------------------------------------------------------
@@ -768,9 +768,10 @@ void NEngineOp::ClearParsedOpsFlags(NOperator* _pop)
 //!	\param	_ftime time in ms
 //!	\param	_popFinal	final operator for result
 //!	\param	_fDetailFactor	Result Detail (Factor x0.5, x1 , x2)
+//!	\param	_cbOpsProcess	CallBack
 //!	\note		Invalid operators are computed first
 //-----------------------------------------------------------------
-void NEngineOp::Execute(float _ftime, NOperator* _popFinal, float _fDetailFactor/*=1.0f*/)
+void NEngineOp::Execute(float _ftime, NOperator* _popFinal, float _fDetailFactor/*=1.0f*/, FXGEN_OPSPROCESSCB* _cbOpsProcess/*=NULL*/)
 {
 	if (_popFinal!=null)
 	{
@@ -783,13 +784,17 @@ void NEngineOp::Execute(float _ftime, NOperator* _popFinal, float _fDetailFactor
 		m_dwTotalProcessOpsCount	= 0;
 		m_popFinal								= _popFinal;
 		m_bError									= false;
+		m_cbOpsProcess						= _cbOpsProcess;
 
 		ZeroMemory(m_aStacks, sizeof(m_aStacks));
 
-		//Operators count (just for editor not really need for game...) ###TOFIX###
-		NOperator* pcRootOP = GetRootOperator(_popFinal);
-		ClearParsedOpsFlags(pcRootOP);
-		_ComputeToProcessOpsCount(_popFinal);
+		//Operators count if a callback is specified
+		if (m_cbOpsProcess!=NULL)
+		{
+			NOperator* pcRootOP = GetRootOperator(_popFinal);
+			ClearParsedOpsFlags(pcRootOP);
+			_ComputeToProcessOpsCount(_popFinal);
+		}
 
 		//Execute
 		_Execute(_ftime, _popFinal, _fDetailFactor);
@@ -842,6 +847,7 @@ void NEngineOp::_Execute(float _ftime, NOperator* _popFinal, float _fDetailFacto
 			if (!m_bError)
 			{
 				//TRACE("Process %d/%d\n", m_dwCurProcessOpsCount, m_dwTotalProcessOpsCount);
+				if (m_cbOpsProcess)		(*m_cbOpsProcess)(m_dwCurProcessOpsCount, m_dwTotalProcessOpsCount);
 
 				NOperator** pOpsIns = &m_aStacks[m_nCurContext][pccurOP->m_byDepth];
 				if (pccurOP->Process(_ftime, pOpsIns, _fDetailFactor)==-1)
@@ -1116,7 +1122,7 @@ void NEngineOp::CompactMemory()
 //-----------------------------------------------------------------
 //!	\brief	Process all operators
 //-----------------------------------------------------------------
-void NEngineOp::ProcessOperators(float _ftime, float _fDetailFactor/*=1.0f*/, FXGEN_PROCESSCB* _cbProcess/*=NULL*/)
+void NEngineOp::ProcessOperators(float _ftime, float _fDetailFactor/*=1.0f*/, FXGEN_RESULTSPROCESSCB* _cbResultsProcess/*=NULL*/, FXGEN_OPSPROCESSCB* _cbOpsProcess/*=NULL*/)
 {
 	//Get finals operators type from opened project (at first time only)
 	if (m_arrayFinalsOp.Count()==0)
@@ -1128,8 +1134,8 @@ void NEngineOp::ProcessOperators(float _ftime, float _fDetailFactor/*=1.0f*/, FX
 	//Execute processing at time t
 	for (udword i=0; i<m_arrayFinalsOp.Count(); i++)
 	{
-		if (_cbProcess)	(*_cbProcess)(i+1, m_arrayFinalsOp.Count());
-		Execute(_ftime, (NOperator*)m_arrayFinalsOp[i], _fDetailFactor);
+		if (_cbResultsProcess)	(*_cbResultsProcess)(i+1, m_arrayFinalsOp.Count());
+		Execute(_ftime, (NOperator*)m_arrayFinalsOp[i], _fDetailFactor, _cbOpsProcess);
 	}
 
 }

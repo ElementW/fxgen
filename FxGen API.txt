@@ -1,0 +1,31 @@
+//-----------------------------------------------------------------
+// 	How to compute operators result from your application
+//----------------------------------------------------------------- 
+
+FxGen API
+*How to use FxGen into your games
+
+
+void staticProcess(udword _dwCurrentOp, udword _dwTotalOps, udword _dwCurrentResult, udword _dwTotalResults)
+{
+	TRACE("Operators: Current %d Total %d\n", _dwCurrentOp, _dwTotalOps);
+}
+
+void Main()
+{
+	NEngineOp* peng = gNFxGen_GetEngine();
+	if (peng->LoadProject("Bricks.prj"))
+	{
+		peng->ProcessOperators(0.0f, 1.0f, staticProcess);
+		peng->CompactMemory();	//!< Keep just final result bitmaps in memory
+		
+		udword dwCount = peng->GetFinalResultCount();
+		if (dwCount)
+		{
+			NBitmap* pbmp =	peng->GetFinalResultBitmapByIdx(0);
+			char* pszName = pbmp->GetName();
+		}
+		
+	}
+	
+}

@@ -158,7 +158,8 @@ public:
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 
 protected:
-	HMENU m_hMenu;
+	//HMENU m_hMenu;
+	NMenuCtrl	m_wndMenu;
 	NArray<NString>	m_carrayStringsList;
 };
 
@@ -191,7 +192,8 @@ public:
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 
 	void BuildMenu(NTreeNode* _pnode);
-	HMENU m_hMenu;
+	//HMENU m_hMenu;
+	NMenuCtrl	m_wndMenu;
 };
 
 

@@ -24,9 +24,9 @@ Version 0.5 alpha (Release: Use FxGen in your Games !)
 .New main submenu items "options"
 	
 .API
-	NEngineOp* gNFxGen_GetEngine();
+	NEngineOp* NEngineOp::GetEngine();
 	.NEngineOp::Clear();
-	.NEngineOp::LoadProject(const char* _pszFullFileName);
+	.NEngineOp::LoadProject();
 	.NEngineOp::ProcessOperators()
 	.NEngineOp::GetFinalResultCount()
 	.NEngineOp::GetFinalResultBitmapByIdx()

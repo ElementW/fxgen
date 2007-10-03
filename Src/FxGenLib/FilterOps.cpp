@@ -60,7 +60,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -310,7 +310,7 @@ udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -481,7 +481,7 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	}
 
 	//Set Texture Size
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 	NBitmap* pDst	= (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
 
@@ -647,7 +647,7 @@ udword NNormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	//////////////////////////////////////////
 	//Get input texture
@@ -752,7 +752,7 @@ udword NInvertOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	// Init
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -834,7 +834,7 @@ udword NThresholdOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	// Init
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -942,7 +942,7 @@ udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	gNFxGen_GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;

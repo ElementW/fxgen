@@ -34,7 +34,6 @@
 //-----------------------------------------------------------------
 NOperatorsWnd::NOperatorsWnd(void)
 {
-	m_hMenu=null;
 }
 
 //-----------------------------------------------------------------
@@ -42,8 +41,6 @@ NOperatorsWnd::NOperatorsWnd(void)
 //-----------------------------------------------------------------
 NOperatorsWnd::~NOperatorsWnd(void)
 {
-	if (m_hMenu)				::DestroyMenu(m_hMenu);
-
 	EVT_UNREGISTERALL();
 }
 
