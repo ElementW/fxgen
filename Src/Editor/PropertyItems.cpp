@@ -283,6 +283,13 @@ void NUbyteComboProp::DrawItem(NGraphics* pdc, NRect& rcItem)
 
 		} while (i!=-1);
 
+		//Menu
+		m_wndMenu.Create("", m_pParent);
+		for (udword i=0; i<m_carrayStringsList.Count(); i++)
+		{
+			m_wndMenu.AddItem(m_carrayStringsList[i].Buffer(), i+1, 0);
+		}
+
 	}
 
 	//Draw
@@ -300,22 +307,9 @@ bool NUbyteComboProp::BeginEdit(NRect& rcItem)
 {
 	assert(m_pParent!=null);
 
-
-	NFxGenApp* papp = (NFxGenApp*)GetApp();
-	NMainFrm* pfrm = (NMainFrm*)papp->GetMainWnd();
-
-	m_wndMenu.Create("", m_pParent);
-
-	for (udword i=0; i<m_carrayStringsList.Count(); i++)
-	{
-		m_wndMenu.AddItem(m_carrayStringsList[i].Buffer(), i+1, 0);
-	}
-
-	POINT pt;
-	::GetCursorPos(&pt);	//Cursor position even with keyboard 'Context key'
-	ubyte byVal = 0;
-	//ubyte byVal = (ubyte)m_wndMenu.TrackPopupMenu(m_hMenu, TPM_LEFTALIGN|TPM_LEFTBUTTON|TPM_RETURNCMD, pt.x, pt.y, null, pfrm->m_W32HWnd, null);
-	//###TODO###
+	NPoint pt(rcItem.left, rcItem.bottom);
+	m_pParent->ClientToScreen(pt);
+	ubyte byVal = (ubyte)m_wndMenu.TrackPopupMenu(pt, null, true);
 
 	if (byVal!=0)
 		m_pvarValue->byVal = byVal-1;
@@ -348,7 +342,7 @@ bool NFileBrowserProp::BeginEdit(NRect& rcItem)
 	assert(m_pParent!=null);
 
 	NFileDialog dlg;
-	dlg.Create("Choose a JPEG File to Load", m_pParent);
+	dlg.Create("Choose a File to Load", m_pParent);
 	if (1==dlg.DoModal())
 	{
 		NString str = dlg.GetPathName(0);

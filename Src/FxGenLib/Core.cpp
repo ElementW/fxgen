@@ -219,7 +219,7 @@ bool NVarsBloc::IsAnimated()
 void NVarsBloc::GetValue(udword _idx, float _fTime, ubyte& _val)
 {
 	if (m_paVarsValues[_idx].pcCtrlObj)
-		_val = ((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
+		_val = (ubyte) ((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
 	else
 		_val = m_paVarsValues[_idx].byVal;
 }
@@ -227,7 +227,7 @@ void NVarsBloc::GetValue(udword _idx, float _fTime, ubyte& _val)
 void NVarsBloc::GetValue(udword _idx, float _fTime, uword&	_val)
 {
 	if (m_paVarsValues[_idx].pcCtrlObj)
-		_val = ((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
+		_val = (uword) ((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
 	else
 		_val = m_paVarsValues[_idx].wVal;
 
@@ -236,7 +236,7 @@ void NVarsBloc::GetValue(udword _idx, float _fTime, uword&	_val)
 void NVarsBloc::GetValue(udword _idx, float _fTime, udword&	_val)
 {
 	if (m_paVarsValues[_idx].pcCtrlObj)
-		_val = ((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
+		_val = (udword) ((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
 	else
 		_val = m_paVarsValues[_idx].dwVal;
 }

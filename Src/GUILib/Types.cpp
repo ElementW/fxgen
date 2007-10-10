@@ -59,7 +59,11 @@ NString::NString(const NString& string)
 //-----------------------------------------------------------------
 NString::~NString()
 {
-	if (mBuffer)	free(mBuffer);
+	if (mBuffer)
+	{
+		free(mBuffer);
+		mBuffer=null;
+	}
 }
 
 void NString::SetLength(udword length)

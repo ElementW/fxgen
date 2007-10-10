@@ -552,6 +552,10 @@ void NWnd::SetWindowText(char* _pszText)
 	::SetWindowText(m_W32HWnd, _pszText);
 }
 
+bool NWnd::IsWindowVisible()
+{
+	return ::IsWindowVisible(m_W32HWnd)!=0;
+}
 
 //-----------------------------------------------------------------
 // Name:	Windows Proc()
