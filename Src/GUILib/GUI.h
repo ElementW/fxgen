@@ -209,6 +209,7 @@ public:
 	void	ReleaseCapture();
 
 	void SetWindowText(char* _pszText);
+	bool IsWindowVisible();
 
 	//Datas
 	HWND m_W32HWnd;

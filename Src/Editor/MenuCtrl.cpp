@@ -125,7 +125,8 @@ void NMenuCtrl::OnPaint()
 
 	/////////////////////////////////////////////////
 	//Erase Background
-	dc.FillSolidRect(rc, RGB(115,115,115));
+	//dc.FillSolidRect(rc, RGB(115,115,115));
+	dc.FillSolidRect(rc, RGB(255,255,255));
 	dc.Draw3dRect(rc, RGB(200,200,200), RGB(0,0,0));
 
 	/////////////////////////////////////////////////
@@ -228,8 +229,8 @@ void NMenuCtrl::OnLeftButtonDown(udword flags, NPoint _point)
 		//Notify selected item ID
 		if (pitem->ppopUpMenu==null)
 		{
-			udword id = pitem->dwID;
-			::SendMessage(m_pParentWnd->m_W32HWnd, WM_COMMAND, id, 0);
+			m_dwReturnCmdID = pitem->dwID;
+			::SendMessage(m_pParentWnd->m_W32HWnd, WM_COMMAND, m_dwReturnCmdID, 0);
 			ShowMenu(false);
 		}
 	}
@@ -399,8 +400,10 @@ NMenuCtrl* NMenuCtrl::CreatePopupMenu(char* _pszName, udword _idx)
 //!	\brief	Display menu at screen position
 //!	\return	Pointer to selected Item Desc
 //-----------------------------------------------------------------
-NMEItemDesc* NMenuCtrl::TrackPopupMenu(NPoint _ptScreen, NMenuCtrl* _pParentMenu/*=null*/)
+udword NMenuCtrl::TrackPopupMenu(NPoint _ptScreen, NMenuCtrl* _pParentMenu/*=null*/, bool _bReturnItem/*=false*/)
 {
+	m_dwReturnCmdID = 0;
+
 	//Calc Menu rect
 	NRect rc;
 	CalcMenuSize(rc);
@@ -419,7 +422,27 @@ NMEItemDesc* NMenuCtrl::TrackPopupMenu(NPoint _ptScreen, NMenuCtrl* _pParentMenu
 	//Hide menu window
 	//::ShowWindow(m_W32HWnd, SW_HIDE);
 
-	return null;
+	//Polling messages from event queue until quit
+	if (_bReturnItem)
+	{
+		MSG	msg;
+		while(IsWindowVisible())
+		{
+			if (::PeekMessage(&msg, 0, 0, 0, PM_NOREMOVE))
+			{
+				while (::PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+				{
+					if (msg.message == WM_COMMAND)
+						return msg.wParam;
+					::TranslateMessage(&msg);		//Translates virtual-key messages into character messages
+					::DispatchMessage(&msg);		//Dispatches a message to window proc
+				}
+			}
+		}
+	}
+
+
+	return m_dwReturnCmdID;
 }
 
 //-----------------------------------------------------------------
@@ -444,7 +467,7 @@ void NMenuCtrl::CalcMenuSize(NRect& _rcOut)
 
 	_rcOut.left		= 0;
 	_rcOut.top		= 0;
-	_rcOut.right	= dwMaxLen * 10;
+	_rcOut.right	= dwMaxLen * 12;
 	_rcOut.bottom	= (dwCount * ME_ITEMHEIGHT) + 1 + dwTitleH;
 
 }

@@ -116,18 +116,18 @@ EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnOPDeleting)
 //-----------------------------------------------------------------
 EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnRender)
 {
+	//Texte
+	NRect rc = GetClientRect();
+	NGraphics dc(this);
+	dc.FillSolidRect(rc, RGB(115,115,115));
+	dc.SetFont(m_hfontNormal);
+	dc.SetTextColor(RGB(200,255,200));
+
 	//Check operator
 	NOperator* pop = (NOperator*)dwParam1;
 	if (pop==null || pop->m_pObj==null || (pop!=null && pop->m_bError))
 	{
 		m_pcurObject = null;
-
-		//Texte
-		NRect rc = GetClientRect();
-		NGraphics dc(this);
-		dc.FillSolidRect(rc, RGB(115,115,115));
-		dc.SetFont(m_hfontNormal);
-		dc.SetTextColor(RGB(200,255,200));
 
 		if (pop==null)
 			dc.DrawText("Select an operator by double clicking on it", rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
@@ -136,6 +136,10 @@ EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnRender)
 
 		return 0;
 	}
+
+	NString str;
+	str.Format("Texture Size w%d h%d"
+	dc.DrawText(str, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 
 	//Get resource
 	m_pcurObject = pop->m_pObj;

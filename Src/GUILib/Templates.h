@@ -86,6 +86,7 @@ public:
 				if (m_dwCount>=m_dwSize)
 				{
 					m_pBuffer = (T*)realloc(m_pBuffer, sizeof(T)*(m_dwSize+m_dwGrow));
+					memset(m_pBuffer+m_dwCount, 0, m_dwGrow * sizeof(T));
 					m_dwSize+= m_dwGrow;
 				}
 				m_pBuffer[m_dwCount] = item;
@@ -99,8 +100,9 @@ public:
 			{
 				if (idx>=m_dwSize)
 				{
+					m_pBuffer = (T*)realloc(m_pBuffer, sizeof(T)*(idx+m_dwGrow));
+					memset(m_pBuffer+idx, 0, m_dwGrow * sizeof(T));
 					m_dwSize = idx+m_dwGrow;
-					m_pBuffer = (T*)realloc(m_pBuffer, sizeof(T)*(m_dwSize));
 				}
 				m_pBuffer[idx] = item;
 				if (idx>=m_dwCount)	m_dwCount = idx+1;
