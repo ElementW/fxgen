@@ -1482,6 +1482,18 @@ bool NStatusBar::Create(NWnd* parent)
 	return true;
 }
 
+void NStatusBar::OnPaint()
+{
+	NRect rc = GetClientRect();
+
+	NGraphics dc(this);
+	dc.FillSolidRect(rc, RGB(115,115,115));
+	dc.SetBkMode(TRANSPARENT);
+
+	//Background color
+	dc.GradientVRect(rc, RGB(220, 220, 220), RGB(120, 120, 120));
+
+}
 
 
 //-----------------------------------------------------------------

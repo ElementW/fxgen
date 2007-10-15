@@ -75,6 +75,8 @@ public:
 
 	udword	TrackPopupMenu(NPoint _ptScreen, NMenuCtrl* _pParentMenu=null, bool _bReturnItem=false);
 
+	void DeleteAllItems();
+
 	NMEItemDesc* AddItem(char* _pszName, udword _id, udword _dwStyle);
 
 	udword				GetItemsCount();
@@ -100,7 +102,8 @@ protected:
 	udword	m_dwItemHighLightedIdx;	//!< Idx from m_carrayItems
 	//udword	m_dwTimerHide;
 	bool		m_bEntered;
-	udword	m_dwReturnCmdID;
+
+	static udword	m_dwReturnCmdID;
 
 	NMenuCtrl* m_pcurPopupMenu, *m_pcurParentMenu;
 

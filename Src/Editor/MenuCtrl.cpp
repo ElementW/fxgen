@@ -29,6 +29,11 @@
 #define DELAY_TIMER_HIDE	500
 
 //-----------------------------------------------------------------
+//                   Static Variables
+//-----------------------------------------------------------------
+udword	NMenuCtrl::m_dwReturnCmdID = 0;
+
+//-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
 //										NGLRenderer Class Implementation
@@ -276,6 +281,19 @@ void NMenuCtrl::OnMouseMove(udword flags, NPoint point )
 				//Show new popup Menu
 				NPoint pT(pitem->rcItem.right, pitem->rcItem.top);
 				ClientToScreen(pT);
+				NRect rcPopup;
+				pitem->ppopUpMenu->CalcMenuSize(rcPopup);
+
+				HWND wndDesktop = ::GetDesktopWindow();
+				RECT rcDesktop;	::GetWindowRect(wndDesktop, &rcDesktop);
+
+				if (pT.x + rcPopup.Width() > rcDesktop.right)
+				{
+					pT.x=pitem->rcItem.left-rcPopup.Width();
+					pT.y=pitem->rcItem.top;
+					ClientToScreen(pT);
+				}
+
 				pitem->ppopUpMenu->TrackPopupMenu(pT, this);
 
 				m_pcurPopupMenu = pitem->ppopUpMenu;
@@ -407,6 +425,8 @@ udword NMenuCtrl::TrackPopupMenu(NPoint _ptScreen, NMenuCtrl* _pParentMenu/*=nul
 	//Calc Menu rect
 	NRect rc;
 	CalcMenuSize(rc);
+
+	//Move Menu
 	rc.Move(_ptScreen);
 	SetWindowRect(rc);
 
@@ -443,6 +463,14 @@ udword NMenuCtrl::TrackPopupMenu(NPoint _ptScreen, NMenuCtrl* _pParentMenu/*=nul
 
 
 	return m_dwReturnCmdID;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Delete all menu items
+//-----------------------------------------------------------------
+void NMenuCtrl::DeleteAllItems()
+{
+	m_carrayItems.Clear();
 }
 
 //-----------------------------------------------------------------

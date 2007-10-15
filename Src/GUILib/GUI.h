@@ -413,14 +413,18 @@ class GUI_API NStatusBar : public NWnd
 {
 public:
 	//Constructor-Destructor
-								NStatusBar();
-	virtual						~NStatusBar();
+					NStatusBar();
+	virtual	~NStatusBar();
 
 	//Menu Creation
-	virtual	bool				Create(NWnd* parent);
+	virtual	bool Create(NWnd* parent);
 
 	//Methods
-			udword				GetHeight()				{ return 24; }
+	udword GetHeight()				{ return 24; }
+
+protected:
+	//Win32 messages
+	virtual	void	OnPaint();
 };
 
 
