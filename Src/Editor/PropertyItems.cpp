@@ -389,20 +389,13 @@ bool NUseStoredOpsProp::BeginEdit(NRect& rcItem)
 	NRect rc = rcItem;
 	rc.left = rc.right;
 
-	NFxGenApp* papp = (NFxGenApp*)GetApp();
-	NMainFrm* pfrm = (NMainFrm*)papp->GetMainWnd();
-
 	//Creation du menu
-	m_wndMenu.Create("", m_pParent);
-
 	NTreeNode* pnode = NEngineOp::GetEngine()->GetRootGroup();
 	BuildMenu(pnode);
 
-	POINT pt;
-	::GetCursorPos(&pt);	//Cursor position even with keyboard 'Context key'
-	NOperator* popSel = null;
-		//###TODO###
-	//NOperator* popSel = (NOperator*)::TrackPopupMenu(m_hMenu, TPM_LEFTALIGN|TPM_LEFTBUTTON|TPM_RETURNCMD, pt.x, pt.y, null, pfrm->m_W32HWnd, null);
+	NPoint pt(rcItem.left, rcItem.bottom);
+	m_pParent->ClientToScreen(pt);
+	NOperator* popSel = (NOperator*)m_wndMenu.TrackPopupMenu(pt, null, true);
 
 	//Affect selected 'stored operator'
 	if (popSel!=null)
@@ -418,16 +411,20 @@ bool NUseStoredOpsProp::EndEdit(bool bSaveChanged)
 
 void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 {
-	//###TODO###
+	if (m_wndMenu.m_W32HWnd==0)
+		m_wndMenu.Create("", m_pParent);
+	else
+		m_wndMenu.DeleteAllItems();
+
 	//Parse Alls Pages to add 'NStoreOp'
-/*	NObjectArray& arrayObjs = _pnode->GetObjsArray();
+	NObjectArray& arrayObjs = _pnode->GetObjsArray();
 	udword dwCount = arrayObjs.Count();
+	udword idx=0;
 	while (dwCount--)
 	{
-		NOperatorsPage* ppage = (NOperatorsPage*)arrayObjs[dwCount];
+		NOperatorsPage* ppage = (NOperatorsPage*)arrayObjs[idx++];
 
-		HMENU popMenu = CreateMenu();
-		::AppendMenu(m_hMenu, MF_POPUP, (UINT)popMenu, ppage->GetName());
+		NMenuCtrl* popMenu = m_wndMenu.CreatePopupMenu(ppage->GetName(), -1);
 
 		NObjectArray storedOp;
 		storedOp.SetManageDelete(false);
@@ -437,7 +434,7 @@ void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 		{
 			NOperator* pop = (NOperator*)storedOp[i];
 			if (strlen(pop->GetUserName())!=0)
-				::AppendMenu(popMenu, MF_STRING, (DWORD)pop, pop->GetUserName());
+				popMenu->AddItem(pop->GetUserName(), (udword)pop, 0);
 		}
 	}
 
@@ -445,7 +442,7 @@ void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 	_pnode = _pnode->GetSon();
 	if (_pnode)
 		BuildMenu(_pnode);
-*/
+
 }
 
 

@@ -137,6 +137,7 @@ void NSplitWnd::OnPaint()
 		if (cpane->strCaption.Length())
 		{
 			rect.left+=24;
+			gfx.SetTextColor(RGB(240,240,240));
 			gfx.DrawText(cpane->strCaption.Buffer(), rect, DT_END_ELLIPSIS|DT_VCENTER|DT_SINGLELINE);
 		}
 

@@ -185,7 +185,7 @@ class NUseStoredOpsProp : public NPropertyItem
 {
 public:
 	DECLARE_CLASS();
-
+	
 	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
 	//virtual void		Click(NPoint& pt, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);

@@ -40,6 +40,7 @@ protected:
 	//Events
 	EVT_DECLARE_HANDLER(OnOPSelChanged);
 	EVT_DECLARE_HANDLER(OnOPDeleting);
+	EVT_DECLARE_HANDLER(OnPageSelected);
 
 	// Messages Notify
 	virtual void OnPropertiesChanged();

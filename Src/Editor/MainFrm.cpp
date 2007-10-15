@@ -30,17 +30,17 @@
 //                   Defines
 //-----------------------------------------------------------------
 
-#define	MENU_NEWPROJECT		100
-#define	MENU_OPENPROJECT	101
+#define	MENU_NEWPROJECT			100
+#define	MENU_OPENPROJECT		101
 #define	MENU_SAVEPROJECTAS	102
-#define	MENU_EXIT			103
-#define	MENU_SAVEPROJECT	104
+#define	MENU_EXIT						103
+#define	MENU_SAVEPROJECT		104
 #define	MENU_RELOADPROJECT	105
 
-#define	MENU_DETAILLOW		200
-#define	MENU_DETAILNORMAL	201
-#define	MENU_DETAILHIGH		202
-//#define	MENU_AUTOSIZE		210
+#define	MENU_DETAILLOW			200
+#define	MENU_DETAILNORMAL		201
+#define	MENU_DETAILHIGH			202
+
 
 
 //-----------------------------------------------------------------
@@ -52,10 +52,11 @@
 //-----------------------------------------------------------------
 
 //###TEST###
-/*void staticProcess(udword _dwCurrentOp, udword _dwTotalOps)
+void staticOperatorsProcessCB(udword _dwCurrentOp, udword _dwTotalOps)
 {
-	TRACE("Current %d Total %d\n", _dwCurrentOp, _dwTotalOps);
-}*/
+	TRACE("CallBack: Current %d Total %d\n", _dwCurrentOp, _dwTotalOps);
+	SetCursor(::LoadCursor(NULL, IDC_WAIT));
+}
 
 
 //-----------------------------------------------------------------
@@ -131,12 +132,12 @@ bool NMainFrm::Create(char* name, const NRect& rect)
 	NMenuBar*	pmenu = GetMenuBar();
 	udword dwParent = pmenu->InsertPopupItem(0, 0, "File");
 
-	pmenu->InsertItem(dwParent,1,"New...",	MENU_NEWPROJECT);
-	pmenu->InsertItem(dwParent,2,"Reload	F9", MENU_RELOADPROJECT);
-	pmenu->InsertItem(dwParent,3,"Open...	F3", MENU_OPENPROJECT);
-	pmenu->InsertItem(dwParent,4,"Save	F6", MENU_SAVEPROJECT);
-	pmenu->InsertItem(dwParent,5,"Save as...	F2", MENU_SAVEPROJECTAS);
-	pmenu->InsertItem(dwParent,6,"Exit...",					MENU_EXIT);
+	pmenu->InsertItem(dwParent,1,"New",					MENU_NEWPROJECT);
+	pmenu->InsertItem(dwParent,2,"Open...",			MENU_OPENPROJECT);
+	//pmenu->InsertItem(dwParent,2,"Reload",			MENU_RELOADPROJECT);
+	pmenu->InsertItem(dwParent,3,"Save",				MENU_SAVEPROJECT);
+	pmenu->InsertItem(dwParent,4,"Save as...",	MENU_SAVEPROJECTAS);
+	pmenu->InsertItem(dwParent,5,"Exit",				MENU_EXIT);
 
 
 	dwParent = pmenu->InsertPopupItem(0,				1, "Options");
@@ -348,7 +349,9 @@ NOperator* NMainFrm::Execute(float _ftime)
 	if (!m_bExecuteLocked)
 	{
 		m_bExecuteLocked = true;
-		NEngineOp::GetEngine()->Execute(_ftime, m_popMarkedShow, m_fDetailFactor);
+		//Process operators
+		NEngineOp::GetEngine()->Execute(_ftime, m_popMarkedShow, m_fDetailFactor, staticOperatorsProcessCB);
+
 		//Rendering
 		EVT_EXECUTE(EVT_RENDER, (udword)m_popMarkedShow, (udword)&_ftime);
 		m_bExecuteLocked = false;
@@ -398,14 +401,20 @@ void NMainFrm::DeletedOperator(NOperator* pop)
 	m_bExecuteLocked = false;
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Keys Down
+//-----------------------------------------------------------------
 void NMainFrm::OnKeyDown(udword dwchar)
 {
+	//###SEELATER###
+	/*
 	switch(dwchar)
 	{
-		case VK_F6:	SaveProject();			break;
-		case VK_F9:	LoadProject();			break;
-		case VK_F2:	OnSaveProjectAs();	break;
-		case VK_F3:	OnOpenProject();		break;
+		case 'S':	SaveProject();			break;
+		case 'R':	LoadProject();			break;
+		case 'A':	OnSaveProjectAs();	break;
+		case 'O':	OnOpenProject();		break;
 		default: break;
 	}
+	*/
 }
