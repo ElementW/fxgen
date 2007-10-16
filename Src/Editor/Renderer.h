@@ -104,6 +104,8 @@ public:
   HGLRC					m_hRC;              // Permanent Rendering Context
   HWND					m_hWnd;             // Holds Our Window Handle
 	bool					m_bFullScreen;
+	bool				m_bHasMipmapGeneration;
+	bool				m_bHasAnisotropicFiltering;
 
 	mat4					m_mtxProj, m_mtxView, m_mtxWorld;
 };

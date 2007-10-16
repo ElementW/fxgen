@@ -23,6 +23,14 @@
 #include "Renderer.h"
 
 //-----------------------------------------------------------------
+//									Defines
+//-----------------------------------------------------------------
+
+#define GL_GENERATE_MIPMAP_SGIS			0x8191
+#define GL_TEXTURE_MAX_ANISOTROPY_EXT		0x84FE
+#define GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT	0x84FF
+
+//-----------------------------------------------------------------
 //									Variables
 //-----------------------------------------------------------------
 NGLRenderer* g_pcGLRenderer = NULL;
@@ -130,6 +138,10 @@ bool NGLRenderer::Init(HWND hwnd, bool bFullScreen)
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+	const char* extensionString = (const char*)glGetString(GL_EXTENSIONS);
+	m_bHasMipmapGeneration = extensionString != 0 && strstr(extensionString, "GL_SGIS_generate_mipmap") != 0;
+	m_bHasAnisotropicFiltering = extensionString != 0 && strstr(extensionString, "GL_EXT_texture_filter_anisotropic") != 0;
 
 	return true; // Success
 }
@@ -256,10 +268,21 @@ udword NGLRenderer::CreateTexture(udword _w, udword _h)
 	{
 		glBindTexture(GL_TEXTURE_2D, dwTexnameID);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _w, _h, 0, GL_RGBA, GL_UNSIGNED_BYTE, null);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,			GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,			GL_REPEAT);
+		if (m_bHasMipmapGeneration)
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP_SGIS, GL_TRUE);
+		}
+		if (m_bHasAnisotropicFiltering)
+		{
+			GLfloat maxAnisotropy = 0;
+			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
+			// Removing this for now... It seems like it has to be turned of for GL_NEAREST filtering to work
+			//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropy); 
+		}
 	}
 
 	return dwTexnameID;

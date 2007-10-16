@@ -236,6 +236,8 @@ public:
 	void	SetValue(udword _idx, float _fTime, NObject*	_val);	//!< Change variable value
 	void	SetValue(udword _idx, float _fTime, const char*			_val);	//!< Change variable value
 
+	NObject *GetOwner() { return m_powner; }
+
 protected:
 	//Methods
 	void DoVarBlocVersion_Mapping(NArchive* _l, ubyte _byVersion);

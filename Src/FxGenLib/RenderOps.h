@@ -24,6 +24,18 @@
 #include "EngineOp.h"
 
 //-----------------------------------------------------------------
+//                   Forward declarations
+//-----------------------------------------------------------------
+namespace vgvm
+{
+	namespace cairo
+	{
+		class CairoContext;
+	}
+	class Program;
+}
+
+//-----------------------------------------------------------------
 //                   Prototypes
 //-----------------------------------------------------------------
 //NObject
@@ -132,7 +144,7 @@ public:
 //!	\class		NNoiseOp
 //!	\brief		Render noise
 //-----------------------------------------------------------------
-class NNoiseOp : public NOperator
+class FXGEN_API NNoiseOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -146,4 +158,31 @@ public:
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+};
+
+//-----------------------------------------------------------------
+//!	\class		NVectorOp
+//!	\brief		Render vector graphics
+//-----------------------------------------------------------------
+class FXGEN_API NVectorOp : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NVectorOp();
+	~NVectorOp();
+
+	//Methods
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Vector"; }		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
+
+	void			SetVectorData(ubyte* _data, udword _length);
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+
+private:
+	vgvm::cairo::CairoContext*	m_pContext;
+	vgvm::Program*			m_pProgram;
 };
