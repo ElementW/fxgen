@@ -664,7 +664,7 @@ udword NNormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 	ubyte byAmp;
 	m_pcvarsBloc->GetValue(0, _ftime, byAmp);
 
-	float fAmp = (float)byAmp / 64.0f; //[0<->4]
+	float fAmp = (float)byAmp*_fDetailFactor / 64.0f; //[0<->4]
 
 	//////////////////////////////////////////
 	// Creation des normales
