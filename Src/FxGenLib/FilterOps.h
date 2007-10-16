@@ -175,3 +175,44 @@ public:
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 };
+
+//-----------------------------------------------------------------
+//!	\class		NSegmentOp
+//!	\brief		Unifies color on joint segments
+//-----------------------------------------------------------------
+class FXGEN_API NSegmentOp : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NSegmentOp();
+
+	//Methods
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Segment"; }		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+};
+
+
+//-----------------------------------------------------------------
+//!	\class		NDilate
+//!	\brief		Expands colored areas
+//-----------------------------------------------------------------
+class FXGEN_API NDilateOp : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NDilateOp();
+
+	//Methods
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Dilate"; }		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+};

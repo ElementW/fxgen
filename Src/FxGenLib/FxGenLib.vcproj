@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="windows-1250"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
@@ -42,6 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="..\..\Externals\vgvm;..\..\Externals\cairo;..\..\Externals\vgvm"
 				PreprocessorDefinitions="WIN32;_DEBUG;_USRDLL;FXGEN_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,7 +64,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="cairo.lib cairomm-1.0d.lib vgvm.lib vgvm_cairo.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_D.dll"
+				AdditionalLibraryDirectories="..\..\Externals\cairo;..\..\Externals\vgvm;"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
@@ -120,6 +123,7 @@
 				Optimization="2"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
+				AdditionalIncludeDirectories="..\..\Externals\vgvm;..\..\Externals\cairo;..\..\Externals\vgvm"
 				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;FXGEN_EXPORTS"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
@@ -142,7 +146,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib"
+				AdditionalDependencies="cairo.lib cairomm-1.0d.lib vgvm.lib vgvm_cairo.lib user32.lib"
+				AdditionalLibraryDirectories="..\..\Externals\cairo;..\..\Externals\vgvm;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -198,6 +203,7 @@
 				Optimization="1"
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
+				AdditionalIncludeDirectories="..\..\Externals\vgvm;..\..\Externals\cairo;..\..\Externals\vgvm"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_MODE_EDITION"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
@@ -264,6 +270,7 @@
 				Optimization="2"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
+				AdditionalIncludeDirectories="..\..\Externals\vgvm;..\..\Externals\cairo;..\..\Externals\vgvm"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;FXGEN_EXPORTS"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
@@ -284,6 +291,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="cairo.lib cairomm-1.0d.lib vgvm.lib vgvm_cairo.lib"
+				AdditionalLibraryDirectories="..\..\Externals\cairo;..\..\Externals\vgvm;"
 			/>
 			<Tool
 				Name="VCALinkTool"

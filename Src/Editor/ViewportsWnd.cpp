@@ -28,7 +28,8 @@
 #define ID_RESET			100
 #define ID_TILEONOFF	101
 #define ID_FILTERONOFF	102
-#define ID_EXPORT	103
+#define ID_2D3D		103
+#define ID_EXPORT	104
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -48,10 +49,12 @@ NViewportsWnd::NViewportsWnd(void)
 	m_dwTextureID = 0;
 	m_dwTexWidth=m_dwTexHeight=0;
 	m_fScale			= 1.0f;
-	m_bPanning		= false;
+	m_eDragMode = NONE;
 	m_vecTrans.x=m_vecTrans.y=m_vecTrans.z=0.0f;
+	m_vecRot.x=m_vecRot.y=m_vecRot.z=0.0f;
 	m_bTiling			= false;
 	m_bFiltering	= false;
+	m_bOrtho = true;
 }
 
 //-----------------------------------------------------------------
@@ -88,7 +91,8 @@ bool NViewportsWnd::Create(const char* name, const NRect& rect, NWnd* parent)
 	m_wndMenu.AddItem("Reset",			ID_RESET,				0);
 	m_wndMenu.AddItem("Tiling",			ID_TILEONOFF,		ME_ITEMSTYLE_CHECKBOX);
 	m_wndMenu.AddItem("Filtering",	ID_FILTERONOFF,	ME_ITEMSTYLE_CHECKBOX);
-	m_wndMenu.AddItem("Export TGA",	ID_EXPORT,			0);
+	m_wndMenu.AddItem("Toggle 2D/3D",	ID_2D3D,	ME_ITEMSTYLE_CHECKBOX);
+	m_wndMenu.AddItem("Export TGA",	ID_EXPORT,	null);
 
 	//Register Events
 	EVT_REGISTER(EVT_OPDELETING,	(EVENTFNC)&NViewportsWnd::OnOPDeleting	);
@@ -186,7 +190,7 @@ void NViewportsWnd::DisplayTexture(NObject* pobj)
 	NRect rc = GetClientRect();
 	int w = rc.right-rc.left;
 	int h = rc.bottom-rc.top;
-	float fAspect = 1.0f;//(float)w/(float)h;
+	float fAspect = (float)w/(float)h;
 
 	//Unit1
 	//glActiveTextureARB(GL_TEXTURE1_ARB);
@@ -198,16 +202,28 @@ void NViewportsWnd::DisplayTexture(NObject* pobj)
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);			// Enable Alpha Blending (disable alpha testing)
 	glEnable(GL_BLEND);											// Enable Blending       (disable alpha testing)
+	glDisable(GL_CULL_FACE);
+	//glDisable(GL_DEPTH_TEST);
 
 	glMatrixMode(GL_PROJECTION);
 	mat4 matProj;
-	ortho2D(matProj, -0.5f*fAspect, 0.5f*fAspect, 0.5f, -0.5f);
+	if (m_bOrtho)
+		ortho2D(matProj, -0.5f*fAspect, 0.5f*fAspect, 0.5f, -0.5f);
+	else
+		perspective(matProj, sinf(nv_half_pi), fAspect, 0.1f, 100.0f);
 	glLoadMatrixf((GLfloat*)&matProj.mat_array);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(m_vecTrans.x, m_vecTrans.y, m_vecTrans.z);
-	glScalef(m_fScale, m_fScale, m_fScale);
+	if (m_bOrtho)
+	{
+		glTranslatef(m_vecTrans.x, m_vecTrans.y, m_vecTrans.z);
+		glScalef(m_fScale, m_fScale, m_fScale);
+	} else {
+		glTranslatef(m_vecTrans.x/m_fScale, -m_vecTrans.y/m_fScale, -1/m_fScale);
+		glRotatef(m_vecRot.x, 0, 1, 0);
+		glRotatef(m_vecRot.y, 1, 0, 0);
+	}
 
 
 	glMatrixMode(GL_TEXTURE);
@@ -225,21 +241,25 @@ void NViewportsWnd::DisplayTexture(NObject* pobj)
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	//glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE_EXT);
 	//glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB_EXT, GL_MODULATE);
 	//glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB_EXT, GL_TEXTURE);
 	//glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB_EXT, GL_PRIMARY_COLOR_EXT);
-
 	if (m_bFiltering)
-  {
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,		GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,		GL_LINEAR);
-  } else {
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,		GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,		GL_NEAREST);
-  }
-
+	{
+		if (m_renderer.m_bHasMipmapGeneration && !m_bOrtho)
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,		GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,		GL_LINEAR_MIPMAP_LINEAR);
+		} else {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,		GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,		GL_LINEAR);
+		}
+	} else {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,		GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,		GL_NEAREST);
+	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,		GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,		GL_REPEAT);
 
@@ -252,8 +272,10 @@ void NViewportsWnd::DisplayTexture(NObject* pobj)
 	float f = 1.0f;	//No Tiling
 	if (m_bTiling)	f=3.0f;	//Tiling
 
-	float tx = (float)m_dwTexWidth	/ (float)w;
 	float ty = (float)m_dwTexHeight / (float)h;
+	float tx = (float)m_dwTexWidth / (float)h;
+	if (!m_bOrtho)
+		ty = -ty;
 
 	glTexCoord2f(0.0f, 0.0f);			glVertex3f(-(tx/2.0f)*f, -(ty/2.0f)*f, 0.0f);
 	glTexCoord2f(0.0f, 1.0f*f);		glVertex3f(-(tx/2.0f)*f, +(ty/2.0f)*f, 0.0f);
@@ -287,7 +309,7 @@ void NViewportsWnd::OnMouseWheel(udword flags, sword zDelta, NPoint point)
 	if (zDelta>0) m_fScale*=2.0f;
 	else					m_fScale/=2.0f;
 
-        if (m_fScale>0.9f && m_fScale<1.1f) m_fScale = 1.0f; // Re-"normalize" when at 1, to avoid accumulating numerical errors
+	if (m_fScale>0.9f && m_fScale<1.1f) m_fScale = 1.0f; // Re-"normalize" when at 1, to avoid accumulating numerical errors
 
 	if (m_fScale<0.0625f)	m_fScale=0.0625f;
 }
@@ -297,15 +319,21 @@ void NViewportsWnd::OnMouseWheel(udword flags, sword zDelta, NPoint point)
 //-----------------------------------------------------------------
 void NViewportsWnd::OnMouseMove(udword flags, NPoint pos)
 {
-	if (m_bPanning)
+	if (m_eDragMode == PANNING)
 	{
+			NPoint ptOffset = pos-m_ptStartDrag;
 			NRect rc= GetClientRect();
-			NPoint ptOffset = pos-m_ptStartPan;
 			m_vecTrans.x+=(float)ptOffset.x / rc.Width();
 			m_vecTrans.y+=(float)ptOffset.y / rc.Height();
-			m_ptStartPan=pos;
+			m_ptStartDrag=pos;
 	}
-
+	else if (m_eDragMode == ROTATING)
+	{
+			NPoint ptOffset = pos-m_ptStartDrag;
+			m_vecRot.x+=(float)ptOffset.x / 3.0f;
+			m_vecRot.y+=(float)ptOffset.y / 3.0f;
+			m_ptStartDrag=pos;
+	}
 }
 
 //-----------------------------------------------------------------
@@ -314,9 +342,12 @@ void NViewportsWnd::OnMouseMove(udword flags, NPoint pos)
 void NViewportsWnd::OnMButtonDown(udword flags, NPoint pos)
 {
 	SetFocus();
-	m_ptStartPan	= pos;
-	m_bPanning		= true;
-	SetCapture();
+	if (m_eDragMode == NONE)
+	{
+		m_ptStartDrag	= pos;
+		m_eDragMode	= PANNING;
+		SetCapture();
+	}
 }
 
 //-----------------------------------------------------------------
@@ -324,8 +355,26 @@ void NViewportsWnd::OnMButtonDown(udword flags, NPoint pos)
 //-----------------------------------------------------------------
 void NViewportsWnd::OnMButtonUp(udword flags, NPoint pos)
 {
-	m_bPanning		= false;
-	ReleaseCapture();
+	SetFocus();
+	if (m_eDragMode == PANNING)
+	{
+		m_eDragMode	= NONE;
+		ReleaseCapture();
+	}
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Mouse Left button message
+//-----------------------------------------------------------------
+void NViewportsWnd::OnLeftButtonDown(udword flags, NPoint pos)
+{
+	SetFocus();
+	if (!m_bOrtho && m_eDragMode == NONE)
+	{
+		m_ptStartDrag	= pos;
+		m_eDragMode	= ROTATING;
+		SetCapture();
+	}
 }
 
 //-----------------------------------------------------------------
@@ -334,6 +383,11 @@ void NViewportsWnd::OnMButtonUp(udword flags, NPoint pos)
 void NViewportsWnd::OnLeftButtonUp(udword flags, NPoint pos)
 {
 	SetFocus();
+	if (m_eDragMode == ROTATING)
+	{
+		m_eDragMode	= NONE;
+		ReleaseCapture();
+	}
 }
 
 //-----------------------------------------------------------------
@@ -377,9 +431,16 @@ void NViewportsWnd::OnCommand(udword _id)
 			break;
 		}
 
+		case ID_2D3D:
+		{
+			m_bOrtho=!m_bOrtho;
+			break;
+		}
+
 		case ID_EXPORT:
 		{
 			if (m_pcurObject != null && strcmp(m_pcurObject->GetRTClass()->m_pszClassName, "NBitmap") == 0)
+
 			{
 				//Save File Dialog
 				NFileDialog dlg;

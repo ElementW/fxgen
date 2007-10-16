@@ -975,3 +975,210 @@ udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 	return 0;
 }
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//							NSegmentOp class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+IMPLEMENT_CLASS(NSegmentOp, NOperator);
+
+static NVarsBlocDesc blocdescSegmentOp[] =
+{
+	VAR(eubyte,		true, "Threshold",	"128",	"NUbyteProp")	//0
+};
+
+NSegmentOp::NSegmentOp()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(1, blocdescSegmentOp, 1);
+}
+
+udword NSegmentOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+{
+	//Two inputs
+	if (m_byInputs!=2)		return (udword)-1;
+
+	//Bitmap instance
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+
+	// Init
+	NBitmap* pSrc1 = (NBitmap*)(*_pOpsInts)->m_pObj;
+	_pOpsInts++;
+	NBitmap* pSrc2 = (NBitmap*)(*_pOpsInts)->m_pObj;
+	NBitmap* pDst	= (NBitmap*)m_pObj;
+
+	udword w = pSrc1->GetWidth();
+	udword h = pSrc1->GetHeight();
+	if (pSrc2->GetWidth()!=w || pSrc2->GetHeight()!=h)
+		return (udword)-1;
+	pDst->SetSize(w,h);
+
+	RGBA* pPxSrc1 = pSrc1->GetPixels();
+	RGBA* pPxSrc2 = pSrc2->GetPixels();
+	RGBA* pPxDst = pDst->GetPixels();
+
+	//Get Variables Values
+	ubyte byThreshold;
+	m_pcvarsBloc->GetValue(0, _ftime, byThreshold);
+
+	struct Coord
+	{
+		uword x;
+		uword y;
+		Coord(uword x, uword y) : x(x), y(y) {}
+	};
+	ubyte* pCoverage = (ubyte*)NMemAlloc(w*h);
+	Coord* pStack = (Coord*)NMemAlloc(w*h*sizeof(Coord)*4);
+
+	memset(pCoverage, 0, w*h);
+
+	udword index = 0;
+	udword stackPtr = 0;
+	//Process
+	for (udword y=0; y<h; y++)
+	{
+		for (udword x=0; x<w; x++)
+		{
+			if (pPxSrc1[index].r+pPxSrc1[index].g+pPxSrc1[index].b > byThreshold*3)
+			{
+				pStack[stackPtr++] = Coord(x, y);
+			}
+
+			RGBA color = pPxSrc2[index];
+
+			while (stackPtr>0)
+			{
+				Coord current = pStack[--stackPtr];
+				udword currentIndex = current.x + current.y*w;
+				if (pCoverage[currentIndex] != 0)
+				{
+					continue;
+				}
+
+				if (pPxSrc1[currentIndex].r+pPxSrc1[currentIndex].g+pPxSrc1[currentIndex].b > byThreshold*3)
+				{
+					pStack[stackPtr++] = Coord(current.x, (current.y+h-1)%h); // Up
+					pStack[stackPtr++] = Coord(current.x, (current.y+1)%h); // Down
+					pStack[stackPtr++] = Coord((current.x+1)%w, current.y); // Right
+					pStack[stackPtr++] = Coord((current.x+w-1)%w, current.y); // Left
+
+					pCoverage[currentIndex] = 1;
+					pPxDst[currentIndex] = color;
+				}
+			}
+
+			if (pCoverage[index] == 0)
+			{
+				pPxDst[index].r = 0;
+				pPxDst[index].g = 0;
+				pPxDst[index].b = 0;
+				pPxDst[index].a = 255;
+			}
+
+			index++;
+		}
+	}
+
+	NMemFree(pCoverage);
+	NMemFree(pStack);
+
+	return 0;
+}
+
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//							NDilateOp class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+IMPLEMENT_CLASS(NDilateOp, NOperator);
+
+
+static NVarsBlocDesc blocdescDilateOp[] =
+{
+	VAR(eubyte,		true, "Iterations",	"10",	"NUbyteProp")	//0
+};
+
+NDilateOp::NDilateOp()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(1, blocdescDilateOp, 1);
+}
+
+udword NDilateOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+{
+	//One input
+	if (m_byInputs!=1)		return (udword)-1;
+
+	//Bitmap instance
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+
+	// Init
+	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
+	NBitmap* pDst = (NBitmap*)m_pObj;
+
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
+
+	//Get Variables Values
+	ubyte byIterations;
+	m_pcvarsBloc->GetValue(0, _ftime, byIterations);
+
+	RGBA* pPxInter = (RGBA*)NMemAlloc(w*h*sizeof(RGBA));
+
+	for (udword i=0; i<byIterations+1; ++i)
+	{
+		udword index = 0;
+		RGBA* pPxSrc;
+		RGBA* pPxDst;
+
+		if (i == 0)
+		{
+			pPxSrc = pSrc->GetPixels();
+		} else
+		{
+			pPxSrc = (i%2)!=(byIterations%2) ? pDst->GetPixels() : pPxInter;
+		}
+
+		pPxDst = (i%2)==(byIterations%2) ? pDst->GetPixels() : pPxInter;
+
+		//Process
+		for (udword y=0; y<h; y++)
+		{
+			for (udword x=0; x<w; x++)
+			{
+				sdword sum = -1;;
+				pPxDst[index] = pPxSrc[index];
+				
+				udword neighbourIndex;
+				for (sdword v=-1; v<2; ++v)
+				{
+					for (sdword u=-1; u<2; ++u)
+					{
+						neighbourIndex = ((x+w+u)%w) + ((y+h+v)%h)*w;
+						if (pPxSrc[neighbourIndex].r + pPxSrc[neighbourIndex].g + pPxSrc[neighbourIndex].b > sum)
+						{
+							sum = pPxSrc[neighbourIndex].r + pPxSrc[neighbourIndex].g + pPxSrc[neighbourIndex].b;
+							pPxDst[index] = pPxSrc[neighbourIndex];
+						}
+					}
+				}
+
+				index++;
+			}
+		}
+	}
+
+	NMemFree(pPxInter);
+
+
+	return 0;
+}

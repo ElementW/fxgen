@@ -22,6 +22,8 @@
 //-----------------------------------------------------------------
 #include "pch.h"
 #include "RenderOps.h"
+#include "vgvm/vgvm.h"
+#include "vgvm/contexts/cairo.h"
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -575,41 +577,41 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	{
 		for (udword x=0; x<w; x++)
 		{
-      vec3 pixelPos;
-      pixelPos.x = x/(float)w,
-      pixelPos.y = y/(float)h;
-      pixelPos.z = 0;
+			vec3 pixelPos;
+			pixelPos.x = x/(float)w,
+			pixelPos.y = y/(float)h;
+			pixelPos.z = 0;
 
-      float minDist = 10;
-      float nextMinDist = minDist;
-      int xo = x*byDensity/w;
-      int yo = y*byDensity/h;
-      for (sdword v=-1; v<2; ++v)
-      {
-        int vo = ((yo+byDensity+v)%byDensity)*byDensity;
-        for (sdword u=-1; u<2; ++u)
-        {
-          vec3 cellPos = cellPoints[((xo+byDensity+u)%byDensity) + vo];
-          if (u==-1 && x*byDensity<w) cellPos.x-=1;
-          if (v==-1 && y*byDensity<h) cellPos.y-=1;
-          if (u==1 && x*byDensity>=w*(byDensity-1)) cellPos.x+=1;
-          if (v==1 && y*byDensity>=h*(byDensity-1)) cellPos.y+=1;
-          vec3 tmp;
-          float dist = sub(tmp, pixelPos, cellPos).norm ();
-          if (dist<minDist) 
-          {
-            nextMinDist = minDist;
-            minDist = dist;
-          } else if (dist<nextMinDist)
-          {
-            nextMinDist = dist;
-          }
-        }
-      }
+			float minDist = 10;
+			float nextMinDist = minDist;
+			int xo = x*byDensity/w;
+			int yo = y*byDensity/h;
+			for (sdword v=-1; v<2; ++v)
+			{
+				int vo = ((yo+byDensity+v)%byDensity)*byDensity;
+				for (sdword u=-1; u<2; ++u)
+				{
+					vec3 cellPos = cellPoints[((xo+byDensity+u)%byDensity) + vo];
+					if (u==-1 && x*byDensity<w) cellPos.x-=1;
+					if (v==-1 && y*byDensity<h) cellPos.y-=1;
+					if (u==1 && x*byDensity>=w*(byDensity-1)) cellPos.x+=1;
+					if (v==1 && y*byDensity>=h*(byDensity-1)) cellPos.y+=1;
+					vec3 tmp;
+					float dist = sub(tmp, pixelPos, cellPos).norm ();
+					if (dist<minDist) 
+					{
+						nextMinDist = minDist;
+						minDist = dist;
+					} else if (dist<nextMinDist)
+					{
+						nextMinDist = dist;
+					}
+				}
+			}
 
-      minDist = (nextMinDist-minDist)*byDensity;
-      if (minDist<0) minDist = 0;
-      if (minDist>1) minDist = 1;
+			minDist = (nextMinDist-minDist)*byDensity;
+			if (minDist<0) minDist = 0;
+			if (minDist>1) minDist = 1;
 
 			pPxDst->r = (ubyte)(minDist*col.r);
 			pPxDst->g = (ubyte)(minDist*col.g);
@@ -683,15 +685,110 @@ udword NNoiseOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	//Process operator
 	for (udword y=0; y<w; y++)
 		for (udword x=0; x<h; x++)
-    {
-      udword noiseVal = myRandom(1)%256;
-      pPxDst->r = (noiseVal*col.r)>>8;
-      pPxDst->g = (noiseVal*col.g)>>8;
-      pPxDst->b = (noiseVal*col.b)>>8;
-      pPxDst->a = 255;
+		{
+			udword noiseVal = myRandom(1)%256;
+			pPxDst->r = (noiseVal*col.r)>>8;
+			pPxDst->g = (noiseVal*col.g)>>8;
+			pPxDst->b = (noiseVal*col.b)>>8;
+			pPxDst->a = 255;
 			*pPxDst++;
-    }
+		}
 
 	return 0;
 }
 
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//							NVectorOp class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+IMPLEMENT_CLASS(NVectorOp, NOperator);
+
+static void* vgvmAlloc( size_t size )
+{
+  return NMemAlloc( size );
+}
+
+static void vgvmFree( void* memory )
+{
+  return NMemFree( memory );
+}
+
+static NVarsBlocDesc blocdescVectorOp[] =
+{
+	VAR(eubyte,	false, "Width",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
+	VAR(eubyte,	false, "Height",	"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//1
+	VAR(eubyte,	true,  "VectorData",    "0",	                                           "NVectorDataProp")	//2
+};
+
+
+NVectorOp::NVectorOp()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(3, blocdescVectorOp, 1);
+
+	m_pContext = vgvm::cairo::createCairoContext(vgvmAlloc, vgvmFree);
+	m_pProgram = m_pContext->createProgram();
+}
+
+NVectorOp::~NVectorOp()
+{
+	delete m_pProgram;
+	delete m_pContext;
+}
+
+void NVectorOp::SetVectorData(ubyte* _data, udword _length)
+{
+	m_pProgram->load(_data, _length);
+}
+
+udword NVectorOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+{
+	//No Inputs!
+	if (m_byInputs!=0)		return (udword)-1;
+
+	//Get Variables Values
+	ubyte byVal;
+
+	m_pcvarsBloc->GetValue(0, 0, byVal);
+	udword w=1<<((udword)byVal);
+
+	m_pcvarsBloc->GetValue(1, 0, byVal);
+	udword h=1<<((udword)byVal);
+
+	w=(udword) ((float)w*_fDetailFactor);
+	h=(udword) ((float)h*_fDetailFactor);
+
+	//Bitmap instance
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+
+	NBitmap* pDst = (NBitmap*)m_pObj;
+	pDst->SetSize(w,h);
+	RGBA* pPxDst = pDst->GetPixels();
+
+	memset( pPxDst, 0, w*h*4 );
+
+	m_pContext->setOutput((unsigned char*)pPxDst, w, h, true);
+	m_pContext->reset();
+	m_pContext->setRegisterCount( 1 );
+	m_pContext->setRegister( 0, vgvm::Value( 256.0f ) );
+	m_pContext->executeProgram( m_pProgram );
+
+	// Switch from BGR to RGB
+	for (udword y=0; y<h; y++)
+	{
+		for (udword x=0; x<w; x++)
+		{
+			RGBA color = *pPxDst;
+			pPxDst->r = color.b;
+			pPxDst->g = color.g;
+			pPxDst->b = color.r;
+
+			pPxDst++;
+		}
+	}
+
+	return 0;
+}

@@ -42,6 +42,7 @@ protected:
 	virtual void	OnMouseMove		(udword flags, NPoint pos);
 	virtual void	OnMButtonDown	(udword flags, NPoint pos);
 	virtual void	OnMButtonUp		(udword flags, NPoint pos);
+	virtual void	OnLeftButtonDown(udword flags, NPoint pos);
 	virtual void	OnLeftButtonUp(udword flags, NPoint pos);
 	virtual void	OnRightButtonDown(udword flags, NPoint pos);
 	virtual	void	OnCommand(udword id);
@@ -61,13 +62,21 @@ protected:
 
 	NMenuCtrl		m_wndMenu;
 
+	enum {
+		NONE,
+		PANNING,
+		ROTATING
+	} m_eDragMode;
 	float				m_fScale;
 	bool				m_bPanning;
+	bool				m_bRotating;
 	vec3				m_vecTrans;
-	NPoint			m_ptStartPan;
+	vec3				m_vecRot;
+	NPoint				m_ptStartDrag;
 
 	bool				m_bTiling;
 	bool				m_bFiltering;
+	bool				m_bOrtho;
 
 	NObject*		m_pcurObject;		//!< Objet in visualisation
 };
