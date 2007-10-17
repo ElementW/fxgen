@@ -59,8 +59,8 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Flat"; }			//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "Flat"; }			//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -79,8 +79,8 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Cloud"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "Cloud"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -112,8 +112,8 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Gradient"; }	//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Render"; }		//!< Operator's Category
+	virtual const char*		GetName()			{ return "Gradient"; }	//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Render"; }		//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -133,8 +133,8 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Cell"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "Cell"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -153,8 +153,8 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Noise"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "Noise"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -174,8 +174,8 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Vector"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "Vector"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
 	void			SetVectorData(ubyte* _data, udword _length);
 

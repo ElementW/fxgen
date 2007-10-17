@@ -26,8 +26,8 @@ public:
 	NEnterNameDlg(UINT _nResID, NWnd* _parent);
 
 	//Methods
-	void	SetName(char* _pszName)		{ m_cstrName = _pszName;			}
-	char* GetName()									{ return m_cstrName.Buffer(); }
+	void	SetName(const char* _pszName)		{ m_cstrName = _pszName;			}
+	const char* GetName()									{ return m_cstrName.Buffer(); }
 
 protected:
 	//Messages

@@ -334,7 +334,7 @@ public:
 
 	//Methods
 	virtual void	SetName(const char* _pszName)	{ strncpy_s(m_szName, sizeof(m_szName), _pszName, sizeof(m_szName)); }	//!< Affecte le nom de l'objet
-	virtual char*	GetName()								{ return m_szName;}	//!< Return object name
+	virtual const char*	GetName()								{ return m_szName;}	//!< Return object name
 
 	virtual NObject* Duplicate();
 

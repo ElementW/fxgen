@@ -22,7 +22,31 @@
 
 #include <stdio.h>
 #include <string.h>
+
+#ifdef _WIN32
 #include <windows.h>
+#else
+#include <algorithm>
+using std::min;
+using std::max;
+#define __int64 long long int
+#define __cdecl
+#define __declspec(x)
+typedef unsigned DWORD;
+typedef DWORD COLORREF;
+#define CopyMemory memcpy
+#define GetTickCount clock
+inline void ZeroMemory(void* dest, size_t size) { memset(dest, 0, size); }
+#define TCHAR char
+#define wsprintf sprintf
+inline void MessageBox(void*,const char*,const char*,int){}
+#define MB_OK 0
+#define MB_ICONERROR 0
+#define MB_APPLMODAL 0
+#define MB_TOPMOST 0
+#include <cmath>
+#define sqrtf sqrt
+#endif
 
 #ifndef errno_t
 #define errno_t int

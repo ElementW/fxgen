@@ -366,7 +366,7 @@ void NMenuCtrl::ShowMenu(bool _bShow, NMenuCtrl* _pParentMenu/*=null*/)
 //-----------------------------------------------------------------
 //!	\brief	Add an item
 //-----------------------------------------------------------------
-NMEItemDesc* NMenuCtrl::AddItem(char* _pszName, udword _id, udword _dwStyle)
+NMEItemDesc* NMenuCtrl::AddItem(const char* _pszName, udword _id, udword _dwStyle)
 {
 	NMEItemDesc		st;
 	st.dwID				= _id;
@@ -384,7 +384,7 @@ NMEItemDesc* NMenuCtrl::AddItem(char* _pszName, udword _id, udword _dwStyle)
 //-----------------------------------------------------------------
 //!	\brief	Create a popup item
 //-----------------------------------------------------------------
-NMenuCtrl* NMenuCtrl::CreatePopupMenu(char* _pszName, udword _idx)
+NMenuCtrl* NMenuCtrl::CreatePopupMenu(const char* _pszName, udword _idx)
 {
 	NMenuCtrl* ppopup = new NMenuCtrl;
 

@@ -49,8 +49,8 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Blur"; }			//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Filter"; }		//!< Operator's Category
+	virtual const char*		GetName()			{ return "Blur"; }			//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Filter"; }		//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -69,8 +69,8 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Colors"; }	//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "Colors"; }	//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -90,8 +90,8 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Light"; }	//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "Light"; }	//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -110,8 +110,8 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Normals"; }	//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "Normals"; }	//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -129,8 +129,8 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Invert"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "Invert"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -149,8 +149,8 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Threshold"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "Threshold"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -169,8 +169,8 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Alpha"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "Alpha"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -189,8 +189,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Segment"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "Segment"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -210,8 +210,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Dilate"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "Dilate"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);

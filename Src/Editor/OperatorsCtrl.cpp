@@ -196,7 +196,7 @@ void NOperatorsCtrl::DisplayOperator(NGraphics* _pdc, NOperator* _pop)
 	else													_pdc->Draw3dRect(rcBloc,RGB(255,255,255),RGB(0,0,0));
 
 	//Operator's Name
-	char* pszname = _pop->GetUserName();
+	const char* pszname = _pop->GetUserName();
 	if (pszname==null || (strlen(pszname)==0))		pszname=_pop->GetName();
 
 	_pdc->DrawText(pszname, rcBloc, DT_SINGLELINE|DT_CENTER|DT_END_ELLIPSIS|DT_VCENTER);

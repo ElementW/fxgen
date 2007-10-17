@@ -45,7 +45,7 @@ NStoreOp::~NStoreOp()
 {
 }
 
-char* NStoreOp::GetUserName()
+const char* NStoreOp::GetUserName()
 {
 	char* pszname;
 	m_pcvarsBloc->GetValue(0, 0, pszname);
@@ -56,8 +56,6 @@ udword NStoreOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
-
-	//InsureCommonInputsSize(_pOpsInts, _fDetailFactor);
 
 	//Bitmap instance
 	NEngineOp::GetEngine()->GetBitmap(&m_pObj, OBJRES_TYPE_STORED);
@@ -101,7 +99,7 @@ NStoreResultOp::~NStoreResultOp()
 {
 }
 
-char* NStoreResultOp::GetUserName()
+const char* NStoreResultOp::GetUserName()
 {
 	char* pszname;
 	m_pcvarsBloc->GetValue(0, 0, pszname);
@@ -153,7 +151,7 @@ NLoadOp::NLoadOp()
 	m_pcvarsBloc = AddVarsBloc(1, blocdescLoadOp, 1);
 }
 
-char* NLoadOp::GetUserName()
+const char* NLoadOp::GetUserName()
 {
 		//Get Variables Values
 	NOperator* popRef;
@@ -253,4 +251,5 @@ udword NChannelAnimFX1Op::Process(float _ftime, NOperator** _pOpsInts, float _fD
 
 	return 0;
 }
+
 

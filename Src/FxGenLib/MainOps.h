@@ -35,9 +35,9 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x004080FF;	}
-	virtual char*		GetName()			{ return "Store";	}		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Misc"; }		//!< Operator's Category
-	virtual char*		GetUserName();											//!< Operator's User Name
+	virtual const char*		GetName()			{ return "Store";	}		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Misc"; }		//!< Operator's Category
+	virtual const char*		GetUserName();											//!< Operator's User Name
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -58,9 +58,9 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x000000FF;	}
-	virtual char*		GetName()			{ return "Store Result";	}	//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Misc";	}					//!< Operator's Category
-	virtual char*		GetUserName();														//!< Operator's User Name
+	virtual const char*		GetName()			{ return "Store Result";	}	//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Misc";	}					//!< Operator's Category
+	virtual const char*		GetUserName();														//!< Operator's User Name
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -80,9 +80,9 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x00e36464;	}
-	virtual char*		GetName()			{ return "Load"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Misc"; }		//!< Operator's Category
-	virtual char*		GetUserName();											//!< Operator's User Name
+	virtual const char*		GetName()			{ return "Load"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Misc"; }		//!< Operator's Category
+	virtual const char*		GetUserName();											//!< Operator's User Name
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -103,8 +103,8 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x00e36464;	}
-	virtual char*		GetName()			{ return "Channel FX1"; }	//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Animation"; }		//!< Operator's Category
+	virtual const char*		GetName()			{ return "Channel FX1"; }	//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Animation"; }		//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);

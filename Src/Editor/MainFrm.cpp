@@ -205,19 +205,38 @@ void NMainFrm::OnCommand(udword id)
 }
 
 
+bool AnnoyUserProjectMayBeLost()
+{
+	static int firsttime = 2;
+
+	if (firsttime)
+	{
+		--firsttime;
+		return true;
+	}
+
+	NTreeNode* prootNode = NEngineOp::GetEngine()->GetRootGroup();
+
+	udword dwCount = prootNode->GetSonsCount();
+
+	if (dwCount != 0)
+	{
+		udword dwRet = GetApp()->MessageBox("You will lose your current project! Do you want to continue ?", MB_YESNO | MB_DEFBUTTON2);
+
+		if (dwRet == IDNO)		return false;
+	}
+	return true;
+}
+
+
 //-----------------------------------------------------------------
 //!	\brief	Project creation
 //-----------------------------------------------------------------
 void NMainFrm::OnNewProject()
 {
 	NTreeNode* prootNode = NEngineOp::GetEngine()->GetRootGroup();
-	udword dwCount = prootNode->GetSonsCount();
-
-	if (dwCount!=0)
-	{
-		udword dwRet = GetApp()->MessageBox("You will lost current project ! do you want to continue ?", MB_YESNO|MB_DEFBUTTON2);
-		if (dwRet==IDNO)		return;
-	}
+	if(!AnnoyUserProjectMayBeLost())
+		return;
 
 	m_popMarkedShow = null;
 	m_bExecuteLocked = true;
@@ -254,7 +273,10 @@ void NMainFrm::OnNewProject()
 
 void NMainFrm::LoadProject(NString str)
 {
-	if(!str.Length())
+	if(!AnnoyUserProjectMayBeLost())
+		return;
+
+	if (!str.Length())
 		str = projectname;
 	if(!str.Length())
 	{
@@ -305,9 +327,12 @@ void NMainFrm::OnOpenProject()
 
 void NMainFrm::SaveProject(NString path)
 {
-	if(!path.Length())
+	bool show_message = false;
+
+	if (!path.Length())
 		path = projectname;
-	if(!path.Length())
+
+	if (!path.Length())
 	{
 		OnSaveProjectAs();
 		return;
@@ -321,6 +346,7 @@ void NMainFrm::SaveProject(NString path)
 		NString strTitle(CAPTION);
 		strTitle+=path.Buffer();
 		SetWindowText(strTitle.Buffer());
+		GetApp()->MessageBox("File saved.", MB_OK);
 	}
 
 	m_bExecuteLocked = false;
@@ -406,15 +432,15 @@ void NMainFrm::DeletedOperator(NOperator* pop)
 //-----------------------------------------------------------------
 void NMainFrm::OnKeyDown(udword dwchar)
 {
-	//###SEELATER###
-	/*
-	switch(dwchar)
+// temporary implementation
+#ifdef USE_QUAKE_KEYS
+	switch (dwchar)
 	{
-		case 'S':	SaveProject();			break;
-		case 'R':	LoadProject();			break;
-		case 'A':	OnSaveProjectAs();	break;
-		case 'O':	OnOpenProject();		break;
+		case VK_F6: SaveProject();	break;
+		case VK_F9:	LoadProject(); break;
+		case VK_F2:	OnSaveProjectAs(); break;
+		case VK_F3:	OnOpenProject(); break;
 		default: break;
 	}
-	*/
+#endif
 }

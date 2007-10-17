@@ -164,7 +164,7 @@ public:
 	void SetBkMode(udword dwMode);
 	void SetTextColor(COLORREF clr);
 	void SetTextBkColor(COLORREF clr);
-	sdword DrawText(char* szString, NRect& rc, udword nFormat);
+	sdword DrawText(const char* szString, NRect& rc, udword nFormat);
 
 	//Polygones
 	void  Polygon(NPoint* ptsArray, udword dwCount);

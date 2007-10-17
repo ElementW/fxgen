@@ -73,7 +73,7 @@ protected:
 	void			_DisplayAnimationObjectProperties(NObject* _pobj, udword _dwDepth);	//!< Display Object Properties (called by DisplayObjectProperties)
 
 
-	udword		AddGroup(char* pszName, udword _dwDepth);
+	udword		AddGroup(const char* pszName, udword _dwDepth);
 	udword		AddVarProperties(NVarsBloc* _pvarBloc, NVarsBlocDesc* _pvarBlocDesc, NVarValue* _pvarValue, udword _dwvarIdx, udword _dwDepth);
 
 	void			DeleteAllProperties();	//!< Reset
@@ -118,4 +118,5 @@ protected:
 	//Windows Proc
 	virtual	LRESULT WndProc( UINT msg, WPARAM wparam, LPARAM lparam);
 };
+
 

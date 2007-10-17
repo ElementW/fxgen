@@ -117,10 +117,10 @@ udword NRectOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 
 	//Init
 	udword x1, x2, y1, y2;
-	x1 = max(0, fx1 * w);
-	x2 = min(w, fx2 * w);
-	y1 = max(0, fy1 * h);
-	y2 = min(h, fy2 * h);
+	x1 = max(0.f, fx1 * w);
+	x2 = min(float(w), fx2 * w);
+	y1 = max(0.f, fy1 * h);
+	y2 = min(float(h), fy2 * h);
 
 	//Copy Source to this bitmap
 	CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
@@ -225,8 +225,6 @@ udword NAddOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 {
 	//x Inputs
 	if (m_byInputs<1)		return (udword)-1;
-
-	//InsureCommonInputsSize(_pOpsInts, _fDetailFactor);
 
 	//Bitmap instance
 	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
@@ -683,8 +681,6 @@ udword NLerpOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 {
 	//Three inputs
 	if (m_byInputs!=3)		return (udword)-1;
-
-	//InsureCommonInputsSize(_pOpsInts, _fDetailFactor);
 
 	//Get input textures
 	NBitmap* pSrc1 = (NBitmap*)(*(_pOpsInts+0))->m_pObj;
