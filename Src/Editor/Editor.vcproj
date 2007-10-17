@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\FxGenLib;..\GUILib;..\..\Externals\cairo;..\..\Externals\vgvm;..\..\Externals\tinyxml"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;USING_VGVM_DLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -63,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="winmm.lib comctl32.lib opengl32.lib tinyxml.lib cairo.lib cairomm-1.0d.lib vgvmd.lib vgvm_svgd.lib"
+				AdditionalDependencies="winmm.lib comctl32.lib opengl32.lib cairo.lib cairomm-1.0d.lib vgvmd.lib vgvm_svgd.lib"
 				OutputFile="$(OutDir)/Editor_D.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\Externals\tinyxml;..\..\Externals\cairo;..\..\Externals\vgvm"
@@ -127,7 +127,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="..\FxGenLib;..\GUILib;..\..\Externals\cairo;..\..\Externals\vgvm;..\..\Externals\tinyxml"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;USING_VGVM_DLL"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				EnableEnhancedInstructionSet="2"
@@ -149,7 +149,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="winmm.lib comctl32.lib opengl32.lib Msimg32.lib gdi32.lib user32.lib comdlg32.lib tinyxml.lib cairo.lib cairomm-1.0d.lib vgvm.lib vgvm_svg.lib"
+				AdditionalDependencies="winmm.lib comctl32.lib opengl32.lib Msimg32.lib gdi32.lib user32.lib comdlg32.lib cairo.lib cairomm-1.0.lib"
 				OutputFile="$(OutDir)/Editor.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\Externals\tinyxml;..\..\Externals\cairo;..\..\Externals\vgvm"
@@ -234,7 +234,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="winmm.lib comctl32.lib opengl32.lib tinyxml.lib cairo.lib cairomm-1.0d.lib vgvm.lib vgvm_svg.lib"
+				AdditionalDependencies="winmm.lib comctl32.lib opengl32.lib cairo.lib cairomm-1.0.lib"
 				OutputFile="$(OutDir)/Editor.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\Externals\tinyxml;..\..\Externals\cairo;..\..\Externals\vgvm"
@@ -300,7 +300,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="..\FxGenLib;..\GUILib;..\..\Externals\cairo;..\..\Externals\vgvm;..\..\Externals\tinyxml"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;USING_VGVM_DLL"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -320,7 +320,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="winmm.lib comctl32.lib opengl32.lib Msimg32.lib tinyxml.lib cairo.lib cairomm-1.0d.lib vgvm.lib vgvm_cairo.lib vgvm_svg.lib"
+				AdditionalDependencies="winmm.lib comctl32.lib opengl32.lib Msimg32.lib cairo.lib cairomm-1.0.lib"
 				OutputFile="$(OutDir)/Editor.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\Externals\tinyxml;..\..\Externals\cairo;..\..\Externals\vgvm"
@@ -524,6 +524,194 @@
 			<File
 				RelativePath=".\TGAWriter.h"
 				>
+			</File>
+		</Filter>
+		<Filter
+			Name="TinyXML"
+			>
+			<File
+				RelativePath="..\..\Externals\tinyxml\tinystr.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Tiny Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release DLL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\Externals\tinyxml\tinyxml.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Tiny Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release DLL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\Externals\tinyxml\tinyxmlerror.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Tiny Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release DLL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\Externals\tinyxml\tinyxmlparser.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Tiny Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release DLL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+		</Filter>
+		<Filter
+			Name="VGVM"
+			>
+			<File
+				RelativePath="..\..\Externals\vgvm\compiler_svg.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Tiny Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release DLL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<File
