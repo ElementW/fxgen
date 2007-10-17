@@ -6,10 +6,13 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
-#include <tchar.h>
 #include <math.h>
 #include <assert.h>
 #include <stdio.h>
 
+#ifdef _WIN32
 #include <windows.h>
+#include <tchar.h>
+#endif
+
 

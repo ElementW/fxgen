@@ -60,9 +60,9 @@ public:
 	//Methods
 	virtual NObject* Duplicate();						//!< Duplicate this object (used for copy-paste)
 	virtual	COLORREF GetColor()	= 0;				//!< Operator color
-	virtual char* GetName()				{ return ""; }			//!< Operator's Name
-	virtual char* GetCategory()		{ return "Misc"; }	//!< Operator's Category
-	virtual char* GetUserName()		{ return null; }		//!< Operator's User Name
+	virtual const char* GetName()				{ return ""; }			//!< Operator's Name
+	virtual const char* GetCategory()		{ return "Misc"; }	//!< Operator's Category
+	virtual const char* GetUserName()		{ return null; }		//!< Operator's User Name
 
 	//Serialization
 	virtual	bool Save(NArchive* _s);	//!< Save object
@@ -90,8 +90,6 @@ public:
 
 	// Variables Bloc
 	NVarsBloc* m_pcvarsBloc;
-	//void InsureCommonInputsSize(NOperator** _pOpsInts, float _fDetailFactor);
-	//static bool useInsureCommonInputsSize; //!< the function is useful in the editor only
 };
 
 

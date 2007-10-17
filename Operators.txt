@@ -1,0 +1,180 @@
+-------------------------
+List of FXGen operators
+17 October 2007
+-------------------------
+
+
+
+-------------------
+Render Operators
+-------------------
+
+Name: Flat
+Purpose: Create a flat texture of given color.
+Details:
+Inputs: no
+
+Name: Cloud
+Purpose:
+Details: Clouds are constructed from 2 colors.
+Inputs: no
+
+Name: Gradient
+Purpose:
+Details: Each corner of the texture has unique color.
+Inputs: no
+
+Name: Cell
+Purpose: Create a texture consisting of cells aligned in a grid.
+Details: Cells can be irregular. If considered bump map, they have pyramid form.
+Inputs: no
+
+Name: Noise
+Purpose:
+Details: White noise of high quality. Texture can be filtered into a color.
+Inputs: no
+
+Name: Vector
+Purpose:
+Details: can render vector graphics. The Editor is also equipped with a
+converter that can import SVG data to the vector operator.
+Inputs: no
+
+-------------------
+Combine Operators
+-------------------
+
+Name: Nop
+Purpose: No operation.
+Details: Copies input to output.
+Inputs: 1
+
+Name: Rect
+Purpose: Draw a rectangle on top of previous content.
+Details:
+Inputs: 1
+
+Name: Pixels
+Purpose: Draw a number of pixels at random positions.
+Details:
+Inputs: 1
+
+Name: Add
+Purpose: Combine inputs together.
+Details: Provides several ways of combining. Clamps bitmap to first input size.
+Inputs: arbitrary
+
+Name: Glow
+Purpose: Render a glow.
+Details: Glow is a blurred, filled ellipse of given color.
+Inputs: 1
+
+Name: Crack
+Purpose: Create crack lines.
+Details: Number, length and intensity of cracked lines can be set.
+Inputs: 1
+
+Name: Lerp
+Purpose: Mix first two inputs (a, b) in proportions given by third input (c).
+Details: Each color compound is processed separately. Equation: x = bc + a(1 - c)
+Inputs: 3
+
+-------------------
+Distord Operators
+-------------------
+
+Name: RotoZoom
+Purpose: Rotate, scale and tile input.
+Details: Can change bitmap size.
+Inputs: 1
+
+Name: Distort
+Purpose: Apply normal (ie. vector) map to a bitmap.
+Details:
+Inputs: 2
+
+Name: Vortex
+Purpose: Twist some fragment of input bitmap.
+Details:
+Inputs: 1
+
+Name: Lookup
+Purpose: Copy pixels from first input (x,y), given coordinates from second input
+(red,green).
+Details: x = w * red, y = h * green
+Inputs: 2
+
+-------------------
+Filter Operators
+-------------------
+
+Name: Blur
+Purpose: Reduce sharpness ;)
+Details: Two algorithms: Box and Gaussian.
+Inputs: 1
+
+Name: Colors
+Purpose: Apply a color filter and color light, adjust contrast and brightness.
+Details:
+Inputs: 1
+
+Name: Light
+Purpose: Apply an illumination on a curved surface.
+Details: First input is considered texture, second is normal map. Ambient,
+diffuse and specular light can have different colors and intensity.
+Inputs: 2
+
+Name: Normals
+Purpose: Convert height map to normal map.
+Details:
+Inputs: 1
+
+Name: Invert
+Purpose: Invert all color compounds.
+Details: r:=1-r, g:=1-g, b:=1-b
+Inputs: 1
+
+Name: Threshold
+Purpose: Change luminance curve around given value.
+Details: Several ways.
+Inputs: 1
+
+Name: Alpha
+Purpose: Extract single color (light green #4C951D) intensity, replace it with
+white smoke, discard the rest.
+Details: Resulting texture has alpha channel.
+Inputs: 1
+
+Name: Segment
+Purpose:
+Details: takes segments input 1 based on a threshold, and colors each segment based on input 2
+Inputs: 2
+
+Name: Dilate
+Purpose:
+Details: expands bright areas over darker areas
+Inputs: 1
+
+-------------------
+Misc Operators
+-------------------
+
+Name: Store
+Purpose: Assign the bitmap a name accessible from within the project.
+Details:
+Inputs: 1
+
+Name: StoreResult
+Purpose: Assign the bitmap a name accessible from outside the project.
+Details:
+Inputs: 1
+
+Name: Load
+Purpose: Retrieve a named bitmap within the project.
+Details:
+Inputs: no
+
+Name: ChannelAnimFX1Op
+Purpose: Whatever - todo find out what animations does it create.
+Details:
+Inputs: arbitrary

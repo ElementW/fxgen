@@ -422,7 +422,7 @@ void NPropertiesCtrl::OnMButtonUp(udword flags, NPoint pos)
 //-----------------------------------------------------------------
 void NPropertiesCtrl::OnKeyDown(udword dwchar)
 {
-//	GetApp()->GetMainWnd()->OnKeyDown(dwchar);
+	GetApp()->GetMainWnd()->OnKeyDown(dwchar);
 }
 
 //-----------------------------------------------------------------
@@ -519,7 +519,7 @@ void NPropertiesCtrl::_DisplayAnimationObjectProperties(NObject* _pobj, udword _
 //-----------------------------------------------------------------
 //!	\brief	Add a group
 //-----------------------------------------------------------------
-udword NPropertiesCtrl::AddGroup(char* pszName, udword _dwDepth)
+udword NPropertiesCtrl::AddGroup(const char* pszName, udword _dwDepth)
 {
 	NRowDesc				rd;
 	rd.dwDepth			= _dwDepth;

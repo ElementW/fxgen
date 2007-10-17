@@ -77,12 +77,12 @@ public:
 
 	void DeleteAllItems();
 
-	NMEItemDesc* AddItem(char* _pszName, udword _id, udword _dwStyle);
+	NMEItemDesc* AddItem(const char* _pszName, udword _id, udword _dwStyle);
 
 	udword				GetItemsCount();
 	NMEItemDesc* GetItemDesc(udword _idx);
 
-	NMenuCtrl* CreatePopupMenu(char* _pszName, udword _idx);
+	NMenuCtrl* CreatePopupMenu(const char* _pszName, udword _idx);
 	NMenuCtrl* GetPopupMenu(udword _idx);
 
 	//Notification Messages
@@ -125,4 +125,5 @@ protected:
 	//Windows Proc
 	virtual	LRESULT	WndProc( UINT msg, WPARAM wparam, LPARAM lparam);
 };
+
 

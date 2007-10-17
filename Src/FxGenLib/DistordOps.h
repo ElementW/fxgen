@@ -48,8 +48,8 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Roto Zoom"; }	//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Distord"; }		//!< Operator's Category
+	virtual const char*		GetName()			{ return "Roto Zoom"; }	//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Distord"; }		//!< Operator's Category
 
 
 	//Processing methods
@@ -69,8 +69,8 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Distort"; }	//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "Distort"; }	//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -90,8 +90,8 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Vortex"; }	//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "Vortex"; }	//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -111,8 +111,8 @@ public:
 
 	//Methods
 	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Lookup"; }	//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "Lookup"; }	//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);

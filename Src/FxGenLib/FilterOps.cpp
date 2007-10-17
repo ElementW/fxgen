@@ -450,8 +450,6 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	//Two inputs (texture, normal)
 	if (m_byInputs < 2 || m_byInputs > 4)	return (udword)-1;
 
-	//InsureCommonInputsSize(_pOpsInts, _fDetailFactor);
-
 	//Get input Texture
 	NBitmap* pSrc	= (NBitmap*)(*_pOpsInts)->m_pObj;
 	udword w = pSrc->GetWidth();
@@ -1157,7 +1155,7 @@ udword NDilateOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 			{
 				sdword sum = -1;;
 				pPxDst[index] = pPxSrc[index];
-				
+
 				udword neighbourIndex;
 				for (sdword v=-1; v<2; ++v)
 				{

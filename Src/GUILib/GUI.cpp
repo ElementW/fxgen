@@ -25,7 +25,10 @@
 //-----------------------------------------------------------------
 // Defines
 //-----------------------------------------------------------------
+
+#ifndef WM_MOUSEWHEEL
 #define WM_MOUSEWHEEL                   0x020A
+#endif
 
 //-----------------------------------------------------------------
 // Variables
@@ -410,7 +413,7 @@ void NGraphics::SetTextBkColor(COLORREF clr)
 }
 
 
-sdword NGraphics::DrawText(char* szString, NRect& rc, udword nFormat)
+sdword NGraphics::DrawText(const char* szString, NRect& rc, udword nFormat)
 {
 	return (sdword)::DrawText(m_hMemDC, szString, strlen(szString), (RECT*)&rc, nFormat);
 }
