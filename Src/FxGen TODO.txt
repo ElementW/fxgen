@@ -1,15 +1,19 @@
 Next Version
 -------------
-.a merge project command menu 
-.review animation controllers
-.add an editor's icon
-.statusbar suppression ?
-.SVG format import
-.Little and Big-Endian Management
-	.Native format is little Endian
-	.Create a NFileStream::GetData with conversion (Little->Big endian)
+.Editor
+	.add a merge project command menu
+	.add an editor's icon
+	.SVG format import
 	
+.FxGen FileFormat
+	.Add a chunk for used plugins list in order to reopen file without errors.
 
+.FxGenLib
+	.Review animation controllers
+	.Little and Big-Endian Management
+		.Native format is little Endian
+		.Create a class NFileStream for BigEndian with conversion on load and write (Little->Big endian)
+	
 Version 0.5 alpha (Release: Use FxGen in your Games !)
 ----------------------------------
 .Custom popup menu (OpenGL GUI preparation)
@@ -17,7 +21,7 @@ Version 0.5 alpha (Release: Use FxGen in your Games !)
 .new method NEngineOp::_ComputeToProcessOpsCount()
 .new method NObjectGarbage::Compact()
 .new method NObjectGarbage::RemoveEntry()
-.GCC compilation.
+.GCC compilation support.
 .Fixed Crash when Referenced variable<->object are broken
 .Engine resources detail factor (x0.5, x1.0, x2.0)
 	.i.e For textures, process them for size * detail factor
@@ -31,6 +35,9 @@ Version 0.5 alpha (Release: Use FxGen in your Games !)
 	.NEngineOp::GetFinalResultCount()
 	.NEngineOp::GetFinalResultBitmapByIdx()
 	.NEngineOp::CompactMemory()
+
+New Operators
+	.NVectorOp	
 
 
 Version 0.4 alpha
