@@ -62,3 +62,5 @@ protected:
 	NString projectname;
 	float						m_fDetailFactor;
 };
+
+bool AnnoyUserProjectMayBeLost();
