@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="GUILib" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug|Win32">
+				<Option output="..\..\W32Bin\GUILib_D" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Debug" />
+				<Option external_deps="Debug\libFxGenLib_D.a;" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-W" />
+					<Add option="-pg" />
+					<Add option="-g" />
+					<Add option="-O0" />
+					<Add option="-DWIN32" />
+					<Add option="-D_DEBUG" />
+					<Add option="-D_USRDLL" />
+					<Add option="-DGUI_EXPORTS" />
+					<Add directory="..\FxGenLib" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="..\FxGenLib" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+					<Add library="comctl32" />
+					<Add library="Msimg32" />
+					<Add library="user32" />
+					<Add library="gdi32" />
+					<Add library="comdlg32" />
+					<Add library="libFxGenLib_D.a" />
+				</Linker>
+				<ExtraCommands>
+					<Add after="copy $(TargetDir)GUILib_D.dll ..\..\W32Bin\GUILib_D.dll" />
+				</ExtraCommands>
+			</Target>
+			<Target title="Release|Win32">
+				<Option output="..\..\W32Bin\GUILib" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Release" />
+				<Option external_deps="libFxGenLib.a;" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
+					<Add option="-W" />
+					<Add option="-g" />
+					<Add option="-DWIN32" />
+					<Add option="-DNDEBUG" />
+					<Add option="-D_USRDLL" />
+					<Add option="-DGUI_EXPORTS" />
+					<Add directory="..\FxGenLib" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="..\FxGenLib" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="comctl32" />
+					<Add library="Msimg32" />
+					<Add library="gdi32" />
+					<Add library="user32" />
+					<Add library="comdlg32" />
+					<Add library="libFxGenLib.a" />
+				</Linker>
+				<ExtraCommands>
+					<Add after="copy $(TargetDir) ..\..\W32Bin\" />
+				</ExtraCommands>
+			</Target>
+			<Target title="Tiny Release|Win32">
+				<Option output="Tiny Release_Win32\libGUILib" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="Tiny Release_Win32" />
+				<Option external_deps="Tiny Release|Win32\libFxGenLib.a;" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-DWIN32" />
+					<Add option="-DNDEBUG" />
+					<Add option="-D_LIB" />
+					<Add option="-D_MODE_EDITION" />
+					<Add option="-W" />
+					<Add option="-g" />
+					<Add option="-O1" />
+					<Add directory="..\CGCLib" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="..\CGCLib" />
+				</ResourceCompiler>
+				<Linker>
+					<Add library="Tiny Release|Win32\libFxGenLib.a" />
+				</Linker>
+			</Target>
+			<Target title="Release DLL|Win32">
+				<Option output="Release DLL|Win32\libGUILib" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="Release DLL|Win32" />
+				<Option external_deps="libFxGenLib.a;" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-DWIN32" />
+					<Add option="-DNDEBUG" />
+					<Add option="-D_LIB" />
+					<Add option="-W" />
+					<Add option="-g" />
+					<Add option="-O1" />
+					<Add directory="..\FxGenLib" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="..\FxGenLib" />
+				</ResourceCompiler>
+				<Linker>
+					<Add library="libFxGenLib.a" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="..\..\LinuxBin\GUILib" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\..\LinuxBin" />
+				<Option object_output="Release" />
+				<Option external_deps="libFxGenLib.a;" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Option projectIncludeDirsRelation="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-W" />
+					<Add option="-g" />
+					<Add option="-DWIN32" />
+					<Add option="-DNDEBUG" />
+					<Add option="-D_USRDLL" />
+					<Add option="-DGUI_EXPORTS" />
+					<Add directory="..\..\..\wine-0.9.46\include" />
+					<Add directory="..\FxGenLib" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="..\FxGenLib" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+				<ExtraCommands>
+					<Add after="copy $(TargetDir) ..\..\W32Bin\" />
+				</ExtraCommands>
+			</Target>
+		</Build>
+		<Linker>
+			<Add directory="..\..\W32Bin" />
+		</Linker>
+		<Unit filename="Dialog.cpp" />
+		<Unit filename="Dialog.h" />
+		<Unit filename="EventsMgr.cpp" />
+		<Unit filename="EventsMgr.h" />
+		<Unit filename="GUI.cpp" />
+		<Unit filename="GUI.h" />
+		<Unit filename="SplitWnd.cpp" />
+		<Unit filename="SplitWnd.h" />
+		<Unit filename="Templates.h" />
+		<Unit filename="Types.cpp" />
+		<Unit filename="Types.h" />
+		<Unit filename="WinMain.h" />
+		<Unit filename="pch.cpp" />
+		<Unit filename="pch.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

@@ -66,7 +66,8 @@ Inputs: arbitrary
 
 Name: Glow
 Purpose: Render a glow.
-Details: Glow is a blurred, filled ellipse of given color.
+Details: Glow is a blurred, filled ellipse of given color, that is added to
+existing content.
 Inputs: 1
 
 Name: Crack
@@ -76,7 +77,7 @@ Inputs: 1
 
 Name: Lerp
 Purpose: Mix first two inputs (a, b) in proportions given by third input (c).
-Details: Each color compound is processed separately. Equation: x = bc + a(1 - c)
+Details: Each color compound is processed separately. Equation: x = bc + a(1-c)
 Inputs: 3
 
 -------------------
@@ -147,7 +148,8 @@ Inputs: 1
 
 Name: Segment
 Purpose:
-Details: takes segments input 1 based on a threshold, and colors each segment based on input 2
+Details: takes segments input 1 based on a threshold, and colors each segment
+based on input 2
 Inputs: 2
 
 Name: Dilate

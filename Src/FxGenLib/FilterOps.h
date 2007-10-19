@@ -188,7 +188,7 @@ public:
 	NSegmentOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual const char*		GetName()			{ return "Segment"; }		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
@@ -209,7 +209,7 @@ public:
 	NDilateOp();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
 	virtual const char*		GetName()			{ return "Dilate"; }		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 

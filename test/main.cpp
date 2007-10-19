@@ -77,6 +77,7 @@ void staticProcess(udword _dwTotalOps, udword _dwTotalResults)
 
 int main(int argc, char *argv[])
 {
+		printf("The Ultimate BMP Extractor v. 1.0\n");
 	if(argc == 1)
 	{
 		printf("Use project file name as an argument.\n");
