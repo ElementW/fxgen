@@ -81,8 +81,8 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	ubyte byPasses = byType == 1 ? 3 : 1;
 
 	//Radius
-	float radiusW= (float)byWidth / 2.0f;
-	float radiusH= (float)byHeight /2.0f;
+	float radiusW= (float)byWidth / 2.0f * _fDetailFactor;
+	float radiusH= (float)byHeight /2.0f * _fDetailFactor;
 
 	//Amplify
 	float amplify= (float)byAmplify;
@@ -335,7 +335,8 @@ udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	sdword	contrast	= (((sdword)byContrast));						//0 <> 255
 
 	float fconstrast = (float)contrast/128.0f;
-	if (contrast>64)		fconstrast = fconstrast*fconstrast*fconstrast;
+//	if (contrast>64)
+	fconstrast = fconstrast*fconstrast*fconstrast;
 	contrast=(sdword)(fconstrast*256.0f);
 
 	RGBA* pPxSrc = pSrc->GetPixels();
@@ -936,8 +937,8 @@ NAlphaOp::NAlphaOp()
 
 udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
-	//Only one Input
-	if (m_byInputs!=1)		return (udword)-1;
+	//One or two Inputs
+	if (m_byInputs <1 || m_byInputs > 2)		return (udword)-1;
 
 	//Bitmap instance
 	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
@@ -952,21 +953,49 @@ udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 	RGBA*	pPxSrc = pSrc->GetPixels();
 	RGBA*	pPxDst = pDst->GetPixels();
+	RGBA*	pPxAlpha = null;
+	NBitmap* pAlpha = null;
+
+	if(m_byInputs == 2)
+	{
+		_pOpsInts++;
+
+		pAlpha = (NBitmap*)(*_pOpsInts)->m_pObj;
+		pPxAlpha = pAlpha->GetPixels();
+		if(pAlpha->GetWidth() < w || pAlpha->GetHeight() < h)
+			return (udword)-1; // insufficient alpha channel size
+	}
 
 	//Process
 	for (udword y=0; y<h; y++)
 	{
 		for (udword x=0; x<w; x++)
 		{
-			float r = (float)pPxSrc->r * 0.299f;
-			float g = (float)pPxSrc->g * 0.587f;
-			float b = (float)pPxSrc->b * 0.114f;
+			if(pAlpha)
+			{
+				pPxDst->r = pPxSrc->r;
+				pPxDst->g = pPxSrc->g;
+				pPxDst->b = pPxSrc->b;
 
-			pPxDst->a = (ubyte) (( (udword)pPxDst->a + (udword)(r+g+b) )>>1);
-			pPxDst->r=pPxDst->g=pPxDst->b=pPxDst->a;
+				pPxDst->a =
+					ubyte((pPxAlpha->r + pPxAlpha->g + pPxAlpha->b) / 3);
 
-			pPxDst++;
-			pPxSrc++;
+				pPxDst++;
+				pPxSrc++;
+				pPxAlpha++;
+			}
+			else
+			{
+				float r = (float)pPxSrc->r * 0.299f;
+				float g = (float)pPxSrc->g * 0.587f;
+				float b = (float)pPxSrc->b * 0.114f;
+
+				pPxDst->a = (ubyte) (( (udword)pPxDst->a + (udword)(r+g+b) )>>1);
+				pPxDst->r=pPxDst->g=pPxDst->b=pPxDst->a;
+
+				pPxDst++;
+				pPxSrc++;
+			}
 		}
 	}
 
