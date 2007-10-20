@@ -121,9 +121,11 @@ Inputs: 1
 
 Name: Light
 Purpose: Apply an illumination on a curved surface.
-Details: First input is considered texture, second is normal map. Ambient,
-diffuse and specular light can have different colors and intensity.
-Inputs: 2
+Details: First input is considered texture, second is normal map.
+Ambient, diffuse and specular light can have different colors and intensity.
+It is possible to specify specular or specular + ambient colors per pixel using
+the third and fourth input.
+Inputs: 2-4
 
 Name: Normals
 Purpose: Convert height map to normal map.
@@ -141,10 +143,10 @@ Details: Several ways.
 Inputs: 1
 
 Name: Alpha
-Purpose: Extract single color (light green #4C951D) intensity, replace it with
-white smoke, discard the rest.
-Details: Resulting texture has alpha channel.
-Inputs: 1
+Purpose: 1) Extract single color (light green #4C951D) intensity, replace it with
+white smoke, discard the rest or 2) apply second input luminance as alpha channel.
+Details:
+Inputs: 1-2
 
 Name: Segment
 Purpose:
