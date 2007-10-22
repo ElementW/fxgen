@@ -14,6 +14,8 @@ using namespace std;
 
 #include "EngineOp.h"
 
+// application stuff
+
 struct BMP // Windows Bitmap header
 {
 	BMP(int w, int h)
@@ -30,8 +32,10 @@ struct BMP // Windows Bitmap header
 	void write(string filename, const RGBA* data)
 	{
 		FILE* f = fopen(filename.c_str(), "wb");
+		/* put header */
 		fwrite((char*)this + 2, sizeof(BMP), 1, f);
 
+		/* put data */
 		for (int i = 0; i < width * height; i++)
 		{
 			// flip vertically
@@ -68,16 +72,34 @@ int number_of_important_colors:	32; //, or zero
 
 };
 
-
-void staticProcess(udword _dwTotalOps, udword _dwTotalResults)
+void showProgress(float howmuch)
 {
-	printf("Processing %d/%d\n", _dwTotalOps, _dwTotalResults);
+	printf("\r");
+
+	for (int i = 0; i < 79 * howmuch; i++)
+		printf("#");
+}
+
+float progress = 0., frac = 1;
+
+void GlobalProgress(udword current, udword total)
+{
+	frac = 1. / total;
+}
+
+void LocalProgress(udword current, udword total)
+{
+	progress += frac / total;
+	showProgress(progress);
 }
 
 
+// FxGen use case
+
 int main(int argc, char *argv[])
 {
-		printf("The Ultimate BMP Extractor v. 1.0\n");
+	printf("The Ultimate BMP Extractor v. 1.0\n");
+
 	if(argc == 1)
 	{
 		printf("Use project file name as an argument.\n");
@@ -88,13 +110,13 @@ int main(int argc, char *argv[])
 
 	if (peng->LoadProject(argv[1]))
 	{
-		peng->ProcessOperators(0.0f, 1.0f, staticProcess);
+		peng->ProcessOperators(0.0f, 1.f, GlobalProgress, LocalProgress);
 		peng->CompactMemory();	//!< Keep just final result bitmaps in memory
 
 		for (int i = 0; i < peng->GetFinalResultCount(); i++)
 		{
 			NBitmap* pbmp =	peng->GetFinalResultBitmapByIdx(i);
-			printf("Writing result: %s\n", pbmp->GetName());
+			printf("\nWriting result: %s", pbmp->GetName());
 
 			BMP bmp(pbmp->GetWidth(), pbmp->GetHeight());
 

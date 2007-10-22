@@ -5,6 +5,7 @@
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
 //!					Anders Stenberg (anders.stenberg@gmail.com)
+//!						Sebastian Olter (qduaty@gmail.com)
 //!
 //!	\date		17-05-2007
 //!
@@ -22,6 +23,11 @@
 //-----------------------------------------------------------------
 #include "pch.h"
 #include "FilterOps.h"
+
+template <typename T> T mod(T num)
+{
+	return max(num, -num);
+}
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -295,13 +301,14 @@ static NVarsBlocDesc blocdescColorsOp[] =
 	VAR(eudword,	true,		"Color Percent",	"-1",						"NColorProp")				//1
 	VAR(eubyte,		true,		"Brithness",			"127",					"NUbyteProp")				//2
 	VAR(eubyte,		true,		"Contrast",				"127",					"NUbyteProp")				//3
+	VAR(eubyte,		true,		"Alpha",				"127",					"NUbyteProp")				//3
 };
 
 
 NColorsOp::NColorsOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(4, blocdescColorsOp, 1);
+	m_pcvarsBloc = AddVarsBloc(5, blocdescColorsOp, 1);
 }
 
 udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
@@ -323,12 +330,13 @@ udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	//Get Variables Values
 	ubyte byMode=1;
 	RGBA ColorBase, ColorPer;
-	ubyte byBrihtness, byContrast;
+	ubyte byBrihtness, byContrast, byAlpha;
 	//m_pcvarsBloc->GetValue(0, _ftime, byMode);
 	m_pcvarsBloc->GetValue(0, _ftime, (udword&)ColorBase);
 	m_pcvarsBloc->GetValue(1, _ftime, (udword&)ColorPer);
 	m_pcvarsBloc->GetValue(2, _ftime, byBrihtness);
 	m_pcvarsBloc->GetValue(3, _ftime, byContrast);
+	m_pcvarsBloc->GetValue(4, _ftime, byAlpha);
 
 	//Process operator
 	sdword	brithness = (((sdword)byBrihtness)*2) - 256;	//-255 <> +255
@@ -338,6 +346,10 @@ udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 //	if (contrast>64)
 	fconstrast = fconstrast*fconstrast*fconstrast;
 	contrast=(sdword)(fconstrast*256.0f);
+
+	ubyte minalpha = (byAlpha >=127) ? (byAlpha - 127) * 2. - (byAlpha - 127) / 128. : 0;
+	ubyte maxalpha = (byAlpha <=127) ? byAlpha * 2. + byAlpha / 127. : 255;
+	float alphamult = (maxalpha - minalpha) / 255.;
 
 	RGBA* pPxSrc = pSrc->GetPixels();
 	RGBA* pPxDst = pDst->GetPixels();
@@ -371,7 +383,7 @@ udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 			pPxDst->r = (ubyte) r;
 			pPxDst->g = (ubyte) g;
 			pPxDst->b = (ubyte) b;
-			pPxDst->a	= pPxSrc->a;
+			pPxDst->a = pPxSrc->a * alphamult + minalpha;
 			pPxDst++;
 			pPxSrc++;
 		}
@@ -772,7 +784,7 @@ udword NInvertOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 			pPxDst->r = 255-pPxSrc->r;
 			pPxDst->g = 255-pPxSrc->g;
 			pPxDst->b = 255-pPxSrc->b;
-			pPxDst->a = 255;
+			pPxDst->a = pPxSrc->a;
 
 			pPxSrc++;
 			pPxDst++;
@@ -931,8 +943,16 @@ udword NThresholdOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 //-----------------------------------------------------------------
 IMPLEMENT_CLASS(NAlphaOp, NOperator);
 
+static NVarsBlocDesc blocdescAlphaOp[] =
+{
+	VAR(eubyte,		true, "Color Alpha Mask",			"0,[0 (Off), 1 (On)]",	"NUbyteComboProp")	//7
+};
+
+
 NAlphaOp::NAlphaOp()
 {
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(1, blocdescAlphaOp, 1);
 }
 
 udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
@@ -950,6 +970,9 @@ udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
 	pDst->SetSize(w,h);
+
+	ubyte colormask;
+	m_pcvarsBloc->GetValue(0, _ftime, colormask);
 
 	RGBA*	pPxSrc = pSrc->GetPixels();
 	RGBA*	pPxDst = pDst->GetPixels();
@@ -977,8 +1000,18 @@ udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 				pPxDst->g = pPxSrc->g;
 				pPxDst->b = pPxSrc->b;
 
-				pPxDst->a =
-					ubyte((pPxAlpha->r + pPxAlpha->g + pPxAlpha->b) / 3);
+				if(colormask)
+				{
+					ubyte r1 = pPxSrc->r, r2 = pPxAlpha->r;
+					ubyte g1 = pPxSrc->g, g2 = pPxAlpha->g;
+					ubyte b1 = pPxSrc->b, b2 = pPxAlpha->b;
+					ubyte correctness = 255 - 255./3 *(((mod(r1-r2)+1)/(r1+r2+1.))+(mod(g1-g2)+1)/(g1+g2+1.)+(mod(b1-b2)+1)/(b1+b2+1.));
+					float imask = (pPxSrc->r + pPxSrc->g + pPxSrc->b) / 3;
+					pPxDst->a = correctness;
+				}
+				else
+					pPxDst->a =
+						ubyte((pPxAlpha->r + pPxAlpha->g + pPxAlpha->b) / 3);
 
 				pPxDst++;
 				pPxSrc++;

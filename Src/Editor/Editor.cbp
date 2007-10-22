@@ -37,6 +37,9 @@
 					<Add library="user32" />
 					<Add library="libGUILib_D.a" />
 					<Add library="libFxGenLib_D.a" />
+					<Add library="..\..\lib\libtinyxml_lib.a" />
+					<Add library="..\..\lib\libvgvmd.a" />
+					<Add library="..\..\..\..\..\..\GTK\lib\libcairo.dll.a" />
 				</Linker>
 			</Target>
 			<Target title="Release|Win32">
