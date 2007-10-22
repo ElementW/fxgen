@@ -106,10 +106,10 @@ using boost::lexical_cast;
 using std::min;
 using std::max;
 
-int MessageBox(string text, int type = MB_OK)
-{
-	return ::MessageBox(NULL, text.c_str(), "", type);
-}
+//int MessageBox(string text, int type = MB_OK)
+//{
+//	return ::MessageBox(NULL, text.c_str(), "", type);
+//}
 #endif
 
 #else // not __GNUC__

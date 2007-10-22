@@ -38,6 +38,7 @@ Name: Vector
 Purpose:
 Details: can render vector graphics. The Editor is also equipped with a
 converter that can import SVG data to the vector operator.
+Current version does not store vector data in projects.
 Inputs: no
 
 -------------------
@@ -62,6 +63,16 @@ Inputs: 1
 Name: Add
 Purpose: Combine inputs together.
 Details: Provides several ways of combining. Clamps bitmap to first input size.
+Modes:
+Add Clamp
+Add Wrap
+Sub Clamp
+Sub Wrap
+Multiply
+Multiply x2
+Blend
+Alpha
+Layer - to adjust alpha, use one of operators: Colors or Alpha with second arg.
 Inputs: arbitrary
 
 Name: Glow
@@ -115,7 +126,7 @@ Details: Two algorithms: Box and Gaussian.
 Inputs: 1
 
 Name: Colors
-Purpose: Apply a color filter and color light, adjust contrast and brightness.
+Purpose: Apply a color filter and color light, adjust contrast, brightness and alpha.
 Details:
 Inputs: 1
 
@@ -129,11 +140,12 @@ Inputs: 2-4
 
 Name: Normals
 Purpose: Convert height map to normal map.
-Details:
+Details: 3-tap(?) Sobel.
 Inputs: 1
 
 Name: Invert
-Purpose: Invert all color compounds.
+Purpose: Invert all color compounds. Alpha is left unchanged - use Colors filter
+to adjust alpha.
 Details: r:=1-r, g:=1-g, b:=1-b
 Inputs: 1
 
@@ -144,7 +156,8 @@ Inputs: 1
 
 Name: Alpha
 Purpose: 1) Extract single color (light green #4C951D) intensity, replace it with
-white smoke, discard the rest or 2) apply second input luminance as alpha channel.
+white smoke, discard the rest or 2) apply second input luminance as alpha channel,
+or 3) apply second input as color alpha mask (experimental).
 Details:
 Inputs: 1-2
 

@@ -2,11 +2,11 @@
 <CodeBlocks_workspace_file>
 	<Workspace title="FxGen workspace">
 		<Project filename="..\Src\GUILib\GUILib.cbp" />
+		<Project filename="..\test\test.cbp" />
 		<Project filename="..\Src\Editor\Editor.cbp" active="1">
 			<Depends filename="..\Src\FxGenLib\FxGenLib.cbp" />
 			<Depends filename="..\Src\GUILib\GUILib.cbp" />
 		</Project>
-		<Project filename="..\test\test.cbp" />
 		<Project filename="..\Src\FxGenLib\FxGenLib.cbp">
 			<Depends filename="..\Externals\vgvm\vgvm.cbp" />
 		</Project>

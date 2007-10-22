@@ -5,6 +5,7 @@
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
 //!					Anders Stenberg (anders.stenberg@gmail.com)
+//!						Sebastian Olter (qduaty@gmail.com)
 //!
 //!	\date		17-05-2007
 //!
@@ -211,7 +212,7 @@ IMPLEMENT_CLASS(NAddOp, NOperator);
 
 static NVarsBlocDesc blocdescAddOp[] =
 {
-	VAR(eubyte,		false, "Mode",				"0,[Add Clamp,Add Wrap,Sub Clamp,Sub Wrap,Multiply,Multiply x2,Blend,Alpha]", "NUbyteComboProp")	//0
+	VAR(eubyte,		false, "Mode",				"0,[Add Clamp,Add Wrap,Sub Clamp,Sub Wrap,Multiply,Multiply x2,Blend,Alpha,Layer]", "NUbyteComboProp")	//0
 	VAR(eudword,	true,	 "RGB Percent",	"-1" , "NColorProp")			//1
 };
 
@@ -441,6 +442,27 @@ udword NAddOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 				}
 			}
 
+		}
+
+		//////////////////////////////////////////////
+		//Layer
+		else if (byMode==8)	{
+
+			for (udword y=0; y<hh; y++)
+			{
+				pPxSrc = pSrc->GetPixels() + (y*w2);
+				pPxDst = pDst->GetPixels() + (y*w);
+
+				for (udword x=0; x<ww; x++)
+				{
+					float alpha = pPxSrc->a / 255.f;
+					pPxDst->r = pPxSrc->r * alpha + pPxDst->r * (1 - alpha);
+					pPxDst->g = pPxSrc->g * alpha + pPxDst->g * (1 - alpha);
+					pPxDst->b = pPxSrc->b * alpha + pPxDst->b * (1 - alpha);
+					pPxDst++;
+					pPxSrc++;
+				}
+			}
 		}
 
 	}
