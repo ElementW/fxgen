@@ -294,6 +294,14 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 //-----------------------------------------------------------------
 IMPLEMENT_CLASS(NColorsOp, NOperator);
 
+static NMapVarsBlocDesc mapblocdescColorsOp[] =
+{
+	MAP(1,	eudword,		"0",		""	)	//V1 => 0-Color Base
+	MAP(1,	eudword,		"1",		""	)	//V1 => 1-Color Percent
+	MAP(1,	eubyte,			"2",		""	)	//V1 => 2-Brithness
+	MAP(1,	eubyte,			"3",		""	)	//V1 => 3-Contrast
+};
+
 static NVarsBlocDesc blocdescColorsOp[] =
 {
 	//eubyte,		false,	"Mode",				"0,[RGB,HLS]",	"NUbyteComboProp",	//0
@@ -308,7 +316,8 @@ static NVarsBlocDesc blocdescColorsOp[] =
 NColorsOp::NColorsOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(5, blocdescColorsOp, 1);
+	m_pcvarsBloc = AddVarsBloc(5, blocdescColorsOp, 2);
+	m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescColorsOp);
 }
 
 udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
@@ -943,22 +952,12 @@ udword NThresholdOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 //-----------------------------------------------------------------
 IMPLEMENT_CLASS(NAlphaOp, NOperator);
 
-static NVarsBlocDesc blocdescAlphaOp[] =
-{
-	VAR(eubyte,		true, "Color Alpha Mask",			"0,[0 (Off), 1 (On)]",	"NUbyteComboProp")	//7
-};
-
-
-NAlphaOp::NAlphaOp()
-{
-	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(1, blocdescAlphaOp, 1);
-}
+NAlphaOp::NAlphaOp(){}
 
 udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
-	//One or two Inputs
-	if (m_byInputs <1 || m_byInputs > 2)		return (udword)-1;
+	//One input
+	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
 	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
@@ -971,71 +970,25 @@ udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	udword h = pSrc->GetHeight();
 	pDst->SetSize(w,h);
 
-	ubyte colormask;
-	m_pcvarsBloc->GetValue(0, _ftime, colormask);
-
 	RGBA*	pPxSrc = pSrc->GetPixels();
 	RGBA*	pPxDst = pDst->GetPixels();
-	RGBA*	pPxAlpha = null;
-	NBitmap* pAlpha = null;
-
-	if(m_byInputs == 2)
-	{
-		_pOpsInts++;
-
-		pAlpha = (NBitmap*)(*_pOpsInts)->m_pObj;
-		pPxAlpha = pAlpha->GetPixels();
-		if(pAlpha->GetWidth() < w || pAlpha->GetHeight() < h)
-			return (udword)-1; // insufficient alpha channel size
-	}
 
 	//Process
 	for (udword y=0; y<h; y++)
 	{
 		for (udword x=0; x<w; x++)
 		{
-			if(pAlpha)
-			{
-				pPxDst->r = pPxSrc->r;
-				pPxDst->g = pPxSrc->g;
-				pPxDst->b = pPxSrc->b;
+			float r = (float)pPxSrc->r * 0.299f;
+			float g = (float)pPxSrc->g * 0.587f;
+			float b = (float)pPxSrc->b * 0.114f;
 
-				if(colormask)
-				{
-					vec3 c1, c2;
+			pPxDst->a = (ubyte) (( (udword)pPxDst->a + (udword)(r+g+b) )>>1);
+			pPxDst->r=pPxDst->g=pPxDst->b=pPxDst->a;
 
-					c1.x = pPxSrc->r, c2.x = pPxAlpha->r;
-					c1.y = pPxSrc->g, c2.y = pPxAlpha->g;
-					c1.z = pPxSrc->b, c2.z = pPxAlpha->b;
-					c1.normalize();
-					c2.normalize();
-					float correctness;
-					dot(correctness, c1, c2);
-					pPxDst->a = correctness * 255;
-				}
-				else
-					pPxDst->a =
-						ubyte((pPxAlpha->r + pPxAlpha->g + pPxAlpha->b) / 3);
-
-				pPxDst++;
-				pPxSrc++;
-				pPxAlpha++;
-			}
-			else
-			{
-				float r = (float)pPxSrc->r * 0.299f;
-				float g = (float)pPxSrc->g * 0.587f;
-				float b = (float)pPxSrc->b * 0.114f;
-
-				pPxDst->a = (ubyte) (( (udword)pPxDst->a + (udword)(r+g+b) )>>1);
-				pPxDst->r=pPxDst->g=pPxDst->b=pPxDst->a;
-
-				pPxDst++;
-				pPxSrc++;
-			}
+			pPxDst++;
+			pPxSrc++;
 		}
 	}
-
 
 	return 0;
 }
@@ -1257,12 +1210,22 @@ udword NDilateOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 IMPLEMENT_CLASS(NAlphaMaskOp, NOperator);
 
 
-NAlphaMaskOp::NAlphaMaskOp(){}
+static NVarsBlocDesc blocdescAlphaMaskOp[] =
+{
+	VAR(eubyte,		true, "Color Alpha Mask",			"0,[0 (Off), 1 (On)]",	"NUbyteComboProp")	//7
+};
+
+
+NAlphaMaskOp::NAlphaMaskOp()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(1, blocdescAlphaMaskOp, 1);
+}
 
 udword NAlphaMaskOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
-	//One input
-	if (m_byInputs!=1)		return (udword)-1;
+	//One or two Inputs
+	if (m_byInputs <1 || m_byInputs > 2)		return (udword)-1;
 
 	//Bitmap instance
 	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
@@ -1270,17 +1233,74 @@ udword NAlphaMaskOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	// Init
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst = (NBitmap*)m_pObj;
+	NBitmap* pAlpha = null;
 
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
 	pDst->SetSize(w,h);
+
+	ubyte colormask;
+	m_pcvarsBloc->GetValue(0, _ftime, colormask);
+
 	RGBA* pPxSrc = pSrc->GetPixels();
 	RGBA* pPxDst = pDst->GetPixels();
+	RGBA*	pPxAlpha = null;
 
-	for (udword i=0; i<w*h; ++i)
+	if(m_byInputs == 2)
 	{
-		pPxDst[i].r = pPxDst[i].g = pPxDst[i].b = pPxSrc[i].a;
-		pPxDst[i].a = 255;
+		_pOpsInts++;
+
+		pAlpha = (NBitmap*)(*_pOpsInts)->m_pObj;
+		pPxAlpha = pAlpha->GetPixels();
+		if(pAlpha->GetWidth() < w || pAlpha->GetHeight() < h)
+			return (udword)-1; // insufficient alpha channel size
+	}
+
+	for (udword y=0; y<h; y++)
+	{
+		for (udword x=0; x<w; x++)
+		{
+			if(pAlpha)
+			{
+				pPxDst->r = pPxSrc->r;
+				pPxDst->g = pPxSrc->g;
+				pPxDst->b = pPxSrc->b;
+
+				if(colormask)
+				{
+					vec3 c1, c2;
+
+					c1.x = pPxSrc->r;
+					c1.y = pPxSrc->g;
+					c1.z = pPxSrc->b;
+					c1.normalize();
+
+					c2.x = pPxAlpha->r;
+					c2.y = pPxAlpha->g;
+					c2.z = pPxAlpha->b;
+					c2.normalize();
+
+					static float correctness = 0;
+
+					if(c1.norm() && c2.norm()) // else - use existing value to avoid hot-spots
+						dot(correctness, c1, c2);
+
+					pPxDst->a = correctness * 255;
+				}
+				else // monochrome mask
+					pPxDst->a = (pPxAlpha->r + pPxAlpha->g + pPxAlpha->b) / 3;
+
+				pPxAlpha++;
+			}
+			else // extract alpha mask
+			{
+				pPxDst->r = pPxDst->g = pPxDst->b = pPxSrc->a;
+				pPxDst->a = 255;
+			}
+
+			pPxDst++;
+			pPxSrc++;
+		}
 	}
 
 	return 0;
