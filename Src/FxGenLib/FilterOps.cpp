@@ -1002,12 +1002,16 @@ udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 				if(colormask)
 				{
-					ubyte r1 = pPxSrc->r, r2 = pPxAlpha->r;
-					ubyte g1 = pPxSrc->g, g2 = pPxAlpha->g;
-					ubyte b1 = pPxSrc->b, b2 = pPxAlpha->b;
-					ubyte correctness = 255 - 255./3 *(((mod(r1-r2)+1)/(r1+r2+1.))+(mod(g1-g2)+1)/(g1+g2+1.)+(mod(b1-b2)+1)/(b1+b2+1.));
-					float imask = (pPxSrc->r + pPxSrc->g + pPxSrc->b) / 3;
-					pPxDst->a = correctness;
+					vec3 c1, c2;
+
+					c1.x = pPxSrc->r, c2.x = pPxAlpha->r;
+					c1.y = pPxSrc->g, c2.y = pPxAlpha->g;
+					c1.z = pPxSrc->b, c2.z = pPxAlpha->b;
+					c1.normalize();
+					c2.normalize();
+					float correctness;
+					dot(correctness, c1, c2);
+					pPxDst->a = correctness * 255;
 				}
 				else
 					pPxDst->a =
@@ -1239,6 +1243,45 @@ udword NDilateOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 
 	NMemFree(pPxInter);
 
+
+	return 0;
+}
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//							NAlphaMaskOp class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+IMPLEMENT_CLASS(NAlphaMaskOp, NOperator);
+
+
+NAlphaMaskOp::NAlphaMaskOp(){}
+
+udword NAlphaMaskOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+{
+	//One input
+	if (m_byInputs!=1)		return (udword)-1;
+
+	//Bitmap instance
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+
+	// Init
+	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
+	NBitmap* pDst = (NBitmap*)m_pObj;
+
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
+	RGBA* pPxSrc = pSrc->GetPixels();
+	RGBA* pPxDst = pDst->GetPixels();
+
+	for (udword i=0; i<w*h; ++i)
+	{
+		pPxDst[i].r = pPxDst[i].g = pPxDst[i].b = pPxSrc[i].a;
+		pPxDst[i].a = 255;
+	}
 
 	return 0;
 }

@@ -88,7 +88,7 @@ Inputs: 1
 
 Name: Lerp
 Purpose: Mix first two inputs (a, b) in proportions given by third input (c).
-Details: Each color compound is processed separately. Equation: x = bc + a(1-c)
+Details: Each color channel is processed separately. Equation: x = bc + a(1-c)
 Inputs: 3
 
 -------------------
@@ -122,7 +122,7 @@ Filter Operators
 
 Name: Blur
 Purpose: Reduce sharpness ;)
-Details: Two algorithms: Box and Gaussian.
+Details: Two modes: Box and Gaussian.
 Inputs: 1
 
 Name: Colors
@@ -132,19 +132,22 @@ Inputs: 1
 
 Name: Light
 Purpose: Apply an illumination on a curved surface.
-Details: First input is considered texture, second is normal map.
+Details: First input is considered texture, second is normal map, third is per-pixel occlusion.
 Ambient, diffuse and specular light can have different colors and intensity.
-It is possible to specify specular or specular + ambient colors per pixel using
-the third and fourth input.
-Inputs: 2-4
+Inputs: 2-4(?)
 
 Name: Normals
 Purpose: Convert height map to normal map.
 Details: 3-tap(?) Sobel.
 Inputs: 1
 
+Name: AlphaMask
+Purpose: Extracts alpha channel as an opaque monochrome bitmap.
+Details:
+Inputs: 1
+
 Name: Invert
-Purpose: Invert all color compounds. Alpha is left unchanged - use Colors filter
+Purpose: Invert all color channels. Alpha is left unchanged - use Colors filter
 to adjust alpha.
 Details: r:=1-r, g:=1-g, b:=1-b
 Inputs: 1
@@ -157,7 +160,7 @@ Inputs: 1
 Name: Alpha
 Purpose: 1) Extract single color (light green #4C951D) intensity, replace it with
 white smoke, discard the rest or 2) apply second input luminance as alpha channel,
-or 3) apply second input as color alpha mask (experimental).
+or 3) apply second input as color alpha mask. Luminance is not taken into account.
 Details:
 Inputs: 1-2
 
