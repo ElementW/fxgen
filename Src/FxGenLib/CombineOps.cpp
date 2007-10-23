@@ -456,6 +456,8 @@ udword NAddOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 				for (udword x=0; x<ww; x++)
 				{
 					float alpha = pPxSrc->a / 255.f;
+					// 1-(1-a1)(1-a2) = 1 - (1-a1-a2+a1a2) = a1+a2-a1a2
+					pPxDst->a = (pPxDst->a - pPxDst->a * alpha) + pPxSrc->a;
 					pPxDst->r = pPxSrc->r * alpha + pPxDst->r * (1 - alpha);
 					pPxDst->g = pPxSrc->g * alpha + pPxDst->g * (1 - alpha);
 					pPxDst->b = pPxSrc->b * alpha + pPxDst->b * (1 - alpha);

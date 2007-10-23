@@ -216,3 +216,24 @@ public:
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 };
+
+
+//-----------------------------------------------------------------
+//!	\class		NAlphaMaskOp
+//!	\brief		Create monochrome image from alpha channel
+//-----------------------------------------------------------------
+class FXGEN_API NAlphaMaskOp : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NAlphaMaskOp();
+
+	//Methods
+	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
+	virtual const char*		GetName()			{ return "AlphaMask"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+};
