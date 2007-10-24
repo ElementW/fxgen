@@ -598,11 +598,22 @@ udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 //-----------------------------------------------------------------
 IMPLEMENT_CLASS(NCrackOp, NOperator);
 
+static NMapVarsBlocDesc mapblocdescCrackOp[] =
+{
+	MAP(1, eudword,		"0",		""						)	//V1 => 0-Color
+	MAP(1, eubyte,		"1",		""						)	//V1 => 1-Count
+	MAP(1, eubyte,		"2",		""						)	//V1 => 2-Variation
+	MAP(1, eubyte,		"3",		""						)	//V1 => 3-Length
+	MAP(1, euword,		"4",		""						)	//V1 => 4-Seed
+};
+
 static NVarsBlocDesc blocdescCrackOp[] =
 {
 	VAR(eudword,	true, "Color",			"-1",		"NColorProp")	//0
-	VAR(eubyte,		true, "Count",			"100",	"NUbyteProp") //1
+	VAR(euword,		true, "Count",			"100",	"NUwordProp") //1
 	VAR(eubyte,		true, "Variation",	"64",		"NUbyteProp") //2
+// will create a "bear fur" same as we can find in ProFX presets
+//	VAR(eubyte,		true, "Group",			"0",	"NUbyteProp") //
 	VAR(eubyte,		true, "Length",			"255",	"NUbyteProp") //3
 	VAR(euword,		true, "Seed",				"5412",	"NUwordProp") //4
 };
@@ -610,7 +621,8 @@ static NVarsBlocDesc blocdescCrackOp[] =
 NCrackOp::NCrackOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(5, blocdescCrackOp, 1);
+	m_pcvarsBloc = AddVarsBloc(5, blocdescCrackOp, 2);
+	m_pcvarsBloc->SetMapVarBlocDesc(5, mapblocdescCrackOp);
 
 }
 
@@ -637,10 +649,10 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 	//Get Variables Values
 	RGBA color;
-	ubyte byCount, byVariation, byLength;
-	uword wSeed;
+	ubyte byVariation, byLength;
+	uword wSeed, wCount;
 	m_pcvarsBloc->GetValue(0, _ftime, (udword&)color);
-	m_pcvarsBloc->GetValue(1, _ftime, byCount);
+	m_pcvarsBloc->GetValue(1, _ftime, wCount);
 	m_pcvarsBloc->GetValue(2, _ftime, byVariation);
 	m_pcvarsBloc->GetValue(3, _ftime, byLength);
 	m_pcvarsBloc->GetValue(4, _ftime, wSeed);
@@ -651,8 +663,8 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	float fcrackLength = (float)byLength;
 
 	//Process operator
-	ubyte n = 0;
-	while( n++ < byCount )
+	uword n = 0;
+	while( n++ < wCount )
 	{
 		float x = (float)myfRandom() * float(w);
 		float y = (float)myfRandom() * float(h);
