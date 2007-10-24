@@ -69,7 +69,7 @@ udword NStoreOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	pDst->SetSize(w,h);
 
 	//Copy Source to This
-	CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
+	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
 
 	return 0;
 }
@@ -124,12 +124,22 @@ udword NStoreResultOp::Process(float _ftime, NOperator** _pOpsInts, float _fDeta
 	pDst->SetSize(w,h);
 
 	//Copy Source to This
-	CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
+	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
 
 	return 0;
 }
 
+NBitmap* NStoreResultOp::GetBitmap()
+{
+	NBitmap* pbmp = null;
+	if (m_pObj!=null)
+	{
+		if (strcmp(m_pObj->GetRTClass()->m_pszClassName, "NBitmap") == 0)
+			pbmp = (NBitmap*)m_pObj;
+	}
 
+	return pbmp;
+}
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -187,7 +197,7 @@ udword NLoadOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 		pDst->SetSize(w,h);
 
 		//Copy Source to This
-		CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
+		memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
 	}
 
 	return 0;

@@ -458,7 +458,7 @@ void NMainFrm::DeletedOperator(NOperator* pop)
 void NMainFrm::OnKeyDown(udword dwchar)
 {
 // temporary implementation
-#ifdef USE_QUAKE_KEYS
+//#ifdef USE_QUAKE_KEYS		//###JN### ok for now... :-)
 	switch (dwchar)
 	{
 		case VK_F6: SaveProject();	break;
@@ -467,5 +467,5 @@ void NMainFrm::OnKeyDown(udword dwchar)
 		case VK_F3:	OnOpenProject(); break;
 		default: break;
 	}
-#endif
+//#endif
 }

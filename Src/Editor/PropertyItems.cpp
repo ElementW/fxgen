@@ -283,13 +283,6 @@ void NUbyteComboProp::DrawItem(NGraphics* pdc, NRect& rcItem)
 
 		} while (i!=-1);
 
-		//Menu
-		m_wndMenu.Create("", m_pParent);
-		for (udword i=0; i<m_carrayStringsList.Count(); i++)
-		{
-			m_wndMenu.AddItem(m_carrayStringsList[i].Buffer(), i+1, 0);
-		}
-
 	}
 
 	//Draw
@@ -306,6 +299,16 @@ void NUbyteComboProp::DrawItem(NGraphics* pdc, NRect& rcItem)
 bool NUbyteComboProp::BeginEdit(NRect& rcItem)
 {
 	assert(m_pParent!=null);
+
+	//Menu
+	if (m_wndMenu.m_W32HWnd==0)
+	{
+		m_wndMenu.Create("", m_pParent);
+		for (udword i=0; i<m_carrayStringsList.Count(); i++)
+		{
+			m_wndMenu.AddItem(m_carrayStringsList[i].Buffer(), i+1, 0);
+		}
+	}
 
 	NPoint pt(rcItem.left, rcItem.bottom);
 	m_pParent->ClientToScreen(pt);

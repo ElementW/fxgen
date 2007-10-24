@@ -100,7 +100,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 
 	if (bw == 0 && bh == 0)
 	{
-		CopyMemory(pDst->GetPixels(), pSrc->GetPixels(), w*h*sizeof(RGBA));
+		memcpy(pDst->GetPixels(), pSrc->GetPixels(), w*h*sizeof(RGBA));
 		return 0;
 	}
 
@@ -151,7 +151,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
               // Accumulation precalc
               sdword x = 0;
               RGBAI sum;
-              ZeroMemory(&sum, sizeof(RGBAI));
+              memset(&sum,0, sizeof(RGBAI));
               while (x<bw)
               {
                 sum.r+=(sdword)pAccu->r;
@@ -236,7 +236,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
               // Accumulation Precalc
               sdword y = 0;
               RGBAI sum;
-              ZeroMemory(&sum, sizeof(RGBAI));
+              memset(&sum, 0, sizeof(RGBAI));
               while (y<bh)
               {
                 sum.r+=(sdword)pAccu->r;

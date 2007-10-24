@@ -48,7 +48,7 @@ public:
 	NBlurOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
 	virtual const char*		GetName()			{ return "Blur"; }			//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Filter"; }		//!< Operator's Category
 
@@ -68,7 +68,7 @@ public:
 	NColorsOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
 	virtual const char*		GetName()			{ return "Colors"; }	//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
@@ -89,7 +89,7 @@ public:
 	NLightOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
 	virtual const char*		GetName()			{ return "Light"; }	//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
@@ -109,7 +109,7 @@ public:
 	NNormalsOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
 	virtual const char*		GetName()			{ return "Normals"; }	//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
@@ -128,7 +128,7 @@ public:
 	DECLARE_CLASS();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
 	virtual const char*		GetName()			{ return "Invert"; }		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
@@ -148,7 +148,7 @@ public:
 	NThresholdOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
 	virtual const char*		GetName()			{ return "Threshold"; }		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
@@ -168,7 +168,7 @@ public:
 	NAlphaOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
 	virtual const char*		GetName()			{ return "Alpha"; }		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
@@ -188,7 +188,7 @@ public:
 	NSegmentOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
 	virtual const char*		GetName()			{ return "Segment"; }		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
@@ -209,7 +209,7 @@ public:
 	NDilateOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
 	virtual const char*		GetName()			{ return "Dilate"; }		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
@@ -230,7 +230,7 @@ public:
 	NAlphaMaskOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
 	virtual const char*		GetName()			{ return "AlphaMask"; }		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 

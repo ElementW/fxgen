@@ -47,7 +47,7 @@ public:
 	virtual ~NRotoZoomOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
 	virtual const char*		GetName()			{ return "Roto Zoom"; }	//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Distord"; }		//!< Operator's Category
 
@@ -68,7 +68,7 @@ public:
 	NDistortOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
 	virtual const char*		GetName()			{ return "Distort"; }	//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
 
@@ -89,7 +89,7 @@ public:
 	NVortexOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
 	virtual const char*		GetName()			{ return "Vortex"; }	//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
 
@@ -110,7 +110,7 @@ public:
 	NLookupOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
 	virtual const char*		GetName()			{ return "Lookup"; }	//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
 

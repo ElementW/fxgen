@@ -115,7 +115,7 @@ bool NMemoryStream::PutData(const void* _buf, udword _length)
 	}
 
 	//Save datas
-	CopyMemory(m_pbyBuffer+m_dwBufPos, _buf, _length);
+	memcpy(m_pbyBuffer+m_dwBufPos, _buf, _length);
 	m_dwBufPos+=_length;
 
 	return true;
@@ -132,7 +132,7 @@ bool NMemoryStream::GetData(void* _buf, udword _length)
   if ((m_dwBufPos+_length)>=m_dwBufSize)
     return false;
 
-  CopyMemory(_buf, m_pbyBuffer+m_dwBufPos, _length);
+  memcpy(_buf, m_pbyBuffer+m_dwBufPos, _length);
   m_dwBufPos += _length;
   return true;
 }

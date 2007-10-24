@@ -26,18 +26,23 @@ Version 0.5 alpha (Release: Use FxGen in your Games !)
 .Engine resources detail factor (x0.5, x1.0, x2.0)
 	.i.e For textures, process them for size * detail factor
 .New main submenu items "options"
+
+.NUbyteComboProp menu focus fix
+New NTreeNode::GetSonFromName()
 	
 .API
 	NEngineOp* NEngineOp::GetEngine();
-	.NEngineOp::Clear();
-	.NEngineOp::LoadProject();
-	.NEngineOp::ProcessOperators()
-	.NEngineOp::GetFinalResultCount()
-	.NEngineOp::GetFinalResultBitmapByIdx()
+	.NEngineOp::Clear()
+	.NEngineOp::LoadProject()
 	.NEngineOp::CompactMemory()
+	.NEngineOp::GetFinalsResultsList()
+	.NEngineOp::ProcessFinalResult()
 
 New Operators
 	.NVectorOp	
+
+.FxgenLib
+	.Removed MS windows dependencies (use of C standart functions)
 
 
 Version 0.4 alpha

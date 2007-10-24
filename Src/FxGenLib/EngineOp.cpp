@@ -603,7 +603,7 @@ NEngineOp::NEngineOp()
 
 	m_bitmapsAlloc.SetManagedClassID( NRTClass::MakeClassID("NBitmap") );
 
-	ZeroMemory(&m_achannels, sizeof(m_achannels));
+	memset(&m_achannels, 0, sizeof(m_achannels));
 }
 
 //-----------------------------------------------------------------
@@ -635,8 +635,6 @@ void NEngineOp::Clear()
 	if (m_pRootGroup)		delete m_pRootGroup;
 	m_pRootGroup = new NTreeNode;
 	m_pRootGroup->SetName("Root");
-
-	m_arrayFinalsOp.Clear();	//##NEW###
 }
 
 //-----------------------------------------------------------------
@@ -651,7 +649,7 @@ void NEngineOp::ComputeInvaliddOps(NOperator* _popFinal)
 
 	//Init
 	m_nCurContext = 0;
-	ZeroMemory(m_aStacks, sizeof(m_aStacks));
+	memset(m_aStacks, 0, sizeof(m_aStacks));
 
 	//Get Root operator
 	NOperator* pcRootOP = GetRootOperator(_popFinal);
@@ -786,7 +784,7 @@ void NEngineOp::Execute(float _ftime, NOperator* _popFinal, float _fDetailFactor
 		m_bError									= false;
 		m_cbOpsProcess						= _cbOpsProcess;
 
-		ZeroMemory(m_aStacks, sizeof(m_aStacks));
+		memset(m_aStacks, 0, sizeof(m_aStacks));
 
 		//Operators count if a callback is specified
 		if (m_cbOpsProcess!=NULL)
@@ -1009,7 +1007,7 @@ void NEngineOp::GetBitmap(NObject** _ppobj, ubyte _byObjType)
 void NEngineOp::SetChannelValue(ubyte _byChannel, NVarValue& _value)
 {
 	if (_byChannel<MAX_CHANNELS)
-		CopyMemory(&m_achannels[_byChannel], &_value, sizeof(NVarValue));
+		memcpy(&m_achannels[_byChannel], &_value, sizeof(NVarValue));
 }
 
 //-----------------------------------------------------------------
@@ -1021,35 +1019,8 @@ void NEngineOp::SetChannelValue(ubyte _byChannel, NVarValue& _value)
 void NEngineOp::GetChannelValue(ubyte _byChannel, NVarValue& _outValue)
 {
 	if (_byChannel<MAX_CHANNELS)
-		CopyMemory(&_outValue, &m_achannels[_byChannel], sizeof(NVarValue));
+		memcpy(&_outValue, &m_achannels[_byChannel], sizeof(NVarValue));
 }
-
-//-----------------------------------------------------------------
-//!	\brief	Return finals ops from a treenode
-//!	\param	_pnodeFrom	root tree node
-//!	\param	_finalsOp		finals operators array
-//!	\param	_bRecurse		true if recurse into sons
-//-----------------------------------------------------------------
-void NEngineOp::GetFinalOps(NTreeNode* _pnodeFrom, NObjectArray& _finalsOp, bool _bRecurse)
-{
-	//Parse Alls Pages to add 'NStoreResultOp'
-	NObjectArray& arrayObjs = _pnodeFrom->GetObjsArray();
-	udword dwCount = arrayObjs.Count();
-	while (dwCount--)
-	{
-		NOperatorsPage* ppage = (NOperatorsPage*)arrayObjs[dwCount];
-		ppage->GetOpsFromClassName("NStoreResultOp", _finalsOp);
-	}
-
-	//Childs
-	if (_bRecurse)
-	{
-		_pnodeFrom = _pnodeFrom->GetSon();
-		if (_pnodeFrom)
-			GetFinalOps(_pnodeFrom, _finalsOp, _bRecurse);
-	}
-}
-
 
 
 //-----------------------------------------------------------------
@@ -1114,15 +1085,15 @@ bool NEngineOp::SaveProject(const char* _pszFullFileName)
 //-----------------------------------------------------------------
 //!	\brief	Keep just final result medias in memory (bitmaps ...)
 //-----------------------------------------------------------------
-void NEngineOp::CompactMemory()
+void NEngineOp::CompactMemory(ubyte _byTypeMask/*=OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED*/)
 {
-	m_bitmapsAlloc.Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED,0);
+	m_bitmapsAlloc.Compact(_byTypeMask,0);
 }
 
 //-----------------------------------------------------------------
 //!	\brief	Process all operators
 //-----------------------------------------------------------------
-void NEngineOp::ProcessOperators(float _ftime, float _fDetailFactor/*=1.0f*/, FXGEN_RESULTSPROCESSCB* _cbResultsProcess/*=NULL*/, FXGEN_OPSPROCESSCB* _cbOpsProcess/*=NULL*/)
+/*void NEngineOp::ProcessOperators(float _ftime, float _fDetailFactor, FXGEN_RESULTSPROCESSCB* _cbResultsProcess, FXGEN_OPSPROCESSCB* _cbOpsProcess)
 {
 	//Get finals operators type from opened project (at first time only)
 	if (m_arrayFinalsOp.Count()==0)
@@ -1137,14 +1108,13 @@ void NEngineOp::ProcessOperators(float _ftime, float _fDetailFactor/*=1.0f*/, FX
 		if (_cbResultsProcess)	(*_cbResultsProcess)(i+1, m_arrayFinalsOp.Count());
 		Execute(_ftime, (NOperator*)m_arrayFinalsOp[i], _fDetailFactor, _cbOpsProcess);
 	}
-
-}
+}*/
 
 //-----------------------------------------------------------------
 //!	\brief	Return Final result operator count
 //!	\return	operators count
 //-----------------------------------------------------------------
-udword NEngineOp::GetFinalResultCount()
+/*udword NEngineOp::GetFinalResultCount()
 {
 	return (m_arrayFinalsOp.Count());
 }
@@ -1165,4 +1135,69 @@ NBitmap* NEngineOp::GetFinalResultBitmapByIdx(udword _idx)
 	}
 
 	return null;
+}*/
+
+
+//-----------------------------------------------------------------
+//!	\brief		Return Final Result array
+//!	\param	_carray					Final Result Operators Array
+//!	\param	_pszFromGroup	Start Group Name (can be null for Root)
+//!	\param	_bRecurse			true if recurse into sons
+//-----------------------------------------------------------------
+void NEngineOp::GetFinalsResultsList(NObjectArray& _carray, const char* _pszFromGroup, bool _bRecurse)
+{
+	if (m_pRootGroup==null)		return;
+
+	//Do Not delete final results Operators on destructor !
+	_carray.SetManageDelete(false);
+
+	//Get Start Node
+	NTreeNode* pFromGroup = m_pRootGroup;
+
+	if (_pszFromGroup!=NULL)
+		pFromGroup = m_pRootGroup->GetSonFromName(_pszFromGroup);
+
+	//Get Final Ops List
+	GetFinalOps(pFromGroup, _carray, _bRecurse);
+
+}
+
+
+//-----------------------------------------------------------------
+//!	\brief	Return finals ops from a treenode
+//!	\param	_pnodeFrom	root tree node
+//!	\param	_finalsOp		finals operators array
+//!	\param	_bRecurse		true if recurse into sons
+//-----------------------------------------------------------------
+void NEngineOp::GetFinalOps(NTreeNode* _pnodeFrom, NObjectArray& _finalsOp, bool _bRecurse)
+{
+	//Parse Alls Pages to add 'NStoreResultOp'
+	NObjectArray& arrayObjs = _pnodeFrom->GetObjsArray();
+	udword dwCount = arrayObjs.Count();
+	while (dwCount--)
+	{
+		NOperatorsPage* ppage = (NOperatorsPage*)arrayObjs[dwCount];
+		ppage->GetOpsFromClassName("NStoreResultOp", _finalsOp);
+	}
+
+	//Childs
+	if (_bRecurse)
+	{
+		_pnodeFrom = _pnodeFrom->GetSon();
+		if (_pnodeFrom)
+			GetFinalOps(_pnodeFrom, _finalsOp, _bRecurse);
+	}
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Process a final result operator
+//!	\param	_pFinalResultOp			Operator to process
+//!	\param	_ftime								Time in ms
+//!	\param	_fDetailFactor				Result Detail (Factor x0.5, x1 , x2)
+//!	\param	_cbOpsProcess				CallBack
+//-----------------------------------------------------------------
+void NEngineOp::ProcessFinalResult(NStoreResultOp* _pFinalResultOp, float _ftime, float _fDetailFactor, FXGEN_OPSPROCESSCB* _cbOpsProcess)
+{
+	if (_pFinalResultOp)
+		Execute(_ftime, (NOperator*)_pFinalResultOp, _fDetailFactor, _cbOpsProcess);
 }

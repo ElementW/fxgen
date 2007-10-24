@@ -22,6 +22,15 @@
 #include "EngineOp.h"
 
 //-----------------------------------------------------------------
+//                   Macros
+//-----------------------------------------------------------------
+#ifdef FXGEN_EXPORTS
+	#define FXGEN_API __declspec(dllexport)
+#else
+	#define FXGEN_API __declspec(dllimport)
+#endif
+
+//-----------------------------------------------------------------
 //!	\class		NStoreOp
 //!	\brief		Store operator
 //-----------------------------------------------------------------
@@ -34,7 +43,7 @@ public:
 	virtual ~NStoreOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x004080FF;	}
+	virtual	udword	GetColor()		{ return 0x004080FF;	}
 	virtual const char*		GetName()			{ return "Store";	}		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Misc"; }		//!< Operator's Category
 	virtual const char*		GetUserName();											//!< Operator's User Name
@@ -57,10 +66,13 @@ public:
 	virtual ~NStoreResultOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x000000FF;	}
+	virtual	udword	GetColor()		{ return 0x000000FF;	}
 	virtual const char*		GetName()			{ return "Store Result";	}	//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Misc";	}					//!< Operator's Category
 	virtual const char*		GetUserName();														//!< Operator's User Name
+
+	//Bitmap Access
+	NBitmap* GetBitmap();
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -79,7 +91,7 @@ public:
 	NLoadOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x00e36464;	}
+	virtual	udword	GetColor()		{ return 0x00e36464;	}
 	virtual const char*		GetName()			{ return "Load"; }		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Misc"; }		//!< Operator's Category
 	virtual const char*		GetUserName();											//!< Operator's User Name
@@ -102,7 +114,7 @@ public:
 	NChannelAnimFX1Op();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x00e36464;	}
+	virtual	udword	GetColor()		{ return 0x00e36464;	}
 	virtual const char*		GetName()			{ return "Channel FX1"; }	//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Animation"; }		//!< Operator's Category
 

@@ -41,7 +41,7 @@ NString::NString(const char* string)
 {
 	udword len = (udword)strlen(string);
 	mBuffer = (char*)malloc(len+1);
-	CopyMemory(mBuffer, string, len);
+	memcpy(mBuffer, string, len);
 	mBuffer[len] = 0;
 }
 
@@ -50,7 +50,7 @@ NString::NString(const NString& string)
 {
 	udword len = string.Length();
 	mBuffer = (char*)malloc(len+1);
-	CopyMemory(mBuffer, string.Buffer(), len);
+	memcpy(mBuffer, string.Buffer(), len);
 	mBuffer[len] = 0;
 }
 
@@ -241,7 +241,7 @@ NString NString::Mid(udword first, udword count)
 	NString				str;
 	str.mBuffer			= (char*)malloc(count+1);
 	str.mBuffer[count]	= 0;
-	CopyMemory(str.mBuffer, mBuffer+first, count);
+	memcpy(str.mBuffer, mBuffer+first, count);
 
 	return str;
 }
