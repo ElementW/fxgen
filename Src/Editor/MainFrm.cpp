@@ -40,6 +40,9 @@
 #define	MENU_DETAILLOW			200
 #define	MENU_DETAILNORMAL		201
 #define	MENU_DETAILHIGH			202
+#define	MENU_DETAILFINE			203
+#define	MENU_DETAILREALISTIC	204
+#define	MENU_DETAILULTRA		205
 
 
 
@@ -147,6 +150,9 @@ bool NMainFrm::Create(char* name, const NRect& rect)
 		pmenu->InsertItem(dwParent, 1, "Low\t50%",			MENU_DETAILLOW);
 		pmenu->InsertItem(dwParent, 2, "Normal\t100%",	MENU_DETAILNORMAL);
 		pmenu->InsertItem(dwParent, 3, "High\t200%",		MENU_DETAILHIGH);
+		pmenu->InsertItem(dwParent, 4, "Fine\t400%",		MENU_DETAILFINE);
+		pmenu->InsertItem(dwParent, 5, "Realistic\t800%",		MENU_DETAILREALISTIC);
+		pmenu->InsertItem(dwParent, 6, "Ultra\t1600%",		MENU_DETAILULTRA);
 //	}
 
 	///////////////////////////////////////////////
@@ -196,10 +202,29 @@ void NMainFrm::OnCommand(udword id)
 			m_bExecuteLocked = false;
 			break;
 
-//		case MENU_AUTOSIZE:
-//			bool &toggle = NOperator::useInsureCommonInputsSize;
-//			toggle = toggle ? false : true;
-//			break;
+		case MENU_DETAILFINE:
+			m_bExecuteLocked = true;
+			NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			NEngineOp::GetEngine()->InvalidateAllOps();
+			m_fDetailFactor = 4.0f;
+			m_bExecuteLocked = false;
+			break;
+
+		case MENU_DETAILREALISTIC:
+			m_bExecuteLocked = true;
+			NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			NEngineOp::GetEngine()->InvalidateAllOps();
+			m_fDetailFactor = 8.0f;
+			m_bExecuteLocked = false;
+			break;
+
+		case MENU_DETAILULTRA:
+			m_bExecuteLocked = true;
+			NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			NEngineOp::GetEngine()->InvalidateAllOps();
+			m_fDetailFactor = 16.0f;
+			m_bExecuteLocked = false;
+			break;
 	};
 
 }
@@ -303,7 +328,7 @@ void NMainFrm::LoadProject(NString str)
 			//NEngineOp::GetEngine()->ProcessOperators(0.0, staticProcess);
 
 		} else {
-			NEngineOp::GetEngine()->Clear();
+			OnNewProject(); // some invalid file names can leave Editor in undefined state so ensure full cleanup here
 		}
 
 		//Display Projects's Pages

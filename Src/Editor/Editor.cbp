@@ -13,7 +13,6 @@
 				<Option external_deps="Debug\libGUILib_D.a;Debug\libFxGenLib_D.a;" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option parameters="C:\Documents and Settings\wojownik\Desktop\mm3.prj" />
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
@@ -33,8 +32,8 @@
 					<Add library="winmm" />
 					<Add library="comctl32" />
 					<Add library="opengl32" />
-					<Add library="gdi32" />
 					<Add library="user32" />
+					<Add library="gdi32" />
 					<Add library="libGUILib_D.a" />
 					<Add library="libFxGenLib_D.a" />
 					<Add library="..\..\lib\libtinyxml_lib.a" />
@@ -53,7 +52,6 @@
 				<Compiler>
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-O3" />
-					<Add option="-I../../Externals/vgvm/trunk/include" />
 					<Add option="-DWIN32" />
 					<Add option="-DNDEBUG" />
 					<Add option="-D_WINDOWS" />
@@ -70,10 +68,8 @@
 					<Add library="winmm" />
 					<Add library="comctl32" />
 					<Add library="opengl32" />
-					<Add library="Msimg32" />
 					<Add library="user32" />
 					<Add library="gdi32" />
-					<Add library="comdlg32" />
 					<Add library="libGUILib.a" />
 					<Add library="libFxGenLib.a" />
 					<Add library="..\..\lib\libtinyxml_lib.a" />
