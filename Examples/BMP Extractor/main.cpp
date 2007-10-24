@@ -2,17 +2,21 @@
 //	(fxgen API test)
 //	Copyright (C) 2007 Sebastian Olter (qduaty@gmail.com)
 //	This file is provided for free in the terms of GNU General Public License (GPL) v.2
-//	Link it with fxgenlib.dll or so.
+//	Link it with fxgenlib.lib
+
+#include <math.h>
+#include <string>
 
 #ifdef __GNUC__ // in case gcc is used
-#include <math.h>
 #define sqrtf sqrt
 #include "gcccompat/gcccompat.h"
 #endif
-#include <string>
+
+
 using namespace std;
 
-#include "EngineOp.h"
+#include "..\..\Src\FxGenLib\EngineOp.h"
+#include "..\..\Src\FxGenLib\MainOps.h"
 
 // application stuff
 
@@ -26,7 +30,7 @@ struct BMP // Windows Bitmap header
 			number_of_colors(0), number_of_important_colors(0)
 	{
 		size_of_image_data = width * height * bpp / 8;
-		filesize = sizeof(BMP) + size_of_image_data;
+		filesize = (int)(sizeof(BMP) + size_of_image_data);
 	}
 
 	void write(string filename, const RGBA* data)
@@ -80,12 +84,12 @@ void showProgress(float howmuch)
 		printf("#");
 }
 
-float progress = 0., frac = 1;
+float progress = 0.0f, frac = 1.0f;
 
-void GlobalProgress(udword current, udword total)
-{
-	frac = 1. / total;
-}
+//void GlobalProgress(udword current, udword total)
+//{
+//	frac = 1. / total;
+//}
 
 void LocalProgress(udword current, udword total)
 {
@@ -110,7 +114,37 @@ int main(int argc, char *argv[])
 
 	if (peng->LoadProject(argv[1]))
 	{
-		peng->ProcessOperators(0.0f, 1.f, GlobalProgress, LocalProgress);
+		//Get All Finals result Operators List
+		NObjectArray carrayOps;
+		peng->GetFinalsResultsList(carrayOps, NULL, true);
+
+		frac = 1.0f / (float)carrayOps.Count();
+
+		//Process Operators...
+		for (udword i=0; i<carrayOps.Count(); i++)
+		{
+			NStoreResultOp* pFinalResultOp = (NStoreResultOp*)carrayOps[i];
+			peng->ProcessFinalResult(pFinalResultOp, 0.0f, 1.0f, LocalProgress);
+		}
+
+		//Free Memory
+		// Keep just final result bitmaps in memory		
+		peng->CompactMemory(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED);
+
+		//Now use generated Textures :-)
+		for (udword i=0; i<carrayOps.Count(); i++)
+		{
+			NStoreResultOp* pFinalResultOp = (NStoreResultOp*)carrayOps[i];
+
+			const char* pszName = pFinalResultOp->GetUserName();
+			NBitmap* pbmp				= pFinalResultOp->GetBitmap();
+
+			printf("\nWriting result: %s", pszName);
+			BMP bmp(pbmp->GetWidth(), pbmp->GetHeight());
+			bmp.write(string(pszName) + ".bmp", pbmp->GetPixels());
+		}
+
+		/*peng->ProcessOperators(0.0f, 1.f, GlobalProgress, LocalProgress);
 		peng->CompactMemory();	//!< Keep just final result bitmaps in memory
 
 		for (int i = 0; i < peng->GetFinalResultCount(); i++)
@@ -121,7 +155,7 @@ int main(int argc, char *argv[])
 			BMP bmp(pbmp->GetWidth(), pbmp->GetHeight());
 
 			bmp.write(string(pbmp->GetName()) + ".bmp", pbmp->GetPixels());
-		}
+		}*/
 	}
 	else
 		printf("Project file \"%s\" is broken or unreadable.\n", argv[1]);

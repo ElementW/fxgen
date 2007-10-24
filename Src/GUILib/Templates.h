@@ -115,7 +115,7 @@ public:
 			{
 				udword dwOldCount = m_dwCount;
 				SetSize(m_dwCount+array.Count()+m_dwGrow);
-				CopyMemory(m_pBuffer + dwOldCount, array.m_pBuffer, array.m_dwCount * sizeof(T));
+				memcpy(m_pBuffer + dwOldCount, array.m_pBuffer, array.m_dwCount * sizeof(T));
 				m_dwCount+=array.m_dwCount;
 			}
 
@@ -128,7 +128,7 @@ public:
 				m_dwCount--;
 				T* pBuffer = m_pBuffer+idx;
 
-				CopyMemory(pBuffer, pBuffer+1, (m_dwSize-idx-1) * sizeof(T));
+				memcpy(pBuffer, pBuffer+1, (m_dwSize-idx-1) * sizeof(T));
 			}
 
 			//-----------------------------------------------------------------
@@ -191,7 +191,7 @@ public:
 
 				T* pBuffer = m_pBuffer+idx;
 
-				CopyMemory(pBuffer+1, pBuffer, (m_dwSize-idx) * sizeof(T));
+				memcpy(pBuffer+1, pBuffer, (m_dwSize-idx) * sizeof(T));
 
 				m_pBuffer[idx] = item;
 				return m_dwCount++;

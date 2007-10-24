@@ -97,6 +97,14 @@ public:
 #define		MAX_PATHLEN					256
 #define		OBJARRAY_GROWSIZE		16
 
+#ifndef max
+#define max(a,b)            (((a) > (b)) ? (a) : (b))
+#endif
+
+#ifndef min
+#define min(a,b)            (((a) < (b)) ? (a) : (b))
+#endif
+
 #ifdef _DEBUG
 #define TRACE	gDebugLog
 void FXGEN_API gDebugLog(const char* fmt, ... );
@@ -109,10 +117,9 @@ void FXGEN_API gDebugLog(const char* fmt, ... );
 // Macros
 //-----------------------------------------------------------------
 
-//Log and error
-#define ERR(msg, errcode)		{	TCHAR buffer[256]; \
-				wsprintf( buffer, ("File: %s\n\rLine: %ld\n\r Msg:%s\n\rCode:%d"), __FILE__, (udword)__LINE__, msg, errcode  ); \
-				::MessageBox(null, buffer, "FxGen Error", MB_OK|MB_ICONERROR|MB_APPLMODAL|MB_TOPMOST); \
+//Error ###TODO### Error management
+#define ERR(msg, errcode)		{ \
+				TRACE("File: %s\n\rLine: %ld\n\r Msg:%s\n\rCode:%d", __FILE__, (udword)__LINE__, msg, errcode ); \
 			}
 
 //Runtime class
@@ -333,7 +340,7 @@ public:
 	DECLARE_CLASS();
 
 	//Methods
-	virtual void	SetName(const char* _pszName)	{ strncpy_s(m_szName, sizeof(m_szName), _pszName, sizeof(m_szName)); }	//!< Affecte le nom de l'objet
+	virtual void	SetName(const char* _pszName)	{ strncpy(m_szName, _pszName, sizeof(m_szName)); }	//!< Affecte le nom de l'objet
 	virtual const char*	GetName()								{ return m_szName;}	//!< Return object name
 
 	virtual NObject* Duplicate();
@@ -402,6 +409,8 @@ public:
 
 	NTreeNode*	GetSon()			{ return m_pFirstSon;		}
 	NTreeNode*	GetBrother()	{ return m_pBrother;		}
+
+	NTreeNode*	GetSonFromName(const char* _pszNodeName);
 
 	udword GetSonsCount();
 

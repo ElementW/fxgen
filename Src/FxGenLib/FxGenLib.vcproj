@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\Externals\vgvm;..\..\Externals\cairo;..\..\Externals\vgvm"
-				PreprocessorDefinitions="WIN32;_DEBUG;_USRDLL;FXGEN_EXPORTS;BUILDING_VGVM_DLL"
+				PreprocessorDefinitions="WIN32;_DEBUG;_USRDLL;FXGEN_EXPORTS;BUILDING_VGVM_DLL;_CRT_SECURE_NO_DEPRECATE "
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -124,7 +124,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="..\..\Externals\vgvm;..\..\Externals\cairo;..\..\Externals\vgvm"
-				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;FXGEN_EXPORTS;BUILDING_VGVM_DLL"
+				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;FXGEN_EXPORTS;BUILDING_VGVM_DLL;_CRT_SECURE_NO_DEPRECATE "
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				EnableEnhancedInstructionSet="2"

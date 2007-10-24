@@ -34,6 +34,7 @@
 #include <math.h>
 #include <assert.h>
 #include <stdio.h>
+#include <time.h>
 
 #include "Core.h"
 

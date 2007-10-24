@@ -395,7 +395,7 @@ void NVarsBloc::DoVarBlocVersion_Mapping(NArchive* _l, ubyte _byVersion)
 					pvalPrev = pval;
 				} else {
 
-					CopyMemory(pval, pvalPrev, sizeof(NVarValue));
+					memcpy(pval, pvalPrev, sizeof(NVarValue));
 
 				}
 
@@ -562,7 +562,7 @@ NObject* NObject::Duplicate()
 		NVarsBloc* pcurvarblocClone = pobjClone->m_pcfirstVarsBloc;
 		while (pcurvarbloc)
 		{
-			CopyMemory(pcurvarblocClone->GetValues(), pcurvarbloc->GetValues(), pcurvarbloc->Count() * sizeof(NVarValue));
+			memcpy(pcurvarblocClone->GetValues(), pcurvarbloc->GetValues(), pcurvarbloc->Count() * sizeof(NVarValue));
 			pcurvarbloc = m_pcfirstVarsBloc->m_pcnextVarsBloc;
 			pcurvarblocClone = pobjClone->m_pcfirstVarsBloc->m_pcnextVarsBloc;
 		}
@@ -793,7 +793,7 @@ udword NObjectArray::AddItem(NObject* _item, udword _idx)
 			m_pBuffer = (NObject**)NMemRealloc(m_pBuffer, m_dwSize * sizeof(NObject*));
 		}
 
-		CopyMemory(m_pBuffer+_idx+1, m_pBuffer+_idx, (m_dwSize-_idx) * sizeof(NObject*));
+		memcpy(m_pBuffer+_idx+1, m_pBuffer+_idx, (m_dwSize-_idx) * sizeof(NObject*));
 
 		m_pBuffer[_idx] = _item;
 
@@ -812,7 +812,7 @@ void NObjectArray::RemoveItem(udword _idx)
 {
 	m_dwCount--;
 	if (m_bManagedDel)	m_pBuffer[_idx];
-	CopyMemory(m_pBuffer+_idx, m_pBuffer+_idx+1, (m_dwSize-_idx-1) * sizeof(NObject*));
+	memcpy(m_pBuffer+_idx, m_pBuffer+_idx+1, (m_dwSize-_idx-1) * sizeof(NObject*));
 }
 
 //-----------------------------------------------------------------
@@ -858,7 +858,7 @@ void NObjectArray::AddArray(NObjectArray& _array)
 {
 	udword dwOldCount = m_dwCount;
 	SetSize(m_dwCount+_array.Count()+OBJARRAY_GROWSIZE);
-	CopyMemory(m_pBuffer + dwOldCount, _array.m_pBuffer, _array.m_dwCount * sizeof(NObject*));
+	memcpy(m_pBuffer + dwOldCount, _array.m_pBuffer, _array.m_dwCount * sizeof(NObject*));
 	m_dwCount+=_array.m_dwCount;
 }
 
@@ -1169,6 +1169,30 @@ udword NTreeNode::FindSon(NTreeNode* _pnode)
 	return -1;
 }
 
+//-----------------------------------------------------------------
+//!	\brief		Find son from name
+//!	\param		_pszNodeName	Son's name
+//!	\return		son NTreeNode ptr else null
+//-----------------------------------------------------------------
+NTreeNode* NTreeNode::GetSonFromName(const char* _pszNodeName)
+{
+	NTreeNode* pnodeFound = null;
+
+	NTreeNode* pnode = m_pFirstSon;
+	while (pnode)
+	{
+		if (strcmp(pnode->GetName(), _pszNodeName)==0)
+		{
+			pnodeFound=pnode;
+			break;
+		}
+
+		pnode=pnode->m_pBrother;
+	}
+
+	return pnodeFound;
+}
+
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -1217,7 +1241,7 @@ void NObjectGarbage::SetManagedClassID(ID _CLASSID)
 //-----------------------------------------------------------------
 void NObjectGarbage::Compact(ubyte _byTypeMask, udword _dwTimevalidityMs)
 {
-	udword dwTick = GetTickCount();
+	udword dwTick = clock();
 	udword	dwCompacted = 0;
 	udword	dwCount = 0;
 	bool bToKeep = false;
@@ -1243,7 +1267,7 @@ void NObjectGarbage::Compact(ubyte _byTypeMask, udword _dwTimevalidityMs)
 
 		if (bToKeep)
 		{
-			CopyMemory(aobjectsCompact+dwCount, pdesc, sizeof(NObjGarbageDesc));
+			memcpy(aobjectsCompact+dwCount, pdesc, sizeof(NObjGarbageDesc));
 			dwCount++;
 		}
 
@@ -1290,7 +1314,7 @@ void NObjectGarbage::GetInstance(NObject** _ppobj, ubyte _byAsType)
 
 		//Update used object time
 		if (*_ppobj!=null)
-			(*_ppobj)->m_dwLastUsedTime = GetTickCount();
+			(*_ppobj)->m_dwLastUsedTime = clock();
 
 	}
 }
@@ -1311,7 +1335,7 @@ void NObjectGarbage::RemoveEntry(NObject** _ppobj)
 				delete *pdesc->ppobj;
 			}
 
-			CopyMemory(m_aobjects+i, m_aobjects+i+1, (m_dwSize-i-1) * sizeof(NObjGarbageDesc*));
+			memcpy(m_aobjects+i, m_aobjects+i+1, (m_dwSize-i-1) * sizeof(NObjGarbageDesc*));
 			m_dwCount--;
 			TRACE("NObjectGarbage::RemoveEntry Count<%d>\n", m_dwCount);
 			break;
@@ -1337,9 +1361,9 @@ void NObjectGarbage::RemoveEntry(NObject** _ppobj)
 void gDebugLog(const char* _fmt, ... )
 {
 #ifdef _WIN32
-	char buf[256];
-	wvsprintf(buf, _fmt, (char *)(&_fmt+1));
-	OutputDebugString(buf);
+	//char buf[256];
+	//wvsprintf(buf, _fmt, (char *)(&_fmt+1));
+	//OutputDebugString(buf);
 #else
 #warning Empty function
 #endif

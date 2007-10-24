@@ -22,6 +22,15 @@
 #include "Core.h"
 
 //-----------------------------------------------------------------
+//                   Macros
+//-----------------------------------------------------------------
+#ifdef FXGEN_EXPORTS
+	#define FXGEN_API __declspec(dllexport)
+#else
+	#define FXGEN_API __declspec(dllimport)
+#endif
+
+//-----------------------------------------------------------------
 //                   Defines
 //-----------------------------------------------------------------
 #define	MAX_CONTEXTS	256		//!< Max Stack contexts
@@ -32,12 +41,12 @@
 #define	OBJRES_TYPE_STORED				2		//!< Stored bitmaps
 #define	OBJRES_TYPE_FINALSTORED		4		//!< Final Stored bitmaps
 
-
 //-----------------------------------------------------------------
 //                   Prototypes
 //-----------------------------------------------------------------
 class NObject;
 	class NOperator;
+		class	NStoreResultOp;
 	class NOperatorsPage;
 	class NEngineOp;
 
@@ -45,7 +54,6 @@ class NObject;
 //                   TypesDef
 //-----------------------------------------------------------------
 typedef	void (__cdecl FXGEN_OPSPROCESSCB)(udword _dwCurrentOp, udword _dwTotalOps);
-typedef	void (__cdecl FXGEN_RESULTSPROCESSCB)(udword _dwCurrentResult, udword _dwTotalResults);
 
 //-----------------------------------------------------------------
 //!	\class		NOperator
@@ -59,9 +67,10 @@ public:
 
 	//Methods
 	virtual NObject* Duplicate();						//!< Duplicate this object (used for copy-paste)
-	virtual	COLORREF GetColor()	= 0;				//!< Operator color
+	virtual	udword GetColor()	= 0;				//!< Operator color
 	virtual const char* GetName()				{ return ""; }			//!< Operator's Name
 	virtual const char* GetCategory()		{ return "Misc"; }	//!< Operator's Category
+
 	virtual const char* GetUserName()		{ return null; }		//!< Operator's User Name
 
 	//Serialization
@@ -152,12 +161,12 @@ public:
 	static	NEngineOp* GetEngine();
 
 	//API Methods
-	void			Clear();
-	bool			LoadProject(const char* _pszFullFileName);
-	void			ProcessOperators(float _ftime, float _fDetailFactor=1.0f, FXGEN_RESULTSPROCESSCB* _cbResultsProcess=NULL, FXGEN_OPSPROCESSCB* _cbOpsProcess=NULL);
-	void			CompactMemory();
-	udword		GetFinalResultCount();
-	NBitmap*	GetFinalResultBitmapByIdx(udword _idx);
+	void	Clear();
+	bool	LoadProject(const char* _pszFullFileName);
+
+	void	GetFinalsResultsList(NObjectArray& _carray, const char* _pszFromGroup=NULL, bool _bRecurse=true);
+	void	ProcessFinalResult(NStoreResultOp* _pFinalResultOp, float _ftime, float _fDetailFactor=1.0f, FXGEN_OPSPROCESSCB* _cbOpsProcess=NULL);
+	void	CompactMemory(ubyte _byTypeMask=OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED);
 
 	//Editor Methods
 	bool SaveProject(const char* _pszFullFileName);
@@ -206,7 +215,4 @@ protected:
 
 	//Garbages for media (bitmaps ...)
 	NObjectGarbage	m_bitmapsAlloc;
-
-	//Datas API Interface
-	NObjectArray m_arrayFinalsOp;
 };
