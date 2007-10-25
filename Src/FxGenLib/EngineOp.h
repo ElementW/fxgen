@@ -24,11 +24,15 @@
 //-----------------------------------------------------------------
 //                   Macros
 //-----------------------------------------------------------------
+#ifndef STATIC_BUILD
 #ifdef FXGEN_EXPORTS
 	#define FXGEN_API __declspec(dllexport)
 #else
 	#define FXGEN_API __declspec(dllimport)
 #endif
+#else // STATIC_BUILD
+#define FXGEN_API
+#endif // STATIC_BUILD
 
 //-----------------------------------------------------------------
 //                   Defines

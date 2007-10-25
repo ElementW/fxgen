@@ -1285,10 +1285,13 @@ udword NAlphaMaskOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 					if(c1.norm() && c2.norm()) // else - use existing value to avoid hot-spots
 						dot(correctness, c1, c2);
 
-					pPxDst->a = correctness * 255;
+					pPxDst->a = pPxSrc->a * correctness;
 				}
 				else // monochrome mask
-					pPxDst->a = (pPxAlpha->r + pPxAlpha->g + pPxAlpha->b) / 3;
+				{
+					float alpha = (pPxAlpha->r + pPxAlpha->g + pPxAlpha->b) / 3. / 255.;
+					pPxDst->a = pPxSrc->a * alpha;
+				}
 
 				pPxAlpha++;
 			}
