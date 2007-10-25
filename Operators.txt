@@ -1,6 +1,6 @@
 -------------------------
 List of FXGen operators
-17 October 2007
+25 October 2007
 -------------------------
 
 
@@ -25,7 +25,7 @@ Details: Each corner of the texture has unique color.
 Inputs: no
 
 Name: Cell
-Purpose: Create a texture consisting of cells aligned in a grid.
+Purpose: Create a texture consisting of cells aligned in a grid, or a chessboard.
 Details: Cells can be irregular. If considered bump map, they have pyramid form.
 Inputs: no
 
@@ -126,13 +126,15 @@ Details: Two modes: Box and Gaussian.
 Inputs: 1
 
 Name: Colors
-Purpose: Apply a color filter and color light, adjust contrast, brightness and alpha.
+Purpose: Apply a color filter and color light, adjust contrast, brightness and
+alpha.
 Details:
 Inputs: 1
 
 Name: Light
 Purpose: Apply an illumination on a curved surface.
-Details: First input is considered texture, second is normal map, third is per-pixel occlusion.
+Details: First input is considered texture, second is normal map, third is
+per-pixel occlusion.
 Ambient, diffuse and specular light can have different colors and intensity.
 Inputs: 2-4(?)
 
@@ -142,9 +144,11 @@ Details: 3-tap(?) Sobel.
 Inputs: 1
 
 Name: AlphaMask
-Purpose: Extracts alpha channel as an opaque monochrome bitmap.
+Purpose: 1) Extract alpha channel as an opaque monochrome bitmap. or 2) multiply
+alpha channel with second input luminance, or 3) use second input as color alpha
+mask. Luminance is not taken into account.
 Details:
-Inputs: 1
+Inputs: 1-2
 
 Name: Invert
 Purpose: Invert all color channels. Alpha is left unchanged - use Colors filter
@@ -158,11 +162,10 @@ Details: Several ways.
 Inputs: 1
 
 Name: Alpha
-Purpose: 1) Extract single color (light green #4C951D) intensity, replace it with
-white smoke, discard the rest or 2) apply second input luminance as alpha channel,
-or 3) apply second input as color alpha mask. Luminance is not taken into account.
+Purpose: Extract single color (light green #4C951D) intensity, replace it with
+white smoke, discard the rest.
 Details:
-Inputs: 1-2
+Inputs: 1
 
 Name: Segment
 Purpose:

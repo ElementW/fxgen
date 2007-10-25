@@ -113,7 +113,7 @@ static NVarsBlocDesc blocdescCloudOp[] =
 {
 	VAR(eubyte,	false, "Width",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
 	VAR(eubyte,	false, "Height",	"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//1
-	VAR(eudword,	true, "Color 0",		"0",		"NColorProp")	//2
+	VAR(eudword,	true, "Color 0",		"4278190080",		"NColorProp")	//2
 	VAR(eudword,	true, "Color 1",		"-1",		"NColorProp")	//3
 	VAR(eubyte,		true, "Amp",				"128",	"NUbyteProp") //4
 	VAR(euword,		true, "Seed",				"5412",	"NUwordProp") //5
@@ -182,19 +182,21 @@ udword NCloudOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 		for (udword x=0; x<w; x++)
 		{
 			//Cal color
-			udword r = (udword)color0.r + ((*pbyPxSrc * color1.r)>>8);
-			udword g = (udword)color0.g + ((*pbyPxSrc * color1.g)>>8);
-			udword b = (udword)color0.b + ((*pbyPxSrc * color1.b)>>8);
+			udword r = (udword)color0.r + ((*pbyPxSrc * (color1.r - color0.r))>>8);
+			udword g = (udword)color0.g + ((*pbyPxSrc * (color1.g - color0.g))>>8);
+			udword b = (udword)color0.b + ((*pbyPxSrc * (color1.b - color0.b))>>8);
+			udword a = (udword)color0.a + ((*pbyPxSrc * (color1.a - color0.a))>>8);
 
 			//Set pixel
 			r = (r<255)?r:255;				r = (r>0)?r:0;
 			g = (g<255)?g:255;				g = (g>0)?g:0;
 			b = (b<255)?b:255;				b = (b>0)?b:0;
+			a = (a<255)?a:255;				a = (a>0)?a:0;
 
 			pPxDst->r = (ubyte) r;
 			pPxDst->g = (ubyte) g;
 			pPxDst->b = (ubyte) b;
-			pPxDst->a = 255;
+			pPxDst->a = (ubyte) a;
 
 			pPxDst++;
 			pbyPxSrc++;
@@ -411,10 +413,10 @@ static NVarsBlocDesc blocdescGradientOp[] =
 {
 	VAR(eubyte,	false, "Width",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
 	VAR(eubyte,	false, "Height",	"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//1
-	VAR(eudword,	true, "A",	"16711680", "NColorProp")	//2	blue
-	VAR(eudword,	true, "B",	"65280",		"NColorProp")	//3 green
-	VAR(eudword,	true, "C",	"255",			"NColorProp")	//4 red
-	VAR(eudword,	true, "D",	"16776960", "NColorProp")	//5 blue light
+	VAR(eudword,	true, "A",	"4294901760", "NColorProp")	//2	blue
+	VAR(eudword,	true, "B",	"4278255360",		"NColorProp")	//3 green
+	VAR(eudword,	true, "C",	"4278190335",			"NColorProp")	//4 red
+	VAR(eudword,	true, "D",	"4294967040", "NColorProp")	//5 blue light
 };
 
 NGradientOp::NGradientOp()
@@ -472,11 +474,12 @@ udword NGradientOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 			col.r= (sdword)((colA.r*a) + (colB.r*b) + (colC.r*c) + (colD.r*d));
 			col.g= (sdword)((colA.g*a) + (colB.g*b) + (colC.g*c) + (colD.g*d));
 			col.b= (sdword)((colA.b*a) + (colB.b*b) + (colC.b*c) + (colD.b*d));
+			col.a= (sdword)((colA.a*a) + (colB.a*b) + (colC.a*c) + (colD.a*d));
 
 			pPxDst->r = (ubyte)col.r;
 			pPxDst->g = (ubyte)col.g;
 			pPxDst->b = (ubyte)col.b;
-			pPxDst->a = 255;
+			pPxDst->a = (ubyte)col.a;
 			pPxDst++;
 		}
 	}
@@ -494,7 +497,7 @@ udword NGradientOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 //-----------------------------------------------------------------
 IMPLEMENT_CLASS(NCellOp, NOperator);
 
-static NMapVarsBlocDesc mapblocdescCellOp[] =
+static NMapVarsBlocDesc mapblocdescCellOp1[] =
 {
 	MAP(1, eubyte,	"2", "" )	//V1 => 0-Regularity
 	MAP(1, eubyte,	"3", "" )	//V1 => 1-Density
@@ -502,23 +505,35 @@ static NMapVarsBlocDesc mapblocdescCellOp[] =
 	MAP(1, euword,	"5", "" )	//V1 => 3-Seed
 };
 
+static NMapVarsBlocDesc mapblocdescCellOp2[] =
+{
+	MAP(2, eubyte,	"0", "" )	//V1 => 0-Width
+	MAP(2, eubyte,	"1", "" )	//V1 => 1-Height
+	MAP(2, eubyte,	"2", "" )	//V1 => 2-Regularity
+	MAP(2, eubyte, 	"3", "" )	//V1 => 3-Density
+	MAP(2, eudword,	"4", "" )	//V1 => 4-Color
+	MAP(2, euword,	"5", "" )	//V1 => 5-Seed
+};
+
 
 static NVarsBlocDesc blocdescCellOp[] =
 {
-	VAR(eubyte,	false, "Width",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
-	VAR(eubyte,	false, "Height",	"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//1
-	VAR(eubyte,		true, "Regularity",	"128",	"NUbyteProp")	//2
-	VAR(eubyte,		true, "Density",		"8",		"NUbyteProp")	//3
-	VAR(eudword,	true, "Color",			"-1",		"NColorProp")	//4
-	VAR(euword,		true, "Seed",				"5412",	"NUwordProp") //5
+	VAR(eubyte,	false, "Width",			"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
+	VAR(eubyte,	false, "Height",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//1
+	VAR(eubyte,	true, 	"Regularity",	"128",	"NUbyteProp")	//2
+	VAR(eubyte,	true, 	"Density",		"8",		"NUbyteProp")	//3
+	VAR(eudword,true, 	"Color",		"-1",		"NColorProp")	//4
+	VAR(euword,	true, 	"Seed",			"5412",	"NUwordProp") //5
+	VAR(eubyte,	true, 	"Mode",			"0,[Grid,Chessboard]", "NUbyteComboProp")	//6
 };
 
 NCellOp::NCellOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(6, blocdescCellOp, 2);
+	m_pcvarsBloc = AddVarsBloc(7, blocdescCellOp, 3);
 	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
-	m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescCellOp);
+	m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescCellOp1);
+	m_pcvarsBloc->SetMapVarBlocDesc(6, mapblocdescCellOp2);
 }
 
 udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
@@ -539,11 +554,13 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	ubyte byRegularity;
 	ubyte byDensity;
 	uword wSeed;
+	ubyte chessboard;
 	RGBA col;
 	m_pcvarsBloc->GetValue(2, _ftime, byRegularity);
 	m_pcvarsBloc->GetValue(3, _ftime, byDensity);
 	m_pcvarsBloc->GetValue(4, _ftime, (udword&)col);
 	m_pcvarsBloc->GetValue(5, _ftime, wSeed);
+	m_pcvarsBloc->GetValue(6, _ftime, chessboard);
 
   byDensity = byDensity>1?byDensity:1;
 
@@ -613,10 +630,28 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 			if (minDist<0) minDist = 0;
 			if (minDist>1) minDist = 1;
 
-			pPxDst->r = (ubyte)(minDist*col.r);
-			pPxDst->g = (ubyte)(minDist*col.g);
-			pPxDst->b = (ubyte)(minDist*col.b);
-			pPxDst->a = 255;
+			if(chessboard)
+			{
+				if((xo%2)^(yo%2))
+				{
+					pPxDst->r = (ubyte)((1-minDist/2.5)*(col.r));
+					pPxDst->g = (ubyte)((1-minDist/2.5)*(col.g));
+					pPxDst->b = (ubyte)((1-minDist/2.5)*(col.b));
+				}
+				else
+				{
+					pPxDst->r = (ubyte)((minDist/2.5)*(col.r));
+					pPxDst->g = (ubyte)((minDist/2.5)*(col.g));
+					pPxDst->b = (ubyte)((minDist/2.5)*(col.b));
+				}
+			}
+			else
+			{
+				pPxDst->r = (ubyte)(minDist*col.r);
+				pPxDst->g = (ubyte)(minDist*col.g);
+				pPxDst->b = (ubyte)(minDist*col.b);
+			}
+			pPxDst->a = (ubyte)(col.a);
 
 			pPxDst++;
 		}
@@ -690,7 +725,7 @@ udword NNoiseOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 			pPxDst->r = (ubyte)((noiseVal*col.r)>>8);
 			pPxDst->g = (ubyte)((noiseVal*col.g)>>8);
 			pPxDst->b = (ubyte)((noiseVal*col.b)>>8);
-			pPxDst->a = 255;
+			pPxDst->a = col.a;
 			*pPxDst++;
 		}
 

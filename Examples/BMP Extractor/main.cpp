@@ -2,7 +2,7 @@
 //	(fxgen API test)
 //	Copyright (C) 2007 Sebastian Olter (qduaty@gmail.com)
 //	This file is provided for free in the terms of GNU General Public License (GPL) v.2
-//	Link it with fxgenlib.lib
+//	Link it with fxgenlib
 
 #include <math.h>
 #include <string>
@@ -15,8 +15,8 @@
 
 using namespace std;
 
-#include "..\..\Src\FxGenLib\EngineOp.h"
-#include "..\..\Src\FxGenLib\MainOps.h"
+#include "../../Src/FxGenLib/EngineOp.h"
+#include "../../Src/FxGenLib/MainOps.h"
 
 // application stuff
 

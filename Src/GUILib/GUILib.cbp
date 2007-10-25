@@ -23,7 +23,6 @@
 					<Add option="-D_DEBUG" />
 					<Add option="-D_USRDLL" />
 					<Add option="-DGUI_EXPORTS" />
-					<Add directory="..\FxGenLib" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="..\FxGenLib" />
@@ -58,7 +57,6 @@
 					<Add option="-DNDEBUG" />
 					<Add option="-D_USRDLL" />
 					<Add option="-DGUI_EXPORTS" />
-					<Add directory="..\FxGenLib" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="..\FxGenLib" />
@@ -85,19 +83,20 @@
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
+					<Add option="-W" />
 					<Add option="-DWIN32" />
 					<Add option="-DNDEBUG" />
 					<Add option="-D_LIB" />
 					<Add option="-D_MODE_EDITION" />
-					<Add option="-W" />
-					<Add option="-g" />
-					<Add option="-O1" />
-					<Add directory="..\CGCLib" />
+					<Add option="-DSTATIC_BUILD" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="..\CGCLib" />
 				</ResourceCompiler>
 				<Linker>
+					<Add option="-s" />
 					<Add library="Tiny Release|Win32\libFxGenLib.a" />
 				</Linker>
 			</Target>
@@ -110,13 +109,12 @@
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
+					<Add option="-O1" />
+					<Add option="-W" />
+					<Add option="-g" />
 					<Add option="-DWIN32" />
 					<Add option="-DNDEBUG" />
 					<Add option="-D_LIB" />
-					<Add option="-W" />
-					<Add option="-g" />
-					<Add option="-O1" />
-					<Add directory="..\FxGenLib" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="..\FxGenLib" />
@@ -144,7 +142,6 @@
 					<Add option="-D_USRDLL" />
 					<Add option="-DGUI_EXPORTS" />
 					<Add directory="..\..\..\wine-0.9.46\include" />
-					<Add directory="..\FxGenLib" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="..\FxGenLib" />
@@ -157,6 +154,9 @@
 				</ExtraCommands>
 			</Target>
 		</Build>
+		<Compiler>
+			<Add directory="..\FxGenLib" />
+		</Compiler>
 		<Linker>
 			<Add directory="..\..\W32Bin" />
 		</Linker>

@@ -131,7 +131,14 @@ udword NRectOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	{
 		RGBA* pPixelsD = pDst->GetPixels() + (y*w) + x1;
 		for (udword x=x1; x<x2; x++)
-			*pPixelsD++ = col;
+		{
+			float alpha = col.a / 255.f;
+			pPixelsD->r = pPixelsD->r * (1 - alpha) + col.r * alpha;
+			pPixelsD->g = pPixelsD->g * (1 - alpha) + col.g * alpha;
+			pPixelsD->b = pPixelsD->b * (1 - alpha) + col.b * alpha;
+			// input alpha is preserved
+			++pPixelsD;
+		}
 	}
 
 	return 0;
@@ -212,7 +219,7 @@ IMPLEMENT_CLASS(NAddOp, NOperator);
 
 static NVarsBlocDesc blocdescAddOp[] =
 {
-	VAR(eubyte,		false, "Mode",				"0,[Add Clamp,Add Wrap,Sub Clamp,Sub Wrap,Multiply,Multiply x2,Blend,Alpha,Layer]", "NUbyteComboProp")	//0
+	VAR(eubyte,		false, "Mode",				"8,[Add Clamp,Add Wrap,Sub Clamp,Sub Wrap,Multiply,Multiply x2,Blend,Alpha,Layer]", "NUbyteComboProp")	//0
 	VAR(eudword,	true,	 "RGB Percent",	"-1" , "NColorProp")			//1
 };
 
@@ -442,11 +449,9 @@ udword NAddOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 				}
 			}
 
-		}
-
 		//////////////////////////////////////////////
 		//Layer
-		else if (byMode==8)	{
+		} else if (byMode==8) {
 
 			for (udword y=0; y<hh; y++)
 			{

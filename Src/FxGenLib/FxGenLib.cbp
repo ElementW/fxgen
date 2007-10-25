@@ -80,14 +80,18 @@
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
+					<Add option="-W" />
 					<Add option="-DWIN32" />
 					<Add option="-DNDEBUG" />
 					<Add option="-D_LIB" />
 					<Add option="-D_MODE_EDITION" />
-					<Add option="-W" />
-					<Add option="-g" />
-					<Add option="-O1" />
+					<Add option="-DSTATIC_BUILD" />
 				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
 			</Target>
 			<Target title="Release DLL|Win32">
 				<Option platforms="Windows;" />

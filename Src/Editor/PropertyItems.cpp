@@ -172,7 +172,7 @@ void NColorProp::DrawItem(NGraphics* pdc, NRect& rcItem)
 	//Display RGB Values
 	NString cstr;
 	NRect rc(rcItem);
-	udword w = rc.Width()/4;
+	udword w = rc.Width()/5;
 
 	//Red
 	rc.right = rc.left + w;
@@ -187,6 +187,11 @@ void NColorProp::DrawItem(NGraphics* pdc, NRect& rcItem)
 	//Blue
 	rc.Move(w,0);
 	cstr.Format("%d",  val.b);
+	pdc->DrawText(cstr.Buffer(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+
+	//Alpha
+	rc.Move(w,0);
+	cstr.Format("%d",  val.a);
 	pdc->DrawText(cstr.Buffer(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 
 	///////////////////////////////////////
@@ -221,7 +226,7 @@ bool NColorProp::EndEdit(bool bSaveChanged)
 
 bool NColorProp::AddValue(sdword dwDelta)
 {
-	if (m_dwRGBEditingIdx<3)
+	if (m_dwRGBEditingIdx<4)
 	{
 		RGBA* pval = (RGBA*) &m_pvarValue->dwVal;
 
@@ -237,10 +242,10 @@ bool NColorProp::AddValue(sdword dwDelta)
 void NColorProp::Click(NPoint& pt, NRect& rcItem)
 {
 	NRect rc(rcItem);
-	int w = rc.Width()/4;
+	int w = rc.Width()/6; // should be 5, but then the pointer misses controls - why?
 	rc.right = rc.left + w;
 
-	for (udword i=0; i<4; i++)
+	for (udword i=0; i<5; i++)
 	{
 		if (rc.Contain(pt))
 		{
