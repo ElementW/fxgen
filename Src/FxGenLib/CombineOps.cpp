@@ -691,8 +691,8 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 		sdword count;
 		if(pNorm)
 		{
-			RGBA n = pPxNorm[size_t(x + y*w)];
-			vec3 normal(n.r / 255., n.g / 255., 0);
+			RGBA N = pPxNorm[size_t(x) + size_t(y)*w];
+			vec3 normal(N.r / 255., N.g / 255., 0);
 			count = normal.norm() * fcrackLength;
 			a = normal.azimuth();
 		}
@@ -714,8 +714,8 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 			if(pNorm)
 			{
-				RGBA* n = pPxNorm + ix + iy*w;
-				vec3 normal(n->r, n->g, 0);
+				RGBA* N = pPxNorm + ix + iy*w;
+				vec3 normal(N->r, N->g, 0);
 				a = normal.azimuth();
 			}
 			a = a + fcrackVariation*(2.0f*(float)myfRandom()-1.0f);
