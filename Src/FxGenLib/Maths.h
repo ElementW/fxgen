@@ -95,6 +95,23 @@ struct FXGEN_API vec3
 	float sq_norm() const { return x * x + y * y + z * z; }
 	float norm() const { return sqrtf(sq_norm()); }
 
+	float azimuth()
+	{
+		if(x == 0)
+		{
+			if(y > 0)
+				return M_PI / 2;
+			else
+				return 1.5 * M_PI;
+		}
+		else if(x < 0)
+			return atan(y / x) + M_PI;
+		else if(y < 0)
+			return atan(y / x) + 2 * M_PI;
+		else
+			return atan(y / x);
+	}
+
 	float & operator[](int i)
 	{
 		return vec_array[i];
