@@ -821,6 +821,7 @@ udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	axis_to_quat(rotation, vec3(x, y, z), 2 * M_PI * w);
 	quat rotation0 = rotation;
 	sensitivity = sens / 255.;
+
 	//////////////////////////////////////////
 	// Process
 	RGBA* pcurSrc = pSrc->GetPixels();

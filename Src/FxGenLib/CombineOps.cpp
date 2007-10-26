@@ -633,8 +633,8 @@ NCrackOp::NCrackOp()
 
 udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
-	//Only one Input
-	if (m_byInputs!=1)		return (udword)-1;
+	//One or two Inputs
+	if (m_byInputs!=1 && m_byInputs!=2)		return (udword)-1;
 
 	//Bitmap instance
 	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
@@ -642,12 +642,25 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst	= (NBitmap*)m_pObj;
+	NBitmap* pNorm	= null;
 
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
 	pDst->SetSize(w,h);
 
 	RGBA* pPxDst	= pDst->GetPixels();
+	RGBA* pPxNorm	= null;
+
+	if(m_byInputs==2)
+	{
+		_pOpsInts++;
+		pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
+
+		if(pNorm->GetWidth() < w || pNorm->GetHeight() < h)
+			return (udword)-1; // insufficient size
+
+		pPxNorm = pNorm->GetPixels();
+	}
 
 	//Copy Source to This
 	memcpy(pDst->GetPixels(), pSrc->GetPixels(), pDst->GetWidth() * pDst->GetHeight() * sizeof(RGBA));
@@ -665,7 +678,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	SetSeedValue(wSeed);
 
 	float fcrackVariation = (float)byVariation / 256.0f;
-	float fcrackLength = (float)byLength;
+	float fcrackLength = (float)byLength * _fDetailFactor;
 
 	//Process operator
 	uword n = 0;
@@ -673,23 +686,41 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	{
 		float x = (float)myfRandom() * float(w);
 		float y = (float)myfRandom() * float(h);
-		float a = 2.0f*3.141592f*(float)myfRandom();
+		float a;
 
-		sdword count = udword(myfRandom()*fcrackLength);
+		sdword count;
+		if(pNorm)
+		{
+			RGBA n = pPxNorm[size_t(x + y*w)];
+			vec3 normal(n.r / 255., n.g / 255., 0);
+			count = normal.norm() * fcrackLength;
+			a = normal.azimuth();
+		}
+		else
+		{
+			a = 2.0f*3.141592f*(float)myfRandom();
+			count = udword(myfRandom()*fcrackLength);
+		}
 
 		while( --count >= 0 )
 		{
 			udword ix = udword(x)%w;
 			udword iy = udword(y)%h;
 
-			pPxDst[ix + (iy*w)].dwCol = color.dwCol;
-
 			x = x + cos(a);
 			y = y + sin(a);
 			if( x < 0.0 ) x = x + float(w);
 			if( y < 0.0 ) y = y + float(h);
 
+			if(pNorm)
+			{
+				RGBA* n = pPxNorm + ix + iy*w;
+				vec3 normal(n->r, n->g, 0);
+				a = normal.azimuth();
+			}
 			a = a + fcrackVariation*(2.0f*(float)myfRandom()-1.0f);
+
+			pPxDst[ix + (iy*w)].dwCol = color.dwCol;
 		}
 
 	}

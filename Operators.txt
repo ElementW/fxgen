@@ -82,12 +82,13 @@ existing content.
 Inputs: 1
 
 Name: Crack
-Purpose: Create crack lines.
-Details: Number, length and intensity of cracked lines can be set.
-Inputs: 1
+Purpose: Create lines that can be randomly cracked or follow a normal map.
+Details: Number, length and variation of cracked lines can be set.
+Inputs: 1-2
 
 Name: Lerp
-Purpose: Mix first two inputs (a, b) in proportions given by third input (c).
+Purpose: Linear interpolation. Mix first two inputs (a, b) in proportions given 
+by third input (c).
 Details: Each color channel is processed separately. Equation: x = bc + a(1-c)
 Inputs: 3
 

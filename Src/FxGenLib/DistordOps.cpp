@@ -124,8 +124,8 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 	RGBA* pPxlSrc = pSrc->GetPixels();
 	RGBA* pPxlDst = pDst->GetPixels();
 
-	float fCoefX = ((float)tw / (float)w) * fZoomX;
-	float fCoefY = ((float)th / (float)h) * fZoomY;
+	float fCoefX = /*((float)tw / (float)w) * */fZoomX;
+	float fCoefY = /*((float)th / (float)h) * */fZoomY;
 
 	float	c = (float) (cosf(fRotate));
 	float	s = (float) (sinf(fRotate));
