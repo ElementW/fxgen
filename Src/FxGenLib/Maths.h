@@ -4,6 +4,7 @@
 //! \brief	mathematics
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr) (based on nvidia sdk)
+//!				Sebastian Olter (qduaty@gmail.com)
 //!	\date		12-02-2007
 //!
 //!	\brief	This file applies the GNU LESSER GENERAL PUBLIC LICENSE
@@ -78,6 +79,7 @@ long _declspec () _ftol ();*/
 struct FXGEN_API vec3
 {
 	vec3() { }
+	vec3(float X, float Y, float Z):x(X),y(Y),z(Z) { }
 
 	bool operator==(const vec3 & u) const
 	{
@@ -182,7 +184,8 @@ struct FXGEN_API mat4
 struct FXGEN_API quat
 {
 public:
-	quat(float x = 0, float y = 0, float z = 0, float w = 1);
+	quat();
+	quat(float x, float y, float z, float w);
 
 	quat Inverse();
 	void Normalize();
@@ -196,6 +199,52 @@ public:
 		};
 		float comp[4];
 	};
+
+	quat operator*(float coeff)
+	{
+		quat result;
+
+		result.w = w * coeff;
+		result.x = x * coeff;
+		result.y = y * coeff;
+		result.z = z * coeff;
+
+		return result;
+	}
+
+	quat operator*(const quat& other)
+	{
+		quat result;
+
+		result.w = w * other.w - x * other.x - y * other.y - z * other.z;
+		result.x = w * other.x + x * other.w + z * other.y - y * other.z;
+		result.y = w * other.y + y * other.w + x * other.z - z * other.x;
+		result.z = w * other.z + z * other.w + y * other.x - x * other.y;
+
+		return result;
+	}
+
+	quat operator+(const quat& other)
+	{
+		quat result;
+
+		result.x = x + other.x;
+		result.y = y + other.y;
+		result.z = z + other.z;
+		result.w = w + other.w;
+
+		return result;
+	}
+
+	quat& operator+=(const quat& other)
+	{
+		x += other.x;
+		y += other.y;
+		z += other.z;
+		w += other.w;
+
+		return *this;
+	}
 };
 
 

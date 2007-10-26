@@ -117,6 +117,25 @@ public:
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 };
 
+//-----------------------------------------------------------------
+//!	\class		NAbnormalsOp
+//!	\brief		Rotate normal vectors
+//-----------------------------------------------------------------
+class FXGEN_API NAbnormalsOp : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NAbnormalsOp();
+
+	//Methods
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual const char*		GetName()			{ return "Abnormals"; }	//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+};
 
 //-----------------------------------------------------------------
 //!	\class		NInvertOp

@@ -760,6 +760,157 @@ udword NNormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
+//							NAbnormalsOp class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+IMPLEMENT_CLASS(NAbnormalsOp, NOperator);
+
+static NVarsBlocDesc blocdescAbnormalsOp[] =
+{
+	VAR(eubyte,	false, "Rotation",	"", "")	//0
+	VAR(efloat,	true, "w",	"0", "NFloatProp")	//1 "1.0" is full angle
+	VAR(efloat,	true, "x",	"0", "NFloatProp")	//2
+	VAR(efloat,	true, "y",	"0", "NFloatProp")	//3
+	VAR(efloat,	true, "z",	"0", "NFloatProp")	//4
+	VAR(eubyte,	false, "Options",	"", "")	//5
+	VAR(eubyte,	true, "Sensitivity",	"127", "NUbyteProp")	//6
+	VAR(eubyte,	true, "Compensation",	"0,[Normal,Height,Quaternion]", "NUbyteComboProp")	//7
+	VAR(eubyte,	true, "Mirror",	"0,[None,X : YZ,Y : XZ,X+Y : Z]", "NUbyteComboProp")	//8
+};
+
+
+NAbnormalsOp::NAbnormalsOp()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(9, blocdescAbnormalsOp, 1);
+
+}
+
+udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+{
+	//Only one Input
+	if (m_byInputs!=1 && m_byInputs!=2)		return (udword)-1;
+
+	//Bitmap instance
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+
+	//////////////////////////////////////////
+	//Get input texture
+	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
+	NBitmap* pDst = (NBitmap*)m_pObj;
+	NBitmap* pQuat = null;
+
+	udword width = pSrc->GetWidth();
+	udword height = pSrc->GetHeight();
+	pDst->SetSize(width,height);
+
+
+	/////////////////////////////////////////
+	//Get Variables Values
+	float sensitivity, w,x,y,z;
+	ubyte sens, comp, mirror;
+	m_pcvarsBloc->GetValue(1, _ftime, w);
+	m_pcvarsBloc->GetValue(2, _ftime, x);
+	m_pcvarsBloc->GetValue(3, _ftime, y);
+	m_pcvarsBloc->GetValue(4, _ftime, z);
+	m_pcvarsBloc->GetValue(6, _ftime, sens);
+	m_pcvarsBloc->GetValue(7, _ftime, comp);
+	m_pcvarsBloc->GetValue(8, _ftime, mirror);
+	quat rotation;
+	axis_to_quat(rotation, vec3(x, y, z), 2 * M_PI * w);
+	quat rotation0 = rotation;
+	sensitivity = sens / 255.;
+	//////////////////////////////////////////
+	// Process
+	RGBA* pcurSrc = pSrc->GetPixels();
+	RGBA* pcurDst = pDst->GetPixels();
+	RGBA* pcurQuat = null;
+
+	if(m_byInputs==2)
+	{
+		_pOpsInts++;
+		pQuat = (NBitmap*)(*_pOpsInts)->m_pObj;
+
+		if(pQuat->GetWidth() < width || pQuat->GetHeight() < height)
+			return (udword)-1; // insufficient size
+
+		pcurQuat = pQuat->GetPixels();
+	}
+
+
+	for (udword y=0; y<height; y++)
+	{
+		for (udword x=0; x<width; x++)
+		{
+			quat v(
+			(pcurSrc->r-127.5f)/127.5f,
+			(pcurSrc->g-127.5f)/127.5f,
+			(pcurSrc->b-127.5f)/127.5f, 0), offset(0,0,0,0);
+
+			if(pQuat)
+			{
+				quat current;
+
+				if(comp == 0) // normals
+				{
+					offset = quat(
+					(pcurQuat->r-127.5f)/127.5f,
+					(pcurQuat->g-127.5f)/127.5f,(pcurQuat->b-127.5f)/127.5f, 0);
+				}
+
+				else if(comp == 1) // height
+				{
+					axis_to_quat(current,
+					vec3(0,0,((pcurQuat->r+pcurQuat->g+pcurQuat->b)/3.-127.5f)/127.5f),
+					2 * M_PI * pcurQuat->a/255.f * sensitivity);
+					rotation = current * rotation0;
+				}
+
+				else if(comp == 2) // quaternions
+				{
+					axis_to_quat(current,
+					vec3((pcurQuat->r-127.5f)/127.5f,
+					(pcurQuat->g-127.5f)/127.5f,(pcurQuat->b-127.5f)/127.5f),
+					2 * M_PI * pcurQuat->a/255.f * sensitivity);
+
+					current.Normalize(); // not enough - blur then?
+
+					rotation = current * rotation0;
+				}
+
+				pcurQuat++;
+			}
+
+			rotation.Normalize();
+			v += offset * sensitivity;
+			v = rotation * v * rotation.Inverse();
+
+			v.Normalize();
+			pcurDst->r = v.x * 127.5f + 127.5f;
+			pcurDst->g = v.y * 127.5f + 127.5f;
+			pcurDst->b = v.z * 127.5f + 127.5f;
+			pcurDst->a = 255;
+
+			// mirroring - for broken normal maps
+			if(mirror == 1 || mirror == 3)
+					pcurDst->r = 255 - pcurDst->r;
+
+			if(mirror == 2 || mirror == 3)
+					pcurDst->g = 255 - pcurDst->g;
+
+			pcurSrc++;
+			pcurDst++;
+		}
+	}
+
+	return 0;
+}
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
 //							NInvertOp class implementation
 //
 //-----------------------------------------------------------------
