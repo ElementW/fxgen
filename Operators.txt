@@ -16,7 +16,8 @@ Inputs: no
 
 Name: Cloud
 Purpose:
-Details: Clouds are constructed from 2 colors.
+Details: Clouds are constructed from 2 colors. If you it doesn't fit your needs,
+make the colors semi-transparent and Add another Cloud.
 Inputs: no
 
 Name: Gradient
@@ -38,7 +39,6 @@ Name: Vector
 Purpose:
 Details: can render vector graphics. The Editor is also equipped with a
 converter that can import SVG data to the vector operator.
-Current version does not store vector data in projects.
 Inputs: no
 
 -------------------
@@ -72,7 +72,7 @@ Multiply
 Multiply x2
 Blend
 Alpha
-Layer - to adjust alpha, use one of operators: Colors or Alpha with second arg.
+Layer (uses alpha channel)
 Inputs: arbitrary
 
 Name: Glow
@@ -142,6 +142,25 @@ Name: Normals
 Purpose: Convert height map to normal map.
 Details: 3-tap(?) Sobel.
 Inputs: 1
+
+Name: Abnormals
+Purpose: Modify a normal map. May be used for shiny surfaces.
+Details: Can take normal, height or quaternion map as second input.
+
+Map translation
+----------------
+Alpha channel - a(0,255) -> angle(0,2pi)
+Coords - r(0,255) -> x(-1,1)
+Height map - luminance -> z
+
+Options
+---------
+Rotation - w(0,1) -> angle(0,2pi), rest are axis direction coordinates
+Sensitivity - (0,255) -> angle(0,2pi) * map alpha
+Compensation - How to deal with map
+Mirror - For broken normal maps ;)
+
+Inputs: 1-2
 
 Name: AlphaMask
 Purpose: 1) Extract alpha channel as an opaque monochrome bitmap. or 2) multiply

@@ -13,5 +13,6 @@
 		<Project filename="..\Externals\tinyxml\tinyxml_lib.cbp" />
 		<Project filename="..\Examples\BMP Extractor\test.cbp" />
 		<Project filename="..\Examples\expeditor\expeditor\expeditor.cbp" active="1" />
+		<Project filename="..\..\..\My Documents\dev\obliczenia\obliczenia.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

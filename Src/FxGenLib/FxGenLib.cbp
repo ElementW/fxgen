@@ -165,6 +165,7 @@
 		<Compiler>
 			<Add option="-DHQNOISE" />
 			<Add directory="..\..\Externals\vgvm" />
+			<Add directory="..\..\Externals" />
 		</Compiler>
 		<Unit filename="Archive.cpp" />
 		<Unit filename="Archive.h" />
