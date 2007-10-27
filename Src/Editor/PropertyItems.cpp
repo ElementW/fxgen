@@ -133,7 +133,7 @@ IMPLEMENT_CLASS(NFloatProp, NPropertyItem);
 
 void NFloatProp::DrawItem(NGraphics* pdc, NRect& rcItem)
 {
-	m_strValue.Format("%f", m_pvarValue->fVal);
+	m_strValue.Format("%0.3f", m_pvarValue->fVal);
 	pdc->DrawText(m_strValue.Buffer(), rcItem, DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 }
 
@@ -150,6 +150,9 @@ bool NFloatProp::EndEdit(bool bSaveChanged)
 bool NFloatProp::AddValue(sdword dwDelta)
 {
 	m_pvarValue->fVal = m_pvarValue->fVal + ((float)dwDelta)/1000.0f;
+	m_pvarValue->fVal *= 10000;
+	m_pvarValue->fVal = floor(m_pvarValue->fVal + .5);
+	m_pvarValue->fVal /= 10000;
 	return true;
 }
 
