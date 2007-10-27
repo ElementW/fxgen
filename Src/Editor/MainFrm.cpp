@@ -352,7 +352,7 @@ void NMainFrm::OnOpenProject()
 
 void NMainFrm::SaveProject(NString path)
 {
-	bool show_message = false;
+//	bool show_message = false;
 
 	if (!path.Length())
 		path = projectname;

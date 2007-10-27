@@ -692,8 +692,8 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 		if(pNorm)
 		{
 			RGBA N = pPxNorm[size_t(x) + size_t(y)*w];
-			vec3 normal(N.r / 255., N.g / 255., 0);
-			count = normal.norm() * fcrackLength;
+			vec3 normal((N.r - 127.5f) / 127.5f, (N.g - 127.5f) / 127.5f, 0);
+			count = normal.norm() * normal.norm() * fcrackLength;
 			a = normal.azimuth();
 		}
 		else
@@ -706,6 +706,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 		{
 			udword ix = udword(x)%w;
 			udword iy = udword(y)%h;
+			a = a + fcrackVariation*(2.0f*(float)myfRandom()-1.0f);
 
 			x = x + cos(a);
 			y = y + sin(a);
@@ -715,10 +716,10 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 			if(pNorm)
 			{
 				RGBA* N = pPxNorm + ix + iy*w;
-				vec3 normal(N->r, N->g, 0);
+				vec3 normal(N->r-127, N->g-127, 0);
+
 				a = normal.azimuth();
 			}
-			a = a + fcrackVariation*(2.0f*(float)myfRandom()-1.0f);
 
 			pPxDst[ix + (iy*w)].dwCol = color.dwCol;
 		}

@@ -84,12 +84,19 @@ Inputs: 1
 Name: Crack
 Purpose: Create lines that can be randomly cracked or follow a normal map.
 Details: Number, length and variation of cracked lines can be set.
+
+Normal tracking (current, simplest mode may be called "direct")
+-----------------------------------------------------------------
+Wire or hair generation is hard. You may start with:
+Render->Blur->Normals->Abnormals->Colors->Abnormals->Crack
+Second Abnormals acts differently than first due to normals' distortion in Colors.
+
 Inputs: 1-2
 
 Name: Lerp
-Purpose: Linear interpolation. Mix first two inputs (a, b) in proportions given 
-by third input (c).
-Details: Each color channel is processed separately. Equation: x = bc + a(1-c)
+Purpose: Linear interpolation. Mix first two inputs (b, c) in proportions given 
+by first input (a).
+Details: Each color channel is processed separately. Equation: x = ba + c(1-a)
 Inputs: 3
 
 -------------------
