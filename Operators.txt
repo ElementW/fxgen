@@ -85,16 +85,17 @@ Name: Crack
 Purpose: Create lines that can be randomly cracked or follow a normal map.
 Details: Number, length and variation of cracked lines can be set.
 
-Normal tracking (current, simplest mode may be called "direct")
------------------------------------------------------------------
-Wire or hair generation is hard. You may start with:
-Render->Blur->Normals->Abnormals->Colors->Abnormals->Crack
-Second Abnormals acts differently than first due to normals' distortion in Colors.
+Normal tracking
+-----------------
+Lines are generated where normals look at sides (r, g channels are set to
+something different than 127). Colors operator may help with eliminating
+unnecessary normals. Abnormals operator can rotate normals, causing them to
+wrap objects, as well as mask them with additional normal map in Quaternion mode.
 
 Inputs: 1-2
 
 Name: Lerp
-Purpose: Linear interpolation. Mix first two inputs (b, c) in proportions given 
+Purpose: Linear interpolation. Mix first two inputs (b, c) in proportions given
 by first input (a).
 Details: Each color channel is processed separately. Equation: x = ba + c(1-a)
 Inputs: 3

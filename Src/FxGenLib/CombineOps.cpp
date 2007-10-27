@@ -617,16 +617,15 @@ static NVarsBlocDesc blocdescCrackOp[] =
 	VAR(eudword,	true, "Color",			"-1",		"NColorProp")	//0
 	VAR(euword,		true, "Count",			"100",	"NUwordProp") //1
 	VAR(eubyte,		true, "Variation",	"64",		"NUbyteProp") //2
-// will create a "bear fur" same as we can find in ProFX presets
-//	VAR(eubyte,		true, "Group",			"0",	"NUbyteProp") //
 	VAR(eubyte,		true, "Length",			"255",	"NUbyteProp") //3
 	VAR(euword,		true, "Seed",				"5412",	"NUwordProp") //4
+	VAR(eubyte,		true, "Length decision", "0,[Random,Constant,Normal based]",	"NUbyteComboProp") //5
 };
 
 NCrackOp::NCrackOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(5, blocdescCrackOp, 2);
+	m_pcvarsBloc = AddVarsBloc(6, blocdescCrackOp, 2);
 	m_pcvarsBloc->SetMapVarBlocDesc(5, mapblocdescCrackOp);
 
 }
@@ -667,13 +666,14 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 	//Get Variables Values
 	RGBA color;
-	ubyte byVariation, byLength;
+	ubyte byVariation, byLength, byMode;
 	uword wSeed, wCount;
 	m_pcvarsBloc->GetValue(0, _ftime, (udword&)color);
 	m_pcvarsBloc->GetValue(1, _ftime, wCount);
 	m_pcvarsBloc->GetValue(2, _ftime, byVariation);
 	m_pcvarsBloc->GetValue(3, _ftime, byLength);
 	m_pcvarsBloc->GetValue(4, _ftime, wSeed);
+	m_pcvarsBloc->GetValue(5, _ftime, byMode);
 
 	SetSeedValue(wSeed);
 
@@ -688,20 +688,30 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 		float y = (float)myfRandom() * float(h);
 		float a;
 
+		// determine line length
 		sdword count;
 		if(pNorm)
 		{
 			RGBA N = pPxNorm[size_t(x) + size_t(y)*w];
 			vec3 normal((N.r - 127.5f) / 127.5f, (N.g - 127.5f) / 127.5f, 0);
-			count = normal.norm() * normal.norm() * fcrackLength;
 			a = normal.azimuth();
+			if(byMode == 0)
+				count = udword(myfRandom()*fcrackLength);
+			else if(byMode == 1)
+				count = fcrackLength;
+			else
+				count = normal.norm() * normal.norm() * fcrackLength;
 		}
 		else
 		{
 			a = 2.0f*3.141592f*(float)myfRandom();
-			count = udword(myfRandom()*fcrackLength);
+			if(byMode == 0)
+				count = udword(myfRandom()*fcrackLength);
+			else
+				count = fcrackLength;
 		}
 
+		// draw a line
 		while( --count >= 0 )
 		{
 			udword ix = udword(x)%w;

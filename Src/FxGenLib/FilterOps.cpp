@@ -86,9 +86,11 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	// Don't change the number of passes if you don't know what you're doing :)
 	ubyte byPasses = byType == 1 ? 3 : 1;
 
-	//Radius
-	float radiusW= (float)byWidth / 2.0f * _fDetailFactor;
-	float radiusH= (float)byHeight /2.0f * _fDetailFactor;
+	//Radius: 0->0, 2->1, 255->127.5d
+	float radiusW= (float)byWidth / 2.0f;
+	radiusW *= pow(_fDetailFactor, (radiusW-1)/126.5);
+	float radiusH= (float)byHeight /2.0f;
+	radiusH *= pow(_fDetailFactor, (radiusH-1)/126.5);
 
 	//Amplify
 	float amplify= (float)byAmplify;
@@ -863,19 +865,19 @@ udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 				else if(comp == 1) // height
 				{
 					axis_to_quat(current,
-					vec3(0,0,((pcurQuat->r+pcurQuat->g+pcurQuat->b)/3.-127.5f)/127.5f),
-					2 * M_PI * pcurQuat->a/255.f * sensitivity);
+					vec3(0,0,1),
+					2 * M_PI * (pcurQuat->r+pcurQuat->g+pcurQuat->b)/765.f * sensitivity);
 					rotation = current * rotation0;
 				}
 
 				else if(comp == 2) // quaternions
 				{
 					axis_to_quat(current,
-					vec3((pcurQuat->r-127.5f)/127.5f,
-					(pcurQuat->g-127.5f)/127.5f,(pcurQuat->b-127.5f)/127.5f),
+					vec3(pcurQuat->r-127,
+					pcurQuat->g-127,pcurQuat->b-127),
 					2 * M_PI * pcurQuat->a/255.f * sensitivity);
 
-					current.Normalize(); // not enough - blur then?
+//					current.Normalize(); // not enough - blur then?
 
 					rotation = current * rotation0;
 				}
