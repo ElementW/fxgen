@@ -91,13 +91,15 @@ Lines are generated where normals look at sides (r, g channels are set to
 something different than 127). Colors operator may help with eliminating
 unnecessary normals. Abnormals operator can rotate normals, causing them to
 wrap objects, as well as mask them with additional normal map in Quaternion mode.
+Line placement decision can be made according the alpha channel - use AlphaMask
+to add it.
 
 Inputs: 1-2
 
 Name: Lerp
-Purpose: Linear interpolation. Mix first two inputs (b, c) in proportions given
-by first input (a).
-Details: Each color channel is processed separately. Equation: x = ba + c(1-a)
+Purpose: Linear interpolation. Mix first two inputs (a, b) in proportions given
+by third input (c).
+Details: Each color channel is processed separately. Equation: x = bc + a(1-c)
 Inputs: 3
 
 -------------------
@@ -160,7 +162,8 @@ Map translation
 ----------------
 Alpha channel - a(0,255) -> angle(0,2pi)
 Coords - r(0,255) -> x(-1,1)
-Height map - luminance -> z
+Height map - luminance(0,255) -> angle(0,2pi) (axis is Z)
+Normal map - is blended with the source.
 
 Options
 ---------

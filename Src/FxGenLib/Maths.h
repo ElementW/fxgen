@@ -100,14 +100,14 @@ struct FXGEN_API vec3
 		if(x == 0)
 		{
 			if(y > 0)
-				return M_PI / 2;
+				return nv_pi / 2;
 			else
-				return 1.5 * M_PI;
+				return 1.5f * nv_pi;
 		}
 		else if(x < 0)
-			return atan(y / x) + M_PI;
+			return atan(y / x) + nv_pi;
 		else if(y < 0)
-			return atan(y / x) + 2 * M_PI;
+			return atan(y / x) + 2 * nv_pi;
 		else
 			return atan(y / x);
 	}
@@ -229,6 +229,14 @@ public:
 		return result;
 	}
 
+	void operator*=(float coeff)
+	{
+		w = w * coeff;
+		x = x * coeff;
+		y = y * coeff;
+		z = z * coeff;
+	}
+
 	quat operator*(const quat& other)
 	{
 		quat result;
@@ -253,14 +261,12 @@ public:
 		return result;
 	}
 
-	quat& operator+=(const quat& other)
+	void operator+=(const quat& other)
 	{
 		x += other.x;
 		y += other.y;
 		z += other.z;
 		w += other.w;
-
-		return *this;
 	}
 };
 

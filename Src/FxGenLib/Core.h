@@ -137,8 +137,8 @@ void FXGEN_API gDebugLog(const char* fmt, ... );
 
 
 //Variables
-#define		VAR(type,	bCanBeAnimate, pszName,	pszDefValue, pszCLASSGUI) type,	bCanBeAnimate, pszName,	pszDefValue, pszCLASSGUI,
-#define		MAP(version, type, pszMapping,	pszExpression )	version,	type, pszMapping,	pszExpression,
+#define		VAR(type,	bCanBeAnimate, pszName,	pszDefValue, pszCLASSGUI) { type,	bCanBeAnimate, pszName,	pszDefValue, pszCLASSGUI },
+#define		MAP(version, type, pszMapping,	pszExpression )	{ version,	type, pszMapping,	pszExpression },
 
 
 //-----------------------------------------------------------------

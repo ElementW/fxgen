@@ -641,24 +641,22 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst	= (NBitmap*)m_pObj;
-	NBitmap* pNorm	= null;
 
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
 	pDst->SetSize(w,h);
 
-	RGBA* pPxDst	= pDst->GetPixels();
-	RGBA* pPxNorm	= null;
+	RGBAArray normals, dest(pDst->GetPixels(), w);
 
 	if(m_byInputs==2)
 	{
 		_pOpsInts++;
-		pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
+		NBitmap* pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
 
 		if(pNorm->GetWidth() < w || pNorm->GetHeight() < h)
 			return (udword)-1; // insufficient size
 
-		pPxNorm = pNorm->GetPixels();
+		normals = RGBAArray(pNorm->GetPixels(), pNorm->GetWidth());
 	}
 
 	//Copy Source to This
@@ -677,63 +675,56 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 	SetSeedValue(wSeed);
 
-	float fcrackVariation = (float)byVariation / 256.0f;
-	float fcrackLength = (float)byLength * _fDetailFactor;
-
 	//Process operator
 	uword n = 0;
+	wCount *= _fDetailFactor;
 	while( n++ < wCount )
 	{
-		float x = (float)myfRandom() * float(w);
-		float y = (float)myfRandom() * float(h);
-		float a;
+		float x = myfRandom() * w;
+		float y = myfRandom() * h;
+		float a = 0;
 
 		// determine line length
-		sdword count;
-		if(pNorm)
+		sdword count = byLength * _fDetailFactor;
+
+		if(normals.width)
 		{
-			RGBA N = pPxNorm[size_t(x) + size_t(y)*w];
-			vec3 normal((N.r - 127.5f) / 127.5f, (N.g - 127.5f) / 127.5f, 0);
-			a = normal.azimuth();
+			// alpha-based placement decision
+			if((normals(x,y).a * myfRandom()) < 128)
+				continue;
+
 			if(byMode == 0)
-				count = udword(myfRandom()*fcrackLength);
-			else if(byMode == 1)
-				count = fcrackLength;
-			else
-				count = normal.norm() * normal.norm() * fcrackLength;
+				count *= myfRandom();
+			else if(byMode == 2)
+			{
+				vec3 normal((normals(x,y).r - 128) / 127.f, (normals(x,y).g - 128) / 127.f, 0);
+				count *= normal.norm() * normal.norm() * 16 /* adjusted value */;
+			}
 		}
 		else
 		{
-			a = 2.0f*3.141592f*(float)myfRandom();
-			if(byMode == 0)
-				count = udword(myfRandom()*fcrackLength);
-			else
-				count = fcrackLength;
+			a = 2.0f*3.141592f*myfRandom();
+			byMode || (count *= myfRandom());
 		}
 
 		// draw a line
 		while( --count >= 0 )
 		{
-			udword ix = udword(x)%w;
-			udword iy = udword(y)%h;
-			a = a + fcrackVariation*(2.0f*(float)myfRandom()-1.0f);
+			size_t ix = x;
+			ix %= w;
+			size_t iy = y;
+			iy %= h;
+
+			if(normals.width)
+				a = vec3(normals(ix,iy).r-128, normals(ix,iy).g-128, 0).azimuth();
+
+			a += byVariation / 256.0f *(2.0f*myfRandom()-1.0f);
+
+			dest(ix,iy).dwCol = color.dwCol;
 
 			x = x + cos(a);
 			y = y + sin(a);
-			if( x < 0.0 ) x = x + float(w);
-			if( y < 0.0 ) y = y + float(h);
-
-			if(pNorm)
-			{
-				RGBA* N = pPxNorm + ix + iy*w;
-				vec3 normal(N->r-127, N->g-127, 0);
-
-				a = normal.azimuth();
-			}
-
-			pPxDst[ix + (iy*w)].dwCol = color.dwCol;
 		}
-
 	}
 
 	return 0;
