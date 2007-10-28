@@ -779,6 +779,30 @@ void NVectorOp::SetVectorData(ubyte* _data, udword _length)
 	m_pProgram->load(_data, _length);
 }
 
+bool NVectorOp::Save(NArchive* _s)
+{
+	if(!NOperator::Save(_s))
+		return false;
+	*_s << (udword)m_pProgram->getSize();
+	_s->PutData(m_pProgram->getBuffer(), m_pProgram->getSize());
+	return true;
+}
+
+bool NVectorOp::Load(NArchive* _l)
+{
+	NOperator::Load(_l);
+	udword size;
+	*_l >> size;
+	if(size > 0)
+	{
+		ubyte* data = (ubyte*)NMemAlloc(size);
+		_l->GetData(data, size);
+		m_pProgram->load(data, size);
+		NMemFree(data);
+	}
+        return true;
+}
+
 udword NVectorOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//No Inputs!

@@ -183,6 +183,10 @@ public:
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 
 private:
+	//Serialization
+	virtual	bool Save(NArchive* _s);	//!< Save object
+	virtual	bool Load(NArchive* _l);	//!< Load object
+
 	vgvm::cairo::CairoContext*	m_pContext;
 	vgvm::Program*			m_pProgram;
 };
