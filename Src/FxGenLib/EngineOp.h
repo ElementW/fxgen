@@ -220,3 +220,25 @@ protected:
 	//Garbages for media (bitmaps ...)
 	NObjectGarbage	m_bitmapsAlloc;
 };
+
+//! Simple wrapper for pixel arrays
+//! RectangularArray r(RGBA*, width);
+//! RGBA col = r(x,y);
+template<typename T> struct RectangularArray
+{
+	RectangularArray(): width(0), data(NULL) {}
+
+	RectangularArray(T* array, size_t w): width(w), data(array) {}
+
+	template<typename size_type>inline T& operator()(size_type x, size_type y)
+	{
+		return *(data + static_cast<size_t>(x) + static_cast<size_t>(y) * width);
+	}
+
+	size_t width;
+
+private:
+	T* data;
+};
+
+typedef RectangularArray<RGBA> RGBAArray;

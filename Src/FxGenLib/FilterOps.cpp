@@ -88,9 +88,9 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 
 	//Radius: 0->0, 2->1, 255->127.5d
 	float radiusW= (float)byWidth / 2.0f;
-	radiusW *= pow(_fDetailFactor, (radiusW-1)/126.5);
+	radiusW *= pow(_fDetailFactor, (radiusW-1)/126.5f);
 	float radiusH= (float)byHeight /2.0f;
-	radiusH *= pow(_fDetailFactor, (radiusH-1)/126.5);
+	radiusH *= pow(_fDetailFactor, (radiusH-1)/126.5f);
 
 	//Amplify
 	float amplify= (float)byAmplify;
@@ -358,8 +358,8 @@ udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	fconstrast = fconstrast*fconstrast*fconstrast;
 	contrast=(sdword)(fconstrast*256.0f);
 
-	ubyte minalpha = (byAlpha >=127) ? (byAlpha - 127) * 2. - (byAlpha - 127) / 128. : 0;
-	ubyte maxalpha = (byAlpha <=127) ? byAlpha * 2. + byAlpha / 127. : 255;
+	ubyte minalpha = (byAlpha >=127) ? (byAlpha - 127) * 2.f - (byAlpha - 127) / 128.f : 0;
+	ubyte maxalpha = (byAlpha <=127) ? byAlpha * 2.f + byAlpha / 127.f : 255;
 	float alphamult = (maxalpha - minalpha) / 255.;
 
 	RGBA* pPxSrc = pSrc->GetPixels();
@@ -771,10 +771,10 @@ IMPLEMENT_CLASS(NAbnormalsOp, NOperator);
 static NVarsBlocDesc blocdescAbnormalsOp[] =
 {
 	VAR(eubyte,	false, "Rotation",	"", "")	//0
-	VAR(efloat,	true, "w",	"0", "NFloatProp")	//1 "1.0" is full angle
+	VAR(efloat,	true, "w",	"0.25", "NFloatProp")	//1 "1.0" is full angle
 	VAR(efloat,	true, "x",	"0", "NFloatProp")	//2
 	VAR(efloat,	true, "y",	"0", "NFloatProp")	//3
-	VAR(efloat,	true, "z",	"0", "NFloatProp")	//4
+	VAR(efloat,	true, "z",	"1.0", "NFloatProp")	//4
 	VAR(eubyte,	false, "Options",	"", "")	//5
 	VAR(eubyte,	true, "Sensitivity",	"127", "NUbyteProp")	//6
 	VAR(eubyte,	true, "Compensation",	"0,[Normal,Height,Quaternion]", "NUbyteComboProp")	//7
@@ -801,12 +801,10 @@ udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst = (NBitmap*)m_pObj;
-	NBitmap* pQuat = null;
 
 	udword width = pSrc->GetWidth();
 	udword height = pSrc->GetHeight();
 	pDst->SetSize(width,height);
-
 
 	/////////////////////////////////////////
 	//Get Variables Values
@@ -820,92 +818,83 @@ udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	m_pcvarsBloc->GetValue(7, _ftime, comp);
 	m_pcvarsBloc->GetValue(8, _ftime, mirror);
 	quat rotation;
-	axis_to_quat(rotation, vec3(x, y, z), 2 * M_PI * w);
+	axis_to_quat(rotation, vec3(x, y, z), 2 * nv_pi * w);
 	quat rotation0 = rotation;
-	sensitivity = sens / 255.;
+	sensitivity = sens / 255.f;
 
 	//////////////////////////////////////////
 	// Process
-	RGBA* pcurSrc = pSrc->GetPixels();
-	RGBA* pcurDst = pDst->GetPixels();
-	RGBA* pcurQuat = null;
+	RGBAArray pcurSrc(pSrc->GetPixels(), width);
+	RGBAArray pcurDst(pDst->GetPixels(), width);
+	RGBAArray pcurQuat;
 
 	if(m_byInputs==2)
 	{
 		_pOpsInts++;
-		pQuat = (NBitmap*)(*_pOpsInts)->m_pObj;
+		NBitmap* pQuat = (NBitmap*)(*_pOpsInts)->m_pObj;
 
 		if(pQuat->GetWidth() < width || pQuat->GetHeight() < height)
 			return (udword)-1; // insufficient size
 
-		pcurQuat = pQuat->GetPixels();
+		pcurQuat = RGBAArray(pQuat->GetPixels(), width);
 	}
 
 
 	for (udword y=0; y<height; y++)
-	{
 		for (udword x=0; x<width; x++)
 		{
 			quat v(
-			(pcurSrc->r-127.5f)/127.5f,
-			(pcurSrc->g-127.5f)/127.5f,
-			(pcurSrc->b-127.5f)/127.5f, 0), offset(0,0,0,0);
+			(pcurSrc(x,y).r-127.5f)/127.5f,
+			(pcurSrc(x,y).g-127.5f)/127.5f,
+			(pcurSrc(x,y).b-127.5f)/127.5f, 0);
 
-			if(pQuat)
+			if(pcurQuat.width)
 			{
 				quat current;
 
 				if(comp == 0) // normals
 				{
-					offset = quat(
-					(pcurQuat->r-127.5f)/127.5f,
-					(pcurQuat->g-127.5f)/127.5f,(pcurQuat->b-127.5f)/127.5f, 0);
+					quat offset = quat(
+					(pcurQuat(x,y).r-127.5f)/127.5f,
+					(pcurQuat(x,y).g-127.5f)/127.5f,(pcurQuat(x,y).b-127.5f)/127.5f, 0);
+					v *= (1 - sensitivity);
+					v += offset * sensitivity;
 				}
 
 				else if(comp == 1) // height
 				{
 					axis_to_quat(current,
 					vec3(0,0,1),
-					2 * M_PI * (pcurQuat->r+pcurQuat->g+pcurQuat->b)/765.f * sensitivity);
+					2 * nv_pi * (pcurQuat(x,y).r+pcurQuat(x,y).g+pcurQuat(x,y).b)/765.f * sensitivity);
 					rotation = current * rotation0;
 				}
-
+ 
 				else if(comp == 2) // quaternions
 				{
 					axis_to_quat(current,
-					vec3(pcurQuat->r-127,
-					pcurQuat->g-127,pcurQuat->b-127),
-					2 * M_PI * pcurQuat->a/255.f * sensitivity);
-
-//					current.Normalize(); // not enough - blur then?
+					vec3(pcurQuat(x,y).r-127,
+					pcurQuat(x,y).g-127,pcurQuat(x,y).b-127),
+					2 * nv_pi * pcurQuat(x,y).a/255.f * sensitivity);
 
 					rotation = current * rotation0;
 				}
-
-				pcurQuat++;
 			}
 
-			rotation.Normalize();
-			v += offset * sensitivity;
 			v = rotation * v * rotation.Inverse();
-
 			v.Normalize();
-			pcurDst->r = v.x * 127.5f + 127.5f;
-			pcurDst->g = v.y * 127.5f + 127.5f;
-			pcurDst->b = v.z * 127.5f + 127.5f;
-			pcurDst->a = 255;
+
+			pcurDst(x,y).r = v.x * 127.5f + 127.5f;
+			pcurDst(x,y).g = v.y * 127.5f + 127.5f;
+			pcurDst(x,y).b = v.z * 127.5f + 127.5f;
+			pcurDst(x,y).a = 255;
 
 			// mirroring - for broken normal maps
 			if(mirror == 1 || mirror == 3)
-					pcurDst->r = 255 - pcurDst->r;
+					pcurDst(x,y).r = 255 - pcurDst(x,y).r;
 
 			if(mirror == 2 || mirror == 3)
-					pcurDst->g = 255 - pcurDst->g;
-
-			pcurSrc++;
-			pcurDst++;
+					pcurDst(x,y).g = 255 - pcurDst(x,y).g;
 		}
-	}
 
 	return 0;
 }
@@ -1379,7 +1368,7 @@ NAlphaMaskOp::NAlphaMaskOp()
 udword NAlphaMaskOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//One or two Inputs
-	if (m_byInputs <1 || m_byInputs > 2)		return (udword)-1;
+	if (m_byInputs !=1 && m_byInputs != 2)		return (udword)-1;
 
 	//Bitmap instance
 	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
@@ -1393,45 +1382,38 @@ udword NAlphaMaskOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	udword h = pSrc->GetHeight();
 	pDst->SetSize(w,h);
 
+	//Get Variables Values
 	ubyte colormask;
 	m_pcvarsBloc->GetValue(0, _ftime, colormask);
 
 	RGBA* pPxSrc = pSrc->GetPixels();
 	RGBA* pPxDst = pDst->GetPixels();
-	RGBA*	pPxAlpha = null;
+	RGBA* pPxAlpha = null;
 
 	if(m_byInputs == 2)
 	{
-		_pOpsInts++;
+		pAlpha = (NBitmap*)(*++_pOpsInts)->m_pObj;
 
-		pAlpha = (NBitmap*)(*_pOpsInts)->m_pObj;
-		pPxAlpha = pAlpha->GetPixels();
 		if(pAlpha->GetWidth() < w || pAlpha->GetHeight() < h)
 			return (udword)-1; // insufficient alpha channel size
+
+		pPxAlpha = pAlpha->GetPixels();
 	}
 
+	// Process
 	for (udword y=0; y<h; y++)
-	{
 		for (udword x=0; x<w; x++)
 		{
 			if(pAlpha)
 			{
-				pPxDst->r = pPxSrc->r;
-				pPxDst->g = pPxSrc->g;
-				pPxDst->b = pPxSrc->b;
+				*pPxDst = *pPxSrc;
 
 				if(colormask)
 				{
-					vec3 c1, c2;
+					vec3 c1(pPxSrc->r, pPxSrc->g, pPxSrc->b);
+					vec3 c2(pPxAlpha->r, pPxAlpha->g, pPxAlpha->b);
 
-					c1.x = pPxSrc->r;
-					c1.y = pPxSrc->g;
-					c1.z = pPxSrc->b;
 					c1.normalize();
-
-					c2.x = pPxAlpha->r;
-					c2.y = pPxAlpha->g;
-					c2.z = pPxAlpha->b;
 					c2.normalize();
 
 					static float correctness = 0;
@@ -1439,12 +1421,12 @@ udword NAlphaMaskOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 					if(c1.norm() && c2.norm()) // else - use existing value to avoid hot-spots
 						dot(correctness, c1, c2);
 
-					pPxDst->a = pPxSrc->a * correctness;
+					pPxDst->a *= correctness;
 				}
 				else // monochrome mask
 				{
 					float alpha = (pPxAlpha->r + pPxAlpha->g + pPxAlpha->b) / 3. / 255.;
-					pPxDst->a = pPxSrc->a * alpha;
+					pPxDst->a *= alpha;
 				}
 
 				pPxAlpha++;
@@ -1458,7 +1440,6 @@ udword NAlphaMaskOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 			pPxDst++;
 			pPxSrc++;
 		}
-	}
 
 	return 0;
 }
