@@ -221,6 +221,9 @@ protected:
 	NObjectGarbage	m_bitmapsAlloc;
 };
 
+
+
+//###JN### to move from Engine !
 //! Simple wrapper for pixel arrays
 //! RectangularArray r(RGBA*, width);
 //! RGBA col = r(x,y);
