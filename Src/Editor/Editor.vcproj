@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
@@ -63,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="winmm.lib comctl32.lib opengl32.lib cairo.lib cairomm-1.0d.lib vgvmd.lib vgvm_svgd.lib"
+				AdditionalDependencies="winmm.lib comctl32.lib opengl32.lib cairo.lib cairomm-1.0d.lib "
 				OutputFile="$(OutDir)/Editor_D.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\Externals\tinyxml;..\..\Externals\cairo;..\..\Externals\vgvm"
@@ -714,6 +714,10 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\Externals\vgvm\context_cairo.h"
+			>
+		</File>
 		<File
 			RelativePath=".\Editor.rc"
 			>

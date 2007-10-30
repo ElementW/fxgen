@@ -620,12 +620,13 @@ static NVarsBlocDesc blocdescCrackOp[] =
 	VAR(eubyte,		true, "Length",			"255",	"NUbyteProp") //3
 	VAR(euword,		true, "Seed",				"5412",	"NUwordProp") //4
 	VAR(eubyte,		true, "Length decision", "0,[Random,Constant,Normal based]",	"NUbyteComboProp") //5
+	VAR(eubyte,		true, "High quality", "0,[Off,On]",	"NUbyteComboProp") //6
 };
 
 NCrackOp::NCrackOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(6, blocdescCrackOp, 2);
+	m_pcvarsBloc = AddVarsBloc(7, blocdescCrackOp, 2);
 	m_pcvarsBloc->SetMapVarBlocDesc(5, mapblocdescCrackOp);
 
 }
@@ -646,7 +647,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	udword h = pSrc->GetHeight();
 	pDst->SetSize(w,h);
 
-	RGBAArray normals, dest(pDst->GetPixels(), w);
+	RGBAArray normals, dest(pDst->GetPixels(), w, h);
 
 	if(m_byInputs==2)
 	{
@@ -656,7 +657,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 		if(pNorm->GetWidth() < w || pNorm->GetHeight() < h)
 			return (udword)-1; // insufficient size
 
-		normals = RGBAArray(pNorm->GetPixels(), pNorm->GetWidth());
+		normals = RGBAArray(pNorm->GetPixels(), w, h);
 	}
 
 	//Copy Source to This
@@ -664,7 +665,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 	//Get Variables Values
 	RGBA color;
-	ubyte byVariation, byLength, byMode;
+	ubyte byVariation, byLength, byMode, byHQ;
 	uword wSeed, wCount;
 	m_pcvarsBloc->GetValue(0, _ftime, (udword&)color);
 	m_pcvarsBloc->GetValue(1, _ftime, wCount);
@@ -672,6 +673,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	m_pcvarsBloc->GetValue(3, _ftime, byLength);
 	m_pcvarsBloc->GetValue(4, _ftime, wSeed);
 	m_pcvarsBloc->GetValue(5, _ftime, byMode);
+	m_pcvarsBloc->GetValue(6, _ftime, byHQ);
 
 	SetSeedValue(wSeed);
 
@@ -680,9 +682,10 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	wCount *= _fDetailFactor;
 	while( n++ < wCount )
 	{
-		float x = myfRandom() * w;
-		float y = myfRandom() * h;
-		float a = 0;
+		// double gives better resolution
+		double x = myfRandom() * w;
+		double y = myfRandom() * h;
+		double a = 0;
 
 		// determine line length
 		sdword count = byLength * _fDetailFactor;
@@ -699,6 +702,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 			{
 				vec3 normal((normals(x,y).r - 128) / 127.f, (normals(x,y).g - 128) / 127.f, 0);
 				count *= normal.norm() * normal.norm() * 16 /* adjusted value */;
+				count = min(count, byLength * _fDetailFactor);
 			}
 		}
 		else
@@ -715,12 +719,15 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 			size_t iy = y;
 			iy %= h;
 
+			if(byHQ)
+				dest.set(x, y, color);
+			else
+				dest(ix, iy) = color;
+
 			if(normals.width)
-				a = vec3(normals(ix,iy).r-128, normals(ix,iy).g-128, 0).azimuth();
+				a = vec3(128 - normals(ix,iy).r, normals(ix,iy).g-128, 0).azimuth() + .5f * nv_pi;
 
 			a += byVariation / 256.0f *(2.0f*myfRandom()-1.0f);
-
-			dest(ix,iy).dwCol = color.dwCol;
 
 			x = x + cos(a);
 			y = y + sin(a);
@@ -732,7 +739,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 float NCrackOp::myfRandom()
 {
-	return (float)myRandom() / 65536.0f;
+	return (float)myRandom(1) / 65536.0f;
 }
 
 
@@ -788,7 +795,7 @@ udword NLerpOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 			pPxDst->r = (pPxSrc1->r*(255-pPxBlend->r) + pPxSrc2->r*pPxBlend->r) >> 8;
 			pPxDst->g = (pPxSrc1->g*(255-pPxBlend->g) + pPxSrc2->g*pPxBlend->g) >> 8;
 			pPxDst->b = (pPxSrc1->b*(255-pPxBlend->b) + pPxSrc2->b*pPxBlend->b) >> 8;
-			pPxDst->a = pPxSrc1->a;
+			pPxDst->a = (pPxSrc1->a*(255-pPxBlend->a) + pPxSrc2->a*pPxBlend->a) >> 8;
 
 			pPxSrc1++;
 			pPxSrc2++;

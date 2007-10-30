@@ -35,6 +35,37 @@ struct RGBA
 		struct { ubyte x, y, z, w;	};
 	};
 
+	RGBA operator*(float c) const
+	{
+		RGBA retval(*this);
+		retval.a *= c;
+		return retval;
+	}
+
+	void operator*=(float c)
+	{
+		a *= c;
+	}
+
+	RGBA operator+(const RGBA& v) const
+	{
+		RGBA retval;
+		float alpha = v.a / 255.f;
+		retval.a = v.a     +     a * (1 - alpha);
+		retval.r = v.r * alpha + r * (1 - alpha);
+		retval.g = v.g * alpha + g * (1 - alpha);
+		retval.b = v.b * alpha + b * (1 - alpha);
+		return retval;
+	}
+
+	void operator+=(const RGBA& v)
+	{
+		float alpha = v.a / 255.f;
+		a = v.a     +     a * (1 - alpha);
+		r = v.r * alpha + r * (1 - alpha);
+		g = v.g * alpha + g * (1 - alpha);
+		b = v.b * alpha + b * (1 - alpha);
+	}
 };
 
 
