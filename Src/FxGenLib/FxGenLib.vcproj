@@ -147,7 +147,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="cairo.lib cairomm-1.0.lib user32.lib"
-				OutputFile="$(OutDir)\$(ProjectName).dll"
+				OutputFile="..\..\W32bin\$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\..\Externals\cairo;..\..\Externals\vgvm;"
 			/>
 			<Tool

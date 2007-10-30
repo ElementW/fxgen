@@ -94,10 +94,12 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 
 	//Amplify
 	float amplify= (float)byAmplify;
-	sdword amp = sdword(powf(floor(amplify*16.0f)/256.0f, 1.0f/byPasses)*256.0f);
+	float amp = powf(floor(amplify*16.0f)/256.0f, 1.0f/byPasses)*256.0f;
 
 	sdword bw = (sdword) (floor(radiusW)*2+1);
-  sdword bh = (sdword) (floor(radiusH)*2+1);
+	sdword bh = (sdword) (floor(radiusH)*2+1);
+	float wamp = amp / bw / 256;
+	float hamp = amp / bh / 256;
 
 
 	if (bw == 0 && bh == 0)
@@ -170,33 +172,32 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
               x=0;
               while (x<w)
               {
-                sdword r = (sum.r*amp)/(bw<<8);
-                sdword g = (sum.g*amp)/(bw<<8);
-                sdword b = (sum.b*amp)/(bw<<8);
-                sdword a = (sum.a*amp)/(bw<<8);
+                sdword r = (sum.r*wamp);
+                sdword g = (sum.g*wamp);
+                sdword b = (sum.b*wamp);
+                sdword a = (sum.a*wamp);
 
-                pPxDst[(x+bw/2)%w].r= (ubyte) ((r<255)?r:255);
-                pPxDst[(x+bw/2)%w].g= (ubyte) ((g<255)?g:255);
-                pPxDst[(x+bw/2)%w].b= (ubyte) ((b<255)?b:255);
-                pPxDst[(x+bw/2)%w].a= (ubyte) ((a<255)?a:255);;
+                RGBA& px = pPxDst[(x+bw/2)%w];
+                px.r= (ubyte) ((r<255)?r:255);
+                px.g= (ubyte) ((g<255)?g:255);
+                px.b= (ubyte) ((b<255)?b:255);
+                px.a= (ubyte) ((a<255)?a:255);
 
                 sum.r-=(sdword)pPxSrc->r;
                 sum.g-=(sdword)pPxSrc->g;
                 sum.b-=(sdword)pPxSrc->b;
-	              sum.a-=(sdword)pPxSrc->a;
+				sum.a-=(sdword)pPxSrc->a;
                 pPxSrc++;
 
-                sum.r+=(sdword)pAccu[(x+bw)%w].r;
-                sum.g+=(sdword)pAccu[(x+bw)%w].g;
-                sum.b+=(sdword)pAccu[(x+bw)%w].b;
-                sum.a+=(sdword)pAccu[(x+bw)%w].a;
+                RGBA& ac = pAccu[(x+bw)%w];
+                sum.r+=(sdword)ac.r;
+                sum.g+=(sdword)ac.g;
+                sum.b+=(sdword)ac.b;
+                sum.a+=(sdword)ac.a;
 
                 ++x;
               }
-
-
             }
-
           }
 
           /////////////////////////////////////////////////////////
@@ -255,26 +256,28 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
               y=0;
               while (y<h)
               {
-                sdword r = (sum.r*amp)/(bh<<8);
-                sdword g = (sum.g*amp)/(bh<<8);
-                sdword b = (sum.b*amp)/(bh<<8);
-                sdword a = (sum.a*amp)/(bh<<8);
+                sdword r = (sum.r*hamp);
+                sdword g = (sum.g*hamp);
+                sdword b = (sum.b*hamp);
+                sdword a = (sum.a*hamp);
 
-                pPxDst[((y+bh/2)%h)*w].r= (ubyte) ((r<255)?r:255);
-                pPxDst[((y+bh/2)%h)*w].g= (ubyte) ((g<255)?g:255);
-                pPxDst[((y+bh/2)%h)*w].b= (ubyte) ((b<255)?b:255);
-                pPxDst[((y+bh/2)%h)*w].a= (ubyte) ((a<255)?a:255);
+                RGBA& px = pPxDst[((y+bh/2)%h)*w];
+                px.r= (ubyte) ((r<255)?r:255);
+                px.g= (ubyte) ((g<255)?g:255);
+                px.b= (ubyte) ((b<255)?b:255);
+                px.a= (ubyte) ((a<255)?a:255);
 
                 sum.r-=(sdword)pPxSrc->r;
                 sum.g-=(sdword)pPxSrc->g;
                 sum.b-=(sdword)pPxSrc->b;
-								sum.a-=(sdword)pPxSrc->a;
+				sum.a-=(sdword)pPxSrc->a;
                 pPxSrc+=w;
 
-                sum.r+=(sdword)pAccu[((y+bh)%h)*w].r;
-                sum.g+=(sdword)pAccu[((y+bh)%h)*w].g;
-                sum.b+=(sdword)pAccu[((y+bh)%h)*w].b;
-                sum.a+=(sdword)pAccu[((y+bh)%h)*w].a;
+                RGBA& ac = pAccu[((y+bh)%h)*w];
+                sum.r+=(sdword)ac.r;
+                sum.g+=(sdword)ac.g;
+                sum.b+=(sdword)ac.b;
+                sum.a+=(sdword)ac.a;
 
                 ++y;
               }
@@ -749,7 +752,7 @@ udword NNormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 			pcurNorm->x = (ubyte) ((norm.x+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
 			pcurNorm->y = (ubyte) ((norm.y+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
 			pcurNorm->z = (ubyte) ((norm.z+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
-			pcurNorm->a = 255;
+			pcurNorm->a = pcurSour[x+y*w].a;
 
 			pcurNorm++;
 		}
@@ -868,7 +871,7 @@ udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 					2 * nv_pi * (pcurQuat(x,y).r+pcurQuat(x,y).g+pcurQuat(x,y).b)/765.f * sensitivity);
 					rotation = current * rotation0;
 				}
- 
+
 				else if(comp == 2) // quaternions
 				{
 					axis_to_quat(current,
@@ -886,7 +889,7 @@ udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 			pcurDst(x,y).r = v.x * 127.5f + 127.5f;
 			pcurDst(x,y).g = v.y * 127.5f + 127.5f;
 			pcurDst(x,y).b = v.z * 127.5f + 127.5f;
-			pcurDst(x,y).a = 255;
+			pcurDst(x,y).a = pcurSrc(x,y).a;
 
 			// mirroring - for broken normal maps
 			if(mirror == 1 || mirror == 3)
@@ -1443,3 +1446,4 @@ udword NAlphaMaskOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 
 	return 0;
 }
+
