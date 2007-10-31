@@ -127,7 +127,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="..\FxGenLib;..\GUILib;..\..\Externals\cairo;..\..\Externals\vgvm;..\..\Externals\tinyxml"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;USING_VGVM_DLL"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;USING_VGVM_DLL;_CRT_SECURE_NO_DEPRECATE"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				EnableEnhancedInstructionSet="2"
