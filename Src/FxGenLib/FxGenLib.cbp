@@ -187,6 +187,7 @@
 		<Unit filename="MainOps.h" />
 		<Unit filename="Maths.cpp" />
 		<Unit filename="Maths.h" />
+		<Unit filename="RectangularArray.h" />
 		<Unit filename="RenderOps.cpp" />
 		<Unit filename="RenderOps.h" />
 		<Unit filename="Stream.cpp" />

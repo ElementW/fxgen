@@ -6,13 +6,13 @@
 			<Depends filename="..\Src\FxGenLib\FxGenLib.cbp" />
 			<Depends filename="..\Src\GUILib\GUILib.cbp" />
 		</Project>
-		<Project filename="..\Src\FxGenLib\FxGenLib.cbp">
+		<Project filename="..\Src\FxGenLib\FxGenLib.cbp" active="1">
 			<Depends filename="..\Externals\vgvm\vgvm.cbp" />
 		</Project>
 		<Project filename="..\Externals\vgvm\vgvm.cbp" />
 		<Project filename="..\Externals\tinyxml\tinyxml_lib.cbp" />
 		<Project filename="..\Examples\BMP Extractor\test.cbp" />
-		<Project filename="..\Examples\expeditor\expeditor\expeditor.cbp" active="1" />
+		<Project filename="..\Examples\expeditor\expeditor\expeditor.cbp" />
 		<Project filename="..\..\..\My Documents\dev\obliczenia\obliczenia.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

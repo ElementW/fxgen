@@ -5,6 +5,7 @@
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
 //!					Anders Stenberg (anders.stenberg@gmail.com)
+//!						Sebastian Olter (qduaty@gmail.com)
 //!
 //!	\date		07-05-2007
 //!
@@ -24,6 +25,7 @@
 #include "RenderOps.h"
 #include "vgvm/vgvm.h"
 #include "vgvm/contexts/cairo.h"
+#include "RectangularArray.h"
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -525,12 +527,13 @@ static NVarsBlocDesc blocdescCellOp[] =
 	VAR(eudword,true, 	"Color",		"-1",		"NColorProp")	//4
 	VAR(euword,	true, 	"Seed",			"5412",	"NUwordProp") //5
 	VAR(eubyte,	true, 	"Mode",			"0,[Grid,Chessboard]", "NUbyteComboProp")	//6
+	VAR(eubyte,	true, 	"Pattern",			"0,[Both,Cross,Cone]", "NUbyteComboProp")	//6
 };
 
 NCellOp::NCellOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(7, blocdescCellOp, 3);
+	m_pcvarsBloc = AddVarsBloc(8, blocdescCellOp, 3);
 	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
 	m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescCellOp1);
 	m_pcvarsBloc->SetMapVarBlocDesc(6, mapblocdescCellOp2);
@@ -551,16 +554,15 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	w=(udword) ((float)w*_fDetailFactor);
 	h=(udword) ((float)h*_fDetailFactor);
 
-	ubyte byRegularity;
-	ubyte byDensity;
+	ubyte byRegularity, byDensity, chessboard, pattern;
 	uword wSeed;
-	ubyte chessboard;
 	RGBA col;
 	m_pcvarsBloc->GetValue(2, _ftime, byRegularity);
 	m_pcvarsBloc->GetValue(3, _ftime, byDensity);
 	m_pcvarsBloc->GetValue(4, _ftime, (udword&)col);
 	m_pcvarsBloc->GetValue(5, _ftime, wSeed);
 	m_pcvarsBloc->GetValue(6, _ftime, chessboard);
+	m_pcvarsBloc->GetValue(7, _ftime, pattern);
 
   byDensity = byDensity>1?byDensity:1;
 
@@ -571,6 +573,7 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	NBitmap* pDst = (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
 	RGBA* pPxDst = pDst->GetPixels();
+	RGBAArray arrDst(pPxDst,w,h);
 
 	//Init
 	const float regularity = byRegularity / 255.0f;
@@ -583,8 +586,8 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 		{
 			float rand1 = (float)myRandom() / 65536.0f;
 			float rand2 = (float)myRandom() / 65536.0f;
-			cellPoints[x+y*byDensity].x = (x+0.5f+(rand1-0.5f)*(1-regularity))/byDensity;
-			cellPoints[x+y*byDensity].y = (y+0.5f+(rand2-0.5f)*(1-regularity))/byDensity;
+			cellPoints[x+y*byDensity].x = (x+0.5f+(rand1-0.5f)*(1-regularity))/byDensity - 1.f/w;
+			cellPoints[x+y*byDensity].y = (y+0.5f+(rand2-0.5f)*(1-regularity))/byDensity - 1.f/h;
 			cellPoints[x+y*byDensity].z = 0;
 		}
 	}
@@ -594,6 +597,7 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	{
 		for (udword x=0; x<w; x++)
 		{
+//			bool cfc = false;// chessboard field color
 			vec3 pixelPos;
 			pixelPos.x = x/(float)w,
 			pixelPos.y = y/(float)h;
@@ -615,8 +619,9 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 					if (v==1 && y*byDensity>=h*(byDensity-1)) cellPos.y+=1;
 					vec3 tmp;
 					float dist = sub(tmp, pixelPos, cellPos).norm ();
-					if (dist<minDist) 
+					if (dist<minDist)
 					{
+//						cfc = ((xo%2)^(yo%2)) ^ (!u ^ !v);
 						nextMinDist = minDist;
 						minDist = dist;
 					} else if (dist<nextMinDist)
@@ -626,24 +631,29 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 				}
 			}
 
-			minDist = (nextMinDist-minDist)*byDensity;
+			switch(pattern)
+			{
+				case 0:default:
+					minDist = (nextMinDist - minDist) * byDensity;
+				break;
+				case 1:
+					minDist = 2 * nextMinDist * byDensity - 1;
+				break;
+				case 2:
+					minDist = 1 - minDist * byDensity;
+				break;
+			}
+
 			if (minDist<0) minDist = 0;
 			if (minDist>1) minDist = 1;
 
 			if(chessboard)
 			{
-				if((xo%2)^(yo%2))
-				{
-					pPxDst->r = (ubyte)((1-minDist/2.5)*(col.r));
-					pPxDst->g = (ubyte)((1-minDist/2.5)*(col.g));
-					pPxDst->b = (ubyte)((1-minDist/2.5)*(col.b));
-				}
-				else
-				{
-					pPxDst->r = (ubyte)((minDist/2.5)*(col.r));
-					pPxDst->g = (ubyte)((minDist/2.5)*(col.g));
-					pPxDst->b = (ubyte)((minDist/2.5)*(col.b));
-				}
+				bool cfc = ((xo%2)^(yo%2));
+				float coeff = (1 - 2 * cfc) / 2.5f;
+				pPxDst->r = (ubyte)((cfc + coeff * minDist)*col.r);
+				pPxDst->g = (ubyte)((cfc + coeff * minDist)*col.g);
+				pPxDst->b = (ubyte)((cfc + coeff * minDist)*col.b);
 			}
 			else
 			{
@@ -651,8 +661,8 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 				pPxDst->g = (ubyte)(minDist*col.g);
 				pPxDst->b = (ubyte)(minDist*col.b);
 			}
-			pPxDst->a = (ubyte)(col.a);
 
+			pPxDst->a = (ubyte)(col.a);
 			pPxDst++;
 		}
 	}

@@ -23,6 +23,7 @@
 //-----------------------------------------------------------------
 #include "pch.h"
 #include "FilterOps.h"
+#include "RectangularArray.h"
 
 template <typename T> T mod(T num)
 {
