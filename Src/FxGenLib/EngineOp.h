@@ -15,7 +15,7 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 #pragma once
-#include <math.h>
+//#include <math.h>
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -221,107 +221,3 @@ protected:
 	//Garbages for media (bitmaps ...)
 	NObjectGarbage	m_bitmapsAlloc;
 };
-
-
-
-//###JN### to move from Engine !
-//! Simple wrapper for pixel arrays
-//! RectangularArray r(RGBA*, width);
-//! RGBA col = r(x,y);
-template<typename T> struct RectangularArray
-{
-	RectangularArray(): width(0), data(NULL),need_delete(false)
-	{}
-
-	RectangularArray(T* array, size_t w, size_t h=0)
-	: width(w), height(h), data(array),need_delete(false)
-	{}
-
-	RectangularArray(size_t w, size_t h): width(w), height(h), data(new T[w*h])
-	{}
-
-	~RectangularArray()
-	{
-		if(need_delete)
-			delete[] data;
-	}
-
-	template<typename size_type>inline T& operator()(size_type x, size_type y)
-	{
-		if(height)
-			return *(data + (static_cast<size_t>(x)%width) + (static_cast<size_t>(y)%height) * width);
-		else
-			return *(data + static_cast<size_t>(x) + static_cast<size_t>(y) * width);
-	}
-
-	inline T get(double x, double y) const
-	{
-		double cy2 = (x-floor(x)) * (y-floor(y));
-		double cy1 = (y-floor(y)) * (ceil(x)-x);
-		double cx2 = (x-floor(x)) * (ceil(y)-y);
-		double cx1 = 1 - (cx1 + cy1 + cy2);
-		size_t ox = x, oy = y;
-		T *x1,*y1,*x2,*y2;
-
-		if(height)
-		{
-			x1=data+(ox%width)+((oy%height)*width);
-			y1=data+(ox%width)+(((oy+1)%height)*width);
-			x2=data+((ox+1)%width)+((oy%height)*width);
-			y2=data+((ox+1)%width)+(((oy+1)%height)*width);
-		}
-		else
-		{
-			x1=data+ox+(oy*width);
-			y1=data+ox+(oy+1)*width;
-			x2=data+ox+1+oy*width;
-			y2=data+ox+1+(oy+1)*width;
-		}
-
-		return *x1*cx1+*x2*cx2+*y1*cy1+*y2*cy2;
-	}
-
-	inline void set(double x, double y, const T& value)
-	{
-		double cy2 = (x-floor(x)) * (y-floor(y));
-		double cy1 = (y-floor(y)) * (ceil(x)-x);
-		double cx2 = (x-floor(x)) * (ceil(y)-y);
-		double cx1 = 1 - (cx1 + cy1 + cy2);
-		size_t ox = x, oy = y;
-		T *x1,*y1,*x2,*y2;
-
-		if(height)
-		{
-			x1=data+(ox%width)+((oy%height)*width);
-			y1=data+(ox%width)+(((oy+1)%height)*width);
-			x2=data+((ox+1)%width)+((oy%height)*width);
-			y2=data+((ox+1)%width)+(((oy+1)%height)*width);
-		}
-		else
-		{
-			x1=data+ox+(oy*width);
-			y1=data+ox+(oy+1)*width;
-			x2=data+ox+1+oy*width;
-			y2=data+ox+1+(oy+1)*width;
-		}
-
-		*x1 += value*cx1;
-		*y1 += value*cy1;
-		*x2 += value*cx2;
-		*y2 += value*cy2;
-	}
-
-	template<typename size_type>inline T& operator[](size_type idx)
-	{
-		return data[max(0,min(width*height-1,idx))];
-	}
-
-	inline size_t size() { return width * height; }
-
-	size_t width, height;
-	T* data;
-private:
-	bool need_delete;
-};
-
-typedef RectangularArray<RGBA> RGBAArray;

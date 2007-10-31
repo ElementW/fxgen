@@ -23,6 +23,7 @@
 //-----------------------------------------------------------------
 #include "pch.h"
 #include "CombineOps.h"
+#include "RectangularArray.h"
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -692,10 +693,6 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 		if(normals.width)
 		{
-			// alpha-based placement decision
-			if((normals(x,y).a * myfRandom()) < 128)
-				continue;
-
 			if(byMode == 0)
 				count *= myfRandom();
 			else if(byMode == 2)
@@ -719,13 +716,21 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 			size_t iy = y;
 			iy %= h;
 
+			if(normals.width)
+			{
+				vec3 normal(128 - normals(ix,iy).r, normals(ix,iy).g-128, 0);
+				a = normal.azimuth() + .5f * nv_pi;
+				// alpha-based placement decision
+				if(normal.norm() < (255 - normals(ix,iy).a) / 4.f)
+					goto skip;
+			}
+
 			if(byHQ)
 				dest.set(x, y, color);
 			else
 				dest(ix, iy) = color;
 
-			if(normals.width)
-				a = vec3(128 - normals(ix,iy).r, normals(ix,iy).g-128, 0).azimuth() + .5f * nv_pi;
+			skip:
 
 			a += byVariation / 256.0f *(2.0f*myfRandom()-1.0f);
 

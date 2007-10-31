@@ -88,13 +88,10 @@ mode is available.
 
 Normal tracking
 -----------------
-Lines are generated where normals look at sides (r, g channels are set to
-something different than 127). Colors operator may help with eliminating
-unnecessary normals. Abnormals operator can rotate normals, causing them to
-wrap objects, as well as mask them with additional normal map in Quaternion mode.
-Line placement decision can be made according the alpha channel - use AlphaMask
-to add it. By default, normals are rotated by 90 degrees with X axis flipped--
-this allows to use it directly on a normal map.
+Lines are drawn where normals look at sides (r, g channels are set to
+something different than 127), and according the difference between alpha 
+channel and normals elevation. By default, normals are rotated 90 degrees 
+with X axis flipped, so that they "wrap" objects.
 
 Inputs: 1-2
 
