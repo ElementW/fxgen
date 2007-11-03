@@ -7,10 +7,10 @@
 #include <math.h>
 #include <string>
 
-#ifdef __GNUC__ // in case gcc is used
-#define sqrtf sqrt
-#include "gcccompat/gcccompat.h"
-#endif
+//#ifdef __GNUC__ // in case gcc is used
+//#define sqrtf sqrt
+//#include "gcccompat/gcccompat.h"
+//#endif
 
 
 using namespace std;
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
 		}
 
 		//Free Memory
-		// Keep just final result bitmaps in memory		
+		// Keep just final result bitmaps in memory
 		peng->CompactMemory(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED);
 
 		//Now use generated Textures :-)

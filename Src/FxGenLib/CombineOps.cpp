@@ -686,7 +686,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 		// double gives better resolution
 		double x = myfRandom() * w;
 		double y = myfRandom() * h;
-		double a = 0;
+		double a = 2.0f*3.141592f*myfRandom();
 
 		// determine line length
 		sdword count = byLength * _fDetailFactor;
@@ -697,16 +697,14 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 				count *= myfRandom();
 			else if(byMode == 2)
 			{
-				vec3 normal((normals(x,y).r - 128) / 127.f, (normals(x,y).g - 128) / 127.f, 0);
+				RGBA &n = normals(x,y);
+				vec3 normal((n.r - 128) / 127.f, (n.g - 128) / 127.f, 0);
 				count *= normal.norm() * normal.norm() * 16 /* adjusted value */;
 				count = min(count, byLength * _fDetailFactor);
 			}
 		}
-		else
-		{
-			a = 2.0f*3.141592f*myfRandom();
-			byMode || (count *= myfRandom());
-		}
+		else if(!byMode)
+			(count *= myfRandom());
 
 		// draw a line
 		while( --count >= 0 )
@@ -718,10 +716,12 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 			if(normals.width)
 			{
-				vec3 normal(128 - normals(ix,iy).r, normals(ix,iy).g-128, 0);
+				RGBA &n = normals(ix,iy);
+				vec3 normal(128 - n.r, n.g-128, n.b);
 				a = normal.azimuth() + .5f * nv_pi;
 				// alpha-based placement decision
-				if(normal.norm() < (255 - normals(ix,iy).a) / 4.f)
+				if(normal.norm() < (255 - n.a) / 4.f)
+//				if(normal.elevation() > n.a * nv_pi * 2.f / 255.f)
 					goto skip;
 			}
 

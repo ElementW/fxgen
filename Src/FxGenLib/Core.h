@@ -54,8 +54,13 @@
 	typedef signed char				sbyte;	// Signed 8 bit value
 	typedef unsigned short		uword;	// Unsigned 16 bit value
 	typedef signed short			sword;	// Signed 16 bit value
+#ifdef __LINUX__
+	typedef uint32_t			udword;	// Unsigned 32 bit value
+	typedef int32_t				sdword;	// Signed 32 bit value
+#else
 	typedef unsigned long			udword;	// Unsigned 32 bit value
 	typedef signed long				sdword;	// Signed 32 bit value
+#endif
 	typedef signed __int64		sqword;	// Signed 64 bit value
 	typedef unsigned __int64	uqword; // Unsigned 64 bit value
 	typedef udword						ID;			// Identifier
@@ -187,9 +192,9 @@ struct NVarsBlocDesc
 	bool			bCanBeAnimate;	//!< True if this variables can be animate
 
 	//Variables for Editing ...
-	char*			pszName;
-	char*			pszDefValue;	//!< One or more for combo-box edition
-	char*			pszCLASSGUI;	//!< Graphic control for editing
+	const char*			pszName;
+	const char*			pszDefValue;	//!< One or more for combo-box edition
+	const char*			pszCLASSGUI;	//!< Graphic control for editing
 };
 
 //-----------------------------------------------------------------
@@ -200,9 +205,9 @@ struct NMapVarsBlocDesc
 {
 	ubyte			byVersion;			//!< Bloc Version
 	eVarType	eType;					//!< Type of variables (eubyte, euword ...)
-	char*			pszMapping;			//!< ie (">2>3") => transfert this old variable bloc version
+	const char*			pszMapping;			//!< ie (">2>3") => transfert this old variable bloc version
 														//!								to new variable bloc index 2 and 3
-	char*			pszExpression;	//!< value conversion (* or +)
+	const char*			pszExpression;	//!< value conversion (* or +)
 														//!  ie ("*2.0") to multiply by 2.0
 };
 

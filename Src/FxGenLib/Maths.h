@@ -93,8 +93,9 @@ struct FXGEN_API vec3
 
 	float normalize();
 	float sq_norm() const { return x * x + y * y + z * z; }
-	float norm() const { return sqrtf(sq_norm()); }
+	float norm() const { float Norm = sq_norm(); return Norm ? sqrtf(Norm) : 0; }
 
+	//! Angle between (1,0,0) and the horizontal cast of this vector.
 	float azimuth()
 	{
 		if(x == 0)
@@ -111,6 +112,28 @@ struct FXGEN_API vec3
 		else
 			return atan(y / x);
 	}
+
+	//! Angle between this vector and its horizontal cast [-pi/2, pi/2].
+	float elevation()
+	{
+		float n = x * x + y * y;
+		if(n == 0)
+		{
+			if(z > 0)
+				return nv_pi / 2;
+			else
+				return 1.5f * nv_pi;
+		}
+		else // n > 0
+		{
+			n = sqrtf(n);
+			if(z >= 0)
+				return atan(z / n);
+			else
+				return atan(z / n) + 2 * nv_pi;
+		}
+	}
+
 
 	float & operator[](int i)
 	{
@@ -203,6 +226,15 @@ struct FXGEN_API quat
 public:
 	quat();
 	quat(float x, float y, float z, float w);
+	quat(float phi, vec3 axis)
+	{
+		w = cosf(phi / 2);
+		float s = sinf(phi / 2);
+		axis.normalize();
+		x = s * axis.x;
+		y = s * axis.y;
+		z = s * axis.z;
+	}
 
 	quat Inverse();
 	void Normalize();

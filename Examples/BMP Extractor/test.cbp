@@ -8,7 +8,7 @@
 		<Build>
 			<Target title="Debug">
 				<Option platforms="Windows;" />
-				<Option output="..\W32Bin\testd" prefix_auto="1" extension_auto="1" />
+				<Option output="." prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Debug\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -16,22 +16,22 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add library="../..\W32Bin\libFxGenLib_D.a" />
+					<Add library="..\..\W32Bin\libFxGenLib_D.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option platforms="Windows;" />
-				<Option output="..\W32Bin\test" prefix_auto="1" extension_auto="1" />
+				<Option output="." prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Release\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="test/Starship.prj" />
+				<Option parameters="Bricks.prj" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="../..\W32Bin\libFxGenLib.a" />
+					<Add library="..\..\W32Bin\libFxGenLib.a" />
 				</Linker>
 			</Target>
 			<Target title="Linux Release">
@@ -46,12 +46,24 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="../..\LinuxBin\libFxGenLib.a" />
+					<Add library="..\..\LinuxBin\libFxGenLib.a" />
+				</Linker>
+			</Target>
+			<Target title="Linux Debug">
+				<Option platforms="Unix;Mac;" />
+				<Option output="test" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="Bricks.prj" />
+				<Linker>
+					<Add library="..\..\LinuxBin\libFxGenLib_D.a" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-g" />
 			<Add option="-fexceptions" />
 			<Add directory="..\..\Src\FxGenLib" />
 			<Add directory="..\..\Src" />

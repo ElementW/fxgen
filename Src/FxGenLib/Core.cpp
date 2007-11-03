@@ -330,7 +330,7 @@ void NVarsBloc::DoVarBlocVersion_Mapping(NArchive* _l, ubyte _byVersion)
 		NMapVarsBlocDesc* pmapdesc = m_pcmapVarsBlocDesc + i;
 		if (pmapdesc->byVersion==_byVersion)
 		{
-			char* pszMapToIdx = pmapdesc->pszMapping;
+			const char* pszMapToIdx = pmapdesc->pszMapping;
 			sdword dwLen = strlen(pszMapToIdx);
 
 			NVarValue* pval			= null;
@@ -774,7 +774,7 @@ udword NObjectArray::AddItem(NObject* _item, udword _idx)
 {
 
 	//Add an item at the end
-	if (_idx==-1)
+	if (_idx==(udword)-1)
 	{
 		if (m_dwCount+1>=m_dwSize)
 		{
@@ -811,7 +811,7 @@ udword NObjectArray::AddItem(NObject* _item, udword _idx)
 void NObjectArray::RemoveItem(udword _idx)
 {
 	m_dwCount--;
-	if (m_bManagedDel)	m_pBuffer[_idx];
+//	if (m_bManagedDel)	m_pBuffer[_idx];
 	memcpy(m_pBuffer+_idx, m_pBuffer+_idx+1, (m_dwSize-_idx-1) * sizeof(NObject*));
 }
 
@@ -1064,7 +1064,7 @@ bool NTreeNode::Load(NArchive* _l)
 void NTreeNode::AddSon(NTreeNode* _pnode, udword _idx)
 {
 	//Add a son at the End
-	if (_idx==-1)
+	if (_idx==(udword)-1)
 	{
 		_pnode->m_pBrother = null;
 

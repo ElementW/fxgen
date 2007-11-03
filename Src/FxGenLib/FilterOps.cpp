@@ -25,11 +25,6 @@
 #include "FilterOps.h"
 #include "RectangularArray.h"
 
-template <typename T> T mod(T num)
-{
-	return max(num, -num);
-}
-
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
@@ -701,49 +696,54 @@ udword NNormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 	{
 		for (udword x=0; x<w; x++)
 		{
+			size_t xp = (x-1) % w;
+			size_t xn = (x+1) % w;
+			size_t yp = ((y-1) % h)*w;
+			size_t yn = ((y+1) % h)*w;
+			size_t yc = y * w;
 			//Y Sobel filter
-			float fPix = (float)pcurSour[ (x-1+w) % w + (((y+1) % h)*w) ].r;
-			float dY  = fPix / 255.0f * -1.0f;
+			float fPix = (float)pcurSour[xp+yn].r;
+			float dY  = fPix * -1.0f;
 
-			fPix = (float)pcurSour[ x % w + (((y+1) % h)*w) ].r;
-			dY+= fPix / 255.0f * -2.0f;
+			fPix = (float)pcurSour[x+yn].r;
+			dY+= fPix * -2.0f;
 
-			fPix = (float)pcurSour[ (x+1) % w + (((y+1) % h)*w) ].r;
-			dY+= fPix / 255.0f * -1.0f;
+			fPix = (float)pcurSour[xn+yn].r;
+			dY+= fPix * -1.0f;
 
-			fPix = (float)pcurSour[ (x-1+w) % w + (((y-1+h) % h)*w) ].r;
-			dY+= fPix / 255.0f * 1.0f;
+			fPix = (float)pcurSour[xp+yp].r;
+			dY+= fPix * 1.0f;
 
-			fPix = (float)pcurSour[ x % w + (((y-1+h) % h)*w) ].r;
-			dY+= fPix / 255.0f * 2.0f;
+			fPix = (float)pcurSour[x+yp].r;
+			dY+= fPix * 2.0f;
 
-			fPix = (float)pcurSour[ (x+1) % w + (((y-1+h) % h)*w) ].r;
-			dY+= fPix / 255.0f * 1.0f;
+			fPix = (float)pcurSour[xn+yp].r;
+			dY+= fPix * 1.0f;
 
 			//X Sobel filter
-			fPix = (float)pcurSour[ (x-1+w) % w + (((y-1+h) % h)*w) ].r;
-			float dX  = fPix / 255.0f * -1.0f;
+			fPix = (float)pcurSour[xp+yp].r;
+			float dX  = fPix * -1.0f;
 
-			fPix = (float)pcurSour[ (x-1+w) % w + ((y % h)*w) ].r;
-			dX+= fPix / 255.0f * -2.0f;
+			fPix = (float)pcurSour[xp+yc].r;
+			dX+= fPix * -2.0f;
 
-			fPix = (float)pcurSour[ (x-1+w) % w + (((y+1) % h)*w) ].r;
-			dX+= fPix / 255.0f * -1.0f;
+			fPix = (float)pcurSour[xp+yn].r;
+			dX+= fPix * -1.0f;
 
-			fPix = (float)pcurSour[ (x+1) % w + (((y-1+h) % h)*w) ].r;
-			dX+= fPix / 255.0f * 1.0f;
+			fPix = (float)pcurSour[xn+yp].r;
+			dX+= fPix * 1.0f;
 
-			fPix = (float)pcurSour[ (x+1) % w + ((y % h)*w) ].r;
-			dX+= fPix / 255.0f * 2.0f;
+			fPix = (float)pcurSour[xn+yc].r;
+			dX+= fPix * 2.0f;
 
-			fPix = (float)pcurSour[ (x+1) % w + (((y+1) % h)*w) ].r;
-			dX+= fPix / 255.0f * 1.0f;
+			fPix = (float)pcurSour[xn+yn].r;
+			dX+= fPix * 1.0f;
 
 
 			// Compute the cross product of the two vectors
 			vec3 norm;
-			norm.x = -dX*fAmp;
-			norm.y = -dY*fAmp;
+			norm.x = -dX*fAmp/ 255.0f;
+			norm.y = -dY*fAmp/ 255.0f;
 			norm.z = 1.0f;
 
 			// Normalize
@@ -795,7 +795,7 @@ NAbnormalsOp::NAbnormalsOp()
 
 udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
-	//Only one Input
+	//One or two inputs
 	if (m_byInputs!=1 && m_byInputs!=2)		return (udword)-1;
 
 	//Bitmap instance
@@ -821,8 +821,7 @@ udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	m_pcvarsBloc->GetValue(6, _ftime, sens);
 	m_pcvarsBloc->GetValue(7, _ftime, comp);
 	m_pcvarsBloc->GetValue(8, _ftime, mirror);
-	quat rotation;
-	axis_to_quat(rotation, vec3(x, y, z), 2 * nv_pi * w);
+	quat rotation(2 * nv_pi * w, vec3(x, y, z));
 	quat rotation0 = rotation;
 	sensitivity = sens / 255.f;
 
@@ -854,31 +853,26 @@ udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 
 			if(pcurQuat.width)
 			{
-				quat current;
-
 				if(comp == 0) // normals
 				{
-					quat offset = quat(
-					(pcurQuat(x,y).r-127.5f)/127.5f,
-					(pcurQuat(x,y).g-127.5f)/127.5f,(pcurQuat(x,y).b-127.5f)/127.5f, 0);
+					const RGBA& curQuat = pcurQuat(x,y);
+					quat offset(curQuat.r-127.5f,curQuat.g-127.5f,curQuat.b-127.5f,0);
 					v *= (1 - sensitivity);
-					v += offset * sensitivity;
+					v += offset * (sensitivity / 127.5f);
 				}
 
 				else if(comp == 1) // height
 				{
-					axis_to_quat(current,
-					vec3(0,0,1),
-					2 * nv_pi * (pcurQuat(x,y).r+pcurQuat(x,y).g+pcurQuat(x,y).b)/765.f * sensitivity);
+					float sum = pcurQuat(x,y).r+pcurQuat(x,y).g+pcurQuat(x,y).b;
+					quat current(2 * nv_pi * sum / 765.f * sensitivity,	vec3(0,0,1));
+
 					rotation = current * rotation0;
 				}
 
 				else if(comp == 2) // quaternions
 				{
-					axis_to_quat(current,
-					vec3(pcurQuat(x,y).r-127,
-					pcurQuat(x,y).g-127,pcurQuat(x,y).b-127),
-					2 * nv_pi * pcurQuat(x,y).a/255.f * sensitivity);
+					vec3 q(pcurQuat(x,y).r-127.5f,pcurQuat(x,y).g-127.5f,pcurQuat(x,y).b-127.5f);
+					quat current(2 / 255.f * nv_pi * pcurQuat(x,y).a * sensitivity, q);
 
 					rotation = current * rotation0;
 				}
@@ -1298,7 +1292,7 @@ udword NDilateOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 
 	RGBA* pPxInter = (RGBA*)NMemAlloc(w*h*sizeof(RGBA));
 
-	for (udword i=0; i<byIterations+1; ++i)
+	for (sdword i=0; i<byIterations+1; ++i)
 	{
 		udword index = 0;
 		RGBA* pPxSrc;
