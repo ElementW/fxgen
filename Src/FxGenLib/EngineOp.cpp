@@ -315,7 +315,7 @@ udword NOperatorsPage::DeleteOp(NOperator* _pop)
 
 	//Remove From Array
 	udword idx = m_arrayOps.Find(_pop);
-	if (idx!=-1)
+	if (idx!=(udword)-1)
 	{
 		m_arrayOps.RemoveItem(idx);
 		delete _pop;
@@ -442,7 +442,7 @@ void NOperatorsPage::_ComputeLinks(NOperator* _pop, NOperator* _pprevop, udword 
 
 	//Remove it from unlinked
 	udword dwIdx = m_arrayOpsUnlinked.Find(_pop);
-	if (dwIdx!=-1)
+	if (dwIdx!=(udword)-1)
 		m_arrayOpsUnlinked.RemoveItem(dwIdx);
 
 	//Link previous operators at same horizontal level
@@ -848,7 +848,7 @@ void NEngineOp::_Execute(float _ftime, NOperator* _popFinal, float _fDetailFacto
 				if (m_cbOpsProcess)		(*m_cbOpsProcess)(m_dwCurProcessOpsCount, m_dwTotalProcessOpsCount);
 
 				NOperator** pOpsIns = &m_aStacks[m_nCurContext][pccurOP->m_byDepth];
-				if (pccurOP->Process(_ftime, pOpsIns, _fDetailFactor)==-1)
+				if (pccurOP->Process(_ftime, pOpsIns, _fDetailFactor)==(udword)-1)
 					m_bError = true;
 
 				m_dwCurProcessOpsCount++;

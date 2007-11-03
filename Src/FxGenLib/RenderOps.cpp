@@ -184,10 +184,10 @@ udword NCloudOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 		for (udword x=0; x<w; x++)
 		{
 			//Cal color
-			udword r = (udword)color0.r + ((*pbyPxSrc * (color1.r - color0.r))>>8);
-			udword g = (udword)color0.g + ((*pbyPxSrc * (color1.g - color0.g))>>8);
-			udword b = (udword)color0.b + ((*pbyPxSrc * (color1.b - color0.b))>>8);
-			udword a = (udword)color0.a + ((*pbyPxSrc * (color1.a - color0.a))>>8);
+			udword r = (udword)color0.r + ((*pbyPxSrc * (color1.r - color0.r))>>23);
+			udword g = (udword)color0.g + ((*pbyPxSrc * (color1.g - color0.g))>>23);
+			udword b = (udword)color0.b + ((*pbyPxSrc * (color1.b - color0.b))>>23);
+			udword a = (udword)color0.a + ((*pbyPxSrc * (color1.a - color0.a))>>23);
 
 			//Set pixel
 			r = (r<255)?r:255;				r = (r>0)?r:0;
@@ -235,7 +235,7 @@ void NCloudOp::Cloud(ubyte byoctaves, float fampMod)
 
 void NCloudOp::AddRandom(float fampMod)
 {
-	sdword amp = (sdword)(fampMod*256.0f);
+	sdword amp = (sdword)(fampMod*256.0f*16.0f);
 
 	sdword* pbypixels = m_pbyPxTps1;
 	for (udword x=0; x<m_dwWidth; x++)
@@ -292,31 +292,28 @@ void NCloudOp::BoxBlur(udword bw, udword bh)
 	y = 0;
 	while( y < h )
 	{
-		// Copy original pixels to the line buffer
-		x = 0;
-		while( x < w )		{	pline[x]=pbypixels[x + y*w];	++x;	}
-
 		// Compute sum of first bw pixels
 		x = 0;
 		sdword sum = 0;
-		while( x < bw )		{ sum+=pline[x]; ++x; }
+		while( x < bw )		{ sum+=pbypixels[x]; ++x; }
 
 		// Set blurred pixels
 		x = 0;
 		while( x < w )
 		{
-			pbypixels[(x+bw/2)%w + y*w] = sum/(sdword)bw;
-			sum -= pline[x];
-			sum += pline[(x+bw)%w];
+			pbypixels[(x+bw/2)%w] = sum/(sdword)bw;
+			sum -= pbypixels[x];
+			sum += pbypixels[(x+bw)%w];
 			++x;
 		}
 
 		++y;
+		pbypixels+=w;
 	}
 
+	pbypixels = m_pbyPxTps1;
 	///////////////////////////////////////
 	// Smooth y
-	pline = m_pbyPxTps2;
 
 	x = 0;
 	while( x < w )
@@ -358,7 +355,7 @@ void NCloudOp::Normalize()
 	// Find the highest and lowest values used
 	sdword* pbypixels = m_pbyPxTps1;
 
-	sdword hi = 0, lo = 65536;
+	sdword hi = 0, lo = 65536*32767;
 	y = 0;
 	while( y < h )
 	{
@@ -379,7 +376,7 @@ void NCloudOp::Normalize()
 	pbypixels = m_pbyPxTps1;
 
 	y = 0;
-	float fhi = 1.0f/(float)(hi-lo);
+	float fhi = 1.0f/(float)(hi-lo) * 256*128;
 	while( y < h )
 	{
 		x = 0;

@@ -47,24 +47,28 @@ struct RGBA
 		a *= c;
 	}
 
+	//! Non-commutative +: argument is put on top existing color based on alpha
 	RGBA operator+(const RGBA& v) const
 	{
 		RGBA retval;
 		float alpha = v.a / 255.f;
-		retval.a = v.a     +     a * (1 - alpha);
-		retval.r = v.r * alpha + r * (1 - alpha);
-		retval.g = v.g * alpha + g * (1 - alpha);
-		retval.b = v.b * alpha + b * (1 - alpha);
+		float beta = 1- alpha; //opt
+		retval.a = v.a     +     a * beta;
+		retval.r = v.r * alpha + r * beta;
+		retval.g = v.g * alpha + g * beta;
+		retval.b = v.b * alpha + b * beta;
 		return retval;
 	}
 
+	//! Non-commutative +: argument is put on top existing color based on alpha
 	void operator+=(const RGBA& v)
 	{
 		float alpha = v.a / 255.f;
-		a = v.a     +     a * (1 - alpha);
-		r = v.r * alpha + r * (1 - alpha);
-		g = v.g * alpha + g * (1 - alpha);
-		b = v.b * alpha + b * (1 - alpha);
+		float beta = 1- alpha; //opt
+		a = v.a     +     a * beta;
+		r = v.r * alpha + r * beta;
+		g = v.g * alpha + g * beta;
+		b = v.b * alpha + b * beta;
 	}
 };
 
