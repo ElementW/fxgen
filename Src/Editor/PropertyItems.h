@@ -126,6 +126,20 @@ public:
 };
 
 //-----------------------------------------------------------------
+//!	\class	NUFloatProp
+//! \brief	Unsigned Float Property Item
+//-----------------------------------------------------------------
+class NUFloatProp : public NPropertyItem
+{
+public:
+	DECLARE_CLASS();
+	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
+	virtual bool		BeginEdit	(NRect& rcItem);
+	virtual bool		EndEdit		(bool bSaveChanged=true);
+	virtual	bool		AddValue(sdword dwDelta);
+};
+
+//-----------------------------------------------------------------
 //!	\class	NColorProp
 //! \brief	Color Property Item
 //-----------------------------------------------------------------
@@ -185,7 +199,7 @@ class NUseStoredOpsProp : public NPropertyItem
 {
 public:
 	DECLARE_CLASS();
-	
+
 	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
 	//virtual void		Click(NPoint& pt, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
