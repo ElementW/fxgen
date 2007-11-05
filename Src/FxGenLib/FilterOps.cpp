@@ -41,10 +41,18 @@ static NMapVarsBlocDesc mapblocdescBlurOp[] =
 	MAP(1,	eubyte,		"2",		""	)	//V1 => 2-Amplify
 };
 
+static NMapVarsBlocDesc mapblocdescBlurOp2[] =
+{
+	MAP(2,	eubyte,		"0",		"*0.0039215"	)	//V1 => 0-Width
+	MAP(2,	eubyte,		"1",		"*0.0039215"	)	//V1 => 1-Height
+	MAP(2,	eubyte,		"2",		""	)	//V1 => 2-Amplify
+	MAP(2,	eubyte,		"3",		""	)	//V1 => 3-Type
+};
+
 static NVarsBlocDesc blocdescBlurOp[] =
 {
-	VAR(eubyte,		true, "Width",		"4",		"NUbyteProp")	//0
-	VAR(eubyte,		true, "Height",		"4",		"NUbyteProp")	//1
+	VAR(efloat,		true, "Width",		"0.01",		"NUFloatProp")	//0
+	VAR(efloat,		true, "Height",		"0.01",		"NUFloatProp")	//1
 	VAR(eubyte,		true, "Amplify",	"16",		"NUbyteProp")	//2
 	VAR(eubyte,		false, "Type",	"0,[Box,Gaussian]",	"NUbyteComboProp")	//3
 };
@@ -52,8 +60,9 @@ static NVarsBlocDesc blocdescBlurOp[] =
 NBlurOp::NBlurOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(4, blocdescBlurOp, 2);
+	m_pcvarsBloc = AddVarsBloc(4, blocdescBlurOp, 3);
 	m_pcvarsBloc->SetMapVarBlocDesc(3, mapblocdescBlurOp);
+	m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescBlurOp2); // can they work together?
 }
 
 udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
@@ -72,9 +81,10 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	pDst->SetSize(w,h);
 
 	//Get Variables Values
-	ubyte byWidth, byHeight, byAmplify, byType;
-	m_pcvarsBloc->GetValue(0, _ftime, byWidth);
-	m_pcvarsBloc->GetValue(1, _ftime, byHeight);
+	ubyte byAmplify, byType;
+	float fWidth, fHeight;
+	m_pcvarsBloc->GetValue(0, _ftime, fWidth);
+	m_pcvarsBloc->GetValue(1, _ftime, fHeight);
 	m_pcvarsBloc->GetValue(2, _ftime, byAmplify);
 	m_pcvarsBloc->GetValue(3, _ftime, byType);
 
@@ -83,10 +93,8 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	ubyte byPasses = byType == 1 ? 3 : 1;
 
 	//Radius: 0->0, 2->1, 255->127.5d
-	float radiusW= (float)byWidth / 2.0f;
-	radiusW *= pow(_fDetailFactor, (radiusW-1)/126.5f);
-	float radiusH= (float)byHeight /2.0f;
-	radiusH *= pow(_fDetailFactor, (radiusH-1)/126.5f);
+	float radiusW= (float)fWidth * 127.5f * _fDetailFactor;
+	float radiusH= (float)fHeight * 127.5f * _fDetailFactor;
 
 	//Amplify
 	float amplify= (float)byAmplify;

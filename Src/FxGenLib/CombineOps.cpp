@@ -621,7 +621,7 @@ static NVarsBlocDesc blocdescCrackOp[] =
 	VAR(eubyte,		true, "Length",			"255",	"NUbyteProp") //3
 	VAR(euword,		true, "Seed",				"5412",	"NUwordProp") //4
 	VAR(eubyte,		true, "Length decision", "0,[Random,Constant,Normal based]",	"NUbyteComboProp") //5
-	VAR(eubyte,		true, "High quality", "0,[Off,On]",	"NUbyteComboProp") //6
+	VAR(eubyte,		true, "High quality", "0,[Off,Alpha,Subpixel]",	"NUbyteComboProp") //6
 };
 
 NCrackOp::NCrackOp()
@@ -691,51 +691,42 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 		// determine line length
 		sdword count = byLength * _fDetailFactor;
 
-		if(normals.width)
+		if(normals.width && byMode == 2)
 		{
-			if(byMode == 0)
-				count *= myfRandom();
-			else if(byMode == 2)
-			{
-				RGBA &n = normals(x,y);
-				vec3 normal((n.r - 128) / 127.f, (n.g - 128) / 127.f, 0);
-				count *= normal.norm() * normal.norm() * 16 /* adjusted value */;
-				count = min(count, byLength * _fDetailFactor);
-			}
+			RGBA &N = normals(x,y);
+			vec3 normal(N.r - 127, N.g - 127, 0);
+			count *= normal.norm() * normal.norm() /8 /* adjusted value */;
+			count = min(count, byLength * _fDetailFactor);
 		}
-		else if(!byMode)
-			(count *= myfRandom());
+
+		if(byMode == 0)
+			count *= myfRandom() * 2; // E=1
 
 		// draw a line
 		while( --count >= 0 )
 		{
-			size_t ix = x;
-			ix %= w;
-			size_t iy = y;
-			iy %= h;
-
-			if(normals.width)
-			{
-				RGBA &n = normals(ix,iy);
-				vec3 normal(128 - n.r, n.g-128, n.b);
-				a = normal.azimuth() + .5f * nv_pi;
-				// alpha-based placement decision
-				if(normal.norm() < (255 - n.a) / 4.f)
-//				if(normal.elevation() > n.a * nv_pi * 2.f / 255.f)
-					goto skip;
-			}
-
-			if(byHQ)
-				dest.set(x, y, color);
-			else
-				dest(ix, iy) = color;
-
-			skip:
-
 			a += byVariation / 256.0f *(2.0f*myfRandom()-1.0f);
 
 			x = x + cos(a);
 			y = y + sin(a);
+
+			if(normals.width)
+			{
+				RGBA &N = normals(x,y);
+				vec3 normal(127.f - N.r, N.g-127.f, 0/*n.b*/); // x flip
+				a = normal.azimuth() + .5f * nv_pi; // rotate 90 degrees ccw
+				// alpha-based placement decision
+				if(normal.norm() < (255 - N.a) / 4.f)
+//				if(normal.elevation() > n.a * nv_pi * 2.f / 255.f)
+					continue;
+			}
+
+			if(byHQ == 2)
+				dest.set(x, y, color);
+			else if(byHQ == 1)
+				dest(x, y) += color;
+			else
+				dest(x, y) = color;
 		}
 	}
 
