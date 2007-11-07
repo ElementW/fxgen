@@ -570,17 +570,17 @@ NCraterOp::NCraterOp()
 udword NCraterOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//No Inputs!
-	if (m_byInputs==0)		return (udword)-1;
+	/*if (m_byInputs==0)		return (udword)-1;
 
 	int how_many = 1000;
 	int Seed = 1;
 	int wrap = 1;
 	float radius = 200.0f;
 
-	/*m_pcvarsBloc->GetValue(0, _ftime, (udword&)how_many);
-	m_pcvarsBloc->GetValue(1, _ftime, (udword&)Seed);
-	m_pcvarsBloc->GetValue(2, _ftime, (udword&)wrap);
-	m_pcvarsBloc->GetValue(3, _ftime, (float&)radius);*/
+	//m_pcvarsBloc->GetValue(0, _ftime, (udword&)how_many);
+	//m_pcvarsBloc->GetValue(1, _ftime, (udword&)Seed);
+	//m_pcvarsBloc->GetValue(2, _ftime, (udword&)wrap);
+	//m_pcvarsBloc->GetValue(3, _ftime, (float&)radius);
 
 
 		//Bitmap instance
@@ -616,7 +616,7 @@ udword NCraterOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 
 	seed_ran1( rand());
 
-	//initgauss();    /* seed or re-seed random # generator */
+	//initgauss();    
 
 	distribute_craters(real, how_many, w, h, (wrap == 1.0 ? true: false), radius);
 
@@ -632,11 +632,12 @@ udword NCraterOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 		}
 
 
-	NMemFree(real);  /* unload imaginary (temp) array */
+	NMemFree(real);  
 
-		//h_minmax();           /* update min, max values */
+		//h_minmax(); */          
 	
 	return 0;
 }
+
 
 

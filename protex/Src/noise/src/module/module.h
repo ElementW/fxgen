@@ -57,4 +57,7 @@
 #include "FractalBrownianMotion.h"
 #include "HeteroTerrain.h"
 #include "TurbulenceGenerator.h"
+#include "CraterSpheres.h"
+#include "perlinoctave.h"
+
 #endif

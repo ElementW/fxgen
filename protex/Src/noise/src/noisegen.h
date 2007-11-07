@@ -201,7 +201,13 @@ namespace noise
   /// to it.
   double ValueNoise3D (int x, int y, int z, int seed = 0);
 
+
+	double GetRandomNumber( double min, double max );
+
+	void GetRandomVector(double &x, double &y, double &z);
   /// @}
+
+
 
 }
 

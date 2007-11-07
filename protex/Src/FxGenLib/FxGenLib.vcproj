@@ -620,11 +620,11 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\Editor\pch.h"
+			RelativePath=".\pch.h"
 			>
 		</File>
 		<File
-			RelativePath=".\pch.h"
+			RelativePath="..\Editor\pch.h"
 			>
 		</File>
 	</Files>

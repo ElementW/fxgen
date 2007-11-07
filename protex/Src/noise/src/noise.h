@@ -69,6 +69,7 @@
 
 #include "module/module.h"
 #include "model/model.h"
+#include "module/VecMath.h"
 #include "misc.h"
 
 #endif

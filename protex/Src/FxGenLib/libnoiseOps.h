@@ -26,6 +26,10 @@
 #include "../noise/src/noise.h"
 #include "../noiseutils/noiseutils.h"
 
+#ifdef GetUserName
+#undef GetUserName
+#endif
+
 //-----------------------------------------------------------------
 //                   Generators
 //	NPerlin
@@ -63,7 +67,30 @@ public:
 	noise::module::Perlin m_module;
 };
 
+//-----------------------------------------------------------------
+//!	\class		NPerlinOctave
+//!	\brief		Perlin noise operator
+//-----------------------------------------------------------------
+class FXGEN_API NPerlinOctave : public NOperator
+{
+public:
+	DECLARE_CLASS();
 
+	NPerlinOctave();
+
+	//Methods
+	virtual	udword	GetColor()		{ return 0x00008600;	}
+	virtual const char*		GetName()			{ return "L_PerlinOctave"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
+
+
+	noise::module::Module* GetLibnoiseModule() { return &m_module; }
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts,float _fDetailFactor = 1.0);
+
+	noise::module::PerlinOctave m_module;
+};
 
 //-----------------------------------------------------------------
 //!	\class		NBillow
@@ -554,6 +581,31 @@ public:
 	noise::module::Terrace m_module;
 };
 
+//-----------------------------------------------------------------
+//!	\class		NCraterSpheres
+//!	\brief		Terrace operator
+//-----------------------------------------------------------------
+class FXGEN_API NCraterSpheres : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NCraterSpheres();
+
+	//Methods
+	virtual	udword	GetColor()		{ return 0x00008600;	}
+	virtual const char*		GetName()			{ return "L_CraterSpheres"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Modifier"; }	//!< Operator's Category
+
+
+	noise::module::Module* GetLibnoiseModule() { return &m_module; }
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor = 1.0);
+
+	noise::module::CraterSpheres m_module;
+};
+
 
 //-----------------------------------------------------------------
 //                   Selector
@@ -885,7 +937,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Libnoise Misc"; }	//!< Operator's Category
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
-	char* GetUserName();
+	virtual char* GetLibnoiseCacheUserName();
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor = 1.0);
@@ -910,6 +962,7 @@ public:
 	virtual	udword	GetColor()		{ return 0x00008600;	}
 	virtual const char*		GetName()			{ return "L_LoadCache"; }		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Libnoise Misc"; }	//!< Operator's Category
+	virtual char*			GetLibnoiseCacheUserName();
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
 	char* GetUserName();
@@ -1057,6 +1110,32 @@ public:
 
 
 //-----------------------------------------------------------------
+//!	\class		NModelSphere
+//!	\brief		Inverts an image
+//-----------------------------------------------------------------
+class FXGEN_API NModelConcentricDepthSphere : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NModelConcentricDepthSphere();
+
+	//Methods
+	virtual	udword	GetColor()		{ return 0x00008600;	}
+	virtual const char*		GetName()			{ return "L_DepthSphere"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Models"; }	//!< Operator's Category
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor = 1.0);
+	noise::utils::NoiseMap* GetNoiseMap(){ return &m_heightMap; }
+
+
+	noise::utils::NoiseMap				m_heightMap;
+	noise::utils::NoiseMapConcentricDepthSphere m_heightMapBuilder;
+
+};
+
+//-----------------------------------------------------------------
 //                   Outputs
 //	NImageRenderer
 //-----------------------------------------------------------------
@@ -1082,4 +1161,5 @@ public:
 
 	noise::utils::RendererImage m_renderer;
 };
+
 
