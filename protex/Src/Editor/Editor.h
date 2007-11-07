@@ -25,9 +25,9 @@
 //                   Defines
 //-----------------------------------------------------------------
 #ifdef __GNUC__
-#define CAPTION		"FxGen Editor v0.5 alpha (gcc) - "
+#define CAPTION		"Protex v0.2 alpha  (gcc) - "
 #else
-#define CAPTION		"FxGen Editor v0.5 alpha - "
+#define CAPTION		"Protex v0.2 alpha - "
 #endif
 #define WIDTH			800
 #define HEIGHT		600

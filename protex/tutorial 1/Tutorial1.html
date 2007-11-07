@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.3  (Win32)">
+	<META NAME="AUTHOR" CONTENT="dave nash">
+	<META NAME="CREATED" CONTENT="20071016;7300154">
+	<META NAME="CHANGEDBY" CONTENT="dave nash">
+	<META NAME="CHANGED" CONTENT="20071016;11320770">
+	<META NAME="CHANGEDBY" CONTENT="dave nash">
+</HEAD>
+<BODY LANG="en-US" DIR="LTR">
+<H1 STYLE="background: #00ffff"><FONT FACE="BankGothic Md BT, sans-serif">Tutorial
+1</FONT></H1>
+<P STYLE="background: transparent">This is the first tutorial in a
+series that will show a user how to use ProTex to create textures
+that incorporate libnoise. The readers should first acquaint
+themselves with the <A HREF="http://FxGen.sourceforge.net/">FxGen
+tutorials</A>, and also the <A HREF="http://libnoise.sourceforge.net/tutorials/index.html">libnoise
+tutorials.</A></P>
+<P STYLE="background: transparent">This tutorial will take the user
+through the basic steps required to recreate <A HREF="http://libnoise.sourceforge.net/tutorials/tutorial3.html">libnoise
+tutorial 3 </A>in ProTex.</P>
+<DIV ID="Part1 - your first project" DIR="LTR" STYLE="background: #00ffff">
+	<P STYLE="margin-top: 0.42cm; page-break-after: avoid"><FONT FACE="BankGothic Md BT, sans-serif"><FONT SIZE=4>Part
+	1 &ndash; your first project</FONT></FONT></P>
+</DIV>
+<P STYLE="background: transparent">To start with, open ProTex and
+right click in the 'Operators' viewport. A popup menu should appear.
+Navigate to the 'Generator' entry to access the libnoise Generator
+routines and select L_Perlin as shown in the picture.</P>
+<P STYLE="background: transparent"><IMG SRC="module1.jpg" NAME="graphics1" ALIGN=LEFT WIDTH=631 HEIGHT=518 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">Now single-click on the L_Perlin
+box that appears in the 'Operators' viewport. This should bring up
+the properties of the Perlin noise module shown in the 'Properties'
+viewport. Keep the values as default for the moment.</P>
+<P STYLE="background: transparent"><IMG SRC="module2.JPG" NAME="graphics2" ALIGN=LEFT WIDTH=848 HEIGHT=699 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<DIV ID="Section2" DIR="LTR" STYLE="background: #00ffff">
+	<P STYLE="margin-top: 0.42cm; background: transparent; page-break-after: avoid">
+	<FONT FACE="BankGothic Md BT, sans-serif"><FONT SIZE=4>Part 2 &ndash;
+	Rendering the Noise</FONT></FONT></P>
+</DIV>
+<P STYLE="background: transparent">In order to render the noise to a
+texture, libnoise requires the use of a Noisemap builder. This is
+because the noise is an abstract concept, not an image. The Noisemap
+builder will calculate the values of the noise for the respective
+points on the image. ProTex has several Noisemap builder types. These
+types are listed under 'Models' in the 'Operators' window popup menu.</P>
+<P STYLE="background: transparent"><IMG SRC="module3.JPG" NAME="graphics3" ALIGN=LEFT WIDTH=848 HEIGHT=696 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">ProTex also requires the use of a
+'L_ImageRenderer' object to output the picture to the screen. Quickly
+add the 'L_Plane' object and the 'L_ImageRenderer' object to the
+positions as shown below, and double-click the L_ImageRenderer to
+produce the output. ProTex may take a couple of seconds to generate
+the noisemap.</P>
+<P STYLE="background: transparent"><IMG SRC="module4.JPG" NAME="graphics4" ALIGN=LEFT WIDTH=848 HEIGHT=699 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">The next step in fixing this image
+is to set the bounds of the L_Plane object. Single click on the
+L_Plane block to bring up the properties in the Properties viewport.
+Set the values as show in the diagram below, to correspond with the
+values set in the libnoise tutorial.</P>
+<P STYLE="background: transparent"><IMG SRC="module9.JPG" NAME="graphics9" ALIGN=LEFT WIDTH=812 HEIGHT=651 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">Be careful not to confuse the x2
+and y1 variables, to avoid bugs. (This should be fixed in a later
+version).</P>
+<DIV ID="Section3" DIR="LTR" STYLE="background: #00ffff">
+	<P STYLE="margin-top: 0.42cm; background: transparent; page-break-after: avoid">
+	<FONT FACE="BankGothic Md BT, sans-serif"><FONT SIZE=4>Part 3 &ndash;
+	Changing the Gradient</FONT></FONT></P>
+</DIV>
+<P STYLE="background: transparent">Now we can make this a bit more
+interesting by adding colors to the picture. Single click on the
+L_ImageRenderer object to show its properties in the Properties
+viewport. Now double-click on the black box next to the 'Gradient
+File' property. This should bring up the gradient dialog as shown
+below.</P>
+<P STYLE="background: transparent"><IMG SRC="module5.JPG" NAME="graphics5" ALIGN=LEFT WIDTH=517 HEIGHT=416 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">It is a perfectly simple process
+to add points and set the correct colors. I have already prepared a
+version of the gradient from <A HREF="http://libnoise.sourceforge.net/tutorials/tutorial3.html">libnoise
+tutorial 3</A>. In order to load it, select the 'Open' button and
+navigate to the 'Gradients' directory. 
+</P>
+<P STYLE="background: transparent"><IMG SRC="module7.JPG" NAME="graphics6" ALIGN=LEFT WIDTH=650 HEIGHT=600 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">Select the file named
+libnoise_tutorial3.grad and press the 'Open' button. The Gradient
+Dialog should now appear as shown below. It is always a good idea to
+save gradients as often as possible, as they are very useful.</P>
+<P STYLE="background: transparent"><IMG SRC="module6.JPG" NAME="graphics7" ALIGN=LEFT WIDTH=517 HEIGHT=416 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">Clicking 'Ok' on the gradient
+dialog should now present you with the scene shown below:-</P>
+<P STYLE="background: transparent"><IMG SRC="module8.JPG" NAME="graphics8" ALIGN=LEFT WIDTH=812 HEIGHT=651 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">I know its not pretty, however the
+reader should be able to play about with the noise parameters to get
+the same appearance as the output from <A HREF="http://libnoise.sourceforge.net/tutorials/tutorial3.html">libnoise
+tutorial 3</A>, as shown in the dialgram. This is the first step to
+becoming a proficient user of ProTex!</P>
+<P STYLE="background: transparent"><BR><BR>
+</P>
+<P STYLE="background: transparent"><BR><BR>
+</P>
+<P STYLE="background: transparent"><BR><BR>
+</P>
+</BODY>
+</HTML>

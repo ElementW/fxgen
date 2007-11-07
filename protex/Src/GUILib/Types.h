@@ -145,6 +145,18 @@ public:
 };
 
 
+class GUI_API NDPoint
+{
+public:
+
+	NDPoint(){x=y=0.0;}
+	NDPoint(double X, double Y){x=X;y=Y;}
+	~NDPoint(){}
+
+	double x,y;
+};
+
+
 //-----------------------------------------------------------------
 //!	\class	NRect
 //!	\brief	Point class
@@ -195,7 +207,31 @@ public:
 	sdword left,top,right,bottom;
 };
 
+// from direct3d
+/*
+ * Format of RGBA colors is
+ *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ *  |    alpha      |      red      |     green     |     blue      |
+ *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ */
+#define RGBA_GETALPHA(rgb)      ((rgb) >> 24)
+#define RGBA_GETRED(rgb)        (((rgb) >> 16) & 0xff)
+#define RGBA_GETGREEN(rgb)      (((rgb) >> 8) & 0xff)
+#define RGBA_GETBLUE(rgb)       ((rgb) & 0xff)
+#define RGBA_MAKE(r, g, b, a)   ((D3DCOLOR) (((a) << 24) | ((r) << 16) | ((g) << 8) | (b)))
 
+/* Format of RGB colors is
+ *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ *  |    ignored    |      red      |     green     |     blue      |
+ *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ */
+#define RGB_GETRED(rgb)         (((rgb) >> 16) & 0xff)
+#define RGB_GETGREEN(rgb)       (((rgb) >> 8) & 0xff)
+#define RGB_GETBLUE(rgb)        ((rgb) & 0xff)
+#define RGBA_SETALPHA(rgba, x) (((x) << 24) | ((rgba) & 0x00ffffff))
+#define RGB_MAKE(r, g, b)       ((DWORD) (((r) << 16) | ((g) << 8) | (b)))
+#define RGBA_TORGB(rgba)       ((DWORD) ((rgba) & 0xffffff))
+#define RGB_TORGBA(rgb)        ((DWORD) ((rgb) | 0xff000000))
 
 //-----------------------------------------------------------------
 //!	\class	NColor
@@ -237,6 +273,9 @@ public:
 
 		};
 };
+
+
+
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -325,4 +364,5 @@ NRect& NRect::Union(const NRect& R)
 
 	return *this;
 }
+
 

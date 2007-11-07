@@ -84,6 +84,7 @@ protected:
 	bool			ExpandRow(udword _dwRowIdx);
 	void 			ClickRow(udword dwRowIdx, NPoint& pt);
 	void 			StartRowEditing(udword dwRowIdx);
+	void			StartEditRowMenu(udword dwRowIdx);
 	void 			EndRowEditing(bool bSaveChanged=true);
 	bool			IsAnimButtonUnderPoint(NPoint& pt);
 	void			AddRemoveAnimControlToRow(udword _dwRowIdx);
@@ -113,10 +114,12 @@ protected:
 	virtual void	OnLeftButtonDown(udword flags, NPoint pos);
 	virtual	void	OnLeftButtonDblClk(udword flags, NPoint point);
 	virtual void	OnRightButtonDown(udword flags, NPoint pos);
+	virtual	void	OnRightButtonDblClk(udword flags, NPoint point);
 	virtual	void	OnKeyDown(udword dwchar);
 
 	//Windows Proc
 	virtual	LRESULT WndProc( UINT msg, WPARAM wparam, LPARAM lparam);
 };
+
 
 

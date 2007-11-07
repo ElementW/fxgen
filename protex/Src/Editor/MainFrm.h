@@ -20,6 +20,7 @@
 //		Prototypes
 //-----------------------------------------------------------------
 class NOperatorsWnd;
+class NViewportsWnd;
 class NProjectWnd;
 class NStoredWnd;
 
@@ -51,11 +52,13 @@ protected:
 	void	OnNewProject();
 	void	OnOpenProject();
 	void	OnSaveProjectAs();
+	void	OnSaveImage();
 
 	void OnKeyDown(udword dwchar);
 	//Datas
 	bool						m_bExecuteLocked;	//!< Lock-Unlock operators execution
 	NOperatorsWnd*	m_opswnd;					//!< Operators Window
+					//!< Viewports Window
 	NProjectWnd*		m_pprojectwnd;		//!< Pages Window
 	NStoredWnd*			m_pstoredwnd;			//!< Stored Window
 	NOperator*			m_popMarkedShow;	//!< Operator marked show for final result

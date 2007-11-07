@@ -158,6 +158,8 @@ enum eVarType
 	efloat,
 	estring,
 	erefobj,
+	erefobj2		// This 'Hack' will allow loading and saving
+					// L_ImageRenderer, L_Curve and L_Terrace
 };
 
 //-----------------------------------------------------------------
@@ -358,8 +360,10 @@ public:
 	virtual bool Save(NArchive* _s);
 	virtual	bool Load(NArchive* _l);
 
+	//virtual void saveBMP(char* filename){}
+
 	//Variables methods
-	NVarsBloc* AddVarsBloc(udword _dwVarCount, NVarsBlocDesc* _pdesc, ubyte _byVersion);
+	NVarsBloc* AddVarsBloc(udword _dwVarCount, NVarsBlocDesc* _pdesc, ubyte _byVersion=1);
 	NVarsBloc* GetFirstVarsBloc()		{ return m_pcfirstVarsBloc; }
 	void			 RemoveVarsRef(NObject* _pobj);
 
@@ -472,12 +476,18 @@ protected:
 };
 
 
+
+
+
 //-----------------------------------------------------------------
 //	Memory System
 //-----------------------------------------------------------------
 #define NMemFree(_ptr)					free(_ptr)					//!< Free memory
 #define NMemAlloc(_len)					calloc(_len, 1)			//!< Allocate memory
 #define NMemRealloc(_ptr, _len)	realloc(_ptr, _len)	//!< Reallocate memory
+
+
+
 
 //NMemCopy
 //NMemFill
@@ -492,6 +502,16 @@ int					NFileRead(void *buffer, int size, NFILEHANDLE *handle);
 void				NFileSeek(NFILEHANDLE *handle, int pos, signed char mode);
 int					NFileTell(NFILEHANDLE *handle);
 */
+
+//-----------------------------------------------------------------
+//	Misc classes 
+//-----------------------------------------------------------------
+struct GradientElem
+{
+	//NColor color;
+	float		color[4];
+	float height;
+};
 
 //-----------------------------------------------------------------
 //	Includes

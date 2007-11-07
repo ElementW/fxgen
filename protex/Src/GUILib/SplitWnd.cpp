@@ -132,12 +132,12 @@ void NSplitWnd::OnPaint()
 		//gfx.Draw3dRect(rect, RGB(255,255,255), RGB(0,0,0));
 
 		gfx.SetBrush(RGB(80,80,80));
-		gfx.RoundRect(12, rect.left, rect.top, rect.right, rect.bottom, 16);
+		//gfx.RoundRect(12, rect.left, rect.top, rect.right, rect.bottom, 16);
+		gfx.GradientVRect(rect, RGB(250,250,250),RGB(110,110,110));
 
 		if (cpane->strCaption.Length())
 		{
 			rect.left+=24;
-			gfx.SetTextColor(RGB(240,240,240));
 			gfx.DrawText(cpane->strCaption.Buffer(), rect, DT_END_ELLIPSIS|DT_VCENTER|DT_SINGLELINE);
 		}
 

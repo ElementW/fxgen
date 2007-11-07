@@ -149,6 +149,7 @@ void NOperatorsCtrl::OnPaint()
 	{
 		NRect rcZone(m_ptStartRect.x, m_ptStartRect.y, m_ptEndRect.x, m_ptEndRect.y);
 		dc.Draw3dRect(rcZone, RGB(255,255,255), RGB(255,255,255));
+
 	}
 
 	/////////////////////////////////////////////////

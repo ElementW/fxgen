@@ -53,7 +53,6 @@ bool NPropertiesWnd::Create(const char* name, const NRect& rect, NWnd* parent)
 
 	EVT_REGISTER(EVT_OPSELECTED, (EVENTFNC)&NPropertiesWnd::OnOPSelChanged);
 	EVT_REGISTER(EVT_OPDELETING, (EVENTFNC)&NPropertiesWnd::OnOPDeleting);
-	EVT_REGISTER(EVT_PAGESELECTED, (EVENTFNC)&NPropertiesWnd::OnPageSelected );
 
 	return true;
 }
@@ -85,18 +84,6 @@ EVT_IMPLEMENT_HANDLER(NPropertiesWnd, OnOPSelChanged)
 //!	\brief	Event for operator deleting
 //-----------------------------------------------------------------
 EVT_IMPLEMENT_HANDLER(NPropertiesWnd, OnOPDeleting)
-{
-	m_pcurOp = null;
-	DisplayObjectProperties(null);
-	Update();
-
-	return 0;
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Event for page selection changed
-//-----------------------------------------------------------------
-EVT_IMPLEMENT_HANDLER(NPropertiesWnd, OnPageSelected)
 {
 	m_pcurOp = null;
 	DisplayObjectProperties(null);

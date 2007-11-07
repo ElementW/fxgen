@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="FxGenLib"
 	ProjectGUID="{D39F9951-FC48-4410-93AC-CEAF6934BF3F}"
 	RootNamespace="FxGenLib"
@@ -64,7 +64,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+<<<<<<< .mine
 				AdditionalDependencies="cairo.lib cairomm-1.0d.lib"
+=======
+				AdditionalDependencies="libnoise.lib"
+>>>>>>> .theirs
 				OutputFile="$(OutDir)\$(ProjectName)_D.dll"
 				AdditionalLibraryDirectories="..\..\Externals\cairo;..\..\Externals\vgvm;"
 				GenerateDebugInformation="true"
@@ -92,7 +96,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetDir)$(TargetFileName) ..\..\W32Bin\$(TargetFileName)"
+				CommandLine="copy debug\$(TargetName).lib ..\..\W32Bin\$(TargetName).lib&#x0D;&#x0A;copy debug\$(TargetFileName) ..\..\W32Bin\$(TargetFileName)&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -147,7 +151,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="cairo.lib cairomm-1.0.lib user32.lib"
-				OutputFile="$(OutDir)\$(ProjectName).dll"
+				OutputFile="..\..\W32Bin\$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\..\Externals\cairo;..\..\Externals\vgvm;"
 			/>
 			<Tool
@@ -345,6 +349,10 @@
 				RelativePath=".\EngineOp.h"
 				>
 			</File>
+			<File
+				RelativePath=".\noiseutils.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Core"
@@ -435,11 +443,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\fftn.h"
+				>
+			</File>
+			<File
 				RelativePath=".\FilterOps.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\FilterOps.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libnoiseOps.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\libnoiseOps.h"
 				>
 			</File>
 			<File
@@ -459,6 +479,7 @@
 				>
 			</File>
 		</Filter>
+<<<<<<< .mine
 		<Filter
 			Name="VGVM"
 			>
@@ -539,6 +560,92 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
+=======
+		<Filter
+			Name="gForge"
+			>
+			<File
+				RelativePath=".\Crater.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Crater.h"
+				>
+			</File>
+			<File
+				RelativePath=".\fftn.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\gForge.h"
+				>
+			</File>
+			<File
+				RelativePath=".\rand.cpp"
+				>
+			</File>
+		</Filter>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> .theirs
+		<File
+			RelativePath=".\noiseutils.h"
+			>
+		</File>
 		<File
 			RelativePath=".\pch.cpp"
 			>
@@ -577,6 +684,10 @@
 		</File>
 		<File
 			RelativePath=".\pch.h"
+			>
+		</File>
+		<File
+			RelativePath="..\Editor\pch.h"
 			>
 		</File>
 	</Files>

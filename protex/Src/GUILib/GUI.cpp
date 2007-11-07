@@ -21,6 +21,7 @@
 #include "pch.h"
 #include "SplitWnd.h"
 #include "GUI.h"
+#include "p3dmathspline.h"
 
 //-----------------------------------------------------------------
 // Defines
@@ -261,6 +262,32 @@ void NGraphics::GradientVRect(NRect& rc, COLORREF clrStart, COLORREF clrEnd)
 	::GradientFill(m_hMemDC,vert,2,&gRect,1,GRADIENT_FILL_RECT_V);
 }
 
+void NGraphics::GradientHRect(NRect& rc, COLORREF clrStart, COLORREF clrEnd)
+{
+	int r = GetRValue(clrEnd)-GetRValue(clrStart);
+	int g = GetGValue(clrEnd)-GetGValue(clrStart);
+	int b = GetBValue(clrEnd)-GetBValue(clrStart);
+
+	TRIVERTEX        vert[2] ;
+	GRADIENT_RECT    gRect;
+	vert [0] .x      = rc.left;
+	vert [0] .y      = rc.top;
+	vert [0] .Red    = GetRValue(clrStart)<<8;
+	vert [0] .Green  = GetGValue(clrStart)<<8;
+	vert [0] .Blue   = GetBValue(clrStart)<<8;
+	vert [0] .Alpha  = 0x0000;
+
+	vert [1] .x      = rc.right;
+	vert [1] .y      = rc.bottom;
+	vert [1] .Red    = GetRValue(clrEnd)<<8;
+	vert [1] .Green  = GetGValue(clrEnd)<<8;
+	vert [1] .Blue   = GetBValue(clrEnd)<<8;
+	vert [1] .Alpha  = 0x0000;
+
+	gRect.UpperLeft  = 0;
+	gRect.LowerRight = 1;
+	::GradientFill(m_hMemDC,vert,2,&gRect,1,GRADIENT_FILL_RECT_H);
+}
 
 void NGraphics::RoundRect(int _roundboxtype, float _minx, float _miny, float _maxx, float _maxy, float _rad)
 {
@@ -555,10 +582,6 @@ void NWnd::SetWindowText(char* _pszText)
 	::SetWindowText(m_W32HWnd, _pszText);
 }
 
-bool NWnd::IsWindowVisible()
-{
-	return ::IsWindowVisible(m_W32HWnd)!=0;
-}
 
 //-----------------------------------------------------------------
 // Name:	Windows Proc()
@@ -568,7 +591,8 @@ LRESULT CALLBACK NWnd::StaticWndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM 
 {
 	//Get NWnd Class pointer
 	NWnd* nwnd = (NWnd*)::GetWindowLong(hwnd, GWL_USERDATA);
-	if (nwnd==null)											return (::DefWindowProc(hwnd, msg, wparam, lparam));
+	if (nwnd==null)
+		return (::DefWindowProc(hwnd, msg, wparam, lparam));
 
 	//Check W32 Messages
 	switch (msg) {
@@ -980,7 +1004,6 @@ void NEditCtrl::HideSelection(bool hide)
 {
 	SendMessage(m_W32HWnd, EM_HIDESELECTION, hide, 0);
 }
-
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -1485,18 +1508,6 @@ bool NStatusBar::Create(NWnd* parent)
 	return true;
 }
 
-void NStatusBar::OnPaint()
-{
-	NRect rc = GetClientRect();
-
-	NGraphics dc(this);
-	dc.FillSolidRect(rc, RGB(115,115,115));
-	dc.SetBkMode(TRANSPARENT);
-
-	//Background color
-	dc.GradientVRect(rc, RGB(220, 220, 220), RGB(120, 120, 120));
-
-}
 
 
 //-----------------------------------------------------------------
@@ -1550,4 +1561,1379 @@ udword	NColorDialog::DoModal()
 void NColorDialog::SetColor(NColor& _color)
 {
 	m_Cc.rgbResult = _color.GetARGB();
+}
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//										NGradientCtrl Class Implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+
+int cmp(const void *elem1, const void *elem2)
+{
+	GradientElem *e1 = (GradientElem*)elem1;
+	GradientElem *e2 = (GradientElem*)elem2;
+
+	return e1->height >= e2->height;
+}
+
+COLORREF g_rgbBackground = RGB(0, 0, 255);
+COLORREF g_rgbCustom[16] = {0};
+
+void DoSelectColour(HWND hwnd)
+{
+    CHOOSECOLOR cc = {sizeof(CHOOSECOLOR)};
+
+    cc.Flags = CC_RGBINIT | CC_FULLOPEN | CC_ANYCOLOR;
+    cc.hwndOwner = hwnd;
+    cc.rgbResult = g_rgbBackground;
+    cc.lpCustColors = g_rgbCustom;
+
+    if(ChooseColor(&cc))
+    {
+        g_rgbBackground = cc.rgbResult;
+    }
+}
+
+//-----------------------------------------------------------------
+//										Constructor
+//-----------------------------------------------------------------
+NGradientCtrl::NGradientCtrl()
+{
+	// misc dimension variables and bools
+	start_client_x = 40;
+	start_client_y = 90;
+	client_Width = 430;
+	client_Height = 40;
+
+
+	m_bSelectedRect = false;
+	m_bMouseLDown = false;
+
+	// I need two gradient points at least
+	m_clientLineX = 0;
+	NColor start;
+	start.mR = 0;
+	start.mG = 0;
+	start.mB = 0;
+	start.mA = 255;
+	float fStart = start_client_x;
+
+	// point 1
+	GradientElem elem;
+	elem.height = fStart;
+	elem.color[0] = start.mR;
+	elem.color[1] = start.mG;
+	elem.color[2] = start.mB;
+	elem.color[3] = start.mA;
+	m_gradientElems.AddItem( elem );
+
+	NColor end;
+	end.mR = 255;
+	end.mG = 255;
+	end.mB = 255;
+	end.mA = 255;
+	float fEnd = start_client_x + client_Width;
+
+	// point 2
+	GradientElem elem2;
+	elem2.height = fEnd;
+	elem2.color[0] = end.mR;
+	elem2.color[1] = end.mG;
+	elem2.color[2] = end.mB;
+	elem2.color[3] = end.mA;
+	m_gradientElems.AddItem( elem2 );
+
+
+}
+
+//-----------------------------------------------------------------
+//										Destructor
+//-----------------------------------------------------------------
+NGradientCtrl::~NGradientCtrl()
+{
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Control creation
+//-----------------------------------------------------------------
+bool NGradientCtrl::Create(const char* name, const NRect& rect, NWnd* parent)
+{
+	//Call Base class
+	NWNDCREATE			wc;
+	wc.Id						= 1;
+	wc.Name					= const_cast<char*>(name);
+	wc.Parent				= parent;
+	wc.Rect					= rect;
+	wc.W32ClassName	= "FXGen_WNDCLASS";
+	wc.W32Style			= WS_CHILD | WS_CLIPCHILDREN;   //WS_CLIPSIBLINGS;
+	wc.W32StyleEx		= WS_EX_ACCEPTFILES;
+	NWnd::Create(wc);
+
+	//Create Normal Font
+	m_hfontNormal = ::CreateFont(
+		10, 0, 0, 0, FW_NORMAL, FALSE, FALSE,
+		0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+		DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, "Lucida console");
+
+	return true;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Window proc
+//-----------------------------------------------------------------
+LRESULT NGradientCtrl::WndProc( UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	if (msg==WM_ERASEBKGND)		return 1;
+
+	//Else Call Base Class
+	else return NWnd::WndProc(msg, wparam, lparam);
+
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Update control
+//-----------------------------------------------------------------
+void NGradientCtrl::Update()
+{
+
+	::RedrawWindow(m_W32HWnd, null, null, RDW_INTERNALPAINT);
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Update control
+//-----------------------------------------------------------------
+float NGradientCtrl::to_graph_space( float X )
+{
+	return 2*(X - start_client_x)/client_Width - 1.0;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Update control
+//-----------------------------------------------------------------
+float NGradientCtrl::from_graph_space( float X )
+{
+	return client_Width*( X + 1.0 )/ 2 + start_client_x;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NGradientCtrl::OnPaint()
+{
+	NRect rc = GetClientRect();
+
+	NGraphics dc(this);
+	dc.FillSolidRect(rc, RGB(115,115,115));
+	dc.SetBkMode(TRANSPARENT);
+
+	int NumElems = m_gradientElems.Count();
+
+	for( int i = 0; i < NumElems; i++ )
+	{
+
+		NRect rct2;
+		rct2.left		= (sdword) (m_gradientElems[i].height );
+		rct2.top		= (sdword) (start_client_y);
+
+		// is this the end? use the end
+		float h = i==NumElems-1?
+			start_client_x + client_Width:
+			m_gradientElems[i+1].height;
+
+		rct2.right	= (sdword) ((h) );
+		rct2.bottom	= (sdword) (rct2.top  + client_Height);
+
+		sdword r1 = m_gradientElems[i].color[0];//.mR;
+		sdword g1 = m_gradientElems[i].color[1];//.mG;
+		sdword b1 = m_gradientElems[i].color[2];//.mB;
+
+		// is this the end? then use the current color
+		sdword r2 = i == NumElems-1 ? m_gradientElems[i].color[0] : m_gradientElems[i+1].color[0] ;
+		sdword g2 = i == NumElems-1 ? m_gradientElems[i].color[1] : m_gradientElems[i+1].color[1] ;
+		sdword b2 = i == NumElems-1 ? m_gradientElems[i].color[2] : m_gradientElems[i+1].color[2] ;
+
+		// render the current gradient
+		dc.GradientHRect(rct2,
+			RGB(r1, g1, b1),
+			RGB(r2, g2, b2));
+
+		// draw small blue rectangle
+		NRect rc4;
+		rc4.left		= (sdword) ( m_gradientElems[i].height );
+		rc4.top		= (sdword) ( start_client_y + client_Height );
+		rc4.right	= (sdword) ( rc4.left + 2.0);
+		rc4.bottom	= (sdword) ( rc4.top  + 2.0 );
+
+		dc.FillSolidRect( rc4, RGB(64,64,128) );
+
+		// draw line through gradient
+		NRect rc5;
+		rc5.left	= (sdword) (m_gradientElems[i].height );
+		rc5.top		= (sdword) ( start_client_y );
+		rc5.right	= (sdword) ( rc5.left + 1 );
+		rc5.bottom	= (sdword) ( rc5.top  + 10 );
+
+		dc.FillSolidRect(rc5, RGB(0,0,0));
+
+		// draw arrow for point
+		dc.MoveTo( m_gradientElems[i].height,      start_client_y + client_Height	);
+		dc.LineTo( m_gradientElems[i].height - 1,  start_client_y + client_Height + 1 );
+
+		dc.MoveTo( m_gradientElems[i].height - 1,  start_client_y + client_Height + 1	);
+		dc.LineTo( m_gradientElems[i].height + 1,  start_client_y + client_Height + 1);
+
+		dc.MoveTo( m_gradientElems[i].height + 1,  start_client_y + client_Height + 1	);
+		dc.LineTo( m_gradientElems[i].height,      start_client_y + client_Height );
+
+
+
+		// draw a selection rectangle
+		NRect rc7;
+		rc7.left		= (sdword) (m_gradientElems[i].height - 2 );
+		rc7.top		= (sdword) ( start_client_y + client_Height + 10 );
+		rc7.right	= (sdword) ( rc7.left + 4 );
+		rc7.bottom	= (sdword) ( rc7.top  + 4 );
+		dc.FillSolidRect( rc7, RGB(0,0,0));
+	}
+
+	/*{
+		NRect rectText1;
+		rectText1.left		= (sdword) ( 430 );
+		rectText1.top		= (sdword) ( y + Height + 10 );
+		rectText1.right	= (sdword) ( rectText1.left + 84.0);
+		rectText1.bottom	= (sdword) ( rectText1.top  + 32 );
+
+		char buff[256];
+		sprintf( buff, "%f", (float)1 );
+
+		dc.DrawTextA(buff, rectText1, 0);
+
+		NRect rectText2;
+		rectText2.left		= (sdword) ( 30 );
+		rectText2.top		= (sdword) ( y + Height + 10 );
+		rectText2.right	= (sdword) ( rectText2.left + 84.0);
+		rectText2.bottom	= (sdword) ( rectText2.top  + 32 );
+
+		char buff2[256];
+		sprintf( buff2, "%f", (float)(-1.0) );
+
+		dc.DrawTextA(buff2, rectText2, 0);
+
+	}
+*/
+
+
+
+	// clamp coordinates
+	if( m_clientLineX < start_client_x ) m_clientLineX = start_client_x;
+	if( m_clientLineX > start_client_x + client_Width ) m_clientLineX = start_client_x + client_Width;
+
+	// draw current rectangle
+	// note: where is this thing?
+	NRect rc6;
+	rc6.left		= (sdword) ( m_clientLineX );
+	rc6.top		= (sdword) ( start_client_y );
+	rc6.right	= (sdword) ( rc6.left + 1 );
+	rc6.bottom	= (sdword) ( rc6.top  + 10 );
+	dc.FillSolidRect( rc6, RGB(0,0,0));
+
+	// draw current arrow
+	dc.MoveTo( m_clientLineX,      start_client_y + client_Height	);
+	dc.LineTo( m_clientLineX - 1,  start_client_y + client_Height + 1 );
+
+	dc.MoveTo( m_clientLineX - 1,  start_client_y + client_Height + 1	);
+	dc.LineTo( m_clientLineX + 1,  start_client_y + client_Height + 1);
+
+	dc.MoveTo( m_clientLineX + 1,  start_client_y + client_Height + 1	);
+	dc.LineTo( m_clientLineX,      start_client_y + client_Height );
+
+	// render the selected rectangle in red
+	if( m_bSelectedRect )
+	{
+		NRect rc8;
+		rc8.left		= (sdword) (selectedElem->height - 2 );
+		rc8.top		= (sdword) ( start_client_y + client_Height + 10 );
+		rc8.right	= (sdword) ( rc8.left + 4 );
+		rc8.bottom	= (sdword) ( rc8.top  + 4 );
+		dc.FillSolidRect( rc8, RGB(255,0,0));
+
+		// add text for the selected rectangle...
+		NRect rectText;
+		rectText.left		= (sdword) ( selectedElem->height );
+		rectText.top		= (sdword) ( start_client_y + client_Height + 10 );
+		rectText.right	= (sdword) ( rectText.left + 84.0);
+		rectText.bottom	= (sdword) ( rectText.top  + 32 );
+
+		char buff[256];
+		sprintf( buff, "%f", to_graph_space(selectedElem->height) );
+
+		dc.DrawTextA(buff, rectText, 0);
+	}
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NGradientCtrl::SelectRectangles()
+{
+	int NumElems = m_gradientElems.Count();
+
+	for( int i = 0; i < NumElems; i++ )
+	{
+		NRect rc7;
+		rc7.left	= (sdword) ( m_gradientElems[i].height-2 );
+		rc7.top		= (sdword) ( start_client_y + client_Height + 10 );
+		rc7.right	= (sdword) ( rc7.left + 4 );
+		rc7.bottom	= (sdword) ( rc7.top  + 4 );
+
+		if( rc7.Contain( mousePos ) )
+		{
+			sel = rc7;
+			selectedElem = &m_gradientElems[i];
+			m_bSelectedRect = true;
+			return;
+		}
+	}
+
+	m_bSelectedRect = false;
+	selectedElem = NULL;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NGradientCtrl::OnLeftButtonDown(udword flags, NPoint pos)
+{
+	SetFocus();
+
+	m_clientLineX = pos.x;
+
+	mousePos = pos;
+
+	SelectRectangles();
+
+	m_bMouseLDown = true;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NGradientCtrl::OnLeftButtonUp(udword flags, NPoint pos)
+{
+	m_bMouseLDown = false;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NGradientCtrl::OnMouseMove(udword flags, NPoint pos )
+{
+	if( m_bSelectedRect && m_bMouseLDown )
+	{
+		if( selectedElem->height == start_client_x ||
+			selectedElem->height == start_client_x + client_Width ) return;
+
+		m_clientLineX = pos.x;
+		if( m_clientLineX < start_client_x ) m_clientLineX = start_client_x;
+		if( m_clientLineX > start_client_x + client_Width ) m_clientLineX = start_client_x + client_Width;
+
+		selectedElem->height = m_clientLineX;
+
+		for( int i = 0 ; i < m_gradientElems.Count(); i++ )
+		{
+			for( int j = 0; j < m_gradientElems.Count(); j++ )
+			{
+				if( i != j && m_gradientElems[i].height == m_gradientElems[j].height )
+				{
+
+					m_gradientElems[i].height -= 1;
+					if( m_gradientElems[i].height < start_client_x )
+					{
+						m_gradientElems[i].height = start_client_x;
+						m_gradientElems[j].height += 1;
+					}
+					if( m_gradientElems[i].height > start_client_x + client_Width )
+					{
+						m_gradientElems[i].height = start_client_x + client_Width;
+						m_gradientElems[j].height -= 1;
+					}
+				}
+
+			}
+		}
+		m_gradientElems.Sort(cmp);
+	}
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NGradientCtrl::OnSize()
+{
+	::RedrawWindow(m_W32HWnd, null, null, RDW_INTERNALPAINT);
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NGradientCtrl::AssignColorToSelection()
+{
+	DoSelectColour( this->m_W32HWnd );
+	if( m_bSelectedRect )
+	{
+		selectedElem->color[2] = RGBA_GETRED( g_rgbBackground );
+		selectedElem->color[1] = RGBA_GETGREEN( g_rgbBackground );
+		selectedElem->color[0]= RGBA_GETBLUE( g_rgbBackground );
+		selectedElem->color[3] = 255;
+	}
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NGradientCtrl::OnAddPoint()
+{
+	DoSelectColour( this->m_W32HWnd );
+	NColor color;
+
+	// should this be BGR or RGB?
+	color.mB = RGBA_GETRED( g_rgbBackground );
+	color.mG = RGBA_GETGREEN( g_rgbBackground );
+	color.mR = RGBA_GETBLUE( g_rgbBackground );
+	color.mA = 255;
+
+	if( m_clientLineX < start_client_x ) m_clientLineX = start_client_x;
+	if( m_clientLineX > start_client_x + client_Width ) m_clientLineX = start_client_x + client_Width;
+	AddGradientPoint( m_clientLineX, color );
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NGradientCtrl::AddGradientPoint( float height, const NColor &color )
+{
+	float rHeight = height;
+
+	GradientElem elem;
+	elem.height = rHeight;
+	elem.color[0] = color.mR;
+	elem.color[1] = color.mG;
+	elem.color[2] = color.mB;
+	elem.color[3] = color.mA;
+	m_gradientElems.AddItem( elem );
+	m_gradientElems.Sort(cmp);
+}
+
+void NGradientCtrl::OnDeletePoint()
+{
+	for( int i = 0; i < m_gradientElems.Size(); i++ )
+	{
+		if( selectedElem == &m_gradientElems[i] )
+		{
+			float f1 =to_graph_space(m_gradientElems[i].height);
+
+			if (!( f1== 1.0 || f1 == -1.0))
+				m_gradientElems.RemoveItem(i);
+			break;
+		}
+	}
+}
+
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//										NCurveCtrl Class Implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+
+int cmp_curve_point(const void *elem1, const void *elem2)
+{
+	NPoint *e1 = (NPoint*)elem1;
+	NPoint *e2 = (NPoint*)elem2;
+
+	return e1->x <= e2->x;
+}
+
+
+//-----------------------------------------------------------------
+//										Constructor
+//-----------------------------------------------------------------
+NGraphCtrl::NGraphCtrl()
+{
+	// misc dimension variables and bools
+	start_x = 40;
+	start_y = 60;
+	Width = 400;
+	Height = 200;
+	end_x = start_x + Width;
+	end_y = start_y + Height;
+
+	x_min = -1.0f;
+	x_max = 1.0f;
+	y_min = -1.0f;
+	y_max = 1.0f;
+
+	graph_space.left = x_min;
+	graph_space.right = x_max;
+	graph_space.top = y_max;
+	graph_space.bottom = y_min;
+
+	m_bSelectedRect = false;
+	m_bMouseLDown = false;
+
+	m_currentLineX = 0;
+	m_currentLineY = 0;
+
+	bMovingPoint = false;
+}
+
+//-----------------------------------------------------------------
+//										Destructor
+//-----------------------------------------------------------------
+NGraphCtrl::~NGraphCtrl()
+{
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Control creation
+//-----------------------------------------------------------------
+bool NGraphCtrl::Create(const char* name, const NRect& rect, NWnd* parent)
+{
+	//Call Base class
+	NWNDCREATE			wc;
+	wc.Id						= 1;
+	wc.Name					= const_cast<char*>(name);
+	wc.Parent				= parent;
+	wc.Rect					= rect;
+	wc.W32ClassName	= "FXGen_WNDCLASS";
+	wc.W32Style			= WS_CHILD | WS_CLIPCHILDREN;   //WS_CLIPSIBLINGS;
+	wc.W32StyleEx		= WS_EX_ACCEPTFILES;
+	NWnd::Create(wc);
+
+	//Create Normal Font
+	m_hfontNormal = ::CreateFont(
+		10, 0, 0, 0, FW_NORMAL, FALSE, FALSE,
+		0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+		DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, "Lucida console");
+
+	return true;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Window proc
+//-----------------------------------------------------------------
+LRESULT NGraphCtrl::WndProc( UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	if (msg==WM_ERASEBKGND)		return 1;
+
+	//Else Call Base Class
+	else return NWnd::WndProc(msg, wparam, lparam);
+
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Update control
+//-----------------------------------------------------------------
+void NGraphCtrl::Update()
+{
+	::RedrawWindow(m_W32HWnd, null, null, RDW_INTERNALPAINT);
+}
+
+
+NDPoint NGraphCtrl::to_graph_space( float X, float Y )
+{
+
+	// X = 15,
+	// percentage = ( X - start_x ) / ( end_x - start_x )
+	// range = x_max - x_min
+	// val = range * percentage + x_min
+	// val = 2 * 0.25 + (-1)
+
+	// compute percentage of current space
+	// calculate the range of the target space
+	// compute value in range of target space
+	// add the value to the min value of the target space
+
+	NDPoint pt;
+
+	float percentageX = ( X - start_x ) / ( end_x - start_x );
+	float percentageY = ( Y - start_y ) / ( end_y - start_y );
+
+	float rangeX = graph_space.right - graph_space.left;
+	float rangeY = -(graph_space.top - graph_space.bottom );
+
+	pt.x = rangeX * percentageX + graph_space.left;
+	pt.y = rangeY * percentageY + graph_space.top;
+
+	return pt;
+}
+
+NDPoint NGraphCtrl::from_graph_space( float X, float Y )
+{
+	// basically this is the inverse of
+	// to_graph_space(...)
+
+	NDPoint pt;
+
+	float rangeX = graph_space.right - graph_space.left;
+	float rangeY = -(graph_space.top - graph_space.bottom);
+
+	pt.x = ( end_x - start_x )* (X - graph_space.left) / rangeX + start_x;
+	pt.y = ( end_y - start_y )* (Y - graph_space.top) / rangeY + start_y;
+
+	return pt;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NGraphCtrl::Paint(NGraphics &dc)
+{
+	NRect rc = GetClientRect();
+
+	dc.SetBkMode(TRANSPARENT);
+
+	int NumElems = m_curveElems.Count();
+
+	for( int i = 0; i < NumElems; i++ )
+	{
+		NDPoint gyx;
+		gyx = from_graph_space( m_curveElems[i].x, m_curveElems[i].y  );
+
+		// draw small blue rectangle
+		NRect rc4;
+		rc4.left		= (sdword) ( gyx.x );
+		rc4.top		= (sdword) ( gyx.y );
+		rc4.right	= (sdword) ( rc4.left + 8.0);
+		rc4.bottom	= (sdword) ( rc4.top  + 8.0 );
+
+		dc.FillSolidRect( rc4, RGB(0,0,128) );
+	}
+
+
+	////////////////////////////////////
+	//plot the bounding box
+
+	dc.SetPen(2, RGB(0,0,0));
+
+	dc.MoveTo( start_x,			start_y );				// top left
+	dc.LineTo( start_x,			start_y + Height );	// bottom left
+	dc.LineTo( start_x + Width, start_y + Height );	// bottom right
+	dc.LineTo( start_x + Width, start_y );				// top right
+	dc.LineTo( start_x,			start_y );				// top left
+
+
+	dc.SetPen(1, RGB(255,0,0));
+	//////////////////////////////////////////
+	// PLOT the text extents here!
+	{
+		// X min, Y min
+		NRect rectX1Y1;
+		rectX1Y1.left		= (sdword) ( start_x - 30 );
+		rectX1Y1.top		= (sdword) ( end_y + 5 - Height / 2);
+		rectX1Y1.right	= (sdword) ( rectX1Y1.left + 160);
+		rectX1Y1.bottom	= (sdword) ( rectX1Y1.top  + 32 );
+
+		char xmin_ymin[256];
+		sprintf( xmin_ymin, "%f", (float)graph_space.left );
+		dc.DrawTextA(xmin_ymin, rectX1Y1, 0);
+
+		// X max, Y min
+		NRect rectX2Y1;
+		rectX2Y1.left		= (sdword) ( end_x + 10 );
+		rectX2Y1.top		= (sdword) ( end_y + 5 - Height / 2);
+		rectX2Y1.right	= (sdword) ( rectX2Y1.left + 160);
+		rectX2Y1.bottom	= (sdword) ( rectX2Y1.top  + 32 );
+
+		char xmax_ymin[256];
+		sprintf( xmax_ymin, "%f", (float)graph_space.right );
+		dc.DrawTextA(xmax_ymin, rectX2Y1, 0);
+
+		// X min, Y max
+		NRect rectX1Y2;
+		rectX1Y2.left		= (sdword) ( start_x + Width / 2);
+		rectX1Y2.top		= (sdword) ( start_y - 20 );
+		rectX1Y2.right	= (sdword) ( rectX1Y2.left + 160);
+		rectX1Y2.bottom	= (sdword) ( rectX1Y2.top  + 32 );
+
+		char xmin_ymax[256];
+		sprintf( xmin_ymax, "%f", (float)graph_space.top );
+		dc.DrawTextA(xmin_ymax, rectX1Y2, 0);
+
+		// X max, Y max
+		NRect rectX2Y2;
+		rectX2Y2.left		= (sdword) (  start_x + Width / 2);
+		rectX2Y2.top		= (sdword) ( end_y + 10 );
+		rectX2Y2.right	= (sdword) ( rectX2Y2.left + 160);
+		rectX2Y2.bottom	= (sdword) ( rectX2Y2.top  + 32 );
+
+		char xmax_ymax[256];
+		sprintf( xmax_ymax, "%f", (float)graph_space.bottom );
+		dc.DrawTextA(xmax_ymax, rectX2Y2, 0);
+	}
+
+
+	////////////////////
+	// Draw the zero point in red
+	dc.SetPen(1, RGB(255,0,0));
+
+	if( graph_space.left < 0 && graph_space.right > 0 )
+	{
+		float Y_AXIS_X = 0.0f;
+		float Y_AXIS_Y1 = graph_space.top;
+		float Y_AXIS_Y2 = graph_space.bottom;
+
+		NDPoint zero_point1 = from_graph_space( Y_AXIS_X, Y_AXIS_Y1 );
+		NDPoint zero_point2 = from_graph_space( Y_AXIS_X, Y_AXIS_Y2 );
+
+		if( zero_point1.x > start_x && zero_point1.x < end_x )
+		{
+			dc.MoveTo( zero_point1.x,			zero_point1.y  );				// middle top
+			dc.LineTo( zero_point2.x,			zero_point2.y);	// middle bottom
+		}
+	}
+
+	if( graph_space.bottom < 0 && graph_space.top > 0 )
+	{
+		float X_AXIS_Y = 0.0f;
+		float X_AXIS_X1 = graph_space.right;
+		float X_AXIS_X2 = graph_space.left;
+
+		NDPoint zero_point1 = from_graph_space( X_AXIS_X1, X_AXIS_Y );
+		NDPoint zero_point2 = from_graph_space( X_AXIS_X2, X_AXIS_Y );
+
+		if( zero_point1.y > start_y && zero_point1.y < end_y )
+		{
+			dc.MoveTo( zero_point1.x,			zero_point1.y  );		// middle left
+			dc.LineTo( zero_point2.x,			zero_point2.y );			// middle right
+		}
+	}
+
+	// draw current point axes
+	dc.SetPen(1, RGB(0,0,255));
+	dc.MoveTo( m_currentLineX,  m_currentLineY );
+	dc.LineTo( start_x,			m_currentLineY );
+
+	dc.MoveTo( m_currentLineX,  m_currentLineY );
+	dc.LineTo( end_x,			m_currentLineY );
+
+	dc.MoveTo( m_currentLineX,			m_currentLineY );
+	dc.LineTo( m_currentLineX,			start_y );
+
+	dc.MoveTo( m_currentLineX,			m_currentLineY );
+	dc.LineTo( m_currentLineX,			end_y  );
+
+	// clamp coordinates
+	if( m_currentLineX < start_x ) m_currentLineX = start_x;
+	if( m_currentLineX > start_x + Width ) m_currentLineX = start_x + Width;
+
+	if( m_currentLineY < start_y ) m_currentLineY = start_y;
+	if( m_currentLineY > start_y + Height ) m_currentLineY = start_y + Height;
+
+	// draw the line for the arrow
+	NRect rc6;
+	rc6.left		= (sdword) ( m_currentLineX );
+	rc6.top		= (sdword) ( start_y + 2*Height );
+	rc6.right	= (sdword) ( rc6.left + 1 );
+	rc6.bottom	= (sdword) ( rc6.top  + 10 );
+	dc.FillSolidRect( rc6, RGB(0,0,0));
+
+
+	// draw current arrow
+	dc.MoveTo( m_currentLineX,      start_y + 2*Height	);
+	dc.LineTo( m_currentLineX - 1,  start_y + 2*Height + 1 );
+
+	dc.MoveTo( m_currentLineX - 1,  start_y + 2*Height + 1	);
+	dc.LineTo( m_currentLineX + 1,  start_y + 2*Height + 1);
+
+	dc.MoveTo( m_currentLineX + 1,  start_y + 2*Height + 1	);
+	dc.LineTo( m_currentLineX,      start_y + 2*Height );
+
+	// render the selected rectangle in red
+	if( m_bSelectedRect )
+	{
+
+		NDPoint sel_elem_screen;
+
+		sel_elem_screen = from_graph_space( selectedElem->x, selectedElem->y  );
+		NRect rc8;
+		rc8.left		= (sdword) (sel_elem_screen.x );
+		rc8.top		= (sdword) ( sel_elem_screen.y );
+		rc8.right	= (sdword) ( rc8.left + 8 );
+		rc8.bottom	= (sdword) ( rc8.top  + 8 );
+		dc.FillSolidRect( rc8, RGB(255,0,0));
+
+
+		NRect rectText2;
+		rectText2.left		= (sdword) ( start_x );
+		rectText2.top		= (sdword) ( end_y + 70 );
+		rectText2.right	= (sdword) ( rectText2.left + 260);
+		rectText2.bottom	= (sdword) ( rectText2.top  + 32 );
+
+		//NDPoint conv;
+		//conv = to_graph_space( selectedElem->x, selectedElem->y );
+		char buff[256];
+		sprintf( buff, "Selected Point: %f, %f", selectedElem->x, selectedElem->y );
+
+		dc.DrawTextA(buff, rectText2, 0);
+	}
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NGraphCtrl::SelectRectangles()
+{
+	int NumElems = m_curveElems.Count();
+
+	for( int i = 0; i < NumElems; i++ )
+	{
+		NDPoint pPoint = from_graph_space(m_curveElems[i].x, m_curveElems[i].y);
+
+		NRect rc7;
+		rc7.left		= (sdword) (pPoint.x-2 );
+		rc7.top		= (sdword) ( pPoint.y - 2 );
+		rc7.right	= (sdword) ( rc7.left + 8 );
+		rc7.bottom	= (sdword) ( rc7.top  + 8 );
+
+		if( rc7.Contain( mousePos ) )
+		{
+			sel = rc7;
+			selectedElem = &m_curveElems[i];
+			m_bSelectedRect = true;
+			return;
+		}
+	}
+
+	m_bSelectedRect = false;
+	selectedElem = NULL;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NGraphCtrl::OnLeftButtonDown(udword flags, NPoint pos)
+{
+	SetFocus();
+
+	m_currentLineX = pos.x;
+	m_currentLineY = pos.y;
+
+	mousePos = pos;
+
+	if( !bMovingPoint )
+	{
+		SelectRectangles();
+	}
+
+	m_bMouseLDown = true;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NGraphCtrl::OnLeftButtonUp(udword flags, NPoint pos)
+{
+	m_bMouseLDown = false;
+	bMovingPoint = false;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NGraphCtrl::OnSize()
+{
+	::RedrawWindow(m_W32HWnd, null, null, RDW_INTERNALPAINT);
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NGraphCtrl::OnAddPoint()
+{
+	if( m_currentLineX < start_x ) m_currentLineX = start_x;
+	if( m_currentLineX > start_x + Width ) m_currentLineX = start_x + Width;
+	if( m_currentLineY < start_y ) m_currentLineY = start_y;
+	if( m_currentLineY > start_y + Height ) m_currentLineY = start_y + Height;
+
+	AddCurvePoint( m_currentLineX, m_currentLineY );
+}
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//										NCurveCtrl Class Implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+
+
+//-----------------------------------------------------------------
+//										Constructor
+//-----------------------------------------------------------------
+NCurveCtrl::NCurveCtrl() : NGraphCtrl()
+{
+	float fStart = start_x;
+	float fEnd = start_x + Width;
+	float fMid1 =   (fEnd - fStart) / 3;
+	float fMid2 = 2*(fEnd - fStart) / 3;
+
+	// point 1
+	NDPoint elem;
+	elem.x = fStart;
+	elem.y = start_y + Height /2 ;
+	NDPoint add_1 = to_graph_space(elem.x, elem.y);
+	m_curveElems.AddItem( add_1 );
+
+	// point 2
+	NDPoint elem2;
+	elem2.x = fMid1;
+	elem2.y = start_y + Height /2 ;
+	NDPoint add_2 = to_graph_space(elem2.x, elem2.y);
+	m_curveElems.AddItem( add_2 );
+
+	// point 3
+	NDPoint elem3;
+	elem3.x = fMid2;
+	elem3.y = start_y + Height /2 ;
+	NDPoint add_3 = to_graph_space(elem3.x, elem3.y);
+	m_curveElems.AddItem( add_3 );
+
+	// point 4
+	NDPoint elem4;
+	elem4.x = fEnd;
+	elem4.y = start_y + Height /2;
+	NDPoint add_4 = to_graph_space(elem4.x, elem4.y);
+	m_curveElems.AddItem( add_4 );
+
+}
+
+//-----------------------------------------------------------------
+//										Destructor
+//-----------------------------------------------------------------
+NCurveCtrl::~NCurveCtrl()
+{
+}
+
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NCurveCtrl::OnPaint()
+{
+	NRect rc = GetClientRect();
+
+	NGraphics dc(this);
+	dc.SetBkMode(TRANSPARENT);
+	dc.FillSolidRect(rc, RGB(255,255,255));
+
+	int NumElems = m_curveElems.Count();
+
+	// using a P3DMathNaturalCubicSpline ...
+	// from ngplant...
+	P3DMathNaturalCubicSpline curveToPlot;
+
+	for( int i = 0; i < NumElems; i++ )
+	{
+		// add the current control point to the curve ...
+		//NDPoint gxy;
+		//gxy = to_graph_space(m_curveElems[i].x, m_curveElems[i].y );
+		curveToPlot.AddCP(m_curveElems[i].x, m_curveElems[i].y );
+	}
+
+
+	/////////////////////////////////////////
+	// now plot the curve...
+
+	dc.SetPen(2, RGB(0,255,0));
+	dc.MoveTo( start_x,      start_y + Height/2	);
+
+	for( int i = start_x; i < end_x; i++ )
+	{
+		// curve for graph-space 'x' in screen space
+		NDPoint p1;
+		p1 = to_graph_space(i , curveToPlot.GetValue(i) );
+		p1 = from_graph_space(i , curveToPlot.GetValue(p1.x) );
+		dc.MoveTo( i,      p1.y	);
+
+		// curve for graph-space 'x' in screen space
+		NDPoint p2;
+		p2 = to_graph_space(i+1, curveToPlot.GetValue(i+1) );
+		p2 = from_graph_space(i+1, curveToPlot.GetValue(p2.x) );
+
+		if(	p2.y > start_y && p2.y < end_y ){
+			dc.LineTo( i+1,   p2.y );
+		}
+	}
+
+	NGraphCtrl::Paint(dc);
+
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NCurveCtrl::OnMouseMove(udword flags, NPoint pos )
+{
+	if( m_bSelectedRect && m_bMouseLDown )
+	{
+
+		float moveX =pos.x;
+		float moveY = pos.y;
+		NDPoint pPoint1 = to_graph_space(moveX, moveY);
+
+		if( m_currentLineX < start_x ) m_currentLineX = start_x;
+		if( m_currentLineX > start_x + Width ) m_currentLineX = start_x + Width;
+
+		if( m_currentLineY < start_y ) m_currentLineY = start_y;
+		if( m_currentLineY > start_y + Height ) m_currentLineY = start_y + Height;
+
+		bMovingPoint = true;
+		bool bSwappedPoint = false;
+
+		for( int i = 0 ; i < m_curveElems.Count(); i++ )
+		{
+			if( m_curveElems[i].x == pPoint1.x )
+			{
+				if( selectedElem != &m_curveElems[i] )
+				{
+
+					if( selectedElem->x > pPoint1.x )
+						pPoint1.x +=1;
+					if( selectedElem->x < pPoint1.x )
+						pPoint1.x -=1;
+
+					//NDPoint pPoint2 = from_graph_space(selectedElem->x, selectedElem->y);
+
+					//moveX = pPoint2.x;
+					pPoint1.x = selectedElem->x;
+					//MessageBox(0,"","",0);
+					//bMovingPoint = false;
+					bSwappedPoint = true;
+					break;
+				}
+			}
+			/*for( int j = 0; j < m_curveElems.Count(); j++ )
+			{
+				if( i != j && m_curveElems[i].x == m_curveElems[j].x )
+				{
+
+
+					m_curveElems[i].x -= 1;
+					if( m_curveElems[i].x < x )
+					{
+						m_curveElems[i].x = x;
+						m_curveElems[j].x += 1;
+					}
+					if( m_curveElems[i].x > x + Width )
+					{
+						m_curveElems[i].x = x + Width;
+						m_curveElems[j].x -= 1;
+					}
+
+					bMovingPoint = false;
+					break;
+				}
+			}*/
+		}
+
+		if( bMovingPoint == true )
+		{
+
+			NDPoint pPoint2 = from_graph_space(pPoint1.x, pPoint1.y);
+			m_currentLineX = pos.x;
+			m_currentLineY = pos.y;
+			NDPoint pPoint = to_graph_space(m_currentLineX, m_currentLineY);
+			selectedElem->x = pPoint1.x;
+			selectedElem->y = pPoint1.y;
+		}
+
+		if( bSwappedPoint )m_curveElems.Sort(cmp_curve_point);
+	}
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NCurveCtrl::AddCurvePoint( float X, float Y )
+{
+	NDPoint pt = to_graph_space(X,Y);
+	//pt.x = X;
+	//pt.y = Y;
+
+	m_curveElems.AddItem( pt );
+	m_curveElems.Sort(cmp_curve_point);
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NCurveCtrl::OnDeletePoint()
+{
+	if( m_curveElems.Size() <= 4 )
+		return;
+
+	for( int i = 0; i < m_curveElems.Size(); i++ )
+	{
+		if( selectedElem == &m_curveElems[i] )
+		{
+			m_curveElems.RemoveItem(i);
+			break;
+		}
+	}
+}
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//										NTerraceCtrl Class Implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+int cmp_curve_point2(const void *elem1, const void *elem2)
+{
+	NPoint *e1 = (NPoint*)elem1;
+	NPoint *e2 = (NPoint*)elem2;
+
+	return e1->x > e2->x;
+}
+
+//-----------------------------------------------------------------
+//										Constructor
+//-----------------------------------------------------------------
+NTerraceCtrl::NTerraceCtrl() : NGraphCtrl()
+{
+	float fStart = start_x;
+	float fEnd = start_x + Width/2;
+	float fMid1 =   (fEnd - fStart) / 4;
+	float fMid2 = 2*(fEnd - fStart) / 3;
+
+	// point 1
+	NDPoint elem;
+	elem.x = fStart;
+	elem.y = start_y + Height /2 ;
+	AddCurvePoint(elem.x, elem.y);
+
+	// point 4
+	NDPoint elem4;
+	elem4.x = fMid1;
+	elem4.y = start_y + Height /2;
+	AddCurvePoint(elem4.x, elem4.y);
+
+	m_bInvertTerrace = false;
+}
+
+//-----------------------------------------------------------------
+//										Destructor
+//-----------------------------------------------------------------
+NTerraceCtrl::~NTerraceCtrl()
+{
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NTerraceCtrl::OnPaint()
+{
+	NRect rc = GetClientRect();
+
+	NGraphics dc(this);
+	dc.SetBkMode(TRANSPARENT);
+	dc.FillSolidRect(rc, RGB(255,255,255));
+
+
+	int NumElems = m_curveElems.Count();
+
+	for( int i = 0; i < NumElems; i++ )
+	{
+		// we need to use the control point in client-rect space
+
+		NDPoint gyx1, gyx2;
+		gyx1 = from_graph_space( m_curveElems[i].x, m_curveElems[i].y  );
+
+		if( i < NumElems )
+		{
+			gyx2 = from_graph_space( m_curveElems[i+1].x, m_curveElems[i+1].y  );
+
+			/////////////////////////////////////////
+			// now plot the curve...
+
+			dc.SetPen(2, RGB(0,255,0));
+			dc.MoveTo( start_x,      start_y + Height/2	);
+
+			int p;
+
+			float span = m_curveElems[i+1].x - m_curveElems[i].x;
+
+			// we loop in client-rect space, because the client-rect space
+			// is definately a set of integers, and is also the visible space ->
+			for( int j = (int)gyx1.x; j < (int)gyx2.x; j++ )
+			{
+				// we need to convert j, the looping value
+				// back to graph space,
+				NDPoint input_1 = to_graph_space(j,y_max);
+
+				// now the terrace value is computed, in graph space
+				// in the same way as the libnoise function
+				float alpha = ( input_1.x - m_curveElems[i].x ) / ( span );
+
+				if( m_bInvertTerrace ) alpha = 1 - alpha;
+
+				alpha *= alpha;
+
+				float output_1 = lerp( alpha,
+									   m_curveElems[i].x,
+									   m_curveElems[i+1].x );
+
+				// now the Y value of the Terrace output needs to be in
+				// client-rect space for this to plot
+				NDPoint P1 = from_graph_space( input_1.x, output_1 );
+
+
+				dc.MoveTo( j,   P1.y 	);
+
+
+				/////////////////////////////////////////////////
+
+
+				// Get the j+1 value into graph space
+				NDPoint input_2 = to_graph_space(j+1,y_max);
+
+				// now the terrace value is computed, in graph space
+				// in the same way as the libnoise function
+				float alpha_plus_1 = ( input_2.x - m_curveElems[i].x ) / ( span );
+
+				if( m_bInvertTerrace ) alpha_plus_1 = 1 - alpha_plus_1;
+
+				alpha_plus_1 *= alpha_plus_1;
+
+				float output_2 = lerp( alpha_plus_1,
+									   m_curveElems[i].x,
+									   m_curveElems[i+1].x );
+
+				// now the Y value of the Terrace output needs to be in
+				// client-rect space for this to plot
+				NDPoint P2 = from_graph_space( input_2.x, output_2 );
+
+				// only plot the line if it is within the client rect
+				if((P2.y < end_y)
+				&& (P2.y > start_y)
+				&& (j+1  < end_x)
+				&& (j+1  > start_x))
+				{
+					dc.LineTo( j+1,   P2.y );
+				}
+			}
+		}
+	}
+
+	NGraphCtrl::Paint(dc);
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NTerraceCtrl::OnMouseMove(udword flags, NPoint pos )
+{
+	if( m_bSelectedRect && m_bMouseLDown )
+	{
+
+		float moveX =pos.x;
+		float moveY = pos.y;
+		NDPoint pPoint1 = to_graph_space(moveX, moveY);
+		//if( selectedElem->x == x  ) return;
+
+		//if( selectedElem->y == y  ) return;
+
+		if( m_currentLineX < start_x ) m_currentLineX = start_x;
+		if( m_currentLineX > start_x + Width ) m_currentLineX = start_x + Width;
+
+		if( m_currentLineY < start_y ) m_currentLineY = start_y;
+		if( m_currentLineY > start_y + Height ) m_currentLineY = start_y + Height;
+
+		bMovingPoint = true;
+		bool bSwappedPoint = false;
+
+		for( int i = 0 ; i < m_curveElems.Count(); i++ )
+		{
+			if( m_curveElems[i].x == pPoint1.x )
+			{
+				if( selectedElem != &m_curveElems[i] )
+				{
+
+					float move_size = 1;
+					NDPoint pPoint2 = to_graph_space(move_size, move_size);
+
+					if( selectedElem->x >= pPoint1.x )
+						pPoint1.x +=pPoint2.x;
+					if( selectedElem->x <= pPoint1.x )
+						pPoint1.x -=pPoint2.x;
+
+					//NDPoint pPoint2 = from_graph_space(selectedElem->x, selectedElem->y);
+
+					//moveX = pPoint2.x;
+					pPoint1.x = selectedElem->x;
+					//MessageBox(0,"","",0);
+					//bMovingPoint = false;
+
+					break;
+				}
+			}
+
+		}
+
+		if( bMovingPoint == true )
+		{
+
+			NDPoint pPoint2 = from_graph_space(pPoint1.x, pPoint1.y);
+			m_currentLineX = pPoint2.x;
+			m_currentLineY = pPoint2.x;
+			NDPoint pPoint = to_graph_space(m_currentLineX, m_currentLineY);
+			selectedElem->x = pPoint1.x;
+			selectedElem->y = pPoint1.x;
+			bSwappedPoint = true;
+		}
+
+		//if( bSwappedPoint )
+		//	m_curveElems.Sort(cmp_curve_point2);
+	}
+
+
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NTerraceCtrl::AddCurvePoint( float X, float Y )
+{
+	NDPoint pt = to_graph_space(X,Y);
+	pt.y = pt.x;
+	//pt.y = Y;
+
+	m_curveElems.AddItem( pt );
+	//m_curveElems.Sort(cmp_curve_point2);
+}
+
+void NTerraceCtrl::OnDeletePoint()
+{
+	if( m_curveElems.Size() <= 2 )
+		return;
+
+	for( int i = 0; i < m_curveElems.Size(); i++ )
+	{
+		if( selectedElem == &m_curveElems[i] )
+		{
+			m_curveElems.RemoveItem(i);
+			break;
+		}
+	}
 }

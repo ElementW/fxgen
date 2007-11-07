@@ -78,5 +78,9 @@ protected:
 	bool				m_bFiltering;
 	bool				m_bOrtho;
 
+
 	NObject*		m_pcurObject;		//!< Objet in visualisation
+
+public:
+	NObject* GetCurrentObject(){ return m_pcurObject; }
 };
