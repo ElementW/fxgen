@@ -24,6 +24,10 @@
 #include "pch.h"
 #include "CombineOps.h"
 #include "RectangularArray.h"
+#ifdef __GNUC__
+using std::max;
+using std::min;
+#endif
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -696,7 +700,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 			RGBA &N = normals(x,y);
 			vec3 normal(N.r - 127, N.g - 127, 0);
 			count *= normal.norm() * normal.norm() /8 /* adjusted value */;
-			count = min(count, byLength * _fDetailFactor);
+			count = min((float)count, byLength * _fDetailFactor);
 		}
 
 		if(byMode == 0)

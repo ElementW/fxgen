@@ -1,0 +1,45 @@
+Bugs
+----
+
+1) 	quality setting should be a selection control.
+//2) 	all dialogs should have a 'delete point' operation.
+//3) 	'add point' should pop up a dialog.
+//4) 	it should be possible to enter a point position via edit controls.
+//5)	on the graph, the x = 0 line dissappears when y=0 is offscreen ...
+//6)	Terrace does not allow 'SetExtents()'.
+//7)	Libnoise planes should be tileable.
+//8)	need to extend libnoise to allow the plane to take 'depth'.
+//9)	need to extend libnoise to create volume textures.
+10)	need a volume texture dialog.			// next release
+11)	need a terrain-viewer dialog.			// next release
+//12)	crashes when trying to operate an L_ImageRenderer with 'cancel' on the dialog after it has been reassembled
+13)	should not shutdown when trying to load a project with the wrong file format
+14)	rename does not work for the projectWnd
+//15)	extra code in dialogs (m_cstrName *and* m_lpszResName)
+//16) 	terrace control should be square
+17) 	should add 3d volume craters			// next release
+//18)	need to tidy up variable names (done for GUI.h and GUI.cpp)
+//19)	need to make an abstract 'graph' widget, and subclass the Terrace and Curve widgets
+20)	Add a progress bar for libnoise 
+//21)	make sure that the L_ImageRenderer is not using a light
+//22)	--Derivative operator for calculating the heighfield slope
+23)	halt execution in case of errors 
+//24)	bug in 'select' module -- I think the problem is that I can't remove a source module
+//25)	cannot press 'cancel' on gradient dialog sometimes
+//26)	terrace control should have a button to add a smooth set of terrace points
+//27)	graph object should not render text from corners
+//28)	bigger gradient tool
+//29)	rand button on gradient tool --> don't want a random gradient
+//30)	terrace control points should not move below the terrace line y=x
+//31)	points still have an annoying yellow box on them
+32)	should add ticks to the graph widget
+//33)	the program now crashes inexplicably now and then (closing the terrace dialog after a short time)
+//34)	multi-select items don't work anymore.
+35)	flow tool - source and sink etc for post processing
+36)	the curve handles overlap and stick to each other a bit
+//37)	should maybe be able to import gradients from other formats ... (old versions are now supported)
+//38)	Gradient in L_ImageRenderer used a hardcoded transform
+//39)	Tidy up extra variables in Dialog.h
+//40)	There is no Load operator in this current version - this is related to the popup menu issue
+//41)	Added a Load-Var ability
+42)	there is a bug on the L_Plane settings - project will crash if bad variables are used

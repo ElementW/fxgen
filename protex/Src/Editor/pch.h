@@ -46,9 +46,10 @@
 #include "EventsList.h"
 
 #include "EngineOp.h"
-
+#include "Bitmap.h"
 #include "MainOps.h"
 #include "FilterOps.h"
 #include "DistordOps.h"
 #include "RenderOps.h"
 #include "CombineOps.h"
+#include "libnoiseOps.h"

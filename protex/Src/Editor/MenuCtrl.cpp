@@ -130,9 +130,10 @@ void NMenuCtrl::OnPaint()
 
 	/////////////////////////////////////////////////
 	//Erase Background
-	//dc.FillSolidRect(rc, RGB(115,115,115));
+	dc.FillSolidRect(rc, RGB(115,115,115));
 	dc.FillSolidRect(rc, RGB(255,255,255));
 	dc.Draw3dRect(rc, RGB(200,200,200), RGB(0,0,0));
+	//dc.GradientVRect(rc,RGB(200,200,200), RGB(0,0,0));
 
 	/////////////////////////////////////////////////
 	//Display Menu Title
@@ -446,7 +447,7 @@ udword NMenuCtrl::TrackPopupMenu(NPoint _ptScreen, NMenuCtrl* _pParentMenu/*=nul
 	if (_bReturnItem)
 	{
 		MSG	msg;
-		while(IsWindowVisible())
+		while(IsWindowVisible(m_W32HWnd))
 		{
 			if (::PeekMessage(&msg, 0, 0, 0, PM_NOREMOVE))
 			{

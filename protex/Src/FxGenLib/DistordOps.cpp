@@ -114,11 +114,11 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 	fRotate = fRotate * nv_two_pi;
 
 	//Zoom
-	fZoomX=0.5f - (fZoomX/2.0f);
-	fZoomX=exp(fZoomX*6.0f);
+	//fZoomX=0.5f - (fZoomX/2.0f);
+	fZoomX=pow(.5f,fZoomX-1);
 
-	fZoomY=0.5f - (fZoomY/2.0f);
-	fZoomY=exp(fZoomY*6.0f);
+	//fZoomY=0.5f - (fZoomY/2.0f);
+	fZoomY=pow(.5f,fZoomY-1);
 
 	//Process RotoZoom
 	RGBA* pPxlSrc = pSrc->GetPixels();
@@ -537,3 +537,106 @@ udword NLookupOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	}
 	return 0;
 }
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//							NCraterOp class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+IMPLEMENT_CLASS(NCraterOp, NOperator);
+
+#include "gforge.h"
+#include "Crater.h"
+
+static NVarsBlocDesc blocdescNCraterOp[] =
+{
+	VAR(euword,	true, "How Many",	"100", "NUwordProp")	//2
+	VAR(euword,	true, "Seed",	"1", "NUwordProp")	//2
+	VAR(euword,	true, "wrap",	"1", "NUwordProp")	//2
+	VAR(efloat,	true, "radius",	"20.0", "NFloatProp")	//2
+	//VAR(euword,		true, "Seed",				"5412",	"NUwordProp") //3
+};
+
+
+NCraterOp::NCraterOp()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(4, blocdescNCraterOp);
+}
+
+udword NCraterOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+{
+	//No Inputs!
+	if (m_byInputs==0)		return (udword)-1;
+
+	int how_many = 1000;
+	int Seed = 1;
+	int wrap = 1;
+	float radius = 200.0f;
+
+	/*m_pcvarsBloc->GetValue(0, _ftime, (udword&)how_many);
+	m_pcvarsBloc->GetValue(1, _ftime, (udword&)Seed);
+	m_pcvarsBloc->GetValue(2, _ftime, (udword&)wrap);
+	m_pcvarsBloc->GetValue(3, _ftime, (float&)radius);*/
+
+
+		//Bitmap instance
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+
+	//Get input Texture
+
+
+	NBitmap* pSrc	= (NBitmap*)(*_pOpsInts)->m_pObj;
+	NBitmap* pDst	= (NBitmap*)m_pObj;
+
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+
+	pDst->SetSize(w,h);
+
+
+
+	RGBA* pPxSrc = pSrc->GetPixels();
+	RGBA* pPxDst = pDst->GetPixels();
+
+
+
+	float *real, *imag;
+
+	real	= (float*)NMemAlloc(w*h*sizeof(float));
+
+
+	for( int i = 0; i < w; i++ )
+		for( int j = 0; j < h; j++ )
+			real[ i*h + j ] = (float)pPxSrc[ i*h + j ].r;
+
+
+	seed_ran1( rand());
+
+	//initgauss();    /* seed or re-seed random # generator */
+
+	distribute_craters(real, how_many, w, h, (wrap == 1.0 ? true: false), radius);
+
+	for( int i = 0; i < w; i++ )
+		for( int j = 0; j < h; j++ )
+		{
+			pPxDst->r = (real[ i * h + j] <= 4.0f ? 0.0f : real[ i * h + j]);// * (0.1 + pPxSrc->r / pPxSrc->r);
+			pPxDst->g = (real[ i * h + j] <= 4.0f ? 0.0f : real[ i * h + j]);// * (0.1 + pPxSrc->g / pPxSrc->r);
+			pPxDst->b = (real[ i * h + j] <= 4.0f ? 0.0f: real[ i * h + j]);// * (0.1 + pPxSrc->b / pPxSrc->r);
+			pPxDst->a = 255;
+			*pPxDst++;
+			*pPxSrc++;
+		}
+
+
+	NMemFree(real);  /* unload imaginary (temp) array */
+
+		//h_minmax();           /* update min, max values */
+	
+	return 0;
+}
+
+

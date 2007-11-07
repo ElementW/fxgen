@@ -152,8 +152,9 @@ void NPropertiesCtrl::OnPaint()
 
 				dc.SetPen(1,RGB(0,0,0));
 				dc.SetBrush(RGB(0,0,0));
-				dc.RoundRect(rcRow, PC_ROWSHEIGHT,PC_ROWGROUPENDHEIGHT);
-
+				//dc.RoundRect(rcRow, PC_ROWSHEIGHT,PC_ROWGROUPENDHEIGHT);
+				//gfx.GradientVRect(rcRow, RGB(250,250,250),RGB(110,110,110));
+				dc.GradientVRect(rcRow, RGB(220, 220, 220), RGB(110,110,110));
 				rcRow.bottom-=PC_ROWGROUPENDHEIGHT/2;
 				dc.FillSolidRect(rcRow, RGB(0,0,0));
 
@@ -175,10 +176,13 @@ void NPropertiesCtrl::OnPaint()
 
 				dc.SetPen(1,RGB(0,0,0));
 				dc.SetBrush(RGB(0,0,0));
-				dc.RoundRect(rcRow, PC_ROWSHEIGHT,PC_ROWSHEIGHT);
+				//dc.RoundRect(rcRow, PC_ROWSHEIGHT,PC_ROWSHEIGHT);
+				//gfx.GradientVRect(rcRow, RGB(250,250,250),RGB(110,110,110));
+				//dc.GradientVRect(rcRow, RGB(220, 220, 220), RGB(110,110,110));
+				dc.FillSolidRect(rcRow, RGB(130, 130, 130));
 
 				rcRow.top+=PC_ROWSHEIGHT/2;
-				dc.FillSolidRect(rcRow, RGB(0,0,0));
+				//dc.FillSolidRect(rcRow, RGB(0,0,0));
 
 				rcRow.top-=(PC_ROWSHEIGHT/2)-2;
 				rcRow.left+=PC_ROWTEXTIDENT;
@@ -263,7 +267,9 @@ void NPropertiesCtrl::OnPaint()
 
 				dc.SetPen(1,RGB(0,0,0));
 				dc.SetBrush(RGB(0,0,0));
-				dc.RoundRect(rcRow, PC_ROWSHEIGHT,PC_ROWGROUPENDHEIGHT);
+				//dc.RoundRect(rcRow, PC_ROWSHEIGHT,PC_ROWGROUPENDHEIGHT);
+				//gfx.GradientVRect(rcRow, RGB(250,250,250),RGB(110,110,110));
+				dc.GradientVRect(rcRow, RGB(220, 220, 220), RGB(110,110,110));
 
 				rcRow.bottom-=PC_ROWGROUPENDHEIGHT/2;
 				dc.FillSolidRect(rcRow, RGB(0,0,0));
@@ -355,6 +361,19 @@ void NPropertiesCtrl::OnLeftButtonUp(udword flags, NPoint point)
 void NPropertiesCtrl::OnRightButtonDown(udword flags, NPoint point)
 {
 	SetFocus();
+	//Row selection
+	int nidx = GetRowUnderPoint(point);
+	SelectRow(nidx);
+
+	//Row Click
+	ClickRow(nidx, point);
+
+	//Start Edit Cell
+	if (!m_bEditingRow && m_dwCurSelRow!=-1)
+	{
+		//Edit Cell
+		StartEditRowMenu(m_dwCurSelRow);
+	}
 }
 
 
@@ -379,6 +398,26 @@ void NPropertiesCtrl::OnLeftButtonDblClk(udword flags, NPoint point)
 
 }
 
+//-----------------------------------------------------------------
+//!	\brief	control left button double click message
+//-----------------------------------------------------------------
+void NPropertiesCtrl::OnRightButtonDblClk(udword flags, NPoint point)
+{
+	//Row selection
+	int nidx = GetRowUnderPoint(point);
+	SelectRow(nidx);
+
+	//Row Click
+	ClickRow(nidx, point);
+
+	//Start Edit Cell
+	if (!m_bEditingRow && m_dwCurSelRow!=-1)
+	{
+		//Edit Cell
+		StartEditRowMenu(m_dwCurSelRow);
+	}
+
+}
 
 //-----------------------------------------------------------------
 //!	\brief	control mouse mouve message
@@ -684,6 +723,30 @@ void NPropertiesCtrl::StartRowEditing(udword dwRowIdx)
 		EndRowEditing(true);	//BeginEdit = true => Fin de l'edition Demande
 
 	} else {
+
+		Update();
+	}
+
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Start Row editing
+//-----------------------------------------------------------------
+void NPropertiesCtrl::StartEditRowMenu(udword dwRowIdx)
+{
+	if (dwRowIdx==-1)		return;
+
+	EndRowEditing(true);
+
+	//Edit Cell
+	m_bEditingRow=true;
+
+	NRowDesc* pRow = &m_carrayRowsDesc[dwRowIdx];
+	if (pRow->pItem->MenuEdit(pRow->rcItem))
+	{
+		//EndRowEditing(true);	//BeginEdit = true => Fin de l'edition Demande
+
+	
 
 		Update();
 	}

@@ -26,6 +26,10 @@
 #include "vgvm/vgvm.h"
 #include "vgvm/contexts/cairo.h"
 #include "RectangularArray.h"
+#ifdef __GNUC__
+using std::max;
+using std::min;
+#endif
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------

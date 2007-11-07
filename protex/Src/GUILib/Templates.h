@@ -51,7 +51,7 @@ public:
 
 	NArray()
 	{
-		m_pBuffer = (T*)malloc(sizeof(T)*16); m_dwSize=16; m_dwCount=0; memset(m_pBuffer, 0, 16 * sizeof(T)); m_dwGrow = 16;
+		m_pBuffer = (T*)malloc(sizeof(T)*256); m_dwSize=256; m_dwCount=0; memset(m_pBuffer, 0, 256 * sizeof(T)); m_dwGrow = 256;
 	}
 
 	NArray(udword size)
@@ -90,7 +90,6 @@ public:
 				if (m_dwCount>=m_dwSize)
 				{
 					m_pBuffer = (T*)realloc(m_pBuffer, sizeof(T)*(m_dwSize+m_dwGrow));
-					memset(m_pBuffer+m_dwCount, 0, m_dwGrow * sizeof(T));
 					m_dwSize+= m_dwGrow;
 				}
 				m_pBuffer[m_dwCount] = item;
@@ -104,9 +103,8 @@ public:
 			{
 				if (idx>=m_dwSize)
 				{
-					m_pBuffer = (T*)realloc(m_pBuffer, sizeof(T)*(idx+m_dwGrow));
-					memset(m_pBuffer+idx, 0, m_dwGrow * sizeof(T));
 					m_dwSize = idx+m_dwGrow;
+					m_pBuffer = (T*)realloc(m_pBuffer, sizeof(T)*(m_dwSize));
 				}
 				m_pBuffer[idx] = item;
 				if (idx>=m_dwCount)	m_dwCount = idx+1;

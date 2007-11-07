@@ -456,7 +456,7 @@ IMPLEMENT_CLASS(NLightOp, NOperator);
 
 static NVarsBlocDesc blocdescLightOp[] =
 {
-	VAR(eudword,	true, "Ambient",		"0",				"NColorProp")	//0
+	VAR(eudword,	true, "Ambiant",		"0",				"NColorProp")	//0
 	VAR(eudword,	true, "Diffuse",		"8421504",	"NColorProp")	//1
 	VAR(eudword,	true, "Specular",		"-1",				"NColorProp")	//2
 
@@ -479,47 +479,30 @@ NLightOp::NLightOp()
 udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Two inputs (texture, normal)
-	if (m_byInputs < 2 || m_byInputs > 4)	return (udword)-1;
+	if (m_byInputs!=2)		return (udword)-1;
 
-	//Get input Texture
-	NBitmap* pSrc	= (NBitmap*)(*_pOpsInts)->m_pObj;
-	udword w = pSrc->GetWidth();
-	udword h = pSrc->GetHeight();
-
-	_pOpsInts++;
-
-	NBitmap* pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
-	if (pNorm->GetWidth()!=w || pNorm->GetHeight()!=h)			return (udword)-1;
-
-	_pOpsInts++;
-
-	NBitmap* pSpec = null; // Specular color
-	if (m_byInputs>2)
-	{
-		pSpec = (NBitmap*)(*_pOpsInts)->m_pObj;
-		if (pSpec->GetWidth()!=w || pSpec->GetHeight()!=h)			return (udword)-1;
-		_pOpsInts++;
-	}
-
-	NBitmap* pAmb = null; // Ambient color
-	if (m_byInputs>3)
-	{
-		pAmb = (NBitmap*)(*_pOpsInts)->m_pObj;
-		if (pAmb->GetWidth()!=w || pAmb->GetHeight()!=h)			return (udword)-1;
-		_pOpsInts++;
-	}
-
-	//Set Texture Size
+	//Bitmap instance
 	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+
+	//Get input Texture and Normal
+	NBitmap* pSrc	= (NBitmap*)(*_pOpsInts)->m_pObj;
+	_pOpsInts++;
+	NBitmap* pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst	= (NBitmap*)m_pObj;
-	pDst->SetSize(w,h);
+
+
+	sdword w = pSrc->GetWidth();
+	sdword h = pSrc->GetHeight();
+
+	pDst->SetSize( w, h );
+	pNorm->SetSize( w, h );
 
 	/////////////////////////////////////////
 	//Get Variables Values
-	RGBA Ambient, Diffuse, Specular;
+	RGBA Ambiant, Diffuse, Specular;
 	ubyte byPosX, byPosY, byPosZ;
 	ubyte bySpecPower, byBumpPower;
-	m_pcvarsBloc->GetValue(0, _ftime, (udword&)Ambient);
+	m_pcvarsBloc->GetValue(0, _ftime, (udword&)Ambiant);
 	m_pcvarsBloc->GetValue(1, _ftime, (udword&)Diffuse);
 	m_pcvarsBloc->GetValue(2, _ftime, (udword&)Specular);
 
@@ -542,21 +525,14 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 	light.normalize();
 
-        vec3 halfV = light;
-        halfV.z += 1;
-        halfV.normalize();
-
-	float fSpecularPower	= 256.0f/(float)bySpecPower;
-	float fBumpPower			= ((float)byBumpPower) / 200.0f;
+	float fSpecularPower	= ((float)bySpecPower) / 32.0f;
+	float fBumpPower			= ((float)byBumpPower) / 32.0f;
 
 	/////////////////////////////////////////
 	// DIRECTIONAL LIGHT TYPE
-        RGBA* pPxNorm = pNorm->GetPixels();
-	RGBA* pPxSpec = pSpec == null ? null : pSpec->GetPixels();
-	RGBA* pPxAmb = pAmb == null ? null : pAmb->GetPixels();
+	RGBA* pPxNorm = pNorm->GetPixels();
 	RGBA* pPxSrc	= pSrc->GetPixels();
 	RGBA* pPxDst	= pDst->GetPixels();
-
 
 	for (udword y=0; y<h; y++)
 	{
@@ -566,23 +542,17 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 			vec3 n;
 			n.x = ((float)pPxNorm->x - 127.0f);
 			n.y = ((float)pPxNorm->y - 127.0f);
-			n.z = ((float)pPxNorm->z - 127.0f)/(0.01f+fBumpPower);
+			n.z = ((float)pPxNorm->z - 127.0f);
+
 			n.normalize();
-			pPxNorm++;
 
 			//compute the dot product between normal and light dir
-			float fDiffDot;
-			dot(fDiffDot, n, light);
-			if (fDiffDot<0.0f)	fDiffDot=0.0f;
-
-			//compute the dot product between normal and halfvector
-			float fSpecDot;
-			dot(fSpecDot, n, halfV);
-			if (fSpecDot<0.0f)	fSpecDot=0.0f;
-                        fSpecDot = powf(fSpecDot, fSpecularPower+0.000001f);
+			float fdot;
+			dot(fdot, n, light);
+			if (fdot<0.0f)	fdot=0.0f;
 
 			//Add bump on normal
-			//fdot*=fBumpPower;
+			fdot*=fBumpPower;
 
 			/*float fdotSpec=0.0;
 			if (dot > 0.0) {
@@ -593,45 +563,19 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 				fdotSpec = pow(fdot, 64);
 			}*/
 
-                        RGBA localAmbient;
-                        if (pPxAmb != null)
-                        {
-                          localAmbient.r = Ambient.r + pPxAmb->r;
-                          localAmbient.g = Ambient.g + pPxAmb->g;
-                          localAmbient.b = Ambient.b + pPxAmb->b;
-                          pPxAmb++;
-                        } else {
-                          localAmbient.r = Ambient.r;
-                          localAmbient.g = Ambient.g;
-                          localAmbient.b = Ambient.b;
-                        }
-
-                        RGBA localSpecular;
-                        if (pPxSpec != null)
-                        {
-                          localSpecular.r = (Specular.r * pPxSpec->r) >> 8;
-                          localSpecular.g = (Specular.g * pPxSpec->g) >> 8;
-                          localSpecular.b = (Specular.b * pPxSpec->b) >> 8;
-                          pPxSpec++;
-                        } else {
-                          localSpecular.r = Specular.r;
-                          localSpecular.g = Specular.g;
-                          localSpecular.b = Specular.b;
-                        }
-
 			// Color = ambient + dif*dot + dot^2 * spec
-			sdword r	= (sdword) ((sdword(pPxSrc->r*(localAmbient.r + fDiffDot*Diffuse.r)) >> 8) + (fSpecDot*localSpecular.r));
-			sdword g	= (sdword) ((sdword(pPxSrc->g*(localAmbient.g + fDiffDot*Diffuse.g)) >> 8) + (fSpecDot*localSpecular.g));
-			sdword b	= (sdword) ((sdword(pPxSrc->b*(localAmbient.b + fDiffDot*Diffuse.b)) >> 8) + (fSpecDot*localSpecular.b));
+			sdword r	= (sdword) (Ambiant.r + (fdot*Diffuse.r) + (fdot*fdot*Specular.r*fSpecularPower));
+			sdword g	= (sdword) (Ambiant.g + (fdot*Diffuse.g) + (fdot*fdot*Specular.g*fSpecularPower));
+			sdword b	= (sdword) (Ambiant.b + (fdot*Diffuse.b) + (fdot*fdot*Specular.b*fSpecularPower));
 
 			//sdword r	= pPxSrc->r + (fdot * pPxSrc->r);
 			//sdword g	= pPxSrc->g + (fdot * pPxSrc->g);
 			//sdword b	= pPxSrc->b + (fdot * pPxSrc->b);
 
 			//Summ
-			/*r = (pPxSrc->r + r) / 2;
+			r = (pPxSrc->r + r) / 2;
 			g = (pPxSrc->g + g) / 2;
-			b = (pPxSrc->b + b) / 2;*/
+			b = (pPxSrc->b + b) / 2;
 
 			pPxDst->r = (ubyte) ((r<255)?r:255);
 			pPxDst->g = (ubyte) ((g<255)?g:255);
@@ -640,6 +584,7 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 			pPxSrc++;
 			pPxDst++;
+			pPxNorm++;
 		}
 	}
 
@@ -905,6 +850,135 @@ udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	return 0;
 }
 
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//							NNormalsOp class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+IMPLEMENT_CLASS(NSlopeMagnitudeOp, NOperator);
+
+static NVarsBlocDesc blocdescNSlopeMagnitudeOp[] =
+{
+	VAR(eudword,	true, "Amplify",	"64", "NUbyteProp")	//0
+};
+
+
+NSlopeMagnitudeOp::NSlopeMagnitudeOp()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(1, blocdescNSlopeMagnitudeOp, 1);
+
+}
+
+udword NSlopeMagnitudeOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+{
+	//Only one Input
+	if (m_byInputs!=1)		return (udword)-1;
+
+	//Bitmap instance
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+
+	//////////////////////////////////////////
+	//Get input texture
+	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
+	NBitmap* pDst = (NBitmap*)m_pObj;
+
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
+
+
+	/////////////////////////////////////////
+	//Get Variables Values
+	ubyte byAmp;
+	m_pcvarsBloc->GetValue(0, _ftime, byAmp);
+
+	float fAmp = (float)byAmp / 64.0f; //[0<->4]
+
+	//////////////////////////////////////////
+	// Creation des normales
+	RGBA* pcurSour = pSrc->GetPixels();
+	RGBA* pcurNorm = pDst->GetPixels();
+
+	for (udword y=0; y<h; y++)
+	{
+		for (udword x=0; x<w; x++)
+		{
+			//Y Sobel filter
+			float fPix = (float)pcurSour[ (x-1+w) % w + (((y+1) % h)*w) ].r;
+			float dY  = fPix / 255.0f * -1.0f;
+
+			fPix = (float)pcurSour[ x % w + (((y+1) % h)*w) ].r;
+			dY+= fPix / 255.0f * -2.0f;
+
+			fPix = (float)pcurSour[ (x+1) % w + (((y+1) % h)*w) ].r;
+			dY+= fPix / 255.0f * -1.0f;
+
+			fPix = (float)pcurSour[ (x-1+w) % w + (((y-1+h) % h)*w) ].r;
+			dY+= fPix / 255.0f * 1.0f;
+
+			fPix = (float)pcurSour[ x % w + (((y-1+h) % h)*w) ].r;
+			dY+= fPix / 255.0f * 2.0f;
+
+			fPix = (float)pcurSour[ (x+1) % w + (((y-1+h) % h)*w) ].r;
+			dY+= fPix / 255.0f * 1.0f;
+
+			//X Sobel filter
+			fPix = (float)pcurSour[ (x-1+w) % w + (((y-1+h) % h)*w) ].r;
+			float dX  = fPix / 255.0f * -1.0f;
+
+			fPix = (float)pcurSour[ (x-1+w) % w + ((y % h)*w) ].r;
+			dX+= fPix / 255.0f * -2.0f;
+
+			fPix = (float)pcurSour[ (x-1+w) % w + (((y+1) % h)*w) ].r;
+			dX+= fPix / 255.0f * -1.0f;
+
+			fPix = (float)pcurSour[ (x+1) % w + (((y-1+h) % h)*w) ].r;
+			dX+= fPix / 255.0f * 1.0f;
+
+			fPix = (float)pcurSour[ (x+1) % w + ((y % h)*w) ].r;
+			dX+= fPix / 255.0f * 2.0f;
+
+			fPix = (float)pcurSour[ (x+1) % w + (((y+1) % h)*w) ].r;
+			dX+= fPix / 255.0f * 1.0f;
+
+
+			// Compute the cross product of the two vectors
+			vec3 norm;
+			norm.x = -dX*4;
+			norm.y = -dY*4;
+			norm.z = 1.0f;
+
+			norm.normalize();
+
+			// Normalize
+			float nm = sqrtf(dX*dX + dY*dY);
+
+			//nm = ;
+			// now compute the dot product of the norm vector with (0,0,1)
+
+			norm.x = nm;
+			norm.y = nm;
+			norm.z = nm;
+
+
+			//norm.normalize();
+
+			// Store
+			pcurNorm->x = (ubyte) ((norm.x+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
+			pcurNorm->y = (ubyte) ((norm.y+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
+			pcurNorm->z = (ubyte) ((norm.z+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
+			pcurNorm->a = 255;
+
+			pcurNorm++;
+		}
+	}
+
+	return 0;
+}
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -1255,8 +1329,6 @@ udword NSegmentOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 	return 0;
 }
 
-
-
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
@@ -1450,3 +1522,205 @@ udword NAlphaMaskOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	return 0;
 }
 
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//							NLightOp class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+IMPLEMENT_CLASS(NLightOp2, NOperator);
+
+static NVarsBlocDesc blocdescLightOp2[] =
+{
+	VAR(eudword,	true, "Ambiant",		"0",				"NColorProp")	//0
+	VAR(eudword,	true, "Diffuse",		"8421504",	"NColorProp")	//1
+	VAR(eudword,	true, "Specular",		"-1",				"NColorProp")	//2
+
+	VAR(eubyte,		true, "PosX",				"255",			"NUbyteProp")	//3
+	VAR(eubyte,		true, "PosY",				"255",			"NUbyteProp")	//4
+	VAR(eubyte,		true, "PosZ",				"127",			"NUbyteProp")	//5
+
+	VAR(eubyte,		true, "Specular power",		"0",			"NUbyteProp")	//6
+	VAR(eubyte,		true, "Bump power",				"0",			"NUbyteProp")	//7
+};
+
+
+NLightOp2::NLightOp2()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(8, blocdescLightOp2, 1);
+
+}
+
+udword NLightOp2::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+{
+	//Two inputs (texture, normal)
+	if (m_byInputs < 2 || m_byInputs > 4)	return (udword)-1;
+
+	//Get input Texture
+	NBitmap* pSrc	= (NBitmap*)(*_pOpsInts)->m_pObj;
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+
+	_pOpsInts++;
+
+	NBitmap* pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
+	if (pNorm->GetWidth()!=w || pNorm->GetHeight()!=h)			return (udword)-1;
+
+	_pOpsInts++;
+
+	NBitmap* pSpec = null; // Specular color
+	if (m_byInputs>2)
+	{
+		pSpec = (NBitmap*)(*_pOpsInts)->m_pObj;
+		if (pSpec->GetWidth()!=w || pSpec->GetHeight()!=h)			return (udword)-1;
+		_pOpsInts++;
+	}
+
+	NBitmap* pAmb = null; // Ambient color
+	if (m_byInputs>3)
+	{
+		pAmb = (NBitmap*)(*_pOpsInts)->m_pObj;
+		if (pAmb->GetWidth()!=w || pAmb->GetHeight()!=h)			return (udword)-1;
+		_pOpsInts++;
+	}
+
+	//Set Texture Size
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NBitmap* pDst	= (NBitmap*)m_pObj;
+	pDst->SetSize(w,h);
+
+	/////////////////////////////////////////
+	//Get Variables Values
+	RGBA Ambient, Diffuse, Specular;
+	ubyte byPosX, byPosY, byPosZ;
+	ubyte bySpecPower, byBumpPower;
+	m_pcvarsBloc->GetValue(0, _ftime, (udword&)Ambient);
+	m_pcvarsBloc->GetValue(1, _ftime, (udword&)Diffuse);
+	m_pcvarsBloc->GetValue(2, _ftime, (udword&)Specular);
+
+	m_pcvarsBloc->GetValue(3, _ftime, byPosX);
+	m_pcvarsBloc->GetValue(4, _ftime, byPosY);
+	m_pcvarsBloc->GetValue(5, _ftime, byPosZ);		//255-near 0-far
+
+	m_pcvarsBloc->GetValue(6, _ftime, bySpecPower);
+	m_pcvarsBloc->GetValue(7, _ftime, byBumpPower);
+
+	/////////////////////////////////////////
+	//Init
+	//sdword nlX	= (sdword)byPosX;
+	//sdword nlY = (sdword)byPosY;
+	//sdword nlZ = (sdword)byPosZ;
+	vec3 light;
+	light.x = (float)byPosX - 127.0f;
+	light.y = -((float)byPosY - 127.0f);
+	light.z = -(127.0f - (float)byPosZ);
+
+	light.normalize();
+
+        vec3 halfV = light;
+        halfV.z += 1;
+        halfV.normalize();
+
+	float fSpecularPower	= 256.0f/(float)bySpecPower;
+	float fBumpPower			= ((float)byBumpPower) / 200.0f;
+
+	/////////////////////////////////////////
+	// DIRECTIONAL LIGHT TYPE
+        RGBA* pPxNorm = pNorm->GetPixels();
+	RGBA* pPxSpec = pSpec == null ? null : pSpec->GetPixels();
+	RGBA* pPxAmb = pAmb == null ? null : pAmb->GetPixels();
+	RGBA* pPxSrc	= pSrc->GetPixels();
+	RGBA* pPxDst	= pDst->GetPixels();
+
+
+	for (udword y=0; y<h; y++)
+	{
+		for (udword x=0; x<w; x++)
+		{
+			//Normalized normal map
+			vec3 n;
+			n.x = ((float)pPxNorm->x - 127.0f);
+			n.y = ((float)pPxNorm->y - 127.0f);
+			n.z = ((float)pPxNorm->z - 127.0f)/(0.01f+fBumpPower);
+			n.normalize();
+			pPxNorm++;
+
+			//compute the dot product between normal and light dir
+			float fDiffDot;
+			dot(fDiffDot, n, light);
+			if (fDiffDot<0.0f)	fDiffDot=0.0f;
+
+			//compute the dot product between normal and halfvector
+			float fSpecDot;
+			dot(fSpecDot, n, halfV);
+			if (fSpecDot<0.0f)	fSpecDot=0.0f;
+                        fSpecDot = powf(fSpecDot, fSpecularPower+0.000001f);
+
+			//Add bump on normal
+			//fdot*=fBumpPower;
+
+			/*float fdotSpec=0.0;
+			if (dot > 0.0) {
+				//color += diffuse * NdotL;
+				//halfV = normalize(halfVector);
+				//NdotHV = max(dot(n,halfV),0.0);
+				//color += gl_FrontMaterial.specular * gl_LightSource[0].specular * pow(NdotHV, gl_FrontMaterial.shininess);
+				fdotSpec = pow(fdot, 64);
+			}*/
+
+                        RGBA localAmbient;
+                        if (pPxAmb != null)
+                        {
+                          localAmbient.r = Ambient.r + pPxAmb->r;
+                          localAmbient.g = Ambient.g + pPxAmb->g;
+                          localAmbient.b = Ambient.b + pPxAmb->b;
+                          pPxAmb++;
+                        } else {
+                          localAmbient.r = Ambient.r;
+                          localAmbient.g = Ambient.g;
+                          localAmbient.b = Ambient.b;
+                        }
+
+                        RGBA localSpecular;
+                        if (pPxSpec != null)
+                        {
+                          localSpecular.r = (Specular.r * pPxSpec->r) >> 8;
+                          localSpecular.g = (Specular.g * pPxSpec->g) >> 8;
+                          localSpecular.b = (Specular.b * pPxSpec->b) >> 8;
+                          pPxSpec++;
+                        } else {
+                          localSpecular.r = Specular.r;
+                          localSpecular.g = Specular.g;
+                          localSpecular.b = Specular.b;
+                        }
+
+			// Color = ambient + dif*dot + dot^2 * spec
+			sdword r	= (sdword) ((sdword(pPxSrc->r*(localAmbient.r + fDiffDot*Diffuse.r)) >> 8) + (fSpecDot*localSpecular.r));
+			sdword g	= (sdword) ((sdword(pPxSrc->g*(localAmbient.g + fDiffDot*Diffuse.g)) >> 8) + (fSpecDot*localSpecular.g));
+			sdword b	= (sdword) ((sdword(pPxSrc->b*(localAmbient.b + fDiffDot*Diffuse.b)) >> 8) + (fSpecDot*localSpecular.b));
+
+			//sdword r	= pPxSrc->r + (fdot * pPxSrc->r);
+			//sdword g	= pPxSrc->g + (fdot * pPxSrc->g);
+			//sdword b	= pPxSrc->b + (fdot * pPxSrc->b);
+
+			//Summ
+			/*r = (pPxSrc->r + r) / 2;
+			g = (pPxSrc->g + g) / 2;
+			b = (pPxSrc->b + b) / 2;*/
+
+			pPxDst->r = (ubyte) ((r<255)?r:255);
+			pPxDst->g = (ubyte) ((g<255)?g:255);
+			pPxDst->b = (ubyte) ((b<255)?b:255);
+			pPxDst->a = pPxSrc->a;
+
+			pPxSrc++;
+			pPxDst++;
+		}
+	}
+
+
+	return 0;
+}

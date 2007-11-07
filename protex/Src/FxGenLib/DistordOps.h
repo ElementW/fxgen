@@ -118,3 +118,45 @@ public:
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 
 };
+
+//-----------------------------------------------------------------
+//!	\class		NCraterOp
+//!	\brief		Render noise
+//-----------------------------------------------------------------
+class NCraterOp : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NCraterOp();
+
+	//Methods
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "Crater"; }		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+};
+
+
+/*//-----------------------------------------------------------------
+//!	\class		NCraterSphereOp
+//!	\brief		Render noise
+//-----------------------------------------------------------------
+class NCraterSphereOp : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NCraterSphereOp();
+
+	//Methods
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual char*		GetName()			{ return "CraterSphere"; }		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts);
+};
+*/

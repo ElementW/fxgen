@@ -53,7 +53,7 @@ NViewportsWnd::NViewportsWnd(void)
 	m_vecTrans.x=m_vecTrans.y=m_vecTrans.z=0.0f;
 	m_vecRot.x=m_vecRot.y=m_vecRot.z=0.0f;
 	m_bTiling			= false;
-	m_bFiltering	= false;
+	m_bFiltering			= true;
 	m_bOrtho = true;
 }
 
@@ -246,6 +246,8 @@ void NViewportsWnd::DisplayTexture(NObject* pobj)
 	//glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB_EXT, GL_MODULATE);
 	//glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB_EXT, GL_TEXTURE);
 	//glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB_EXT, GL_PRIMARY_COLOR_EXT);
+#warning Unsure
+//<<<<<<< .mine
 	if (m_bFiltering)
 	{
 		if (m_renderer.m_bHasMipmapGeneration && !m_bOrtho)
@@ -260,6 +262,22 @@ void NViewportsWnd::DisplayTexture(NObject* pobj)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,		GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,		GL_NEAREST);
 	}
+//=======
+//        if (m_bFiltering)
+//        {
+//          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,		GL_LINEAR);
+//          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,		GL_LINEAR);
+//        } else {
+//          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,		GL_NEAREST);
+//          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,		GL_NEAREST);
+//        }
+//
+//
+//
+//
+//
+//
+//>>>>>>> .theirs
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,		GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,		GL_REPEAT);
 
@@ -286,18 +304,6 @@ void NViewportsWnd::DisplayTexture(NObject* pobj)
 
 	//Updating viewport
 	m_renderer.Update();
-
-	//Texte
-/*	rc.top = rc.bottom-32;
-	NGraphics dc(this);
-	//dc.FillSolidRect(rc, RGB(115,115,115));
-	dc.SetFont(m_hfontNormal);
-	dc.
-	dc.SetTextColor(RGB(200,255,200));
-	NString str;
-	str.Format("Texture Size %dx%d", m_dwTexWidth, m_dwTexHeight);
-	dc.DrawText(str.Buffer(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);*/
-
 }
 
 
@@ -323,8 +329,8 @@ void NViewportsWnd::OnMouseMove(udword flags, NPoint pos)
 	{
 			NPoint ptOffset = pos-m_ptStartDrag;
 			NRect rc= GetClientRect();
-			m_vecTrans.x+=(float)ptOffset.x / rc.Width();
-			m_vecTrans.y+=(float)ptOffset.y / rc.Height();
+			m_vecTrans.x+=(float)ptOffset.x / 300.0f;
+			m_vecTrans.y+=(float)ptOffset.y / 300.0f;
 			m_ptStartDrag=pos;
 	}
 	else if (m_eDragMode == ROTATING)
@@ -454,5 +460,4 @@ void NViewportsWnd::OnCommand(udword _id)
 			break;
 		}
 	}
-
 }

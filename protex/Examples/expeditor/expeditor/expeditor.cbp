@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="expeditor" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\Debug\expeditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Option parameters="C:\Documents and Settings\wojownik\Desktop\tymczas.prj" />
+				<Compiler>
+					<Add option="-pg" />
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="..\..\..\W32Bin\Editor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option parameters="C:\Documents and Settings\wojownik\Desktop\knit3.prj" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-DSTATIC_BUILD" />
+			<Add option="-DTWEAK1" />
+			<Add directory="..\..\..\Src\FxGenLib" />
+			<Add directory="..\..\..\Src" />
+			<Add directory="..\..\..\Src\GUILib" />
+			<Add directory="..\..\..\Externals\tinyxml" />
+			<Add directory="..\..\..\Externals\vgvm" />
+			<Add directory="..\..\..\Src\noise\src\module" />
+		</Compiler>
+		<Linker>
+			<Add library="gdi32" />
+			<Add library="opengl32" />
+			<Add library="..\..\..\lib\libtinyxml_lib.a" />
+			<Add library="..\..\..\lib\libvgvm.a" />
+			<Add library="comctl32" />
+			<Add library="msimg32" />
+			<Add library="comdlg32" />
+			<Add library="..\..\..\..\..\..\..\GTK\lib\libcairo.dll.a" />
+			<Add library="..\..\..\..\..\..\..\GTK\lib\libcairomm-1.0.dll.a" />
+		</Linker>
+		<Unit filename="..\..\..\Src\Editor\Editor.cpp" />
+		<Unit filename="..\..\..\Src\Editor\Editor.h" />
+		<Unit filename="..\..\..\Src\Editor\EnterNameDlg.cpp" />
+		<Unit filename="..\..\..\Src\Editor\EnterNameDlg.h" />
+		<Unit filename="..\..\..\Src\Editor\EventsList.h" />
+		<Unit filename="..\..\..\Src\Editor\GradientDialog.cpp" />
+		<Unit filename="..\..\..\Src\Editor\GradientDialog.h" />
+		<Unit filename="..\..\..\Src\Editor\MainFrm.cpp" />
+		<Unit filename="..\..\..\Src\Editor\MainFrm.h" />
+		<Unit filename="..\..\..\Src\Editor\MenuCtrl.cpp" />
+		<Unit filename="..\..\..\Src\Editor\MenuCtrl.h" />
+		<Unit filename="..\..\..\Src\Editor\OperatorsCtrl.cpp" />
+		<Unit filename="..\..\..\Src\Editor\OperatorsCtrl.h" />
+		<Unit filename="..\..\..\Src\Editor\OperatorsWnd.cpp" />
+		<Unit filename="..\..\..\Src\Editor\OperatorsWnd.h" />
+		<Unit filename="..\..\..\Src\Editor\ProjectWnd.cpp" />
+		<Unit filename="..\..\..\Src\Editor\ProjectWnd.h" />
+		<Unit filename="..\..\..\Src\Editor\PropertiesCtrl.cpp" />
+		<Unit filename="..\..\..\Src\Editor\PropertiesCtrl.h" />
+		<Unit filename="..\..\..\Src\Editor\PropertiesWnd.cpp" />
+		<Unit filename="..\..\..\Src\Editor\PropertiesWnd.h" />
+		<Unit filename="..\..\..\Src\Editor\PropertyItems.cpp" />
+		<Unit filename="..\..\..\Src\Editor\PropertyItems.h" />
+		<Unit filename="..\..\..\Src\Editor\Renderer.cpp" />
+		<Unit filename="..\..\..\Src\Editor\Renderer.h" />
+		<Unit filename="..\..\..\Src\Editor\TGAWriter.cpp" />
+		<Unit filename="..\..\..\Src\Editor\TGAWriter.h" />
+		<Unit filename="..\..\..\Src\Editor\TreeNodeCtrl.cpp" />
+		<Unit filename="..\..\..\Src\Editor\TreeNodeCtrl.h" />
+		<Unit filename="..\..\..\Src\Editor\VectorPropertyItems.cpp" />
+		<Unit filename="..\..\..\Src\Editor\VectorPropertyItems.h" />
+		<Unit filename="..\..\..\Src\Editor\ViewportsCtrl.cpp" />
+		<Unit filename="..\..\..\Src\Editor\ViewportsCtrl.h" />
+		<Unit filename="..\..\..\Src\Editor\ViewportsWnd.cpp" />
+		<Unit filename="..\..\..\Src\Editor\ViewportsWnd.h" />
+		<Unit filename="..\..\..\Src\Editor\pch.cpp" />
+		<Unit filename="..\..\..\Src\Editor\pch.h" />
+		<Unit filename="..\..\..\Src\Editor\resource.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\Archive.cpp" />
+		<Unit filename="..\..\..\Src\FxGenLib\Archive.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\Bitmap.cpp" />
+		<Unit filename="..\..\..\Src\FxGenLib\Bitmap.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\CombineOps.cpp" />
+		<Unit filename="..\..\..\Src\FxGenLib\CombineOps.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\Controllers.cpp" />
+		<Unit filename="..\..\..\Src\FxGenLib\Controllers.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\Core.cpp" />
+		<Unit filename="..\..\..\Src\FxGenLib\Core.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\Crater.cpp" />
+		<Unit filename="..\..\..\Src\FxGenLib\Crater.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\DistordOps.cpp" />
+		<Unit filename="..\..\..\Src\FxGenLib\DistordOps.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\EngineOp.cpp" />
+		<Unit filename="..\..\..\Src\FxGenLib\EngineOp.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\FilterOps.cpp">
+			<Option compiler="gcc" use="0" buildCommand="$compiler $options $includes -c $file -S" />
+		</Unit>
+		<Unit filename="..\..\..\Src\FxGenLib\FilterOps.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\MainOps.cpp" />
+		<Unit filename="..\..\..\Src\FxGenLib\MainOps.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\Maths.cpp" />
+		<Unit filename="..\..\..\Src\FxGenLib\Maths.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\RectangularArray.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\RenderOps.cpp" />
+		<Unit filename="..\..\..\Src\FxGenLib\RenderOps.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\Stream.cpp" />
+		<Unit filename="..\..\..\Src\FxGenLib\Stream.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\fftn.cpp" />
+		<Unit filename="..\..\..\Src\FxGenLib\fftn.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\gForge.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\libnoiseOps.cpp" />
+		<Unit filename="..\..\..\Src\FxGenLib\libnoiseOps.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\noiseutils.cpp" />
+		<Unit filename="..\..\..\Src\FxGenLib\noiseutils.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\pch.cpp" />
+		<Unit filename="..\..\..\Src\FxGenLib\pch.h" />
+		<Unit filename="..\..\..\Src\FxGenLib\rand.cpp" />
+		<Unit filename="..\..\..\Src\GUILib\Dialog.cpp" />
+		<Unit filename="..\..\..\Src\GUILib\Dialog.h" />
+		<Unit filename="..\..\..\Src\GUILib\EventsMgr.cpp" />
+		<Unit filename="..\..\..\Src\GUILib\EventsMgr.h" />
+		<Unit filename="..\..\..\Src\GUILib\GUI.cpp" />
+		<Unit filename="..\..\..\Src\GUILib\GUI.h" />
+		<Unit filename="..\..\..\Src\GUILib\SplitWnd.cpp" />
+		<Unit filename="..\..\..\Src\GUILib\SplitWnd.h" />
+		<Unit filename="..\..\..\Src\GUILib\Templates.h" />
+		<Unit filename="..\..\..\Src\GUILib\Types.cpp" />
+		<Unit filename="..\..\..\Src\GUILib\Types.h" />
+		<Unit filename="..\..\..\Src\GUILib\WinMain.h" />
+		<Unit filename="..\..\..\Src\GUILib\p3dmathspline.cpp" />
+		<Unit filename="..\..\..\Src\GUILib\p3dmathspline.h" />
+		<Unit filename="..\..\..\Src\GUILib\pch.cpp" />
+		<Unit filename="..\..\..\Src\GUILib\pch.h" />
+		<Unit filename="..\..\..\Src\noise\TurbulenceGenerator.h" />
+		<Unit filename="..\..\..\Src\noise\src\Makefile" />
+		<Unit filename="..\..\..\Src\noise\src\Sources" />
+		<Unit filename="..\..\..\Src\noise\src\basictypes.h" />
+		<Unit filename="..\..\..\Src\noise\src\exception.h" />
+		<Unit filename="..\..\..\Src\noise\src\interp.h" />
+		<Unit filename="..\..\..\Src\noise\src\latlon.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\latlon.h" />
+		<Unit filename="..\..\..\Src\noise\src\mathconsts.h" />
+		<Unit filename="..\..\..\Src\noise\src\misc.h" />
+		<Unit filename="..\..\..\Src\noise\src\model\DepthPlane.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\model\DepthPlane.h" />
+		<Unit filename="..\..\..\Src\noise\src\model\Volume.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\model\Volume.h" />
+		<Unit filename="..\..\..\Src\noise\src\model\cylinder.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\model\cylinder.h" />
+		<Unit filename="..\..\..\Src\noise\src\model\line.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\model\line.h" />
+		<Unit filename="..\..\..\Src\noise\src\model\model.h" />
+		<Unit filename="..\..\..\Src\noise\src\model\plane.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\model\plane.h" />
+		<Unit filename="..\..\..\Src\noise\src\model\sphere.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\model\sphere.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\FractalBrownianMotion.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\FractalBrownianMotion.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\HeteroTerrain.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\HeteroTerrain.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\HybridMulti.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\HybridMulti.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\MultiFractal.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\MultiFractal.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\TurbulenceGenerator.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\TurbulenceGenerator.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\abs.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\abs.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\add.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\add.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\billow.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\billow.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\blend.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\blend.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\cache.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\cache.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\checkerboard.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\checkerboard.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\clamp.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\clamp.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\const.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\const.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\curve.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\curve.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\cylinders.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\cylinders.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\displace.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\displace.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\exponent.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\exponent.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\invert.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\invert.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\max.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\max.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\min.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\min.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\module.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\modulebase.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\modulebase.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\multiply.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\multiply.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\perlin.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\perlin.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\power.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\power.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\ridgedmulti.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\ridgedmulti.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\rotatepoint.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\rotatepoint.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\scalebias.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\scalebias.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\scalepoint.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\scalepoint.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\select.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\select.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\spheres.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\spheres.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\terrace.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\terrace.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\translatepoint.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\translatepoint.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\turbulence.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\turbulence.h" />
+		<Unit filename="..\..\..\Src\noise\src\module\voronoi.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\module\voronoi.h" />
+		<Unit filename="..\..\..\Src\noise\src\noise.h" />
+		<Unit filename="..\..\..\Src\noise\src\noisegen.cpp" />
+		<Unit filename="..\..\..\Src\noise\src\noisegen.h" />
+		<Unit filename="..\..\..\Src\noise\src\vectortable.h" />
+		<Unit filename="..\..\..\Src\noiseutils\noiseutils.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

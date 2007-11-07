@@ -51,6 +51,7 @@ public:
 	//Display
 	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem)	= 0;
 	virtual bool		BeginEdit	(NRect& rcItem)										{ return false;	}
+	virtual bool		MenuEdit	(NRect& rcItem)										{ return false;	}
 	virtual bool		EndEdit		(bool bSaveChanged=true)					{ return false;	}
 	virtual	bool		AddValue(sdword dwDelta)										{ return false; }
 	virtual void		Click(NPoint& pt, NRect& rcItem)	{}
@@ -81,8 +82,13 @@ public:
 
 	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
+	virtual bool		MenuEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
+
+	void BuildMenu(NTreeNode* _pnode);
+
+	NMenuCtrl	m_wndMenu;
 };
 
 //-----------------------------------------------------------------
@@ -96,8 +102,13 @@ public:
 
 	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
+	virtual bool		MenuEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
+
+	void BuildMenu(NTreeNode* _pnode);
+
+	NMenuCtrl	m_wndMenu;
 };
 
 //-----------------------------------------------------------------
@@ -121,8 +132,13 @@ public:
 	DECLARE_CLASS();
 	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
+	virtual bool		MenuEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
+	
+	void BuildMenu(NTreeNode* _pnode);
+
+	NMenuCtrl	m_wndMenu;
 };
 
 //-----------------------------------------------------------------
@@ -169,10 +185,11 @@ public:
 
 	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
+	virtual bool		MenuEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 
 protected:
-	//HMENU m_hMenu;
+	HMENU m_hMenu;
 	NMenuCtrl	m_wndMenu;
 	NArray<NString>	m_carrayStringsList;
 };
@@ -223,4 +240,109 @@ public:
 	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
+};
+
+//-----------------------------------------------------------------
+//!	\class	NGradientDialogProp
+//! \brief	Color Property Item
+//-----------------------------------------------------------------
+class NGradientDialogProp : public NPropertyItem
+{
+public:
+	DECLARE_CLASS();
+
+	NGradientDialogProp();
+	~NGradientDialogProp();
+	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
+	virtual bool		BeginEdit	(NRect& rcItem);
+	virtual bool		EndEdit		(bool bSaveChanged=true);
+	virtual	bool		AddValue(sdword dwDelta);
+	virtual void		Click(NPoint& pt, NRect& rcItem);
+
+protected:
+	udword m_dwRGBEditingIdx;
+};
+
+
+//-----------------------------------------------------------------
+//!	\class	NGradientDialogProp
+//! \brief	Color Property Item
+//-----------------------------------------------------------------
+class NCurveDialogProp : public NPropertyItem
+{
+public:
+	DECLARE_CLASS();
+
+	NCurveDialogProp();
+	~NCurveDialogProp();
+	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
+	virtual bool		BeginEdit	(NRect& rcItem);
+	virtual bool		EndEdit		(bool bSaveChanged=true);
+	virtual	bool		AddValue(sdword dwDelta);
+	virtual void		Click(NPoint& pt, NRect& rcItem);
+
+protected:
+	NArray <NDPoint> *pArray;
+	udword m_dwRGBEditingIdx;
+};
+
+//-----------------------------------------------------------------
+//!	\class	NGradientDialogProp
+//! \brief	Color Property Item
+//-----------------------------------------------------------------
+class NTerraceDialogProp : public NPropertyItem
+{
+public:
+	DECLARE_CLASS();
+
+	NTerraceDialogProp();
+	~NTerraceDialogProp();
+	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
+	virtual bool		BeginEdit	(NRect& rcItem);
+	virtual bool		EndEdit		(bool bSaveChanged=true);
+	virtual	bool		AddValue(sdword dwDelta);
+	virtual void		Click(NPoint& pt, NRect& rcItem);
+
+protected:
+	NArray <NDPoint> *pArray;
+	udword m_dwRGBEditingIdx;
+};
+
+
+//-----------------------------------------------------------------
+//!	\class	NVarProp
+//! \brief	Float Property Item
+//-----------------------------------------------------------------
+class NVarProp : public NPropertyItem
+{
+public:
+	DECLARE_CLASS();
+	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
+	virtual bool		BeginEdit	(NRect& rcItem);
+	virtual bool		MenuEdit	(NRect& rcItem);
+	virtual bool		EndEdit		(bool bSaveChanged=true);
+	virtual	bool		AddValue(sdword dwDelta);
+	
+	void BuildMenu(NTreeNode* _pnode);
+
+	NMenuCtrl	m_wndMenu;
+};
+
+//-----------------------------------------------------------------
+//!	\class	NVarProp
+//! \brief	Float Property Item
+//-----------------------------------------------------------------
+class NLoadLibnoiseCache : public NPropertyItem
+{
+public:
+	DECLARE_CLASS();
+
+	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
+	//virtual void		Click(NPoint& pt, NRect& rcItem);
+	virtual bool		BeginEdit	(NRect& rcItem);
+	virtual bool		EndEdit		(bool bSaveChanged=true);
+	
+	void BuildMenu(NTreeNode* _pnode);
+
+	NMenuCtrl	m_wndMenu;
 };

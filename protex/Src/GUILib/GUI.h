@@ -155,6 +155,7 @@ public:
 	void FillSolidRect(NRect& rc, COLORREF clr);
 	void Draw3dRect(NRect& rc, COLORREF clrTopLeft, COLORREF clrBottomRight);
 	void GradientVRect(NRect& rc, COLORREF clrStart, COLORREF clrEnd);
+	void GradientHRect(NRect& rc, COLORREF clrStart, COLORREF clrEnd);
 	void RoundRect(NRect& rc, sdword ellipseW, sdword ellipseH);
 	void RoundRect(int _roundboxtype, float _minx, float _miny, float _maxx, float _maxy, float _rad);
 
@@ -213,7 +214,6 @@ public:
 	void	ReleaseCapture();
 
 	void SetWindowText(char* _pszText);
-	bool IsWindowVisible();
 
 	//Datas
 	HWND m_W32HWnd;
@@ -348,7 +348,6 @@ protected:
 	virtual udword	CatchControlNotify(udword code);
 };
 
-
 //-----------------------------------------------------------------
 //!	\class	NTabCtrl
 //!	\brief	Tab Control Class Definition
@@ -417,18 +416,14 @@ class GUI_API NStatusBar : public NWnd
 {
 public:
 	//Constructor-Destructor
-					NStatusBar();
-	virtual	~NStatusBar();
+								NStatusBar();
+	virtual						~NStatusBar();
 
 	//Menu Creation
-	virtual	bool Create(NWnd* parent);
+	virtual	bool				Create(NWnd* parent);
 
 	//Methods
-	udword GetHeight()				{ return 24; }
-
-protected:
-	//Win32 messages
-	virtual	void	OnPaint();
+			udword				GetHeight()				{ return 24; }
 };
 
 
@@ -491,4 +486,201 @@ protected:
 	//W32 Datas
 	CHOOSECOLOR		m_Cc;			//W32 Color Dialog Struct
 	COLORREF			m_acrCustClr[16]; // array of custom colors
+};
+
+
+
+
+
+//-----------------------------------------------------------------
+//!	\class		NGradientCtrl
+//!	\brief		GUI control for viewport
+//-----------------------------------------------------------------
+class GUI_API NGradientCtrl : public NWControl
+{
+
+public:
+	// Constructor-Destructor
+	NGradientCtrl();
+	virtual ~NGradientCtrl();
+
+	// Methods
+	virtual	bool Create(const char* name, const NRect& rect, NWnd* parent);
+
+	void	Update();
+
+	void OnAddPoint();
+	void AddGradientPoint( float height, const NColor& color );
+
+	void SelectRectangles();
+
+	void AssignColorToSelection();
+
+	int GetCurrentLineX(){ return m_clientLineX;}
+
+	void OnDeletePoint();
+
+	float to_graph_space( float X );
+	float from_graph_space( float X );
+
+
+protected:
+	//Win32 Messages Dispatching
+	virtual	void	OnPaint();
+	virtual void	OnSize();
+
+	//Windows Proc
+	virtual	LRESULT	WndProc( UINT msg, WPARAM wparam, LPARAM lparam);
+
+	virtual void	OnLeftButtonDown(udword flags, NPoint pos);
+	virtual void	OnLeftButtonUp(udword flags, NPoint pos);
+	virtual void	OnMouseMove(udword flags, NPoint pos );
+	HFONT		m_hfontNormal;
+
+
+public:
+
+	NArray<GradientElem> m_gradientElems;
+
+	NRect sel;
+	GradientElem *selectedElem;
+
+	NPoint mousePos;
+
+	int start_client_x,start_client_y, client_Width, client_Height;
+
+	bool   m_bSelectedRect;
+	bool	m_bMouseLDown;
+
+
+	int m_clientLineX;
+};
+
+//-----------------------------------------------------------------
+//!	\class		NCurveCtrl
+//!	\brief		GUI control for viewport
+//-----------------------------------------------------------------
+class GUI_API NGraphCtrl : public NWControl
+{
+
+public:
+	// Constructor-Destructor
+	NGraphCtrl();
+	virtual ~NGraphCtrl();
+
+	// Methods
+	virtual	bool Create(const char* name, const NRect& rect, NWnd* parent);
+
+	virtual void	Update();
+
+	virtual void OnAddPoint();
+	virtual void AddCurvePoint( float X, float Y ){}
+	void SetExtents( float xMin, float xMax, float yMin, float yMax )
+	{
+		graph_space.left = xMin;
+		graph_space.right = xMax;
+		graph_space.bottom = yMin;
+		graph_space.top = yMax;
+	}
+
+	virtual void SelectRectangles();
+
+	int GetCurrentLineX(){ return m_currentLineX;}
+	int GetCurrentLineY(){ return m_currentLineY;}
+
+	NDPoint to_graph_space( float X, float Y );
+	NDPoint from_graph_space( float X, float Y );
+
+
+	void Paint(NGraphics &dc);
+
+
+protected:
+	//Win32 Messages Dispatching
+	//virtual	void	OnPaint();
+	virtual void	OnSize();
+
+	//Windows Proc
+	virtual	LRESULT	WndProc( UINT msg, WPARAM wparam, LPARAM lparam);
+
+	virtual void	OnLeftButtonDown(udword flags, NPoint pos);
+	virtual void	OnLeftButtonUp(udword flags, NPoint pos);
+
+	HFONT		m_hfontNormal;
+
+public:
+
+	NGraphics *pdc;
+
+	NArray<NDPoint> m_curveElems;
+	bool bMovingPoint;
+
+	NRect sel;
+	NDPoint *selectedElem;
+
+	NPoint mousePos;
+
+	int start_x,start_y,Width,Height;
+	int end_x,end_y;
+
+	float x_min, x_max, y_min, y_max;
+
+	NRect graph_space;
+
+	bool   m_bSelectedRect;
+	bool	m_bMouseLDown;
+
+	int m_currentLineX;
+	int m_currentLineY;
+};
+
+
+//-----------------------------------------------------------------
+//!	\class		NTerraceCtrl
+//!	\brief		GUI control for viewport
+//-----------------------------------------------------------------
+class GUI_API NCurveCtrl : public NGraphCtrl
+{
+
+public:
+	// Constructor-Destructor
+	NCurveCtrl();
+	virtual ~NCurveCtrl();
+
+	virtual void AddCurvePoint( float X, float Y );
+	virtual void OnDeletePoint();
+
+protected:
+	//Win32 Messages Dispatching
+	virtual	void	OnPaint();
+
+	virtual void	OnMouseMove(udword flags, NPoint pos );
+};
+
+
+//-----------------------------------------------------------------
+//!	\class		NTerraceCtrl
+//!	\brief		GUI control for viewport
+//-----------------------------------------------------------------
+class GUI_API NTerraceCtrl : public NGraphCtrl
+{
+
+public:
+	// Constructor-Destructor
+	NTerraceCtrl();
+	virtual ~NTerraceCtrl();
+
+	void SetInvertTerrace( bool val){m_bInvertTerrace = val;}
+
+	virtual void AddCurvePoint( float X, float Y );
+	virtual void OnDeletePoint();
+
+protected:
+	//Win32 Messages Dispatching
+	virtual	void	OnPaint();
+
+	virtual void	OnMouseMove(udword flags, NPoint pos );
+
+public:
+	bool m_bInvertTerrace;
 };

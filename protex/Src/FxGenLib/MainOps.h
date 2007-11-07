@@ -126,3 +126,269 @@ public:
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 
 };
+
+
+//-----------------------------------------------------------------
+//!	\class		NStoreOp
+//!	\brief		Store operator
+//-----------------------------------------------------------------
+class FXGEN_API NFloatVarOp : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NFloatVarOp();
+	virtual ~NFloatVarOp();
+
+	//Methods
+	virtual	COLORREF	GetColor()		{ return 0x00AFE0F5;	}
+	virtual char*		GetName()			{ return "Float Var";	}		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
+	virtual char*		GetUserName();		
+	virtual float		GetUserVal();
+	virtual void		AddFloatVar(float *v){ if( indx < 256 )val[indx++] = v; }
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+
+	float *val[256];
+	int indx;
+	float value;
+
+};
+
+//-----------------------------------------------------------------
+//!	\class		NIntVarOp
+//!	\brief		Store operator
+//-----------------------------------------------------------------
+class FXGEN_API NUWordVarOp : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NUWordVarOp();
+	virtual ~NUWordVarOp();
+
+	//Methods
+	virtual	COLORREF	GetColor()		{ return 0x00AFE0F5;	}
+	virtual char*		GetName()			{ return "UDWord Var";	}		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
+	virtual char*		GetUserName();		
+	virtual udword		GetUserVal();
+	virtual void		AddUWordVar(udword *v){ if( indx < 256 )val[indx++] = v; }
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+
+	udword *val[256];
+	int indx;
+	udword value;
+
+};
+
+//-----------------------------------------------------------------
+//!	\class		NLoadOp
+//!	\brief		Load a stored operator
+//-----------------------------------------------------------------
+class FXGEN_API NLoadVarOp : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NLoadVarOp();
+
+	//Methods
+	virtual	COLORREF	GetColor()		{ return 0x00AFE0F5;	}
+	virtual char*		GetName()			{ return "Load Var"; }		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
+	virtual char*		GetUserName();	
+	virtual float		GetUserVal();
+	virtual void		AddFloatVar(float *v){ if( indx < 256 )val[indx++] = v; }
+
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+
+	float *val[256];
+	int indx;
+	float value;
+
+};
+
+
+//-----------------------------------------------------------------
+//!	\class		NVarsSumOp
+//!	\brief		Store operator
+//-----------------------------------------------------------------
+class FXGEN_API NVarsSumOp : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NVarsSumOp();
+	virtual ~NVarsSumOp();
+
+	//Methods
+	virtual	COLORREF	GetColor()		{ return 0x00AFE0F5;	}
+	virtual char*		GetName()			{ return "VARS SUM";	}		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
+	virtual char*		GetUserName();		
+	virtual float		GetUserVal(){return value;}
+	virtual void		AddFloatVar(float *v){ if( indx < 256 )val[indx++] = v; }
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+
+	float *val[256];
+	int indx;
+	float value;
+	float val_ptr;
+};
+
+//-----------------------------------------------------------------
+//!	\class		NVarsSumOp
+//!	\brief		Store operator
+//-----------------------------------------------------------------
+class FXGEN_API NVarsSubtractOp : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NVarsSubtractOp();
+	virtual ~NVarsSubtractOp();
+
+	//Methods
+	virtual	COLORREF	GetColor()		{ return 0x00AFE0F5;	}
+	virtual char*		GetName()			{ return "VARS SUB";	}		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
+	virtual char*		GetUserName();		
+	virtual float		GetUserVal(){return value;}
+	virtual void		AddFloatVar(float *v){ if( indx < 256 )val[indx++] = v; }
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+
+	float *val[256];
+	int indx;
+	float value;
+	float val_ptr;
+};
+
+
+//-----------------------------------------------------------------
+//!	\class		NVarsSumOp
+//!	\brief		Store operator
+//-----------------------------------------------------------------
+class FXGEN_API NVarsDivideOp : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NVarsDivideOp();
+	virtual ~NVarsDivideOp();
+
+	//Methods
+	virtual	COLORREF	GetColor()		{ return 0x00AFE0F5;	}
+	virtual char*		GetName()			{ return "VARS DIVIDE";	}		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
+	virtual char*		GetUserName();		
+	virtual float		GetUserVal(){return value;}
+	virtual void		AddFloatVar(float *v){ if( indx < 256 )val[indx++] = v; }
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+
+	float *val[256];
+	int indx;
+	float value;
+	float val_ptr;
+};
+
+//-----------------------------------------------------------------
+//!	\class		NVarsSumOp
+//!	\brief		Store operator
+//-----------------------------------------------------------------
+class FXGEN_API NVarsMultiplyOp : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NVarsMultiplyOp();
+	virtual ~NVarsMultiplyOp();
+
+	//Methods
+	virtual	COLORREF	GetColor()		{ return 0x00AFE0F5;	}
+	virtual char*		GetName()			{ return "VARS MULTIPLY";	}		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
+	virtual char*		GetUserName();		
+	virtual float		GetUserVal(){return value;}
+	virtual void		AddFloatVar(float *v){ if( indx < 256 )val[indx++] = v; }
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+
+	float *val[256];
+	int indx;
+	float value;
+	float val_ptr;
+};
+
+//-----------------------------------------------------------------
+//!	\class		NVarsSumOp
+//!	\brief		Store operator
+//-----------------------------------------------------------------
+class FXGEN_API NVarsPowerOp : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NVarsPowerOp();
+	virtual ~NVarsPowerOp();
+
+	//Methods
+	virtual	COLORREF	GetColor()		{ return 0x00AFE0F5;	}
+	virtual char*		GetName()			{ return "VARS POWER";	}		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
+	virtual char*		GetUserName();		
+	virtual float		GetUserVal(){return value;}
+	virtual void		AddFloatVar(float *v){ if( indx < 256 )val[indx++] = v; }
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+
+	float *val[256];
+	int indx;
+	float value;
+	float val_ptr;
+};
+
+//-----------------------------------------------------------------
+//!	\class		NVarsSumOp
+//!	\brief		Store operator
+//-----------------------------------------------------------------
+class FXGEN_API NVarsLogOp : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NVarsLogOp();
+	virtual ~NVarsLogOp();
+
+	//Methods
+	virtual	COLORREF	GetColor()		{ return 0x00AFE0F5;	}
+	virtual char*		GetName()			{ return "VARS LOG";	}		//!< Operator's Name
+	virtual char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
+	virtual char*		GetUserName();		
+	virtual float		GetUserVal(){return value;}
+	virtual void		AddFloatVar(float *v){ if( indx < 256 )val[indx++] = v; }
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+
+	float *val[256];
+	int indx;
+	float value;
+	float val_ptr;
+};
+
+

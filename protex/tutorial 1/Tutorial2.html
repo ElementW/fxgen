@@ -1,0 +1,268 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.3  (Win32)">
+	<META NAME="AUTHOR" CONTENT="dave nash">
+	<META NAME="CREATED" CONTENT="20071016;7300154">
+	<META NAME="CHANGEDBY" CONTENT="dave nash">
+	<META NAME="CHANGED" CONTENT="20071016;13433240">
+	<META NAME="CHANGEDBY" CONTENT="dave nash">
+	<META NAME="CHANGEDBY" CONTENT="dave nash">
+</HEAD>
+<BODY LANG="en-US" DIR="LTR">
+<H1 STYLE="background: #00ffff"><FONT FACE="BankGothic Md BT, sans-serif">Tutorial
+2</FONT></H1>
+<P STYLE="background: transparent">This is the second tutorial in a
+series that will show a user how to use ProTex to create textures
+that incorporate libnoise. The readers should first acquaint
+themselves with the <A HREF="http://tutorial1.html/">first tutorial.</A></P>
+<P STYLE="background: transparent">This tutorial will take the user
+through the new features within ProTex not previously available in
+FxGen. 
+</P>
+<DIV ID="Part1 - your first project" DIR="LTR" STYLE="background: #00ffff">
+	<P STYLE="margin-top: 0.42cm; page-break-after: avoid"><FONT FACE="BankGothic Md BT, sans-serif"><FONT SIZE=4>Part
+	1 &ndash; The Basic Types</FONT></FONT></P>
+</DIV>
+<P STYLE="background: transparent">Libnoise modules come in 6 basic
+types. The types are listed below:-</P>
+<UL>
+	<LI><P STYLE="background: transparent">Generators</P>
+	<LI><P STYLE="background: transparent">Modifiers</P>
+	<LI><P STYLE="background: transparent">Transformers</P>
+	<LI><P STYLE="background: transparent">Combiners</P>
+	<LI><P STYLE="background: transparent">Selectors</P>
+	<LI><P STYLE="background: transparent">Misc</P>
+</UL>
+<P STYLE="background: transparent">In addition to these basic types,
+Protex has incorporated the Noisemap builders introduced in the last
+tutorial, and the L_ImageRenderer which was also introduced in the
+last tutorial. All libnoise modules are prefixed by the letter 'L'
+followed by an underscore. They are all colored green except for the
+L_ImageRenderer that is colored red.</P>
+<P STYLE="background: transparent">The version of libnoise included
+with Protex has several new modules, including fBM, Hetero Terrain,
+Multi-fractal, Hybrid Multi-fractal and a turbulence generator. These
+can be found under the Generators menu in the Operators viewport.
+These modules are documented in the book 'Texturing and Modelling: A
+procedural approach&rdquo; and are available for download from the
+<A HREF="http://cobweb.ecn.purdue.edu/~ebertd/book2e.html">website.</A></P>
+<P STYLE="background: transparent">For a quick comparison of the new
+modules, load up the project called 'fbm_compare.prj'. This project
+contains the 2 pages containing arrays of the basic noise modules. On
+the first page they are organised in terms of increasing octaves,
+from left to right. On the second page the changing variable is
+frequency. The modules require that the user creates an
+L_ImageRenderer object and places it below the L_Plane objects, as
+shown:-</P>
+<P STYLE="background: transparent"><IMG SRC="../module25.jpg" NAME="graphics5" ALIGN=LEFT WIDTH=800 HEIGHT=600 BORDER=0><BR CLEAR=LEFT>
+<BR><BR>
+</P>
+<P STYLE="background: transparent">For more information on the
+libnoise operators and their usage please refer to the <A HREF="http://libnoise.sourceforge.net/docs/modules.html">libnoise
+documentation.</A></P>
+<P STYLE="background: transparent"><BR><BR>
+</P>
+<DIV ID="Section2" DIR="LTR" STYLE="background: #00ffff">
+	<P STYLE="margin-top: 0.42cm; background: transparent; page-break-after: avoid">
+	<FONT FACE="BankGothic Md BT, sans-serif"><FONT SIZE=4>Part 2 &ndash;
+	Combining modules and Saving the Output</FONT></FONT></P>
+</DIV>
+<P STYLE="background: transparent">Modules are combined in stacks in
+the same way that FxGen modules are placed in stacks. FxGen operators
+can be applied to the output of a libnoise module, however it is not
+possible to apply libnoise modules to FxGen operators.</P>
+<P STYLE="background: transparent">The projects are loaded and saved
+through use of the file menu. The user should navigate to the 'Datas'
+directory before loading a project. Projects should be postfixed with
+the file extension *.PRJ, however this is not compulsory. 
+</P>
+<P STYLE="background: transparent">The Images menu allows the user to
+save an image in the *.BMP format, and right-clicking in the Viewport
+pane will give the user the option to save in *.TGA format.</P>
+<P STYLE="background: transparent">The L_Cache object allows the user
+to save the output of a set of libnoise modules. This allows the user
+to load the same output multiple times. The load is achieved through
+the use of the L_LoadCache object. Both the L_Cache object and the
+L_LoadCache can both be found under the 'libnoise misc' menu. An
+example of a save and load setup is shown below:-</P>
+<P STYLE="background: transparent"><IMG SRC="../module21.JPG" NAME="graphics1" ALIGN=LEFT WIDTH=800 HEIGHT=600 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">The cache object is selected and
+the name is changed to CACHE_1 as shown below:-</P>
+<P STYLE="background: transparent"><IMG SRC="../module22.JPG" NAME="graphics2" ALIGN=LEFT WIDTH=800 HEIGHT=600 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">Next, the L_LoadCache objects are
+selected and the pop-up menu in the Properties viewport is activated
+by clicking the right mouse button. The pop-up menu has been
+populated with the named variables of type L_Cache. Selecting one of
+the variables (in this case the only variable is CACHE_1), will make
+the name of the L_LoadCache object change its name.</P>
+<P STYLE="background: transparent"><IMG SRC="../module23.JPG" NAME="graphics3" ALIGN=LEFT WIDTH=799 HEIGHT=604 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">And finally the L_ImageRenderer
+object is double clicked to reveal the output:-</P>
+<P STYLE="background: transparent"><IMG SRC="../module24.JPG" NAME="graphics4" ALIGN=LEFT WIDTH=800 HEIGHT=604 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">The cache objects are clearly very
+powerful, and can also save a lot of processing time if used
+correctly.</P>
+<DIV ID="Section3" DIR="LTR" STYLE="background: #00ffff">
+	<P STYLE="margin-top: 0.42cm; background: transparent; page-break-after: avoid">
+	<FONT FACE="BankGothic Md BT, sans-serif"><FONT SIZE=4>Part 3 &ndash;
+	VAR Objects</FONT></FONT></P>
+</DIV>
+<P STYLE="background: transparent">One of the features new to
+ProTex_0.5-alpha is the Var concept. The Vars can be found under the
+Variables menu. The principle behind the vars is to store constant
+numbers that will be reused in later modules. For example, if I
+create a new perlin noise module and set the frequency to 2.73 and
+the create another object that requires the same frequency, I find
+that I am constantly rewriting the frequency. It is much easier to
+store the value for freqency in a var, as shown below:-</P>
+<P STYLE="background: transparent"><IMG SRC="../module26.jpg" NAME="graphics6" ALIGN=LEFT WIDTH=800 HEIGHT=600 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">The value in the 'Float Var'
+object has been set to 2.73. The name is now set to 'frequency' as
+shown:-</P>
+<P STYLE="background: transparent"><IMG SRC="../module27.JPG" NAME="graphics7" ALIGN=LEFT WIDTH=800 HEIGHT=600 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">This variable named 'frequency'
+can now be loaded up in ANY of the float properties, and a truncated
+version can be loaded into the integer properties (I.e. 2.73 ~=2 and
+3.333 ~= 3). This process is similar to referencing an L_Cache
+object, however the menu will be populated with ALL the Var objects
+in ALL pages and groups of the project.</P>
+<P STYLE="background: transparent"><IMG SRC="../module28.JPG" NAME="graphics8" ALIGN=LEFT WIDTH=840 HEIGHT=600 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">After the frequency variable has
+been added, the Frequency property item will display the value stored
+in the 'frequency' Var, as shown:-</P>
+<P STYLE="background: transparent"><IMG SRC="../module29.JPG" NAME="graphics9" ALIGN=LEFT WIDTH=800 HEIGHT=600 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">The way to change the frequency
+variable is by editing the value in the 'frequency' variable and then
+double clicking the 'frequency' block. All current numbers that
+referenced the 'frequency' variable will be updated, however it is
+not yet possible to save Var references. In the current version, up
+to 256 numbers can be updated from a single Var object.</P>
+<P STYLE="background: transparent">Vars have some associated
+operators. These include:-</P>
+<UL>
+	<LI><P STYLE="background: transparent">VARS SUM</P>
+	<LI><P STYLE="background: transparent">VARS SUB</P>
+	<LI><P STYLE="background: transparent">VARS MULTIPLY</P>
+	<LI><P STYLE="background: transparent">VARS DIVIDE</P>
+	<LI><P STYLE="background: transparent">VARS POWER</P>
+	<LI><P STYLE="background: transparent">VARS LOG</P>
+</UL>
+<P STYLE="background: transparent">There is also an operator called
+'Load Var' which can be used to reference another Var. This is
+technically possible anyway, since the Vars themselves use a float
+for a parameter, however it is not recommended to try to reference a
+Var within a Var (in the current version &ndash; the abililty to do
+that will be disabled in future releases). The project window below
+shows some combinations of Var objects:-</P>
+<P STYLE="background: transparent"><IMG SRC="../module30.JPG" NAME="graphics10" ALIGN=LEFT WIDTH=800 HEIGHT=600 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">This basically states:</P>
+<P STYLE="background: transparent"> ( (frequency + Octaves) &ndash;
+(some value)) / ( some value 2 )</P>
+<P STYLE="background: transparent">The names of the 'VARS SUM', the
+'VARS SUB' and the 'VARS DIVIDE' objects have been deliberately left
+unchanged for purposes of illustration. In practical usage it is
+necessary to name the objects, eg. VARS DIVIDE would be called
+'Output_1' or something similar. 
+</P>
+<P STYLE="background: transparent">A major flaw in the way that Vars
+work is that they ALL have to be double clicked before the operators
+will process properly. The the output variable may have to be
+selected twice after this process, but I assure you &ndash; It DOES
+work!</P>
+<P STYLE="background: transparent"> 
+</P>
+<DIV ID="Section1" DIR="LTR" STYLE="background: #00ffff">
+	<P STYLE="margin-top: 0.42cm; background: transparent; page-break-after: avoid">
+	<FONT FACE="BankGothic Md BT, sans-serif"><FONT SIZE=4>Part 4 &ndash;
+	Dialogs</FONT></FONT></P>
+</DIV>
+<P STYLE="background: transparent">There are currently 3 types of
+dialogs exclusive only to ProTex. These are The Gradient Dialog
+(introduced in tutorial 1), the Curve dialog and the Terrace dialog.
+In this section I will cover some of the controls of the dialogs.</P>
+<P STYLE="background: transparent"><IMG SRC="../module5.JPG" NAME="graphics11" ALIGN=LEFT WIDTH=516 HEIGHT=415 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent"> <B>The Gradient Dialog. </B>
+</P>
+<P STYLE="background: transparent">This dialog allows the user to add
+and delete points, to set the color or position of an existing point
+and to open and save an entire gradient. The end points cannot be
+moved or deleted, since a gradient must have the minimum of 2 points.
+The 'Add Point' and 'Set Position' buttons make a dialog appear that
+allows the position of the gradient point to be set manually. It must
+be a number between -1.0 and 1.0. The Set Color button makes a
+typical Color picker appear, for the user to choose the color by
+sight or to enter the color as text. The black rectangles below the
+gradient rectangle are the representation of the gradient point.
+These black rectangles can be selected with the left mouse button.
+The selected rectangle will appear as a red box and is the subject of
+the Delete Point, Set Color and Set Position buttons.</P>
+<P STYLE="background: transparent"><IMG SRC="../module31.JPG" NAME="graphics12" ALIGN=LEFT WIDTH=516 HEIGHT=545 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent"><B>The Curve Dialog.</B></P>
+<P STYLE="background: transparent">This dialog allows the user to add
+and delete points, to set graph extents and to Set the position of a
+selected point. It is also possible to load and save a curve. All
+curves are saved in the 'Curves' directory. Clicking the 'Add Point'
+button will make a dialog appear with two text fields, one for the X
+dimension and one for the Y dimension. The point will appear at the
+position of the blue cross &ndash; the position where the user has
+left clicked the graph &ndash; if the 'Ok' button on the 'Point
+Confirm' dialog is pressed without any modifications to the variables
+in the text boxes. The 'Point Confirm' dialog also appears if the
+'Set Position' button is pressed. The application can handle as many
+graph points as the user chooses, however the curve itself can only
+manage up to 32 points. The 'Set extents' button allows the user to
+view the graph from further out. The 'Set Extents' dialog is shown
+below:-</P>
+<P STYLE="background: transparent"><IMG SRC="../module32.JPG" NAME="graphics13" ALIGN=LEFT WIDTH=188 HEIGHT=221 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">Setting the X max value to 10
+makes the graph shown above look as follows.</P>
+<P STYLE="background: transparent"><IMG SRC="../module33.JPG" NAME="graphics14" ALIGN=LEFT WIDTH=516 HEIGHT=545 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent">The graph tool is very powerful.
+The red lines represent the Zero axes. Curves require a minimum of 4
+points. The curve points can be inserted anywhere on the graph.</P>
+<P STYLE="background: transparent"><IMG SRC="../module34.JPG" NAME="graphics15" ALIGN=LEFT WIDTH=516 HEIGHT=545 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P STYLE="background: transparent"><B>The Terrace Dialog.</B></P>
+<P STYLE="background: transparent">This dialog is basically the same
+as the Curve dialog, apart from the 'Create Points' button and the
+fact that the plot is a terrace plot with points having a Y value the
+same as their X value. The Create Points button creates a smooth
+distribution of points from the -1.0 point to the 1.0 point. When the
+'Create Points' button is pressed a dialog appears requiring a value
+for the number of points. The minimum number of points required for a
+terrace control is 2 points. Unlike the curve tool, the terrace tool
+does not allow the user to insert points behind the most recent
+point. This means that points must be added to the end of the curve,
+not at the beginning or inserted in the middle. If you want to add
+points to the middle, please move the current points to the new
+position and then add a point to the end.</P>
+<P STYLE="background: transparent">For more information on gradients,
+curves and terraces, please refer to the libnoise documentation on
+<A HREF="http://libnoise.sourceforge.net/docs/classnoise_1_1module_1_1Curve.html">curves</A>,
+and <A HREF="http://libnoise.sourceforge.net/docs/classnoise_1_1module_1_1Terrace.html">terraces</A>.</P>
+<DIV ID="Section4" DIR="LTR" STYLE="background: #00ffff">
+	<P STYLE="margin-top: 0.42cm; background: transparent; page-break-after: avoid">
+	<FONT FACE="BankGothic Md BT, sans-serif"><FONT SIZE=4>The next
+	tutorial will demonstrate a method for creating a simple solar
+	system.</FONT></FONT></P>
+</DIV>
+<P STYLE="background: transparent"><BR><BR>
+</P>
+</BODY>
+</HTML>

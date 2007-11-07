@@ -25,25 +25,27 @@
 #include "PropertiesWnd.h"
 #include "ViewportsWnd.h"
 #include "ProjectWnd.h"
+#include "../FxGenLib/Bitmap.h"
+
 
 //-----------------------------------------------------------------
 //                   Defines
 //-----------------------------------------------------------------
 
-#define	MENU_NEWPROJECT			100
-#define	MENU_OPENPROJECT		101
+#define	MENU_NEWPROJECT		100
+#define	MENU_OPENPROJECT	101
 #define	MENU_SAVEPROJECTAS	102
-#define	MENU_EXIT						103
-#define	MENU_SAVEPROJECT		104
+#define	MENU_EXIT			103
+#define	MENU_SAVEPROJECT	104
 #define	MENU_RELOADPROJECT	105
 
-#define	MENU_DETAILLOW			200
-#define	MENU_DETAILNORMAL		201
-#define	MENU_DETAILHIGH			202
+#define	MENU_DETAILLOW		200
+#define	MENU_DETAILNORMAL	201
+#define	MENU_DETAILHIGH		202
 #define	MENU_DETAILFINE			203
 #define	MENU_DETAILREALISTIC	204
 #define	MENU_DETAILULTRA		205
-
+#define MENU_SAVE_BMP 210
 
 
 //-----------------------------------------------------------------
@@ -55,12 +57,12 @@
 //-----------------------------------------------------------------
 
 //###TEST###
-void staticOperatorsProcessCB(udword _dwCurrentOp, udword _dwTotalOps)
+/*void staticProcess(udword _dwCurrentOp, udword _dwTotalOps)
 {
-	TRACE("CallBack: Current %d Total %d\n", _dwCurrentOp, _dwTotalOps);
-	SetCursor(::LoadCursor(NULL, IDC_WAIT));
-}
+	TRACE("Current %d Total %d\n", _dwCurrentOp, _dwTotalOps);
+}*/
 
+NViewportsWnd *viewportswnd;
 
 //-----------------------------------------------------------------
 //		Constructor
@@ -70,6 +72,7 @@ NMainFrm::NMainFrm(void)
 	m_bExecuteLocked	= false;
 	m_popMarkedShow		= null;
 	m_fDetailFactor		= 1.0f;
+	viewportswnd = NULL;
 }
 
 //-----------------------------------------------------------------
@@ -102,7 +105,7 @@ bool NMainFrm::Create(char* name, const NRect& rect)
 	propswnd->Create("", GetClientRect(), pwrkspace);
 
 	//Creation de la fenetre pour les viewports
-	NViewportsWnd* viewportswnd = new NViewportsWnd;
+	viewportswnd = new NViewportsWnd;
 	viewportswnd->Create("", GetClientRect(), pwrkspace);
 
 	//Creation des tabs pour les pages d'operateurs et les operateurs stored
@@ -135,12 +138,12 @@ bool NMainFrm::Create(char* name, const NRect& rect)
 	NMenuBar*	pmenu = GetMenuBar();
 	udword dwParent = pmenu->InsertPopupItem(0, 0, "File");
 
-	pmenu->InsertItem(dwParent,1,"New",					MENU_NEWPROJECT);
-	pmenu->InsertItem(dwParent,2,"Open...",			MENU_OPENPROJECT);
-	//pmenu->InsertItem(dwParent,2,"Reload",			MENU_RELOADPROJECT);
-	pmenu->InsertItem(dwParent,3,"Save",				MENU_SAVEPROJECT);
-	pmenu->InsertItem(dwParent,4,"Save as...",	MENU_SAVEPROJECTAS);
-	pmenu->InsertItem(dwParent,5,"Exit",				MENU_EXIT);
+	pmenu->InsertItem(dwParent,1,"New...",	MENU_NEWPROJECT);
+	pmenu->InsertItem(dwParent,2,"Reload	F9", MENU_RELOADPROJECT);
+	pmenu->InsertItem(dwParent,3,"Open...	F3", MENU_OPENPROJECT);
+	pmenu->InsertItem(dwParent,4,"Save	F6", MENU_SAVEPROJECT);
+	pmenu->InsertItem(dwParent,5,"Save as...	F2", MENU_SAVEPROJECTAS);
+	pmenu->InsertItem(dwParent,6,"Exit...",					MENU_EXIT);
 
 
 	dwParent = pmenu->InsertPopupItem(0,				1, "Options");
@@ -154,6 +157,9 @@ bool NMainFrm::Create(char* name, const NRect& rect)
 		pmenu->InsertItem(dwParent, 5, "Realistic\t800%",		MENU_DETAILREALISTIC);
 		pmenu->InsertItem(dwParent, 6, "Ultra\t1600%",		MENU_DETAILULTRA);
 //	}
+
+	udword dwParent2 = pmenu->InsertPopupItem(0, 2, "Image");
+	pmenu->InsertItem(dwParent2,1,"Save bmp...",	MENU_SAVE_BMP);
 
 	///////////////////////////////////////////////
 	// Creation d'un nouveau projet par defaut
@@ -225,8 +231,8 @@ void NMainFrm::OnCommand(udword id)
 			m_fDetailFactor = 16.0f;
 			m_bExecuteLocked = false;
 			break;
+		case MENU_SAVE_BMP: OnSaveImage(); break;
 	};
-
 }
 
 
@@ -389,6 +395,29 @@ void NMainFrm::OnSaveProjectAs()
 		SaveProject(dlg.GetPathName());
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Image saving
+//-----------------------------------------------------------------
+void	NMainFrm::OnSaveImage()
+{
+	m_bExecuteLocked = true;
+    if (viewportswnd->GetCurrentObject() != null &&
+        strcmp(viewportswnd->GetCurrentObject()->GetRTClass()->m_pszClassName, "NBitmap") == 0)
+    {
+		//Save File Dialog
+		NFileDialog dlg;
+		dlg.Create("Saving Image...", this, false);
+		if (dlg.DoModal())
+		{
+			NString str = dlg.GetPathName();
+
+			NBitmap *btmap = (NBitmap*)viewportswnd->GetCurrentObject();
+			btmap->saveBMP(str.Buffer());
+
+		}
+	}
+	m_bExecuteLocked = false;
+}
 
 //-----------------------------------------------------------------
 //!	\brief	Execute operators processing
@@ -400,9 +429,7 @@ NOperator* NMainFrm::Execute(float _ftime)
 	if (!m_bExecuteLocked)
 	{
 		m_bExecuteLocked = true;
-		//Process operators
-		NEngineOp::GetEngine()->Execute(_ftime, m_popMarkedShow, m_fDetailFactor, staticOperatorsProcessCB);
-
+		NEngineOp::GetEngine()->Execute(_ftime, m_popMarkedShow, m_fDetailFactor);
 		//Rendering
 		EVT_EXECUTE(EVT_RENDER, (udword)m_popMarkedShow, (udword)&_ftime);
 		m_bExecuteLocked = false;
@@ -452,20 +479,16 @@ void NMainFrm::DeletedOperator(NOperator* pop)
 	m_bExecuteLocked = false;
 }
 
-//-----------------------------------------------------------------
-//!	\brief	Keys Down
-//-----------------------------------------------------------------
 void NMainFrm::OnKeyDown(udword dwchar)
 {
 // temporary implementation
 //#ifdef USE_QUAKE_KEYS		//###JN### ok for now... :-)
 	switch (dwchar)
 	{
-		case VK_F6: SaveProject();	break;
-		case VK_F9:	LoadProject(); break;
-		case VK_F2:	OnSaveProjectAs(); break;
-		case VK_F3:	OnOpenProject(); break;
+		case VK_F6:	SaveProject();			break;
+		case VK_F9:	LoadProject();			break;
+		case VK_F2:	OnSaveProjectAs();	break;
+		case VK_F3:	OnOpenProject();		break;
 		default: break;
 	}
-//#endif
 }
