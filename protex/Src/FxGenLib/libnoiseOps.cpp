@@ -17,12 +17,6 @@ using namespace noise;
 using namespace noise::module;
 using namespace noise::utils;
 
-#ifdef GetUserName
-#undef GetUserName
-#endif
-
-//NGradientDlg grad_dlg(IDD_ENTERNAME, 0);
-
 //-----------------------------------------------------------------
 //                   Generators
 //-----------------------------------------------------------------
@@ -73,7 +67,6 @@ udword NPerlin::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	frequency = nv_clamp( frequency, 0, 50.0 );
 	quality = (int)nv_clamp( quality, 0, 2.0 );
 
-
 	//noise::module::Perlin myModule;
 	m_module.SetOctaveCount(octaves);
 	m_module.SetSeed (seed);
@@ -86,6 +79,63 @@ udword NPerlin::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 }
 
 
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//							PerlinOctave class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+IMPLEMENT_CLASS(NPerlinOctave,	NOperator);
+
+static NVarsBlocDesc blocdescPerlinOctave[] =
+{
+	VAR(eudword,	true, "Num Octaves",	"6",		"NUwordProp")	//0
+	VAR(eudword,		true, "Seed",			"0",		"NUwordProp")	//1
+	VAR(eudword,		true, "Required Octave",			"0",		"NUwordProp")	//2
+	VAR(efloat,		true, "Frequency",			"1.0",	"NFloatProp")	//3
+	VAR(efloat,		true, "Persistance",			"0.5",	"NFloatProp")	//4
+	VAR(efloat,		true, "Lacunarity",			"2.0",	"NFloatProp")	//5
+	VAR(eubyte,		true, "Quality",			"1",	"NUwordProp")	//6
+};
+
+NPerlinOctave::NPerlinOctave()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(7, blocdescPerlinOctave);
+}
+
+udword NPerlinOctave::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+{
+	int octaves = 6;
+	int seed = 0;
+	int quality = 1;
+	float frequency = 1.0f;
+	float persistance = 0.5f;
+	float Lacunarity = 2.0f;
+	int requiredOctave = 0;
+
+	m_pcvarsBloc->GetValue(0, _ftime, (uword&)octaves);
+	m_pcvarsBloc->GetValue(1, _ftime, (uword&)seed);
+	m_pcvarsBloc->GetValue(2, _ftime, (uword&)requiredOctave);
+	m_pcvarsBloc->GetValue(3, _ftime, (float&)frequency);
+	m_pcvarsBloc->GetValue(4, _ftime, (float&)persistance);
+	m_pcvarsBloc->GetValue(5, _ftime, (float&)Lacunarity);
+	m_pcvarsBloc->GetValue(6, _ftime, (uword&)quality);
+
+	octaves = (int)nv_clamp( octaves, 1, 30.0 );
+	frequency = nv_clamp( frequency, 0, 50.0 );
+	quality = (int)nv_clamp( quality, 0, 2.0 );
+
+	m_module.SetRequiredOctave(requiredOctave);
+	m_module.SetSeed (seed);
+	m_module.SetFrequency (frequency /* 4.34375*/);
+	m_module.SetPersistence (persistance);
+	m_module.SetLacunarity (Lacunarity);
+	m_module.SetNoiseQuality (noise::NoiseQuality(quality));
+
+	return 0;
+}
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
@@ -132,8 +182,6 @@ udword NBillow::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	frequency = nv_clamp( frequency, 0, 50.0 );
 	quality = (int)nv_clamp( quality, 0, 2.0 );
 
-
-	//noise::module::NBillow myModule;
 	m_module.SetOctaveCount(octaves);
 	m_module.SetSeed (seed);
 	m_module.SetFrequency (frequency /* 4.34375*/);
@@ -188,7 +236,6 @@ udword NRidgedMulti::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	frequency = nv_clamp( frequency, 0, 50.0 );
 	quality = (int)nv_clamp( quality, 0, 2.0 );
 
-	//noise::module::NBillow myModule;
 	m_module.SetOctaveCount(octaves);
 	m_module.SetSeed (seed);
 	m_module.SetFrequency (frequency /* 4.34375*/);
@@ -273,7 +320,7 @@ udword NCylinders::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 	float frequency = 1.0f;
 
 	m_pcvarsBloc->GetValue(0, _ftime, (float&)frequency);
-
+	
 	frequency = nv_clamp( frequency, 0, 50.0 );
 
 	m_module.SetFrequency (frequency /* 4.34375*/);
@@ -306,7 +353,7 @@ udword NSpheres::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	float frequency = 1.0f;
 
 	m_pcvarsBloc->GetValue(0, _ftime, (float&)frequency);
-
+	
 	frequency = nv_clamp( frequency, 0, 50.0 );
 
 	m_module.SetFrequency (frequency /* 4.34375*/);
@@ -346,7 +393,7 @@ udword NVoronoi::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	float frequency = 1.0f;
 
 	m_pcvarsBloc->GetValue(0, _ftime, (ubyte&)bEnableDistance);
-
+	
 	m_pcvarsBloc->GetValue(1, _ftime, (float&)displacement);
 	m_pcvarsBloc->GetValue(2, _ftime, (uword&)seed);
 	m_pcvarsBloc->GetValue(3, _ftime, (float&)frequency);
@@ -362,7 +409,7 @@ udword NVoronoi::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
-//							NRidgedMulti class implementation
+//							NHybridMulti class implementation
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -408,7 +455,6 @@ udword NHybridMulti::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	frequency = nv_clamp( frequency, 0, 50.0 );
 	quality = (int)nv_clamp( quality, 0, 2.0 );
 
-	//noise::module::NBillow myModule;
 	m_module.SetOctaveCount(octaves);
 	m_module.SetGain(gain);
 	m_module.SetOffset(offset);
@@ -424,7 +470,7 @@ udword NHybridMulti::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
-//							NRidgedMulti class implementation
+//							NHeteroTerrain class implementation
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -439,7 +485,7 @@ static NVarsBlocDesc blocdescNHeteroTerrain[] =
 	VAR(efloat,		true, "Lacunarity",			"2.0",	"NFloatProp")	//4
 	VAR(eubyte,		true, "Quality",			"1",	"NUwordProp")	//5
 		VAR(eudword,		true, "Seed",			"1",	"NUwordProp")	//6
-
+	
 };
 
 NHeteroTerrain::NHeteroTerrain()
@@ -471,7 +517,6 @@ udword NHeteroTerrain::Process(float _ftime, NOperator** _pOpsInts, float _fDeta
 	frequency = nv_clamp( frequency, 0, 50.0 );
 	quality = (int)nv_clamp( quality, 0, 2.0 );
 
-	//noise::module::NBillow myModule;
 	m_module.SetOctaveCount(octaves);
 	m_module.SetGain(gain);
 	m_module.SetOffset(offset);
@@ -487,7 +532,7 @@ udword NHeteroTerrain::Process(float _ftime, NOperator** _pOpsInts, float _fDeta
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
-//							NRidgedMulti class implementation
+//							NMultiFractal class implementation
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -533,7 +578,6 @@ udword NMultiFractal::Process(float _ftime, NOperator** _pOpsInts, float _fDetai
 	frequency = nv_clamp( frequency, 0, 50.0 );
 	quality = (int)nv_clamp( quality, 0, 2.0 );
 
-	//noise::module::NBillow myModule;
 	m_module.SetOctaveCount(octaves);
 	m_module.SetGain(gain);
 	m_module.SetOffset(offset);
@@ -549,7 +593,7 @@ udword NMultiFractal::Process(float _ftime, NOperator** _pOpsInts, float _fDetai
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
-//							NRidgedMulti class implementation
+//							NFbm class implementation
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -564,7 +608,7 @@ static NVarsBlocDesc blocdescNFbm[] =
 	VAR(efloat,		true, "Lacunarity",			"2.0",	"NFloatProp")	//4
 	VAR(eubyte,		true, "Quality",			"1",	"NUwordProp")	//5
 	VAR(eudword,		true, "Seed",			"1",	"NUwordProp")	//6
-
+	
 };
 
 NFbm::NFbm()
@@ -596,7 +640,6 @@ udword NFbm::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 	frequency = nv_clamp( frequency, 0, 50.0 );
 	quality = (int)nv_clamp( quality, 0, 2.0 );
 
-	//noise::module::NBillow myModule;
 	m_module.SetOctaveCount(octaves);
 	m_module.SetGain(gain);
 	m_module.SetOffset(offset);
@@ -629,7 +672,7 @@ static NVarsBlocDesc blocdescNTurbulenceGenerator[] =
 	VAR(eubyte,		true, "Quality",			"1",	"NUwordProp")	//5
 	VAR(eudword,		true, "Seed",			"1",	"NUwordProp")	//6
 	VAR(efloat,		true, "Exponent",			"1.0",	"NFloatProp")	//7
-
+	
 };
 
 NTurbulenceGenerator::NTurbulenceGenerator()
@@ -663,7 +706,6 @@ udword NTurbulenceGenerator::Process(float _ftime, NOperator** _pOpsInts, float 
 	frequency = nv_clamp( frequency, 0, 50.0 );
 	quality = (int)nv_clamp( quality, 0, 2.0 );
 
-	//noise::module::NBillow myModule;
 	m_module.SetOctaves(octaves);
 	m_module.SetGain(gain);
 	m_module.SetOffset(offset);
@@ -709,12 +751,16 @@ NAbs::NAbs()
 
 udword NAbs::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
-	noise::module::Module *m = (*_pOpsInts)->GetLibnoiseModule();
+	if (m_byInputs!=1)		return (udword)-1;
+
+	noise::module::Module *m = NULL;
+	
+	if		(*_pOpsInts)
+		m = (*_pOpsInts)->GetLibnoiseModule();
 
 	if( m == NULL )
 		return (udword)-1;
 
-	//module::ScaleBias smallSlime;
 	m_module.SetSourceModule (0, *m);
 
 	return 0;
@@ -748,10 +794,15 @@ udword NClamp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 	m_pcvarsBloc->GetValue(0, _ftime, (float&)cmin);
 	m_pcvarsBloc->GetValue(1, _ftime, (float&)cmax);
 
-	noise::module::Module *m = (*_pOpsInts)->GetLibnoiseModule();
+	if (m_byInputs!=1)		return (udword)-1;
+
+	noise::module::Module *m = NULL;
+	
+	if		(*_pOpsInts)
+		m = (*_pOpsInts)->GetLibnoiseModule();
 
 	if( m == NULL )
-		return (udword)-1;
+		return 0;
 
 	m_module.SetSourceModule (0, *m);
 	m_module.SetBounds(cmin,cmax);
@@ -781,10 +832,15 @@ NCurve::NCurve()
 
 udword NCurve::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
-	noise::module::Module *m = (*_pOpsInts)->GetLibnoiseModule();
+	if (m_byInputs!=1)		return (udword)-1;
+
+	noise::module::Module *m = NULL;
+	
+	if		(*_pOpsInts)
+		m = (*_pOpsInts)->GetLibnoiseModule();
 
 	if( m == NULL )
-		return (udword)-1;
+		return 0;
 
 	m_module.ClearAllControlPoints();
 
@@ -803,7 +859,7 @@ udword NCurve::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 				float Y1 = (*curveObj)[i].y;
 
 				m_module.AddControlPoint( (double)X1, (double)Y1 );
-			}
+			}	
 		}
 	}
 
@@ -811,7 +867,7 @@ udword NCurve::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 	m_pcvarsBloc->GetValue(0, 0, (NObject*&)ptr);
 
 	m_module.SetSourceModule (0, *m);
-
+	
 	return 0;
 }
 
@@ -841,17 +897,20 @@ udword NExponent::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 
 	m_pcvarsBloc->GetValue(0, _ftime, (float&)Exponent);
 
+	if (m_byInputs!=1)		return (udword)-1;
 
-	noise::module::Module *m = (*_pOpsInts)->GetLibnoiseModule();
+	noise::module::Module *m = NULL;
+	
+	if		(*_pOpsInts)
+		m = (*_pOpsInts)->GetLibnoiseModule();
 
 	if( m == NULL )
 		return (udword)-1;
 
-	//module::ScaleBias smallSlime;
 	m_module.SetExponent(Exponent);
 	m_module.SetSourceModule (0, *m);
 
-
+	
 	return 0;
 }
 
@@ -872,7 +931,13 @@ NInvert::NInvert()
 
 udword NInvert::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
-	noise::module::Module *m = (*_pOpsInts)->GetLibnoiseModule();
+
+	if (m_byInputs!=1)		return (udword)-1;
+
+	noise::module::Module *m = NULL;
+	
+	if		(*_pOpsInts)
+		m = (*_pOpsInts)->GetLibnoiseModule();
 
 	if( m == NULL )
 		return (udword)-1;
@@ -905,21 +970,25 @@ NScaleBias::NScaleBias()
 
 udword NScaleBias::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
+	if (m_byInputs!=1)		return (udword)-1;
+
 	float scale = 0.5f, bias = -0.5f;
 
 	m_pcvarsBloc->GetValue(0, _ftime, (float&)scale);
 	m_pcvarsBloc->GetValue(1, _ftime, (float&)bias);
 
-	noise::module::Module *m = (*_pOpsInts)->GetLibnoiseModule();
+	noise::module::Module *m = NULL;
+	
+	if		(*_pOpsInts)
+		m = (*_pOpsInts)->GetLibnoiseModule();
 
 	if( m == NULL )
 		return (udword)-1;
 
-	//module::ScaleBias smallSlime;
 	m_module.SetSourceModule (0, *m);
 	m_module.SetScale (scale);
 	m_module.SetBias (bias);
-
+	
 	return 0;
 }
 //-----------------------------------------------------------------
@@ -933,7 +1002,7 @@ IMPLEMENT_CLASS(NTerrace,	NOperator);
 
 static NVarsBlocDesc blocdescNTerrace[] =
 {
-	VAR(erefobj2,		false, "TerraceDialog",			"0",	"NTerraceDialogProp")
+	VAR(erefobj2,		false, "TerraceDialog",			"0",	"NTerraceDialogProp")	
 };
 
 NTerrace::NTerrace()
@@ -944,7 +1013,12 @@ NTerrace::NTerrace()
 udword NTerrace::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 
-	noise::module::Module *m = (*_pOpsInts)->GetLibnoiseModule();
+	if (m_byInputs!=1)		return (udword)-1;
+
+	noise::module::Module *m = NULL;
+
+	if		(*_pOpsInts)
+		m = (*_pOpsInts)->GetLibnoiseModule();
 
 	if( m == NULL )
 		return (udword)-1;
@@ -964,19 +1038,92 @@ udword NTerrace::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 			{
 				float X1 = (*curveObj)[i].x;
 				m_module.AddControlPoint( (double)X1 );
-			}
+			}	
 		}
 	}
 
 	void *ptr = NULL;
 	m_pcvarsBloc->GetValue(0, 0, (NObject*&)ptr);
-
-
+	
 	m_module.SetSourceModule (0, *m);
 
 	return 0;
 }
 
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//							NTerrace class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+IMPLEMENT_CLASS(NCraterSpheres,	NOperator);
+
+static NVarsBlocDesc blocdescNCraterSpheres[] =
+{
+	VAR(efloat,		true, "Radius Min",			"0.0",	"NFloatProp")	//0
+	VAR(efloat,		true, "Radius Max",			"1.5",	"NFloatProp")	//1
+	VAR(efloat,		true, "Sphere Size",			"0.5",	"NFloatProp")	//0
+	VAR(eudword,		true, "Seed",			"0",	"NUwordProp")	//6
+	VAR(eudword,		true, "Num Craters",			"10",	"NUwordProp")	//6
+	VAR(efloat,		true, "Limit Min",			"-0.5",	"NFloatProp")	//0
+	VAR(efloat,		true, "Limit Max",			"3.5",	"NFloatProp")	//1
+	VAR(efloat,		true, "Depth Min",			"0.1",	"NFloatProp")	//0
+	VAR(efloat,		true, "Depth Max",			"0.15",	"NFloatProp")	//1
+};
+
+NCraterSpheres::NCraterSpheres()
+{
+	m_pcvarsBloc = AddVarsBloc(9, blocdescNCraterSpheres);
+}
+
+udword NCraterSpheres::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+{
+	if (m_byInputs!=1)		return (udword)-1;
+
+	noise::module::Module *m = NULL;
+
+	if		(*_pOpsInts)
+		m = (*_pOpsInts)->GetLibnoiseModule();
+
+	if( m == NULL )
+		return (udword)-1;
+
+	m_module.SetSourceModule (0, *m);
+
+	float sphereSize = 0.5;
+	float rad_min = 0.0;
+	float rad_max = 1.0;
+	int seed = 0;
+	int numCraters = 100;
+		float depth_min = 0.1;
+	float depth_max = 0.15;
+	float lim_min = -0.5;
+	float lim_max = 3.5;
+
+	m_pcvarsBloc->GetValue(0, _ftime, (float&)rad_min);
+	m_pcvarsBloc->GetValue(1, _ftime, (float&)rad_max);
+	m_pcvarsBloc->GetValue(2, _ftime, (float&)sphereSize);
+	m_pcvarsBloc->GetValue(3, _ftime, (udword&)seed);
+	m_pcvarsBloc->GetValue(4, _ftime, (udword&)numCraters);
+
+	m_pcvarsBloc->GetValue(5, _ftime, (float&)lim_min);
+	m_pcvarsBloc->GetValue(6, _ftime, (float&)lim_max);
+
+	m_pcvarsBloc->GetValue(7, _ftime, (float&)depth_min);
+	m_pcvarsBloc->GetValue(8, _ftime, (float&)depth_max);
+
+	m_module.SetRadius(sphereSize);
+	m_module.SetRadiusMinMax( rad_min, rad_max);
+	m_module.SetNumCraters(numCraters);
+	m_module.SetSeed(seed);
+	m_module.SetDepthMinMax(depth_min, depth_max);
+	m_module.SetLimits(lim_min, lim_max);
+	m_module.CalcDistribution();
+
+	return 0;
+}
 
 
 //-----------------------------------------------------------------
@@ -1053,7 +1200,10 @@ udword NRotatePoint::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	m_pcvarsBloc->GetValue(1, _ftime, (float&)yangle);
 	m_pcvarsBloc->GetValue(2, _ftime, (float&)zangle);
 
-	noise::module::Module *m = (*_pOpsInts)->GetLibnoiseModule();
+	noise::module::Module *m = NULL;
+
+	if		(*_pOpsInts)
+		m = (*_pOpsInts)->GetLibnoiseModule();
 
 	if( m == NULL )
 		return (udword)-1;
@@ -1095,7 +1245,10 @@ udword NScalePoint::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 	m_pcvarsBloc->GetValue(1, _ftime, (float&)sy);
 	m_pcvarsBloc->GetValue(2, _ftime, (float&)sz);
 
-	noise::module::Module *m = (*_pOpsInts)->GetLibnoiseModule();
+	noise::module::Module *m = NULL;
+
+	if		(*_pOpsInts)
+		m = (*_pOpsInts)->GetLibnoiseModule();
 
 	if( m == NULL )
 		return (udword)-1;
@@ -1136,7 +1289,10 @@ udword NTranslatePoint::Process(float _ftime, NOperator** _pOpsInts, float _fDet
 	m_pcvarsBloc->GetValue(1, _ftime, (float&)y);
 	m_pcvarsBloc->GetValue(2, _ftime, (float&)z);
 
-	noise::module::Module *m = (*_pOpsInts)->GetLibnoiseModule();
+	noise::module::Module *m = NULL;
+
+	if		(*_pOpsInts)
+		m = (*_pOpsInts)->GetLibnoiseModule();
 
 	if( m == NULL )
 		return (udword)-1;
@@ -1185,11 +1341,14 @@ udword NTurbulence::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 	m_pcvarsBloc->GetValue(2, _ftime, (float&)power);
 	m_pcvarsBloc->GetValue(3, _ftime, (uword&)roughness);
 
-	noise::module::Module *m = (*_pOpsInts)->GetLibnoiseModule();
+	noise::module::Module *m = NULL;
 
+	if		(*_pOpsInts)
+		m = (*_pOpsInts)->GetLibnoiseModule();
+	
 	if( m != NULL  )
 		m_module.SetSourceModule (0, *m);
-	else
+	else 
 		return (udword)-1;
 
 	m_module.SetSeed (seed);
@@ -1204,6 +1363,7 @@ udword NTurbulence::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 //-----------------------------------------------------------------
 //                   Misc
 //	NCache
+//	NLoadCache
 //-----------------------------------------------------------------
 
 //-----------------------------------------------------------------
@@ -1225,7 +1385,7 @@ NCache::NCache()
 	m_pcvarsBloc = AddVarsBloc(1, blocdescNCacheOp, 1);
 }
 
-char* NCache::GetUserName()
+char* NCache::GetLibnoiseCacheUserName()
 {
 	char* pszname;
 	m_pcvarsBloc->GetValue(0, 0, pszname);
@@ -1234,10 +1394,13 @@ char* NCache::GetUserName()
 
 udword NCache::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
-	noise::module::Module *m = (*_pOpsInts)->GetLibnoiseModule();
+	noise::module::Module *m = NULL;
+	
+	if		(*_pOpsInts)
+		m = (*_pOpsInts)->GetLibnoiseModule();
 
 	if( m == NULL )
-		return (udword)-1;
+		return 0;
 
 	m_module.SetSourceModule (0, *m);
 
@@ -1263,7 +1426,7 @@ NLoadCache::NLoadCache()
 	m_pcvarsBloc = AddVarsBloc(1, blocdescNLoadCache, 1);
 }
 
-char* NLoadCache::GetUserName()
+char* NLoadCache::GetLibnoiseCacheUserName()
 {
 		//Get Variables Values
 	NOperator* popRef;
@@ -1271,33 +1434,39 @@ char* NLoadCache::GetUserName()
 
 	//Process
 	if (popRef)
-		return popRef->GetUserName();
+		return popRef->GetLibnoiseCacheUserName();
 
 	return "";
 }
 
 udword NLoadCache::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
-	noise::module::Module *m = NULL;
 
+	noise::module::Module *m = NULL;
+	
 	NOperator* popRef;
 	m_pcvarsBloc->GetValue(0, _ftime, (NObject*&)popRef);
 
-	if( !popRef )
-		return (udword)-1;
+	if( !popRef ) 
+		return 0; 
 
-	if( !strcmp(popRef->GetRTClass()->m_pszClassName, "NCache") )
+	if( popRef->GetRTClass() )
 	{
-		NCache *cache = (NCache*)popRef;
-		m = cache->GetLibnoiseModule();
+		if( !strcmp(popRef->GetRTClass()->m_pszClassName, "NCache") )
+		{
+			NCache *cache = (NCache*)popRef;
+			m = cache->GetLibnoiseModule();
+		}
+		else return 0;
 	}
 	else
 	{
-		return (udword)-1;
+		return 0;  
 	}
+	
 
 	if( m == NULL )
-		return (udword)-1;
+		return 0;
 
 	m_module.SetSourceModule (0, *m);
 
@@ -1419,7 +1588,6 @@ udword NMultiply::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	noise::module::Module *m2 = (*_pOpsInts)->GetLibnoiseModule();
 	m_module.SetSourceModule (1, *m2);
 
-
 	return 0;
 }
 
@@ -1480,7 +1648,7 @@ NSelect::NSelect()
 
 udword NSelect::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
-	if (m_byInputs!=3)		return 0;//(udword)-1;
+	if (m_byInputs!=3)		return 0;
 
 	int seed = 1;
 	float frequency = 8.0f;
@@ -1524,14 +1692,14 @@ NBlend::NBlend()
 
 udword NBlend::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
-	if (m_byInputs!=3)		return 0;//(udword)-1;
-
+	if (m_byInputs!=3)		return 0;
 
 	noise::module::Module *m1 = (*_pOpsInts)->GetLibnoiseModule();
+	
 	if( m1 == NULL )
 		return (udword)-1;
-	m_module.SetSourceModule (0, *m1);
 
+	m_module.SetSourceModule (0, *m1);
 
 	if( (*_pOpsInts+1) )
 	{
@@ -1588,7 +1756,7 @@ NModelPlane::NModelPlane()
 udword NModelPlane::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
-	if (m_byInputs!=1)		return (udword)-1;
+	if (m_byInputs!=1)		return 0;
 
 	noise::module::Module *m = (*_pOpsInts)->GetLibnoiseModule();
 
@@ -1608,12 +1776,7 @@ udword NModelPlane::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 
 	sizeX = (int)nv_clamp( sizeX, 32, 8192 );
 	sizeY = (int)nv_clamp( sizeY, 32, 8192 );
-
-	/*x1 = (int)nv_clamp( x1, -sizeX, 8192 );
-	x2 = (int)nv_clamp( sizeY, 32, 8192 );
-	y1 = (int)nv_clamp( sizeX, 32, 8192 );
-	y2 = (int)nv_clamp( sizeY, 32, 8192 );*/
-
+		
 	m_heightMapBuilder.SetSourceModule (*m);
 	m_heightMapBuilder.SetDestNoiseMap (m_heightMap);
 	m_heightMapBuilder.SetDestSize (sizeX, sizeY);
@@ -1655,10 +1818,13 @@ NModelPlane2::NModelPlane2()
 udword NModelPlane2::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
-	if (m_byInputs!=1)		return (udword)-1;
+	if (m_byInputs!=1)		return 0;
 
-	noise::module::Module *m = (*_pOpsInts)->GetLibnoiseModule();
-
+	noise::module::Module *m = NULL;
+	
+	if		(*_pOpsInts)
+		m = (*_pOpsInts)->GetLibnoiseModule();
+	
 	if( m == NULL )
 		return (udword)-1;
 
@@ -1679,12 +1845,7 @@ udword NModelPlane2::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 
 	sizeX = (int)nv_clamp( sizeX, 32, 8192 );
 	sizeY = (int)nv_clamp( sizeY, 32, 8192 );
-
-	/*x1 = (int)nv_clamp( x1, -sizeX, 8192 );
-	x2 = (int)nv_clamp( sizeY, 32, 8192 );
-	y1 = (int)nv_clamp( sizeX, 32, 8192 );
-	y2 = (int)nv_clamp( sizeY, 32, 8192 );*/
-
+		
 	m_heightMapBuilder.EnableSeamless(bTile);
 
 	m_heightMapBuilder.SetDepth( depth );
@@ -1725,10 +1886,13 @@ NModelCylinder::NModelCylinder()
 udword NModelCylinder::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
-	if (m_byInputs!=1)		return (udword)-1;
+	if (m_byInputs!=1)		return 0;
 
-	noise::module::Module *m = (*_pOpsInts)->GetLibnoiseModule();
-
+	noise::module::Module *m = NULL;
+	
+	if		(*_pOpsInts)
+		m = (*_pOpsInts)->GetLibnoiseModule();
+	
 	if( m == NULL )
 		return (udword)-1;
 
@@ -1749,8 +1913,7 @@ udword NModelCylinder::Process(float _ftime, NOperator** _pOpsInts, float _fDeta
 	theta2 = (int)nv_clamp( theta2, 0.0f, 180.0f );
 	h1 = (int)nv_clamp( h1, -1.0f, 0.0f );
 	h2 = (int)nv_clamp( h2, 0.0f, 1.0f );
-
-
+		
 	m_heightMapBuilder.SetBounds (theta1, theta2, h1, h2); // degrees
 	m_heightMapBuilder.SetDestSize (height * 2, height);
 	m_heightMapBuilder.SetSourceModule (*m);
@@ -1790,9 +1953,12 @@ NModelSphere::NModelSphere()
 udword NModelSphere::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
-	if (m_byInputs!=1)		return (udword)-1;
+	if (m_byInputs!=1)		return 0;
 
-	noise::module::Module *m = (*_pOpsInts)->GetLibnoiseModule();
+	noise::module::Module *m = NULL;
+	
+	if		(*_pOpsInts)
+		m = (*_pOpsInts)->GetLibnoiseModule();
 
 	if( m == NULL )
 		return (udword)-1;
@@ -1802,7 +1968,7 @@ udword NModelSphere::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	float phi2 = 90.0f;
 	float theta1 = -180.0f;
 	float theta2 =  180.0f;
-
+	
 	m_pcvarsBloc->GetValue(0, _ftime, (uword&)height);
 	m_pcvarsBloc->GetValue(1, _ftime, (float&)phi1);
 	m_pcvarsBloc->GetValue(2, _ftime, (float&)phi2);
@@ -1814,8 +1980,7 @@ udword NModelSphere::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	phi2 = (int)nv_clamp( phi2, 0.0f, 90.0f );
 	theta1 = (int)nv_clamp( theta1, -180.0f, 0.0f );
 	theta2 = (int)nv_clamp( theta2, 0.0f, 180.0f );
-
-
+		
 	m_heightMapBuilder.SetBounds (phi1, phi2, theta1, theta2); // degrees
 	m_heightMapBuilder.SetDestSize (height * 2, height);
 	m_heightMapBuilder.SetSourceModule (*m);
@@ -1825,6 +1990,75 @@ udword NModelSphere::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	return 0;
 }
 
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//							NModelSphere class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+IMPLEMENT_CLASS(NModelConcentricDepthSphere, NOperator);
+
+static NVarsBlocDesc blocdescNModelConcentricDepthSphere[] =
+{
+	VAR(eudword,		true, "Height",			"512",	"NUwordProp")	//1
+	VAR(efloat,		true, "phi1",			"-90.0",		"NFloatProp")	//2
+	VAR(efloat,		true, "phi2",			"90.0",		"NFloatProp")	//3
+	VAR(efloat,		true, "theta1",			"-180.0",	"NFloatProp")	//4
+	VAR(efloat,		true, "theta2",			"180.0",	"NFloatProp")	//5
+	VAR(efloat,		true, "radius",			"1.0",	"NFloatProp")	//6
+};
+
+NModelConcentricDepthSphere::NModelConcentricDepthSphere()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(6, blocdescNModelConcentricDepthSphere);
+}
+
+udword NModelConcentricDepthSphere::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+{
+	//Only one Input
+	if (m_byInputs!=1)		return 0;
+
+	noise::module::Module *m = NULL;
+	
+	if		(*_pOpsInts)
+		m = (*_pOpsInts)->GetLibnoiseModule();
+
+	if( m == NULL )
+		return (udword)-1;
+
+	int height = 512;
+	float phi1 = -90.0f;
+	float phi2 = 90.0f;
+	float theta1 = -180.0f;
+	float theta2 =  180.0f;
+	float radius = 1.0f;
+	
+	m_pcvarsBloc->GetValue(0, _ftime, (uword&)height);
+	m_pcvarsBloc->GetValue(1, _ftime, (float&)phi1);
+	m_pcvarsBloc->GetValue(2, _ftime, (float&)phi2);
+	m_pcvarsBloc->GetValue(3, _ftime, (float&)theta1);
+	m_pcvarsBloc->GetValue(4, _ftime, (float&)theta2);
+	m_pcvarsBloc->GetValue(5, _ftime, (float&)radius);
+
+	height = (int)nv_clamp( height, 32, 8192 );
+	phi1 = (int)nv_clamp( phi1, -90.0f, 0.0f );
+	phi2 = (int)nv_clamp( phi2, 0.0f, 90.0f );
+	theta1 = (int)nv_clamp( theta1, -180.0f, 0.0f );
+	theta2 = (int)nv_clamp( theta2, 0.0f, 180.0f );
+		
+	m_heightMapBuilder.SetSamplingRadius(radius);
+	m_heightMapBuilder.SetBounds (phi1, phi2, theta1, theta2); // degrees
+	m_heightMapBuilder.SetDestSize (height * 2, height);
+	m_heightMapBuilder.SetSourceModule (*m);
+	m_heightMapBuilder.SetDestNoiseMap (m_heightMap);
+	m_heightMapBuilder.Build ();
+
+	return 0;
+}
 
 
 
@@ -1852,13 +2086,17 @@ NImageRenderer::NImageRenderer()
 udword NImageRenderer::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
-	if (m_byInputs!=1)		return (udword)-1;
+	if (m_byInputs!=1)		return 0;
 
-	noise::utils::NoiseMap *nm = (*_pOpsInts)->GetNoiseMap();
 
+	noise::utils::NoiseMap *nm = NULL;
+	
+	if		(*_pOpsInts)
+		nm = (*_pOpsInts)->GetNoiseMap();
+	
 	if( nm == NULL )
 		return (udword)-1;
-
+	
 	noise::utils::Image image;
 	m_renderer.SetSourceNoiseMap (*nm);
 	m_renderer.SetDestImage (image);
@@ -1876,10 +2114,10 @@ udword NImageRenderer::Process(float _ftime, NOperator** _pOpsInts, float _fDeta
 		{
 			float height = (*gradObj)[i].height;
 
-			m_renderer.AddGradientPoint (height,
-				utils::Color(  (*gradObj)[i].color[0],
+			m_renderer.AddGradientPoint (height, 
+				utils::Color(  (*gradObj)[i].color[0],   
 							   (*gradObj)[i].color[1],
-							   (*gradObj)[i].color[2],
+							   (*gradObj)[i].color[2], 
 								255));
 		}
 	}
@@ -1887,31 +2125,19 @@ udword NImageRenderer::Process(float _ftime, NOperator** _pOpsInts, float _fDeta
 	{
 		// just a simple black and white gradient
 		float h1 = -1.0f;
-		m_renderer.AddGradientPoint (h1,
-			utils::Color (  0,
+		m_renderer.AddGradientPoint (h1, 
+			utils::Color (  0,   
 							0,
-							0,
+							0, 
 							255));
 
 		float h2 = 1.0f;
-		m_renderer.AddGradientPoint (h2,
-			utils::Color (  255,
+		m_renderer.AddGradientPoint (h2, 
+			utils::Color (  255,   
 							255,
-							255,
+							255, 
 							255));
 	}
-
-	// this pointer was created with 'new'
-	// and it must be deleted
-	// note: the property item that this is
-	// created in will now be destroyed, hence
-	// the lack of a dialog created with 'new'
-	/*if( pVarsObj )
-	{
-		pVarsObj->Clear();
-		///delete pVarsObj;
-		////pVarsObj = NULL;
-	}*/
 
 	void *ptr = NULL;
 

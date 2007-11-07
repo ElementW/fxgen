@@ -33,7 +33,7 @@ void noise::LatLonToXYZ (double lat, double lon, double& x, double& y,
   z = r * sin (DEG_TO_RAD * lon);
 }
 
-
+// x = r*cos
 void noise::XYZToLatLon( double x, double y, double z, double &lat, double &lon )
 {
 	lat = asin( y ) * RAD_TO_DEG;

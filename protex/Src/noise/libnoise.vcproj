@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="libnoise"
 	ProjectGUID="{408579FB-6940-4E2D-9634-2836887558AC}"
 	RootNamespace="libnoise"
@@ -371,6 +371,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\module\CraterSpheres.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\module\CraterSpheres.h"
+				>
+			</File>
+			<File
 				RelativePath="src\module\curve.cpp"
 				>
 				<FileConfiguration
@@ -647,6 +655,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\module\perlinoctave.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\module\perlinoctave.h"
+				>
+			</File>
+			<File
 				RelativePath="src\module\power.cpp"
 				>
 				<FileConfiguration
@@ -895,6 +911,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\module\VecMath.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\module\VecMath.h"
+				>
+			</File>
+			<File
 				RelativePath="src\module\voronoi.cpp"
 				>
 				<FileConfiguration
@@ -922,6 +946,14 @@
 		<Filter
 			Name="models"
 			>
+			<File
+				RelativePath=".\src\model\concentric_depth_sphere.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\model\concentric_depth_sphere.h"
+				>
+			</File>
 			<File
 				RelativePath="src\model\cylinder.cpp"
 				>

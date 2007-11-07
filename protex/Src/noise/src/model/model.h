@@ -28,5 +28,6 @@
 #include "plane.h"
 #include "DepthPlane.h"
 #include "sphere.h"
+#include "concentric_depth_sphere.h"
 
 #endif

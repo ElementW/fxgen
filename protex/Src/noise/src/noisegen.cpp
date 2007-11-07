@@ -23,6 +23,8 @@
 #include "noisegen.h"
 #include "interp.h"
 #include "vectortable.h"
+#include "stdlib.h"
+#include "mathconsts.h"
 
 using namespace noise;
 
@@ -218,4 +220,22 @@ double noise::ValueNoise3D (int x, int y, int z, int seed)
 {
   return 1.0 - ((double)IntValueNoise3D (x, y, z, seed) / 1073741824.0);
 }
+
+double noise::GetRandomNumber( double min, double max )
+{
+    double rnd = (double)rand() / 0x7fff;
+
+    return min + ( max - min )*rnd;
+}
+
+void noise::GetRandomVector(double &x, double &y, double &z)
+{
+    z = GetRandomNumber( -1.0, 1.0 );
+    double radius = sqrt(1 - z * z); 
+    double t = GetRandomNumber( 0, 2*PI );
+
+    x = cos(t) * radius;
+    y = sin(t) * radius;
+}
+
 
