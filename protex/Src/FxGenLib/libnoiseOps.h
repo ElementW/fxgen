@@ -51,8 +51,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Perlin"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Perlin"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -78,8 +78,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Billow"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Billow"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -103,8 +103,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_RidgedMulti"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_RidgedMulti"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -128,8 +128,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Checkerboard"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Checkerboard"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -153,8 +153,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Const"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Const"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -178,8 +178,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Cylinders"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Cylinders"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -204,8 +204,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Spheres"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Spheres"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -230,8 +230,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Voronoi"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Voronoi"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -256,8 +256,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_HybridMulti"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_HybridMulti"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -281,8 +281,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_HeteroTerrain"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_HeteroTerrain"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -306,8 +306,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_MultiFractal"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_MultiFractal"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -331,8 +331,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Fbm"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Fbm"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -356,8 +356,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_TurbulenceGen"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_TurbulenceGen"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Generator"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -392,8 +392,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Abs"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Modifier"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Abs"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Modifier"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -417,8 +417,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Clamp"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Modifier"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Clamp"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Modifier"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -442,8 +442,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Curve"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Modifier"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Curve"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Modifier"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -467,8 +467,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Exponent"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Modifier"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Exponent"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Modifier"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -493,8 +493,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Invert"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Modifier"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Invert"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Modifier"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -518,8 +518,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_ScaleBias"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Modifier"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_ScaleBias"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Modifier"; }	//!< Operator's Category
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
 	//Processing methods
@@ -542,8 +542,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Terrace"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Modifier"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Terrace"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Modifier"; }	//!< Operator's Category
 
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
@@ -575,8 +575,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Select"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Selector"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Select"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Selector"; }	//!< Operator's Category
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
 	//Processing methods
@@ -598,8 +598,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Blend"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Selector"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Blend"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Selector"; }	//!< Operator's Category
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
 	//Processing methods
@@ -630,8 +630,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Add"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Combiners"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Add"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Combiners"; }	//!< Operator's Category
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
 	//Processing methods
@@ -653,8 +653,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Max"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Combiners"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Max"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Combiners"; }	//!< Operator's Category
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
 	//Processing methods
@@ -676,8 +676,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Min"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Combiners"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Min"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Combiners"; }	//!< Operator's Category
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
 	//Processing methods
@@ -700,8 +700,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Multiply"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Combiners"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Multiply"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Combiners"; }	//!< Operator's Category
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
 	//Processing methods
@@ -723,8 +723,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Power"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Combiners"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Power"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Combiners"; }	//!< Operator's Category
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
 	//Processing methods
@@ -755,8 +755,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Displace"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Transformer"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Displace"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Transformer"; }	//!< Operator's Category
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
 
@@ -779,8 +779,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_RotatePoint"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Transformer"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_RotatePoint"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Transformer"; }	//!< Operator's Category
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
 
@@ -803,8 +803,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_ScalePoint"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Transformer"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_ScalePoint"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Transformer"; }	//!< Operator's Category
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
 
@@ -827,8 +827,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_TranslatePoint"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Transformer"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_TranslatePoint"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Transformer"; }	//!< Operator's Category
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
 
@@ -851,8 +851,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Turbulence"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Transformer"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Turbulence"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Transformer"; }	//!< Operator's Category
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
 
@@ -881,8 +881,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Cache"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Libnoise Misc"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Cache"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Libnoise Misc"; }	//!< Operator's Category
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
 	char* GetUserName();
@@ -912,7 +912,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Libnoise Misc"; }	//!< Operator's Category
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
-	const char* GetUserName();
+	char* GetUserName();
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor = 1.0);
@@ -945,8 +945,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Plane"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Models"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Plane"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Models"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor = 1.0);
@@ -969,8 +969,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Plane2"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Models"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Plane2"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Models"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor = 1.0);
@@ -993,8 +993,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Cylinder"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Models"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Cylinder"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Models"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor = 1.0);
@@ -1018,8 +1018,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_NoisePlane"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Models"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_NoisePlane"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Models"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor = 1.0);
@@ -1042,8 +1042,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x00008600;	}
-	virtual char*		GetName()			{ return "L_Sphere"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Models"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_Sphere"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Models"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor = 1.0);
@@ -1074,8 +1074,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x000000FF;	}
-	virtual char*		GetName()			{ return "L_ImageRenderer"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "libnoise Outputs"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "L_ImageRenderer"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor = 1.0);

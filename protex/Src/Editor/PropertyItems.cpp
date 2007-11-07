@@ -575,29 +575,29 @@ bool NFloatProp::AddValue(sdword dwDelta)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
-//										NUFloatProp class Implementation
+//										NCFloatProp class Implementation
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NUFloatProp, NPropertyItem);
+IMPLEMENT_CLASS(NCFloatProp, NPropertyItem);
 
-void NUFloatProp::DrawItem(NGraphics* pdc, NRect& rcItem)
+void NCFloatProp::DrawItem(NGraphics* pdc, NRect& rcItem)
 {
 	m_strValue.Format("%0.3f", m_pvarValue->fVal);
 	pdc->DrawText(m_strValue.Buffer(), rcItem, DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 }
 
-bool NUFloatProp::BeginEdit(NRect& rcItem)
+bool NCFloatProp::BeginEdit(NRect& rcItem)
 {
 	return false;
 }
 
-bool NUFloatProp::EndEdit(bool bSaveChanged)
+bool NCFloatProp::EndEdit(bool bSaveChanged)
 {
 	return false;
 }
 
-bool NUFloatProp::AddValue(sdword dwDelta)
+bool NCFloatProp::AddValue(sdword dwDelta)
 {
 	m_pvarValue->fVal = m_pvarValue->fVal + ((float)dwDelta)/1000.0f;
 	m_pvarValue->fVal *= 10000;
@@ -605,6 +605,8 @@ bool NUFloatProp::AddValue(sdword dwDelta)
 	m_pvarValue->fVal /= 10000;
 	if(m_pvarValue->fVal < 0)
 		m_pvarValue->fVal = 0;
+	if(m_pvarValue->fVal > 1)
+		m_pvarValue->fVal = 1;
 	return true;
 }
 
@@ -743,7 +745,6 @@ void NUbyteComboProp::DrawItem(NGraphics* pdc, NRect& rcItem)
 
 		} while (i!=-1);
 
-#warning Unsure
 		m_wndMenu.Create("", m_pParent);
    		for (udword i=0; i<m_carrayStringsList.Count(); i++)
    		{

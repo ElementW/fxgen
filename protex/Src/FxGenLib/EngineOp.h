@@ -77,7 +77,7 @@ public:
 	virtual	udword GetColor()	= 0;				//!< Operator color
 	virtual const char* GetName()				{ return ""; }			//!< Operator's Name
 	virtual const char* GetCategory()		{ return "Misc"; }	//!< Operator's Category
-	virtual const char* GetUserName()		{ return null; }		//!< Operator's User Name
+	virtual char* GetUserName()		{ return null; }		//!< Operator's User Name
 	virtual noise::module::Module* GetLibnoiseModule() { return null;}
 	virtual noise::utils::NoiseMap* GetNoiseMap() { return null; }
 	//Serialization

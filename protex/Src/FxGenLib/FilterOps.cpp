@@ -51,8 +51,8 @@ static NMapVarsBlocDesc mapblocdescBlurOp2[] =
 
 static NVarsBlocDesc blocdescBlurOp[] =
 {
-	VAR(efloat,		true, "Width",		"0.01",		"NUFloatProp")	//0
-	VAR(efloat,		true, "Height",		"0.01",		"NUFloatProp")	//1
+	VAR(efloat,		true, "Width",		"0.01",		"NCFloatProp")	//0
+	VAR(efloat,		true, "Height",		"0.01",		"NCFloatProp")	//1
 	VAR(eubyte,		true, "Amplify",	"16",		"NUbyteProp")	//2
 	VAR(eubyte,		false, "Type",	"0,[Box,Gaussian]",	"NUbyteComboProp")	//3
 };
@@ -728,9 +728,9 @@ IMPLEMENT_CLASS(NAbnormalsOp, NOperator);
 static NVarsBlocDesc blocdescAbnormalsOp[] =
 {
 	VAR(eubyte,	false, "Rotation",	"", "")	//0
-	VAR(efloat,	true, "w",	"0.25", "NFloatProp")	//1 "1.0" is full angle
-	VAR(efloat,	true, "x",	"0", "NFloatProp")	//2
-	VAR(efloat,	true, "y",	"0", "NFloatProp")	//3
+	VAR(efloat,	true, "w",	"0.0", "NCFloatProp")	//1 "1.0" is full angle
+	VAR(efloat,	true, "x",	"0.0", "NFloatProp")	//2
+	VAR(efloat,	true, "y",	"0.0", "NFloatProp")	//3
 	VAR(efloat,	true, "z",	"1.0", "NFloatProp")	//4
 	VAR(eubyte,	false, "Options",	"", "")	//5
 	VAR(eubyte,	true, "Sensitivity",	"127", "NUbyteProp")	//6

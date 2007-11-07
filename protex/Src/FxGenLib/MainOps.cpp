@@ -45,7 +45,7 @@ NStoreOp::~NStoreOp()
 {
 }
 
-const char* NStoreOp::GetUserName()
+char* NStoreOp::GetUserName()
 {
 	char* pszname;
 	m_pcvarsBloc->GetValue(0, 0, pszname);
@@ -100,7 +100,7 @@ NStoreResultOp::~NStoreResultOp()
 {
 }
 
-const char* NStoreResultOp::GetUserName()
+char* NStoreResultOp::GetUserName()
 {
 	char* pszname;
 	m_pcvarsBloc->GetValue(0, 0, pszname);
@@ -162,7 +162,7 @@ NLoadOp::NLoadOp()
 	m_pcvarsBloc = AddVarsBloc(1, blocdescLoadOp, 1);
 }
 
-const char* NLoadOp::GetUserName()
+char* NLoadOp::GetUserName()
 {
 		//Get Variables Values
 	NOperator* popRef;

@@ -17,6 +17,9 @@ using namespace noise;
 using namespace noise::module;
 using namespace noise::utils;
 
+#ifdef GetUserName
+#undef GetUserName
+#endif
 
 //NGradientDlg grad_dlg(IDD_ENTERNAME, 0);
 
@@ -1260,7 +1263,7 @@ NLoadCache::NLoadCache()
 	m_pcvarsBloc = AddVarsBloc(1, blocdescNLoadCache, 1);
 }
 
-const char* NLoadCache::GetUserName()
+char* NLoadCache::GetUserName()
 {
 		//Get Variables Values
 	NOperator* popRef;

@@ -111,8 +111,8 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Light2"; }	//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
+	virtual const char*		GetName()			{ return "Light2"; }	//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts,  float _fDetailFactor);
@@ -171,9 +171,9 @@ public:
 	NSlopeMagnitudeOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x009696c0;	}
-	virtual char*		GetName()			{ return "Slope Magnitude"; }	//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual const char*		GetName()			{ return "Slope Magnitude"; }	//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);

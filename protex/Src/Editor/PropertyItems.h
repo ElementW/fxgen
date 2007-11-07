@@ -135,17 +135,17 @@ public:
 	virtual bool		MenuEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
-	
+
 	void BuildMenu(NTreeNode* _pnode);
 
 	NMenuCtrl	m_wndMenu;
 };
 
 //-----------------------------------------------------------------
-//!	\class	NUFloatProp
-//! \brief	Unsigned Float Property Item
+//!	\class	NCFloatProp
+//! \brief	Clamped Float Property Item
 //-----------------------------------------------------------------
-class NUFloatProp : public NPropertyItem
+class NCFloatProp : public NPropertyItem
 {
 public:
 	DECLARE_CLASS();
@@ -322,7 +322,7 @@ public:
 	virtual bool		MenuEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
-	
+
 	void BuildMenu(NTreeNode* _pnode);
 
 	NMenuCtrl	m_wndMenu;
@@ -341,7 +341,7 @@ public:
 	//virtual void		Click(NPoint& pt, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
-	
+
 	void BuildMenu(NTreeNode* _pnode);
 
 	NMenuCtrl	m_wndMenu;

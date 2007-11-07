@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="Editor"
 	ProjectGUID="{BF19E0F1-93B4-4D52-8F13-CDA1B6524F79}"
 	RootNamespace="Editor"
@@ -63,11 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-<<<<<<< .mine
-				AdditionalDependencies="winmm.lib comctl32.lib opengl32.lib cairo.lib cairomm-1.0d.lib "
-=======
-				AdditionalDependencies="winmm.lib comctl32.lib opengl32.lib libnoise.lib"
->>>>>>> .theirs
+				AdditionalDependencies="winmm.lib comctl32.lib opengl32.lib cairo.lib cairomm-1.0d.lib  libnoise.lib gdi32.lib user32.lib"
 				OutputFile="$(OutDir)/Editor_D.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\Externals\tinyxml;..\..\Externals\cairo;..\..\Externals\vgvm"

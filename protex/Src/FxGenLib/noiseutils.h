@@ -37,7 +37,7 @@ namespace noise
 
   namespace utils
   {
-	
+
     /// @mainpage noiseutils
     ///
     /// @section intro Introduction
@@ -131,7 +131,7 @@ namespace noise
         /// @param a Value of the alpha (transparency) channel.
         Color (noise::uint8 r, noise::uint8 g, noise::uint8 b,
           noise::uint8 a):
-          red (r), green (g), blue (b), alpha (a)
+          alpha (a), blue (b), green (g), red (r)
         {
         }
 
@@ -1286,7 +1286,7 @@ namespace noise
         void WriteDestFile ();
 
       protected:
-    
+
         /// Calculates the width of one horizontal line in the file, in bytes.
         ///
         /// @param width The width of the noise map, in points.
@@ -1858,7 +1858,7 @@ namespace noise
     /// origin.
     ///
     /// The x coordinate in the noise map represents the longitude.  The y
-    /// coordinate in the noise map represents the latitude.  
+    /// coordinate in the noise map represents the latitude.
     ///
     /// The application must provide the southern, northern, western, and
     /// eastern bounds of the noise map, in degrees.
@@ -1950,7 +1950,7 @@ namespace noise
     };
 
 
-	
+
 
     /// Renders an image from a noise map.
     ///
@@ -2017,14 +2017,14 @@ namespace noise
     /// To set the intensity of the light source, call the SetLightIntensity()
     /// method.  A good intensity value is 2.0, although that value tends to
     /// "wash out" very light colors from the image.
-    /// 
+    ///
     /// To set the contrast amount between areas in light and areas in shadow,
     /// call the SetLightContrast() method.  Determining the correct contrast
     /// amount requires some trial and error, but if your application
     /// interprets the noise map as a height map that has its elevation values
     /// measured in meters and has a horizontal resolution of @a h meters, a
     /// good contrast amount to use is ( 1.0 / @a h ).
-    /// 
+    ///
     /// <b>Specify the background image</b>
     ///
     /// To specify a background image, pass an Image object to the
@@ -2648,7 +2648,7 @@ namespace noise
         /// elevation resolution.  For example, if your noise map has a
         /// spatial resolution of 30 meters and an elevation resolution of one
         /// meter, set the bump height to 1.0 / 30.0.
-        /// 
+        ///
         /// The spatial resolution and elevation resolution are determined by
         /// the application.
         Color CalcNormalColor (double nc, double nr, double nu,

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="FxGenLib"
 	ProjectGUID="{D39F9951-FC48-4410-93AC-CEAF6934BF3F}"
 	RootNamespace="FxGenLib"
@@ -64,11 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-<<<<<<< .mine
-				AdditionalDependencies="cairo.lib cairomm-1.0d.lib"
-=======
-				AdditionalDependencies="libnoise.lib"
->>>>>>> .theirs
+				AdditionalDependencies="cairo.lib cairomm-1.0d.lib libnoise.lib gdi32.lib user32.lib comdlg32.lib comctl32.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_D.dll"
 				AdditionalLibraryDirectories="..\..\Externals\cairo;..\..\Externals\vgvm;"
 				GenerateDebugInformation="true"
@@ -479,7 +475,6 @@
 				>
 			</File>
 		</Filter>
-<<<<<<< .mine
 		<Filter
 			Name="VGVM"
 			>
@@ -560,7 +555,6 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
-=======
 		<Filter
 			Name="gForge"
 			>
@@ -585,63 +579,6 @@
 				>
 			</File>
 		</Filter>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
 		<File
 			RelativePath=".\noiseutils.h"
 			>
@@ -683,11 +620,11 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath=".\pch.h"
+			RelativePath="..\Editor\pch.h"
 			>
 		</File>
 		<File
-			RelativePath="..\Editor\pch.h"
+			RelativePath=".\pch.h"
 			>
 		</File>
 	</Files>

@@ -50,7 +50,7 @@ public:
 	virtual	udword	GetColor()		{ return 0x004080FF;	}
 	virtual const char*		GetName()			{ return "Store";	}		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Misc"; }		//!< Operator's Category
-	virtual const char*		GetUserName();											//!< Operator's User Name
+	virtual char*		GetUserName();											//!< Operator's User Name
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -73,7 +73,7 @@ public:
 	virtual	udword	GetColor()		{ return 0x000000FF;	}
 	virtual const char*		GetName()			{ return "Store Result";	}	//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Misc";	}					//!< Operator's Category
-	virtual const char*		GetUserName();														//!< Operator's User Name
+	virtual char*		GetUserName();														//!< Operator's User Name
 
 	//Bitmap Access
 	NBitmap* GetBitmap();
@@ -98,7 +98,7 @@ public:
 	virtual	udword	GetColor()		{ return 0x00e36464;	}
 	virtual const char*		GetName()			{ return "Load"; }		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Misc"; }		//!< Operator's Category
-	virtual const char*		GetUserName();											//!< Operator's User Name
+	virtual char*		GetUserName();											//!< Operator's User Name
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -141,10 +141,10 @@ public:
 	virtual ~NFloatVarOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x00AFE0F5;	}
-	virtual char*		GetName()			{ return "Float Var";	}		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
-	virtual char*		GetUserName();		
+	virtual	udword	GetColor()		{ return 0x00AFE0F5;	}
+	virtual const char*		GetName()			{ return "Float Var";	}		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
+	virtual char*		GetUserName();
 	virtual float		GetUserVal();
 	virtual void		AddFloatVar(float *v){ if( indx < 256 )val[indx++] = v; }
 
@@ -170,10 +170,10 @@ public:
 	virtual ~NUWordVarOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x00AFE0F5;	}
-	virtual char*		GetName()			{ return "UDWord Var";	}		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
-	virtual char*		GetUserName();		
+	virtual	udword	GetColor()		{ return 0x00AFE0F5;	}
+	virtual const char*		GetName()			{ return "UDWord Var";	}		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
+	virtual char*		GetUserName();
 	virtual udword		GetUserVal();
 	virtual void		AddUWordVar(udword *v){ if( indx < 256 )val[indx++] = v; }
 
@@ -198,10 +198,10 @@ public:
 	NLoadVarOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x00AFE0F5;	}
-	virtual char*		GetName()			{ return "Load Var"; }		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
-	virtual char*		GetUserName();	
+	virtual	udword	GetColor()		{ return 0x00AFE0F5;	}
+	virtual const char*		GetName()			{ return "Load Var"; }		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
+	virtual char*		GetUserName();
 	virtual float		GetUserVal();
 	virtual void		AddFloatVar(float *v){ if( indx < 256 )val[indx++] = v; }
 
@@ -229,10 +229,10 @@ public:
 	virtual ~NVarsSumOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x00AFE0F5;	}
-	virtual char*		GetName()			{ return "VARS SUM";	}		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
-	virtual char*		GetUserName();		
+	virtual	udword	GetColor()		{ return 0x00AFE0F5;	}
+	virtual const char*		GetName()			{ return "VARS SUM";	}		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
+	virtual char*		GetUserName();
 	virtual float		GetUserVal(){return value;}
 	virtual void		AddFloatVar(float *v){ if( indx < 256 )val[indx++] = v; }
 
@@ -258,10 +258,10 @@ public:
 	virtual ~NVarsSubtractOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x00AFE0F5;	}
-	virtual char*		GetName()			{ return "VARS SUB";	}		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
-	virtual char*		GetUserName();		
+	virtual	udword	GetColor()		{ return 0x00AFE0F5;	}
+	virtual const char*		GetName()			{ return "VARS SUB";	}		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
+	virtual char*		GetUserName();
 	virtual float		GetUserVal(){return value;}
 	virtual void		AddFloatVar(float *v){ if( indx < 256 )val[indx++] = v; }
 
@@ -288,10 +288,10 @@ public:
 	virtual ~NVarsDivideOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x00AFE0F5;	}
-	virtual char*		GetName()			{ return "VARS DIVIDE";	}		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
-	virtual char*		GetUserName();		
+	virtual	udword	GetColor()		{ return 0x00AFE0F5;	}
+	virtual const char*		GetName()			{ return "VARS DIVIDE";	}		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
+	virtual char*		GetUserName();
 	virtual float		GetUserVal(){return value;}
 	virtual void		AddFloatVar(float *v){ if( indx < 256 )val[indx++] = v; }
 
@@ -317,10 +317,10 @@ public:
 	virtual ~NVarsMultiplyOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x00AFE0F5;	}
-	virtual char*		GetName()			{ return "VARS MULTIPLY";	}		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
-	virtual char*		GetUserName();		
+	virtual	udword	GetColor()		{ return 0x00AFE0F5;	}
+	virtual const char*		GetName()			{ return "VARS MULTIPLY";	}		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
+	virtual char*		GetUserName();
 	virtual float		GetUserVal(){return value;}
 	virtual void		AddFloatVar(float *v){ if( indx < 256 )val[indx++] = v; }
 
@@ -346,10 +346,10 @@ public:
 	virtual ~NVarsPowerOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x00AFE0F5;	}
-	virtual char*		GetName()			{ return "VARS POWER";	}		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
-	virtual char*		GetUserName();		
+	virtual	udword	GetColor()		{ return 0x00AFE0F5;	}
+	virtual const char*		GetName()			{ return "VARS POWER";	}		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
+	virtual char*		GetUserName();
 	virtual float		GetUserVal(){return value;}
 	virtual void		AddFloatVar(float *v){ if( indx < 256 )val[indx++] = v; }
 
@@ -375,10 +375,10 @@ public:
 	virtual ~NVarsLogOp();
 
 	//Methods
-	virtual	COLORREF	GetColor()		{ return 0x00AFE0F5;	}
-	virtual char*		GetName()			{ return "VARS LOG";	}		//!< Operator's Name
-	virtual char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
-	virtual char*		GetUserName();		
+	virtual	udword	GetColor()		{ return 0x00AFE0F5;	}
+	virtual const char*		GetName()			{ return "VARS LOG";	}		//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Variables"; }		//!< Operator's Category
+	virtual char*		GetUserName();
 	virtual float		GetUserVal(){return value;}
 	virtual void		AddFloatVar(float *v){ if( indx < 256 )val[indx++] = v; }
 

@@ -85,7 +85,7 @@ public:
 
 	//Methods
 	void	SetName(char* _pszName)		{ m_cstrName = _pszName;			}
-	char* GetName()									{ return m_cstrName.Buffer(); }
+	const char* GetName()									{ return m_cstrName.Buffer(); }
 
 	float *GetExtents() { return vars; }
 	float GetMinX(){ return vars[0]; }
@@ -143,7 +143,7 @@ public:
 
 	//Methods
 	void	SetName(char* _pszName)		{ m_cstrName = _pszName;			}
-	char* GetName()									{ return m_cstrName.Buffer(); }
+	const char* GetName()									{ return m_cstrName.Buffer(); }
 
 	float *GetVars() { return vars; }
 	float GetValX(){ return vars[0]; }
@@ -197,7 +197,7 @@ public:
 
 	//Methods
 	void	SetName(char* _pszName)		{ m_cstrName = _pszName;			}
-	char* GetName()									{ return m_cstrName.Buffer(); }
+	const char* GetName()									{ return m_cstrName.Buffer(); }
 
 
 
@@ -250,7 +250,7 @@ public:
 
 	//Methods
 	void	SetName(char* _pszName)		{ m_cstrName = _pszName;			}
-	char* GetName()									{ return m_cstrName.Buffer(); }
+	const char* GetName()									{ return m_cstrName.Buffer(); }
 
 	void SetValues( int X );
 
@@ -296,7 +296,7 @@ public:
 
 	//Methods
 	void	SetName(char* _pszName)		{ m_cstrName = _pszName;			}
-	char* GetName()									{ return m_cstrName.Buffer(); }
+	const char* GetName()									{ return m_cstrName.Buffer(); }
 
 
 	
@@ -362,7 +362,7 @@ public:
 
 	//Methods
 	void	SetName(char* _pszName)		{ m_cstrName = _pszName;			}
-	char* GetName()									{ return m_cstrName.Buffer(); }
+	const char* GetName()									{ return m_cstrName.Buffer(); }
 
 
 
@@ -426,7 +426,7 @@ public:
 
 	//Methods
 	void	SetName(char* _pszName)		{ m_cstrName = _pszName;			}
-	char* GetName()									{ return m_cstrName.Buffer(); }
+	const char* GetName()									{ return m_cstrName.Buffer(); }
 
 
 
