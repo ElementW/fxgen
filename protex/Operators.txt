@@ -1,0 +1,233 @@
+-------------------------
+List of FXGen operators
+25 October 2007
+-------------------------
+
+
+
+-------------------
+Render Operators
+-------------------
+
+Name: Flat
+Purpose: Create a flat texture of given color.
+Details:
+Inputs: no
+
+Name: Cloud
+Purpose:
+Details: Clouds are constructed from 2 colors. If you it doesn't fit your needs,
+make the colors semi-transparent and Add another Cloud.
+Inputs: no
+
+Name: Gradient
+Purpose:
+Details: Each corner of the texture has unique color.
+Inputs: no
+
+Name: Cell
+Purpose: Create a texture consisting of cells aligned in a grid, or a chessboard.
+Details: Cells can be irregular. If considered bump map, they have pyramid form.
+Inputs: no
+
+Name: Noise
+Purpose:
+Details: White noise of high quality. Texture can be filtered into a color.
+Inputs: no
+
+Name: Vector
+Purpose:
+Details: can render vector graphics. The Editor is also equipped with a
+converter that can import SVG data to the vector operator.
+Inputs: no
+
+-------------------
+Combine Operators
+-------------------
+
+Name: Nop
+Purpose: No operation.
+Details: Copies input to output.
+Inputs: 1
+
+Name: Rect
+Purpose: Draw a rectangle on top of previous content.
+Details:
+Inputs: 1
+
+Name: Pixels
+Purpose: Draw a number of pixels at random positions.
+Details:
+Inputs: 1
+
+Name: Add
+Purpose: Combine inputs together.
+Details: Provides several ways of combining. Clamps bitmap to first input size.
+Modes:
+Add Clamp
+Add Wrap
+Sub Clamp
+Sub Wrap
+Multiply
+Multiply x2
+Blend
+Alpha
+Layer (uses alpha channel)
+Inputs: arbitrary
+
+Name: Glow
+Purpose: Render a glow.
+Details: Glow is a blurred, filled ellipse of given color, that is added to
+existing content.
+Inputs: 1
+
+Name: Crack
+Purpose: Create lines that can be randomly cracked or follow a normal map.
+Details: Number, length and variation of cracked lines can be set; high quality
+mode is available.
+
+Normal tracking
+-----------------
+Lines are drawn where normals look at sides (r, g channels are set to
+something different than 127), and according the difference between alpha 
+channel and normals elevation. By default, normals are rotated 90 degrees 
+with X axis flipped, so that they "wrap" objects.
+
+Inputs: 1-2
+
+Name: Lerp
+Purpose: Linear interpolation. Mix first two inputs (a, b) in proportions given
+by third input (c).
+Details: Each color channel is processed separately. Equation: x = bc + a(1-c)
+Inputs: 3
+
+-------------------
+Distord Operators
+-------------------
+
+Name: RotoZoom
+Purpose: Rotate, scale and tile input.
+Details: Can change bitmap size.
+Inputs: 1
+
+Name: Distort
+Purpose: Apply normal (ie. vector) map to a bitmap.
+Details:
+Inputs: 2
+
+Name: Vortex
+Purpose: Twist some fragment of input bitmap.
+Details:
+Inputs: 1
+
+Name: Lookup
+Purpose: Copy pixels from first input (x,y), given coordinates from second input
+(red,green).
+Details: x = w * red, y = h * green
+Inputs: 2
+
+-------------------
+Filter Operators
+-------------------
+
+Name: Blur
+Purpose: Reduce sharpness ;)
+Details: Two modes: Box and Gaussian.
+Inputs: 1
+
+Name: Colors
+Purpose: Apply a color filter and color light, adjust contrast, brightness and
+alpha.
+Details:
+Inputs: 1
+
+Name: Light
+Purpose: Apply an illumination on a curved surface.
+Details: First input is considered texture, second is normal map, third is
+per-pixel occlusion.
+Ambient, diffuse and specular light can have different colors and intensity.
+Inputs: 2-4(?)
+
+Name: Normals
+Purpose: Convert height map to normal map.
+Details: 3-tap(?) Sobel.
+Inputs: 1
+
+Name: Abnormals
+Purpose: Modify a normal map. May be used for shiny surfaces.
+Details: Can take normal, height or quaternion map as second input.
+
+Map translation
+----------------
+Alpha channel - a(0,255) -> angle(0,2pi)
+Coords - r(0,255) -> x(-1,1)
+Height map - luminance(0,255) -> angle(0,2pi) (axis is Z)
+Normal map - is blended with the source.
+
+Options
+---------
+Rotation - w(0,1) -> angle(0,2pi), rest are axis direction coordinates
+Sensitivity - (0,255) -> angle(0,2pi) * map alpha
+Compensation - How to deal with map
+Mirror - For broken normal maps ;)
+
+Inputs: 1-2
+
+Name: AlphaMask
+Purpose: 1) Extract alpha channel as an opaque monochrome bitmap. or 2) multiply
+alpha channel with second input luminance, or 3) use second input as color alpha
+mask. Luminance is not taken into account.
+Details:
+Inputs: 1-2
+
+Name: Invert
+Purpose: Invert all color channels. Alpha is left unchanged - use Colors filter
+to adjust alpha.
+Details: r:=1-r, g:=1-g, b:=1-b
+Inputs: 1
+
+Name: Threshold
+Purpose: Change luminance curve around given value.
+Details: Several ways.
+Inputs: 1
+
+Name: Alpha
+Purpose: Extract single color (light green #4C951D) intensity, replace it with
+white smoke, discard the rest.
+Details:
+Inputs: 1
+
+Name: Segment
+Purpose:
+Details: takes segments input 1 based on a threshold, and colors each segment
+based on input 2
+Inputs: 2
+
+Name: Dilate
+Purpose:
+Details: expands bright areas over darker areas
+Inputs: 1
+
+-------------------
+Misc Operators
+-------------------
+
+Name: Store
+Purpose: Assign the bitmap a name accessible from within the project.
+Details:
+Inputs: 1
+
+Name: StoreResult
+Purpose: Assign the bitmap a name accessible from outside the project.
+Details:
+Inputs: 1
+
+Name: Load
+Purpose: Retrieve a named bitmap within the project.
+Details:
+Inputs: no
+
+Name: ChannelAnimFX1Op
+Purpose: Whatever - todo find out what animations does it create.
+Details:
+Inputs: arbitrary
