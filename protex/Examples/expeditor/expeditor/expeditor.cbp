@@ -54,8 +54,8 @@
 			<Add library="comctl32" />
 			<Add library="msimg32" />
 			<Add library="comdlg32" />
-			<Add library="..\..\..\..\..\..\..\GTK\lib\libcairo.dll.a" />
-			<Add library="..\..\..\..\..\..\..\GTK\lib\libcairomm-1.0.dll.a" />
+			<Add library="..\..\..\..\..\..\..\..\GTK\lib\libcairo.dll.a" />
+			<Add library="..\..\..\..\..\..\..\..\GTK\lib\libcairomm-1.0.dll.a" />
 		</Linker>
 		<Unit filename="..\..\..\Src\Editor\Editor.cpp" />
 		<Unit filename="..\..\..\Src\Editor\Editor.h" />
