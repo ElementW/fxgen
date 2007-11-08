@@ -33,14 +33,14 @@ namespace noise
 
     /// @addtogroup libnoise
     /// @{
-    
+
     /// @addtogroup modules
     /// @{
-    
+
     /// @defgroup combinermodules Combiner Modules
     /// @addtogroup combinermodules
     /// @{
-    
+
     /// Noise module that outputs the sum of the two output values from two
     /// source modules.
     ///
@@ -54,6 +54,9 @@ namespace noise
 
         /// Constructor.
         Add ();
+        #ifdef __GNUC__
+        virtual ~Add (){}
+        #endif
 
         virtual int GetSourceModuleCount () const
         {

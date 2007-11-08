@@ -14,5 +14,6 @@
 		<Project filename="..\Examples\BMP Extractor\test.cbp" />
 		<Project filename="..\Examples\expeditor\expeditor\expeditor.cbp" active="1" />
 		<Project filename="..\Examples\Test files\various-tests\various-tests.cbp" />
+		<Project filename="..\Src\noise\libnoise.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

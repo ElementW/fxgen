@@ -238,9 +238,9 @@ namespace noise
 		double GetRadius(){ return m_radius; }
 
 		void SetNumCraters( int N )
-		{ 
+		{
 			if( N < MAX_NUM_CRATERS-1 )
-				m_numCraters = N; 
+				m_numCraters = N;
 			else m_numCraters = MAX_NUM_CRATERS-1;
 		}
 		int GetNumCraters(){ return m_numCraters; }
@@ -274,8 +274,11 @@ namespace noise
 
 		  double craterHeight;
 
+#ifndef __GNUC__
 		  noise::module::CraterSpheres::Crater *m_craters[9000];
-
+#else
+		  Crater *m_craters[9000];
+#endif
 
 		  double m_rmin, m_rmax;
 		  double m_depthmin, m_depthmax;
@@ -300,11 +303,11 @@ namespace noise
 
 		double LIM_MIN, LIM_MAX;
 
-		
+
 
 
 	//	double b, d, al;
-	
+
 
     };
 

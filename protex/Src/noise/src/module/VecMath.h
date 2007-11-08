@@ -15,15 +15,15 @@
 
 // TODO: put all of this inside a namespace,
 // so that I can look up functions using MATH::
-// namepace MATH { 
+// namepace MATH {
 
 #ifndef __MATH_MACROS_AND_CONSTANTS
 #define __MATH_MACROS_AND_CONSTANTS
 
 //-----------------------------------------------------------------------------
-// Globals and Macros 
+// Globals and Macros
 //-----------------------------------------------------------------------------
-#define LERP(m,x0,x1)       ((x0) + (m)*((x1)-(x0)))      
+#define LERP(m,x0,x1)       ((x0) + (m)*((x1)-(x0)))
 #define POW(x)              ( x*x )
 #define RMAG(v)             ( POW(v.x) + POW(v.y) + POW(v.z) )
 #define PMAG(v)             ( POW(v->x) + POW(v->y) + POW(v->z) )
@@ -33,14 +33,14 @@
 #define RND()               (((float)rand())/RAND_MAX)
 
 
-//#define epsilon FLT_EPSILON     
+//#define epsilon FLT_EPSILON
 const float epsilon = (const float)1e-6;
 
 /* needs a damping */
 
 const float infinity = FLT_MAX/10;
 
-//inline float fmax( float a, float b) { return (a>b?a:b); }  
+//inline float fmax( float a, float b) { return (a>b?a:b); }
 
 static inline float DegToRad(float a) { return a*0.01745329252f; };
 static inline float RadToDeg(float a) { return a*57.29577951f; };
@@ -53,7 +53,7 @@ static inline float RadToDeg(float a) { return a*57.29577951f; };
 #define IsNegative(f) (f<-epsilon)
 
 
-//#define DegToRad(a)  
+//#define DegToRad(a)
 
 #ifndef PI
 #ifdef _USED3D
@@ -90,59 +90,59 @@ public:
 #define __VECTOR3
 
 //-----------------------------------------------------------------------------
-// Vec3 
+// Vec3
 //-----------------------------------------------------------------------------
- 
+
 class Vec3
 #ifdef _USED3D
 : public D3DXVECTOR3
 #endif
 {
 public:
-	
+
 
 	//-----------------------------------------------------------------------------
 	// Constructors/Destructor
 	//-----------------------------------------------------------------------------
-	
+
 	Vec3();
-	
+
 	Vec3
-	( 
-		float X, 
-		float Y, 
-		float Z 
+	(
+		float X,
+		float Y,
+		float Z
 	);
-	
-	Vec3( Vec3 &rhs );
-	
+
+	Vec3( const Vec3 &rhs );
+
 	Vec3( Vec3 *ptr );
-	
+
 	virtual ~Vec3();
 
 
 	//-----------------------------------------------------------------------------
 	// Operators
 	//-----------------------------------------------------------------------------
-	
+
 	bool operator==( const Vec3 &rhs );
 
 	bool operator!=( const Vec3 &rhs );
 
 	void operator+=( const Vec3 &rhs );
-	
+
 	void operator-=( const Vec3 &rhs );
 
 	void operator+=( const float P );
 
 	void operator-=( const float P );
-	
+
 	void operator*=( const float P );
-	
+
 	void operator/=( const float P );
 
 #ifdef _USED3D
-	
+
 	void operator+=( const D3DXVECTOR3 &rhs );
 
 	void operator-=( const D3DXVECTOR3 &rhs );
@@ -153,29 +153,29 @@ public:
 	//-----------------------------------------------------------------------------
 	// Inline Operators
 	//-----------------------------------------------------------------------------
-	
+
 	inline Vec3 operator + ( const Vec3& v ) const
 	{
 		return Vec3(x + v.x, y + v.y, z + v.z);
 	}
-	
+
 	inline Vec3 operator - ( const Vec3& v ) const
 	{
 		return Vec3(x - v.x, y - v.y, z - v.z);
 	}
-	
+
 	inline Vec3 operator * ( float f ) const
 	{
 		return Vec3(x * f, y * f, z * f);
 	}
-	
+
 	inline Vec3 operator / ( float f ) const
 	{
 	    float fInv = 1.0f / f;
 		return Vec3(x * fInv, y * fInv, z * fInv);
 	}
-	
-	Vec3 operator = ( Vec3 &v ) 
+
+	Vec3 operator = ( Vec3 &v )
 	{
 		x = v.x;
 		y = v.y;
@@ -191,7 +191,7 @@ public:
 		if( i == 2 ) return z;
 	}
 
-#ifdef _USED3D	
+#ifdef _USED3D
 
 	inline Vec3 operator + ( const D3DXVECTOR3& v ) const
 	{
@@ -203,7 +203,7 @@ public:
 		return Vec3(x - v.x, y - v.y, z - v.z);
 	}
 
-	void operator = ( D3DXVECTOR3 &v ) 
+	void operator = ( D3DXVECTOR3 &v )
 	{
 		x = v.x;
 		y = v.y;
@@ -222,8 +222,8 @@ public:
 	Vec3 YAxis(){ return Vec3( 0.0f, 1.0f, 0.0f ); }
 
 	Vec3 ZAxis(){ return Vec3( 0.0f, 0.0f, 1.0f ); }
-	
-	
+
+
 	void Set( float _x, float _y, float _z )
 	{
 		x = _x;  y = _y;  z = _z;
@@ -231,16 +231,16 @@ public:
 
 	inline float Dot( const Vec3 &rhs )
 	{
-		return x*rhs.x + 
+		return x*rhs.x +
 			   y*rhs.y +
 			   z*rhs.z;
 	}
-	
+
 	Vec3 CrossProduct( Vec3 &out, const Vec3 &rhs );
 	Vec3 Cross( const Vec3 &v1, const Vec3 &v2 );
-	
+
 	inline float Magnitude();
-	
+
 	void Normalize();
 
 #ifdef _USED3D
@@ -265,7 +265,7 @@ public:
 
 
 //-----------------------------------------------------------------------------
-// Vec3 support functions - these form the bulk of the class 
+// Vec3 support functions - these form the bulk of the class
 // functionality since they provide compatibility with the D3DXVECTOR3
 //-----------------------------------------------------------------------------
 
@@ -278,7 +278,7 @@ float Distance( Vec3 &v1, Vec3 &v2 );
 
 inline Vec3 normalize( Vec3 v ){ v.Normalize(); return v; }
 
-//Vec3 cross( Vec3 &v1, Vec3 &v2 );//{ return v1.Cross(v1, v2); } 
+//Vec3 cross( Vec3 &v1, Vec3 &v2 );//{ return v1.Cross(v1, v2); }
 
 
 inline float AngleBetweenVectors( Vec3 v1, Vec3 v2 )
@@ -351,19 +351,19 @@ public:
 	}
 
 	void operator+=( const Vec4 &rhs );
-	
+
 	void operator-=( const Vec4 &rhs );
 
 	void operator+=( const float P );
 
 	void operator-=( const float P );
-	
+
 	void operator*=( const float P );
-	
+
 	void operator/=( const float P );
 
 #ifdef _USED3D
-	
+
 	void operator+=( const D3DXVECTOR4 &rhs );
 
 	void operator-=( const D3DXVECTOR4 &rhs );
@@ -374,14 +374,14 @@ public:
 	{
 		return ( x*rhs.x +y*rhs.y +z*rhs.z +w*rhs.w );
 	}
-	
+
 	Vec4 CrossProduct( Vec4 &out, const Vec4 &rhs );
-	
+
 	inline float Magnitude()
 	{
 		return sqrt( this->Dot( *this ));
 	}
-	
+
 	void Normalize()
 	{
 		float mag_recip = 1/Magnitude();
@@ -439,9 +439,9 @@ struct Ray
 			float i2 = b + det;
 			if (i2 > 0)
 			{
-				if (i1 < 0) 
+				if (i1 < 0)
 				{
-					if (i2 < dist) 
+					if (i2 < dist)
 					{
 						dist = i2;
 						retval = (int)INPRIM;
@@ -473,7 +473,7 @@ struct Ray
 //-----------------------------------------------------------------------------
 
 
-class Mat44 
+class Mat44
 #ifdef _USED3D
 : public D3DXMATRIXA16
 #endif
@@ -486,38 +486,38 @@ public:
 	//-----------------------------------------------------------------------------
 
 	Mat44();
-	
+
 	Mat44
-	( 
+	(
 		float m11, float m12, float m13, float m14,
 		float m21, float m22, float m23, float m24,
 		float m31, float m32, float m33, float m34,
-		float m41, float m42, float m43, float m44 
+		float m41, float m42, float m43, float m44
 	);
-	
+
 	Mat44( Mat44 &rhs );
-	
+
 	Mat44( Mat44 *ptr );
-	
+
 	virtual ~Mat44();
 
 
 	//-----------------------------------------------------------------------------
 	// Operators
 	//-----------------------------------------------------------------------------
-	
+
 	void operator+=( Mat44 &rhs );
-	
+
 	void operator-=( Mat44 &rhs );
-	
+
 	void operator*=( Mat44 &rhs );
-	
+
 	void operator/=( float F );
-	
+
 	void operator=(Mat44 &rhs);
 
 	float& operator()( int i, int j ){ return m[i][j]; }
-	
+
 #ifdef _USED3D
 
 	void operator-=( D3DXMATRIXA16 &rhs );
@@ -538,7 +538,7 @@ public:
 	void MultiplyVector( Vec3 &out, const Vec3 &v );
 
 	void Set( Vec3 R, Vec3 U, Vec3 L, Vec3 P );
-	
+
 #ifdef _USED3D
 
 	void MultiplyVector( Vec3 &out, const D3DXVECTOR3 &v );
@@ -559,7 +559,7 @@ public:
 					_31,  _32,  _33,  _34,
 					_41,  _42,  _43,  _44;
 		};
-		float m[4][4]; 
+		float m[4][4];
 		float mm[16];
 	};
 
@@ -569,7 +569,7 @@ public:
 
 
 //-----------------------------------------------------------------------------
-// Mat44 support functions - these form the bulk of the class 
+// Mat44 support functions - these form the bulk of the class
 // functionality and they provide compatibility with the D3DXMATRIXA16
 //-----------------------------------------------------------------------------
 
@@ -579,7 +579,7 @@ void InvertFast( Mat44 &out, const Mat44 &m1 );
 void InvertFull( Mat44 &out, Mat44 &m1 );
 void Adjoint( Mat44 &out, Mat44 &m1 );
 float Determinant(Mat44 &m);
-inline float Minor( Mat44& m, const int r0, const int r1, const int r2, 
+inline float Minor( Mat44& m, const int r0, const int r1, const int r2,
 	                             const int c0, const int c1, const int c2 );
 void Transpose( Mat44 &out, const Mat44 &m );
 void TransposeAdd( Mat44 &out, const Mat44 &m1, const Mat44 &m2 );
@@ -592,8 +592,8 @@ void RotationMatrixZ( Mat44 &out, float angle );
 void RotationMatrixAxis( Mat44 &out, Vec3& axis, float angle );
 Mat44 LookAtMatrix44( Vec3 &camPos, Vec3 &camUp, Vec3 &target );
 Mat44 PerspectiveMatrix44( float fovY, float aspect, float n, float f );
-Mat44 FrustumMatrix44( float l, float r, float b, float t, float n, float f ); 
-Mat44 OrthoMatrix44( float l, float r, float b, float t, float n, float f ); 
+Mat44 FrustumMatrix44( float l, float r, float b, float t, float n, float f );
+Mat44 OrthoMatrix44( float l, float r, float b, float t, float n, float f );
 Mat44 OrthoNormalMatrix44( const Vec3 &xdir, const Vec3 &ydir, const Vec3 &zdir );
 void ScaleMatrix44( Mat44& out, float sx, float sy, float sz );
 
@@ -621,7 +621,7 @@ void MatMult( Mat44 &out, const D3DXMATRIXA16 &m1, const D3DXMATRIXA16 &m2 );
 #endif
 
 //-----------------------------------------------------------------------------
-// Mat44 global operators - these provide compatibility 
+// Mat44 global operators - these provide compatibility
 // with the D3DXVECTOR3
 //-----------------------------------------------------------------------------
 
@@ -670,7 +670,7 @@ public:
 	//-----------------------------------------------------------------------------
 	// Constructors/Destructors
 	//-----------------------------------------------------------------------------
-	
+
 	Quaternion();
 	~Quaternion();
 
@@ -720,11 +720,11 @@ VOID QuaternionMultiply( float& Qx, float& Qy, float& Qz, float& Qw,
                          float Ax, float Ay, float Az, float Aw,
                          float Bx, float By, float Bz, float Bw );
 VOID QuaternionSlerp
-( 
+(
 	float& Qx, float& Qy, float& Qz, float& Qw,
     float  Ax, float  Ay, float  Az, float  Aw,
     float  Bx, float  By, float  Bz, float  Bw,
-    float fAlpha 
+    float fAlpha
 );
 
 

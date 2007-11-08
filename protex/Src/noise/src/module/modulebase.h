@@ -229,6 +229,9 @@ namespace noise
         Module (int sourceModuleCount);
 
         /// Destructor.
+        #ifdef __GNUC__
+        virtual
+        #endif
         ~Module ();
 
         /// Returns a reference to a source module connected to this noise
@@ -351,7 +354,7 @@ namespace noise
 
     /// @}
 
-  } 
+  }
 
 }
 

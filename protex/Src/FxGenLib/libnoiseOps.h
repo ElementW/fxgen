@@ -937,7 +937,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Libnoise Misc"; }	//!< Operator's Category
 
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
-	virtual char* GetLibnoiseCacheUserName();
+	char* GetUserName();
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor = 1.0);
@@ -962,8 +962,6 @@ public:
 	virtual	udword	GetColor()		{ return 0x00008600;	}
 	virtual const char*		GetName()			{ return "L_LoadCache"; }		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Libnoise Misc"; }	//!< Operator's Category
-	virtual char*			GetLibnoiseCacheUserName();
-
 	noise::module::Module* GetLibnoiseModule() { return &m_module; }
 	char* GetUserName();
 
@@ -1161,5 +1159,6 @@ public:
 
 	noise::utils::RendererImage m_renderer;
 };
+
 
 

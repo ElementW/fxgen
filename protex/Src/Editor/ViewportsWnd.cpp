@@ -246,10 +246,6 @@ void NViewportsWnd::DisplayTexture(NObject* pobj)
 	//glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB_EXT, GL_MODULATE);
 	//glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB_EXT, GL_TEXTURE);
 	//glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB_EXT, GL_PRIMARY_COLOR_EXT);
-#ifdef __GNUC__
-#warning Unsure
-#endif
-//<<<<<<< .mine
 	if (m_bFiltering)
 	{
 		if (m_renderer.m_bHasMipmapGeneration && !m_bOrtho)
