@@ -581,22 +581,6 @@ bool NFloatProp::AddValue(sdword dwDelta)
 //-----------------------------------------------------------------
 IMPLEMENT_CLASS(NCFloatProp, NPropertyItem);
 
-void NCFloatProp::DrawItem(NGraphics* pdc, NRect& rcItem)
-{
-	m_strValue.Format("%0.3f", m_pvarValue->fVal);
-	pdc->DrawText(m_strValue.Buffer(), rcItem, DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
-}
-
-bool NCFloatProp::BeginEdit(NRect& rcItem)
-{
-	return false;
-}
-
-bool NCFloatProp::EndEdit(bool bSaveChanged)
-{
-	return false;
-}
-
 bool NCFloatProp::AddValue(sdword dwDelta)
 {
 	m_pvarValue->fVal = m_pvarValue->fVal + ((float)dwDelta)/1000.0f;

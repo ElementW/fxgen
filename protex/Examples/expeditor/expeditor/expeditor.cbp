@@ -19,6 +19,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-pg -lgmon" />
+					<Add library="..\..\..\lib\libnoise_d.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -32,6 +33,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add library="..\..\..\lib\libnoise.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -150,103 +152,6 @@
 		<Unit filename="..\..\..\Src\GUILib\p3dmathspline.h" />
 		<Unit filename="..\..\..\Src\GUILib\pch.cpp" />
 		<Unit filename="..\..\..\Src\GUILib\pch.h" />
-		<Unit filename="..\..\..\Src\noise\TurbulenceGenerator.h" />
-		<Unit filename="..\..\..\Src\noise\src\Makefile" />
-		<Unit filename="..\..\..\Src\noise\src\Sources" />
-		<Unit filename="..\..\..\Src\noise\src\basictypes.h" />
-		<Unit filename="..\..\..\Src\noise\src\exception.h" />
-		<Unit filename="..\..\..\Src\noise\src\interp.h" />
-		<Unit filename="..\..\..\Src\noise\src\latlon.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\latlon.h" />
-		<Unit filename="..\..\..\Src\noise\src\mathconsts.h" />
-		<Unit filename="..\..\..\Src\noise\src\misc.h" />
-		<Unit filename="..\..\..\Src\noise\src\model\DepthPlane.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\model\DepthPlane.h" />
-		<Unit filename="..\..\..\Src\noise\src\model\Volume.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\model\Volume.h" />
-		<Unit filename="..\..\..\Src\noise\src\model\cylinder.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\model\cylinder.h" />
-		<Unit filename="..\..\..\Src\noise\src\model\line.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\model\line.h" />
-		<Unit filename="..\..\..\Src\noise\src\model\model.h" />
-		<Unit filename="..\..\..\Src\noise\src\model\plane.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\model\plane.h" />
-		<Unit filename="..\..\..\Src\noise\src\model\sphere.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\model\sphere.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\FractalBrownianMotion.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\FractalBrownianMotion.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\HeteroTerrain.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\HeteroTerrain.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\HybridMulti.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\HybridMulti.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\MultiFractal.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\MultiFractal.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\TurbulenceGenerator.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\TurbulenceGenerator.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\abs.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\abs.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\add.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\add.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\billow.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\billow.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\blend.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\blend.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\cache.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\cache.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\checkerboard.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\checkerboard.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\clamp.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\clamp.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\const.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\const.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\curve.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\curve.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\cylinders.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\cylinders.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\displace.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\displace.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\exponent.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\exponent.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\invert.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\invert.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\max.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\max.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\min.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\min.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\module.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\modulebase.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\modulebase.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\multiply.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\multiply.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\perlin.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\perlin.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\power.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\power.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\ridgedmulti.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\ridgedmulti.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\rotatepoint.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\rotatepoint.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\scalebias.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\scalebias.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\scalepoint.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\scalepoint.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\select.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\select.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\spheres.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\spheres.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\terrace.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\terrace.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\translatepoint.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\translatepoint.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\turbulence.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\turbulence.h" />
-		<Unit filename="..\..\..\Src\noise\src\module\voronoi.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\module\voronoi.h" />
-		<Unit filename="..\..\..\Src\noise\src\noise.h" />
-		<Unit filename="..\..\..\Src\noise\src\noisegen.cpp" />
-		<Unit filename="..\..\..\Src\noise\src\noisegen.h" />
-		<Unit filename="..\..\..\Src\noise\src\vectortable.h" />
-		<Unit filename="..\..\..\Src\noiseutils\noiseutils.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

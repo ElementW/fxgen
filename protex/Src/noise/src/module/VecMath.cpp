@@ -24,11 +24,11 @@ Vec3::Vec3( float X, float Y, float Z )
 	y = Y;
 	z = Z;
 }
-	
+
 //-----------------------------------------------------------------------------
 // Deep copy constructor
 //-----------------------------------------------------------------------------
-Vec3::Vec3( Vec3 &rhs )	
+Vec3::Vec3( const Vec3 &rhs )
 {
 	x = rhs.x;
 	y = rhs.y;
@@ -42,7 +42,7 @@ Vec3::Vec3( Vec3 *ptr )
 {
 	x = ptr->x;
 	y = ptr->y;
-	z = ptr->z;	
+	z = ptr->z;
 }
 
 //-----------------------------------------------------------------------------
@@ -163,7 +163,7 @@ void Vec3::operator*=( const float P )
 //-----------------------------------------------------------------------------
 inline float Vec3::Dot( const D3DXVECTOR3 &rhs )
 {
-	return x*rhs.x + 
+	return x*rhs.x +
 		   y*rhs.y +
 		   z*rhs.z;
 }
@@ -323,7 +323,7 @@ void Cross( Vec3 &vout, const Vec3 &v1, const Vec3 &v2 )
 
 #ifdef _USED3D
 //-----------------------------------------------------------------------------
-// Cross Product between references to a Vec3 and a D3DXVECTOR3 
+// Cross Product between references to a Vec3 and a D3DXVECTOR3
 // the result is stored in out
 //-----------------------------------------------------------------------------
 void Cross( Vec3 &out, const Vec3 &v1, const D3DXVECTOR3 &v2 )
@@ -334,7 +334,7 @@ void Cross( Vec3 &out, const Vec3 &v1, const D3DXVECTOR3 &v2 )
 }
 
 //-----------------------------------------------------------------------------
-// Cross Product between references to a D3DXVECTOR3 and a Vec3 
+// Cross Product between references to a D3DXVECTOR3 and a Vec3
 // the result is stored in out
 //-----------------------------------------------------------------------------
 void Cross( Vec3 &out, const D3DXVECTOR3 &v1, const Vec3 &v2 )
@@ -560,7 +560,7 @@ void Mat44::operator/=( float F )
 	float recip = 1/F;
 	_11 *= recip;  _12 *= recip;  _13 *= recip;  _14 *= recip;
 	_21 *= recip;  _22 *= recip;  _23 *= recip;  _24 *= recip;
-	_31 *= recip;  _32 *= recip;  _33 *= recip;  _34 *= recip;	
+	_31 *= recip;  _32 *= recip;  _33 *= recip;  _34 *= recip;
 	_41 *= recip;  _42 *= recip;  _43 *= recip;  _44 *= recip;
 }
 
@@ -568,7 +568,7 @@ void Mat44::Set( Vec3 R, Vec3 U, Vec3 L, Vec3 P )
 {
 	_11 = R.x;  _12 = R.y;  _13 = R.z;  _14 = 0.0F;
 	_21 = U.x;  _22 = U.y;  _23 = U.z;  _24 = 0.0F;
-	_31 = L.x;  _32 = L.y;  _33 = L.z;  _34 = 0.0F;	
+	_31 = L.x;  _32 = L.y;  _33 = L.z;  _34 = 0.0F;
 	_41 = P.x;  _42 = P.y;  _43 = P.z;  _44 = 1.0F;
 }
 
@@ -580,9 +580,9 @@ void Mat44::MultiplyVector( Vec3 &out, const Vec3 &v )
     out.x = v.x*_11 + v.y*_21 + v.z* _31 + _41;
     out.y = v.x*_12 + v.y*_22 + v.z* _32 + _42;
     out.z = v.x*_13 + v.y*_23 + v.z* _33 + _43;
-    
+
 	float w = v.x*_14 + v.y*_24 + v.z* _34 + _44;
- 
+
 #ifdef _MYDEBUG
     if( fabs( w ) < g_EPSILON )
         return;
@@ -604,9 +604,9 @@ void Mat44::MultiplyVector( Vec3 &out, const D3DXVECTOR3 &v )
     out.x = v.x*_11 + v.y*_21 + v.z* _31 + _41;
     out.y = v.x*_12 + v.y*_22 + v.z* _32 + _42;
     out.z = v.x*_13 + v.y*_23 + v.z* _33 + _43;
-    
+
 	float w = v.x*_14 + v.y*_24 + v.z* _34 + _44;
- 
+
 #ifdef _MYDEBUG
     if( fabs( w ) < g_EPSILON )
         return;
@@ -654,7 +654,7 @@ void VectorMatrixMultiply( Vec3& vDest, Vec3& vSrc, Mat44& mat)
     float y = vSrc.x*mat._12 + vSrc.y*mat._22 + vSrc.z* mat._32 + mat._42;
     float z = vSrc.x*mat._13 + vSrc.y*mat._23 + vSrc.z* mat._33 + mat._43;
     float w = vSrc.x*mat._14 + vSrc.y*mat._24 + vSrc.z* mat._34 + mat._44;
- 
+
 #ifdef _MYDEBUG
     if( fabs( w ) < g_EPSILON )
         return;
@@ -693,7 +693,7 @@ void InvertFast( Mat44 &out, const Mat44 &m1 )
 	float fDet =  ( m1._11 * ( m1._22 * m1._33 - m1._23 * m1._32 ) -
                     m1._12 * ( m1._21 * m1._33 - m1._23 * m1._31 ) +
                     m1._13 * ( m1._21 * m1._32 - m1._22 * m1._31 ) );
-    
+
 	float fDetInv = 1.0f / fDet;
 
     out._11 =  fDetInv * ( m1._22 * m1._33 - m1._23 * m1._32 );
@@ -743,7 +743,7 @@ void InvertFull( Mat44 &out, Mat44 &m1 )
 
 	float det_recip = 1 / det;
 
-	// Compute adjoint while mulitplying by the reciprocal 
+	// Compute adjoint while mulitplying by the reciprocal
 	// of the determinant - TODO:- as above
 	out._11 = Minor( m1, 1, 2, 3, 1, 2, 3 ) * det_recip;
     out._12 =-Minor( m1, 0, 2, 3, 1, 2, 3 ) * det_recip;
@@ -826,7 +826,7 @@ float Determinant(Mat44 &m)
 //-----------------------------------------------------------------------------
 // Gets a minor from a Mat44
 //-----------------------------------------------------------------------------
-inline float Minor( Mat44& m, const int r0, const int r1, const int r2, 
+inline float Minor( Mat44& m, const int r0, const int r1, const int r2,
 	                             const int c0, const int c1, const int c2)
 {
    return m(r0,c0) * (m(r1,c1) * m(r2,c2) - m(r2,c1) * m(r1,c2)) -
@@ -851,16 +851,16 @@ void Transpose( Mat44 &out, const Mat44 &m )
 //-----------------------------------------------------------------------------
 void TransposeAdd( Mat44 &out, const Mat44 &m1, const Mat44 &m2 )
 {
-	out._11 = m1._11 + m2._11;  out._12 = m1._21 + m2._12;  
+	out._11 = m1._11 + m2._11;  out._12 = m1._21 + m2._12;
 	out._13 = m1._31 + m2._13;  out._14 = m1._41 + m2._14;
-	
-	out._21 = m1._12 + m2._21;  out._22 = m1._22 + m2._22;  
+
+	out._21 = m1._12 + m2._21;  out._22 = m1._22 + m2._22;
 	out._23 = m1._32 + m2._23;  out._24 = m1._42 + m2._24;
 
-	out._31 = m1._13 + m2._31;  out._32 = m1._23 + m2._32;  
+	out._31 = m1._13 + m2._31;  out._32 = m1._23 + m2._32;
 	out._33 = m1._33 + m2._33;  out._34 = m1._43 + m2._34;
-	
-	out._41 = m1._14 + m2._41;  out._42 = m1._24 + m2._42;  
+
+	out._41 = m1._14 + m2._41;  out._42 = m1._24 + m2._42;
 	out._43 = m1._34 + m2._43;  out._44 = m1._44 + m2._44;
 }
 
@@ -971,12 +971,12 @@ void MatMult( Mat44 &out, const D3DXMATRIXA16 &m1, const D3DXMATRIXA16 &m2 )
 #endif
 
 //-----------------------------------------------------------------------------
-// copies in into out 
+// copies in into out
 //-----------------------------------------------------------------------------
 void MatCpy( Mat44 &out, Mat44 &in )
 {
 	memcpy( (void*)&out, (void*)&in, sizeof( float ) * 16 );
-	
+
 /*
 	out._11 = in._11;  out._12 = in._12;  out._13 = in._13;  out._14 = in._14;
 	out._21 = in._21;  out._22 = in._22;  out._23 = in._23;  out._24 = in._24;
@@ -988,7 +988,7 @@ void MatCpy( Mat44 &out, Mat44 &in )
 //-----------------------------------------------------------------------------
 // Return a 3D translation Mat44
 //-----------------------------------------------------------------------------
-Mat44 TranslateMatrix44(float x, float y, float z) 
+Mat44 TranslateMatrix44(float x, float y, float z)
 {
   Mat44 ret;
 
@@ -1014,8 +1014,8 @@ void RotationMatrixX( Mat44 &out, float angle )
 	out(0,1) =  0.0F; out(1,1) =  cosA; out(2,1) = -sinA;
 	out(0,2) =  0.0F; out(1,2) =  sinA; out(2,2) =  cosA;
 
-	out(0,3) = 0.0F; 
-	out(1,3) = 0.0F; 
+	out(0,3) = 0.0F;
+	out(1,3) = 0.0F;
 	out(2,3) = 0.0F;
 	out(3,0) = 0.0F;
 	out(3,1) = 0.0F;
@@ -1037,8 +1037,8 @@ void RotationMatrixY( Mat44 &out, float angle )
     out(0,1) =  0.0F; out(1,1) =  1.0F; out(2,1) =  0.0F;
     out(0,2) = -sinA; out(1,2) =  0.0F; out(2,2) =  cosA;
 
-	out(0,3) = 0.0F; 
-	out(1,3) = 0.0F; 
+	out(0,3) = 0.0F;
+	out(1,3) = 0.0F;
 	out(2,3) = 0.0F;
 	out(3,0) = 0.0F;
 	out(3,1) = 0.0F;
@@ -1060,8 +1060,8 @@ void RotationMatrixZ( Mat44 &out, float angle )
     out(0,1) =  sinA; out(1,1) =  cosA; out(2,1) =  0.0F;
     out(0,2) =  0.0F; out(1,2) =  0.0F; out(2,2) =  1.0F;
 
-	out(0,3) = 0.0F; 
-	out(1,3) = 0.0F; 
+	out(0,3) = 0.0F;
+	out(1,3) = 0.0F;
 	out(2,3) = 0.0F;
 	out(3,0) = 0.0F;
 	out(3,1) = 0.0F;
@@ -1081,7 +1081,7 @@ void RotationMatrixAxis( Mat44 &out, Vec3& axis, float angle )
 
 	Vec3 nrm = axis;
 	nrm.Normalize();
-	
+
 	sinA = (float)sin(angle);
 	cosA = (float)cos(angle);
 	invCosA = 1.0F - cosA;
@@ -1119,8 +1119,8 @@ void RotationMatrixAxis( Mat44 &out, Vec3& axis, float angle )
 // Name: LookAtMatrix44
 // Desc: Creates a Look-At Matrix from 3 vectors
 //-----------------------------------------------------------------------------
-Mat44 LookAtMatrix44( Vec3 &camPos,  Vec3 &camUp, 
-                         Vec3 &target ) 
+Mat44 LookAtMatrix44( Vec3 &camPos,  Vec3 &camUp,
+                         Vec3 &target )
 {
 	Mat44 ret;
 
@@ -1148,7 +1148,7 @@ Mat44 LookAtMatrix44( Vec3 &camPos,  Vec3 &camUp,
 //   direction in radians, the aspect ratio of Y/X, and near and
 //   far plane distances.
 //-----------------------------------------------------------------------------
-Mat44 PerspectiveMatrix44( float fovY, float aspect, float n, float f ) 
+Mat44 PerspectiveMatrix44( float fovY, float aspect, float n, float f )
 {
 	Mat44 ret;
 	float angle;
@@ -1187,13 +1187,13 @@ Mat44 PerspectiveMatrix44( float fovY, float aspect, float n, float f )
 // Return a frustum Mat44 given the left, right, bottom, top,
 //   near, and far values for the frustum boundaries.
 //-----------------------------------------------------------------------------
-Mat44 
+Mat44
 FrustumMatrix44
 (
-	float l, float r, 
-    float b, float t, 
+	float l, float r,
+    float b, float t,
 	float n, float f
-) 
+)
 {
 	Mat44 ret;
 	float width = r-l;
@@ -1229,10 +1229,10 @@ FrustumMatrix44
 //-----------------------------------------------------------------------------
 Mat44 OrthoMatrix44
 (
-	float l, float r, 
-    float b, float t, 
+	float l, float r,
+    float b, float t,
 	float n, float f
-) 
+)
 {
 	Mat44 ret;
 	float width = r-l;
@@ -1265,11 +1265,11 @@ Mat44 OrthoMatrix44
 //-----------------------------------------------------------------------------
 // Return an orientation matrix using 3 basis normalized vectors
 //-----------------------------------------------------------------------------
-Mat44 
+Mat44
 OrthoNormalMatrix44
 (
-	const Vec3 &xdir, 
-    const Vec3 &ydir, 
+	const Vec3 &xdir,
+    const Vec3 &ydir,
 	const Vec3 &zdir
 )
 {
@@ -1316,7 +1316,7 @@ VOID QuaternionFromRotation( float& x, float& y, float& z, float& w,
 //-----------------------------------------------------------------------------
 VOID RotationFromQuaternion( Vec3& v, float& fTheta,
                                      float x, float y, float z, float w )
-                                      
+
 {
     fTheta = (float)( acos(w) * 2 );
     v.x    = (float)( x / sinf(fTheta/2) );
@@ -1330,7 +1330,7 @@ VOID RotationFromQuaternion( Vec3& v, float& fTheta,
 //-----------------------------------------------------------------------------
 VOID QuaternionFromAngles( float& x, float& y, float& z, float& w,
                                    float fYaw, float fPitch, float fRoll )
-                                        
+
 {
     float fSinYaw   = (float)sinf(fYaw/2);
     float fSinPitch = (float)sinf(fPitch/2);
@@ -1386,7 +1386,7 @@ VOID QuaternionFromMatrix( float& x, float& y, float& z, float& w,
     float diag2 = - mat._11 + mat._22 - mat._33 + mat._44;
     float diag3 = - mat._11 - mat._22 + mat._33 + mat._44;
     float diag4 = + mat._11 + mat._22 + mat._33 + mat._44;
-    
+
     float max = fmax( diag1, fmax( diag2, fmax( diag3, diag4 ) ) );
     float d   = 1 / ( 2.0f * (float)sqrtf( max ) );
 
@@ -1447,11 +1447,11 @@ VOID QuaternionMultiply( float& Qx, float& Qy, float& Qz, float& Qw,
 //       between two other quaternions by dvFraction.
 //-----------------------------------------------------------------------------
 VOID QuaternionSlerp
-( 
+(
 	float& Qx, float& Qy, float& Qz, float& Qw,
     float  Ax, float  Ay, float  Az, float  Aw,
     float  Bx, float  By, float  Bz, float  Bw,
-    float fAlpha 
+    float fAlpha
 )
 {
     float fScale1;
@@ -1479,7 +1479,7 @@ VOID QuaternionSlerp
         {
             float fTheta    = (float)acos( fCosTheta );
             float fSinTheta = (float)sin( fTheta );
-            
+
             fScale1 = (float)sin( fTheta * (1.0f-fAlpha) ) / fSinTheta;
             fScale2 = (float)sin( fTheta * fAlpha ) / fSinTheta;
         }

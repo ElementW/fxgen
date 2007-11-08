@@ -145,14 +145,18 @@ public:
 //!	\class	NCFloatProp
 //! \brief	Clamped Float Property Item
 //-----------------------------------------------------------------
-class NCFloatProp : public NPropertyItem
+class NCFloatProp : public NFloatProp
 {
 public:
 	DECLARE_CLASS();
-	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
-	virtual bool		BeginEdit	(NRect& rcItem);
-	virtual bool		EndEdit		(bool bSaveChanged=true);
+//	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
+//	virtual bool		BeginEdit	(NRect& rcItem);
+//	virtual bool		MenuEdit	(NRect& rcItem);
+//	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
+	void BuildMenu(NTreeNode* _pnode);
+
+	NMenuCtrl	m_wndMenu;
 };
 
 //-----------------------------------------------------------------
