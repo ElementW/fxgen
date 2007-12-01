@@ -506,13 +506,14 @@ static NVarsBlocDesc blocdescGlowOp[] =
 	VAR(efloat,		true, "RayY",			"0.5",		"NFloatProp")	//4
 	VAR(efloat,		true, "Alpha",		"1.0",		"NFloatProp")	//5
 	VAR(efloat,		true, "Gamma",		"1.0",		"NFloatProp")	//6
+	VAR(eubyte,		true, "Wrap",		"0,[0 (Off), 1 (On)]",	"NUbyteComboProp")	//7
 };
 
 
 NGlowOp::NGlowOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(7, blocdescGlowOp, 1);
+	m_pcvarsBloc = AddVarsBloc(8, blocdescGlowOp, 1);
 	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
 	m_pcvarsBloc->SetMapVarBlocDesc(7, mapblocdescGlowOp);
 }
@@ -536,6 +537,7 @@ udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	//Get Variables Values
 	RGBA col;
 	float fCenterX, fCenterY, fRayX, fRayY, fAlpha, fGamma;
+	ubyte wrap;
 	m_pcvarsBloc->GetValue(0, _ftime, (udword&)col);
 	m_pcvarsBloc->GetValue(1, _ftime, fCenterX);
 	m_pcvarsBloc->GetValue(2, _ftime, fCenterY);
@@ -543,6 +545,7 @@ udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	m_pcvarsBloc->GetValue(4, _ftime, fRayY);
 	m_pcvarsBloc->GetValue(5, _ftime, fAlpha);
 	m_pcvarsBloc->GetValue(6, _ftime, fGamma);
+	m_pcvarsBloc->GetValue(7, _ftime, wrap);
 
 	//Process operator
 	sdword	dwCenterX	= fCenterX*w;
@@ -560,17 +563,31 @@ udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	RGBA* pPxSrc = pSrc->GetPixels();
 	RGBA* pPxDst = pDst->GetPixels();
 
+	sword half_width  = w/2;
+	sword half_height = h/2;
+
 	//Process
 	for (sdword y=0; y<h; y++)
 	{
+        sword diffy = abs(y-dwCenterY);
 
-		float dy = (float)(y-dwCenterY) * f1_RadiusY;
+		if(wrap && diffy>half_height) {
+			diffy = h - diffy;
+		}
+
+		float dy = (float)diffy * f1_RadiusY;
 		float dy_2 = dy*dy;
 
 		for (sdword x=0; x<w; x++)
 		{
+            sword diffx = abs(x-dwCenterX);
+
+			if(wrap && diffx>half_width) {
+				diffx = w - diffx;
+			}
+
 			//Calcul distance
-			float dx = (float)(x-dwCenterX) * f1_RadiusX;
+			float dx = (float)diffx * f1_RadiusX;
 			float d = sqrt(dx*dx + dy_2);
 
 			if (d>1.0f)		d=1.0f;
