@@ -51,7 +51,7 @@ void WriteTGA(NBitmap* _bmp, NString _path, NString _suffix)
   header.width = (short)_bmp->GetWidth();
   header.height = (short)_bmp->GetHeight();
   header.bitsperpixel= 32;
-  header.imagedescriptor=0;
+  header.imagedescriptor=8;
 
   udword length = _path.Length();
   if (length>=4 && _path.Buffer()[length-4] == '.' && 
