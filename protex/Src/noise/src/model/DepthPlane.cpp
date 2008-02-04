@@ -19,7 +19,7 @@
 // The developer's email is ojacobson@lionsanctuary.net
 //
 
-#include "depthplane.h"
+#include "DepthPlane.h"
 
 using namespace noise;
 using namespace noise::model;
@@ -39,6 +39,6 @@ double DepthPlane::GetValue (double x, double y, double z) const
 {
   //assert (m_pModule != NULL);
 	if( m_pModule == NULL ) return 0.0;
-  
+
   return m_pModule->GetValue (x, y, z);
 }

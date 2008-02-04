@@ -20,7 +20,7 @@
 // off every 'zig'.)
 //
 
-#include "hybridmulti.h"
+#include "HybridMulti.h"
 
 using namespace noise::module;
 
@@ -95,7 +95,7 @@ double HybridMulti::GetValue (double x, double y, double z) const
 		int seed = (m_seed + curOctave) & 0x7fffffff;
 		signal = GradientCoherentNoise3D (nx, ny, nz, seed, m_noiseQuality) + offset;
 		signal *= m_pSpectralWeights[curOctave];
-		
+
 		/* add it in, weighted by previous freq's local value */
 		value += weight * signal;
 		/* update the (monotonically decreasing) weighting value */

@@ -55,14 +55,16 @@
 	typedef unsigned short		uword;	// Unsigned 16 bit value
 	typedef signed short			sword;	// Signed 16 bit value
 #ifdef __LINUX__
-	typedef uint32_t			udword;	// Unsigned 32 bit value
 	typedef int32_t				sdword;	// Signed 32 bit value
+	typedef u_int32_t			udword;	// Unsigned 32 bit value
+	typedef int64_t		sqword;	// Signed 64 bit value
+	typedef u_int64_t	uqword; // Unsigned 64 bit value
 #else
 	typedef unsigned long			udword;	// Unsigned 32 bit value
 	typedef signed long				sdword;	// Signed 32 bit value
-#endif
 	typedef signed __int64		sqword;	// Signed 64 bit value
 	typedef unsigned __int64	uqword; // Unsigned 64 bit value
+#endif
 	typedef udword						ID;			// Identifier
 
 	//Runtime class
@@ -504,7 +506,7 @@ int					NFileTell(NFILEHANDLE *handle);
 */
 
 //-----------------------------------------------------------------
-//	Misc classes 
+//	Misc classes
 //-----------------------------------------------------------------
 struct GradientElem
 {

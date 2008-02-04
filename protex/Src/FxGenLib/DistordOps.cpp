@@ -548,7 +548,7 @@ udword NLookupOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 //-----------------------------------------------------------------
 IMPLEMENT_CLASS(NCraterOp, NOperator);
 
-#include "gforge.h"
+//#include "gforge.h"
 #include "Crater.h"
 
 static NVarsBlocDesc blocdescNCraterOp[] =
@@ -616,7 +616,7 @@ udword NCraterOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 
 	seed_ran1( rand());
 
-	//initgauss();    
+	//initgauss();
 
 	distribute_craters(real, how_many, w, h, (wrap == 1.0 ? true: false), radius);
 
@@ -632,10 +632,10 @@ udword NCraterOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 		}
 
 
-	NMemFree(real);  
+	NMemFree(real);
 
-		//h_minmax(); */          
-	
+		//h_minmax(); */
+
 	return 0;
 }
 

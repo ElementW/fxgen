@@ -19,38 +19,15 @@
 #define GCCCOMPAT_WAS_HERE
 
 #ifdef __GNUC__
-
-#include <stdio.h>
-#include <string.h>
-
-#ifdef _WIN32
-#include <windows.h>
-#else
-#include <algorithm>
-using std::min;
-using std::max;
-#define __int64 long long int
 #define __cdecl
 #define __declspec(x)
-typedef unsigned DWORD;
-typedef DWORD COLORREF;
-#define CopyMemory memcpy
-#define GetTickCount clock
-inline void ZeroMemory(void* dest, size_t size) { memset(dest, 0, size); }
-#define TCHAR char
-#define wsprintf sprintf
-inline void MessageBox(void*,const char*,const char*,int){}
-#define MB_OK 0
-#define MB_ICONERROR 0
-#define MB_APPLMODAL 0
-#define MB_TOPMOST 0
-#include <cmath>
-#define sqrtf sqrt
-#endif
+#define __forceinline inline
 
 #ifndef errno_t
 #define errno_t int
 #endif
+
+template<typename T1, typename T2>inline T1 min(T1 t1, T2 t2) { return t1 < t2 ? t1 : t2; }
 
 inline errno_t strncpy_s(
    char *strDest,
@@ -72,6 +49,46 @@ inline errno_t strcpy_s(
 	strncpy(strDestination, strSource, min(numberOfElements, strlen(strSource)));
 	return 0;
 }
+
+#ifndef _WIN32
+typedef u_int16_t DWORD;
+typedef DWORD COLORREF;
+//typedef u_int32_t HANDLE;
+//typedef HANDLE HFONT;
+//typedef HANDLE HDC;
+//typedef HANDLE HWND;
+//typedef HANDLE HPEN;
+//typedef HANDLE HBRUSH;
+//typedef HANDLE HBITMAP;
+//typedef LRESULT (CALLBACK *WNDPROC)(HWND,UINT,HPARAM,LPARAM);
+#endif
+
+#endif
+
+#if 0
+#include <stdio.h>
+#include <string.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <algorithm>
+using std::min;
+using std::max;
+#define __int64 long long int
+#define CopyMemory memcpy
+#define GetTickCount clock
+inline void ZeroMemory(void* dest, size_t size) { memset(dest, 0, size); }
+#define TCHAR char
+#define wsprintf sprintf
+inline void MessageBox(void*,const char*,const char*,int){}
+#define MB_OK 0
+#define MB_ICONERROR 0
+#define MB_APPLMODAL 0
+#define MB_TOPMOST 0
+#include <cmath>
+#define sqrtf sqrt
+#endif
 
 template <size_t size>
 errno_t strcpy_s(
@@ -95,7 +112,6 @@ inline int _vsnprintf_s(
 	return vsnprintf(buffer, min(sizeOfBuffer, count), format, argptr);
 }
 
-#define __forceinline inline
 
 #define FIGOFAGO 0
 #if FIGOFAGO
@@ -112,7 +128,7 @@ using std::max;
 //}
 #endif
 
-#else // not __GNUC__
-template<class T> T log2(T t) {return static_cast<T>(log(1. * t) / log(2.)); }
-#endif // __GNUC__
+//#else // not __GNUC__
+//template<class T> T log2(T t) {return static_cast<T>(log(1. * t) / log(2.)); }
+#endif // 0 __GNUC__
 #endif // GCCCOMPAT_WAS_HERE

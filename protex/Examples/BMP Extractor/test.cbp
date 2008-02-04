@@ -9,20 +9,20 @@
 			<Target title="Debug">
 				<Option platforms="Windows;" />
 				<Option output="." prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Debug\" />
+				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add library="..\..\W32Bin\libFxGenLib_D.a" />
+					<Add library="../../W32Bin/libFxGenLib_D.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option platforms="Windows;" />
 				<Option output="." prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Release\" />
+				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option parameters="Bricks.prj" />
@@ -31,33 +31,41 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="..\..\W32Bin\libFxGenLib.a" />
+					<Add library="../../W32Bin/libFxGenLib.a" />
 				</Linker>
 			</Target>
 			<Target title="Linux Release">
 				<Option platforms="Unix;Mac;" />
 				<Option output="test" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Release\" />
+				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option parameters="Bricks.prj" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-D__LINUX__" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="..\..\LinuxBin\libFxGenLib.a" />
+					<Add library="../../LinuxBin/libFxGenLib.so" />
+					<Add library="cairomm-1.0" />
+					<Add library="../../lib/libvgvm.a" />
 				</Linker>
 			</Target>
 			<Target title="Linux Debug">
 				<Option platforms="Unix;Mac;" />
 				<Option output="test" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Debug\" />
+				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option parameters="Bricks.prj" />
+				<Compiler>
+					<Add option="-D__LINUX__" />
+				</Compiler>
 				<Linker>
-					<Add library="..\..\LinuxBin\libFxGenLib_D.a" />
+					<Add library="../../LinuxBin/libFxGenLib_D.so" />
+					<Add library="../../lib/libvgvm.a" />
+					<Add library="cairomm-1.0" />
 				</Linker>
 			</Target>
 		</Build>
@@ -65,9 +73,9 @@
 			<Add option="-Wall" />
 			<Add option="-g" />
 			<Add option="-fexceptions" />
-			<Add directory="..\..\Src\FxGenLib" />
-			<Add directory="..\..\Src" />
-			<Add directory="..\.." />
+			<Add directory="../../Src/FxGenLib" />
+			<Add directory="../../Src" />
+			<Add directory="../.." />
 		</Compiler>
 		<Unit filename="main.cpp" />
 		<Extensions>

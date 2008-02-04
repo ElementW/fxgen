@@ -2,7 +2,11 @@
 #ifndef _3DMATH_H
 #define _3DMATH_H
 
+#ifdef _WIN32
 #include "windows.h"
+#else
+#define VOID void
+#endif
 #include <stdlib.h>
 #include "math.h"
 #include "float.h"
