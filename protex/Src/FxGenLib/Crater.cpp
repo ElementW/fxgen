@@ -1,4 +1,4 @@
-/* Add craters to a heightfield array 
+/* Add craters to a heightfield array
  * Copyright (C) 1995 by Heiko Eissfeldt
  * heiko@colossus.escape.de
 
@@ -23,8 +23,8 @@
 #include <stdio.h>
 #include <time.h>
 #include <math.h>
-#include "gforge.h"
-#include "crater.h"
+#include "gForge.h"
+#include "Crater.h"
 
 #define alpha   (35.25/180.0*M_PI)      /* sphere segment cutoff angle */
 #define crater_depth 0.85  /* 0.9 */
@@ -147,7 +147,7 @@ void distribute_craters(float *a, unsigned int how_many, int meshwidth, int mesh
 	c = (double)(how_many-k+1)/how_many + b3;
 #endif
 	/* c is in the range b3 ... b3+1 */
-	d2 = b2/c/c/c/c;             
+	d2 = b2/c/c/c/c;
 	/* d2 is in the range 0 ... 1 */
 	cratersize = 3 + (int)(d2 * CRATER_COVERAGE * meshheight);
 
@@ -187,13 +187,13 @@ if (k == 2) {
   cratersize = 10;
 }
 #endif
-	
+
 /* macro to determine the height dependent on crater size */
 #define CRATER_SCALE (((ch_scale*pow((cratersize/(3+CRATER_COVERAGE*meshheight)),0.9)) \
 		       /256*pow(meshheight/256.0,0.1))/CRATER_COVERAGE*80)
 
 	craterscale = CRATER_SCALE;     /* vertical crater scaling factor */
-	
+
 	/* what is the mean height of this plot */
 	samples = lev_samples = max((cratersize*cratersize)/5, 1);
 	level_with = level_pure = 0.0;
@@ -209,7 +209,7 @@ if (k == 2) {
 
 	    /* handle wrapping details... */
 
-	    if ((wrap) || 
+	    if ((wrap) ||
 	      ((ii >= 0) && (ii < meshwidth) && (jj >= 0) && (jj < meshheight))) {
 		DO_THE_WRAPX(ii)
 		DO_THE_WRAPY(jj)

@@ -1,4 +1,6 @@
-
+#ifndef _WIN32
+#include <string.h> // memcpy
+#endif
 
 #include "VecMath.h"
 

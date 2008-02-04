@@ -80,7 +80,7 @@ double TurbulenceGenerator::GetValue (double x, double y, double z) const
 		value *= GradientCoherentNoise3D (nx, ny, nz, seed, m_noiseQuality);
 		value *= m_pSpectralWeights[curOctave];
 		value += 1.0f;
-		
+
 		x *= m_lacunarity;
 		y *= m_lacunarity;
 		z *= m_lacunarity;

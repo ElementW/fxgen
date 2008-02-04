@@ -2,11 +2,14 @@
 
 #include "libnoiseOps.h"
 //#include "resource.h"
+#ifdef _WIN32
 #include <windows.h>
 #include <Commdlg.h>
-
+#endif
 // I need to use the NArray<T> object here
-#include "../GUILib/gui.h"
+// these two enough ;) - S.
+#include "../GUILib/Templates.h"
+#include "../GUILib/Types.h"
 //#include "gui.h"
 //#include "PropertyItems.h"
 //#include "JPEGLoader.h"

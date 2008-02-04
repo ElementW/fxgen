@@ -7,10 +7,10 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Release">
-				<Option output="..\..\..\W32Bin\various-tests" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Release\" />
+				<Option output="../../../W32Bin/various-tests" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
 				<Option type="1" />
-				<Option compiler="gcc" />
+				<Option compiler="mingw_gnu_gcc_compiler" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>
@@ -22,12 +22,9 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
-			<Add directory="..\..\..\Src" />
-			<Add directory="..\..\..\Src\FxGenLib" />
+			<Add directory="../../../Src" />
+			<Add directory="../../../Src/FxGenLib" />
 		</Compiler>
-		<Linker>
-			<Add library="..\..\..\W32Bin\libFxGenLib.a" />
-		</Linker>
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<envvars />

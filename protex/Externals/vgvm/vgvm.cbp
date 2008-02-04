@@ -29,11 +29,11 @@
 				<Option working_dir="" />
 				<Option object_output="Release Win32/vgvm" />
 				<Option type="2" />
-				<Option compiler="gcc" />
+				<Option compiler="mingw_gnu_gcc_compiler" />
 				<Option createDefFile="1" />
 				<Compiler>
-					<Add option="-D_CRT_SECURE_NO_WARNINGS" />
 					<Add option="-W" />
+					<Add option="-D_CRT_SECURE_NO_WARNINGS" />
 					<Add directory="../../include" />
 				</Compiler>
 				<ResourceCompiler>
@@ -48,8 +48,9 @@
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
-					<Add option="-D_CRT_SECURE_NO_WARNINGS" />
 					<Add option="-W" />
+					<Add option="-fPIC" />
+					<Add option="-D_CRT_SECURE_NO_WARNINGS" />
 					<Add directory="../../include" />
 				</Compiler>
 				<ResourceCompiler>

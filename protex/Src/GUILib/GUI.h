@@ -16,6 +16,10 @@
 //-----------------------------------------------------------------
 #pragma once
 
+#ifdef __GNUC__
+#include "gcccompat/gcccompat.h"
+#endif
+
 //-----------------------------------------------------------------
 //                   Macros
 //-----------------------------------------------------------------
@@ -124,13 +128,13 @@ public:
 	NWnd*	GetMainWnd()			{ return m_pMainWnd; }
 
 	//Helpers
-	udword MessageBox(char* _pszText, uword dwType=MB_OK);
+//	udword MessageBox(char* _pszText, uword dwType=MB_OK);
 	NString lpCmdLine;
 
 protected:
 	//Datas
 	NWnd*				m_pMainWnd;
-	HMODULE			m_hRichEditMod;
+//	HMODULE			m_hRichEditMod;
 };
 
 extern	GUI_API	NApplication*			GetApp();

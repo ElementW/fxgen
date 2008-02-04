@@ -52,7 +52,7 @@
 #include "translatepoint.h"
 #include "turbulence.h"
 #include "voronoi.h"
-#include "hybridmulti.h"
+#include "HybridMulti.h"
 #include "MultiFractal.h"
 #include "FractalBrownianMotion.h"
 #include "HeteroTerrain.h"
