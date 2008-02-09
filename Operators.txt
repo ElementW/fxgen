@@ -1,6 +1,6 @@
 -------------------------
 List of FXGen operators
-25 October 2007
+9 February a.d. 2008
 -------------------------
 
 
@@ -10,7 +10,7 @@ Render Operators
 -------------------
 
 Name: Flat
-Purpose: Create a flat texture of given color.
+Purpose: Fill a texture with given color.
 Details:
 Inputs: no
 
@@ -22,7 +22,7 @@ Inputs: no
 
 Name: Gradient
 Purpose:
-Details: Each corner of the texture has unique color.
+Details: Each corner of the texture has an unique color.
 Inputs: no
 
 Name: Cell
@@ -64,6 +64,7 @@ Name: Add
 Purpose: Combine inputs together.
 Details: Provides several ways of combining. Clamps bitmap to first input size.
 Modes:
+Layer (uses alpha channel)
 Add Clamp
 Add Wrap
 Sub Clamp
@@ -72,12 +73,11 @@ Multiply
 Multiply x2
 Blend
 Alpha
-Layer (uses alpha channel)
 Inputs: arbitrary
 
 Name: Glow
 Purpose: Render a glow.
-Details: Glow is a blurred, filled ellipse of given color, that is added to
+Details: Glow is a blurred, filled ellipse of given color, which is added to
 existing content.
 Inputs: 1
 
@@ -89,9 +89,10 @@ mode is available.
 Normal tracking
 -----------------
 Lines are drawn where normals look at sides (r, g channels are set to
-something different than 127), and according the difference between alpha 
+something different than 127), and according to the difference between alpha 
 channel and normals elevation. By default, normals are rotated 90 degrees 
-with X axis flipped, so that they "wrap" objects.
+with X axis flipped, so that they "wrap" objects. Use Abnormals to override this 
+behavior.
 
 Inputs: 1-2
 
@@ -116,7 +117,8 @@ Details:
 Inputs: 2
 
 Name: Vortex
-Purpose: Twist some fragment of input bitmap.
+Purpose: Twist some fragment of input bitmap. It may be expressed as 
+Glow+Normals+Abnormals+Distort.
 Details:
 Inputs: 1
 
@@ -136,8 +138,9 @@ Details: Two modes: Box and Gaussian.
 Inputs: 1
 
 Name: Colors
-Purpose: Apply a color filter and color light, adjust contrast, brightness and
-alpha.
+Purpose: Apply a color filter and color light, adjust contrast, brightness, 
+alpha and saturation. For more advanced color operations such as selective
+hue adjustment, use Abnormals.
 Details:
 Inputs: 1
 
@@ -149,27 +152,29 @@ Ambient, diffuse and specular light can have different colors and intensity.
 Inputs: 2-4(?)
 
 Name: Normals
-Purpose: Convert height map to normal map.
+Purpose: Convert a height map to a normal map.
 Details: 3-tap(?) Sobel.
 Inputs: 1
 
 Name: Abnormals
-Purpose: Modify a normal map. May be used for shiny surfaces.
-Details: Can take normal, height or quaternion map as second input.
+Purpose: Modify a normal map or any color map. May be used to adjust shiny 
+surfaces. Details: Can take normal, height or quaternion map as second input.
 
-Map translation
-----------------
-Alpha channel - a(0,255) -> angle(0,2pi)
-Coords - r(0,255) -> x(-1,1)
-Height map - luminance(0,255) -> angle(0,2pi) (axis is Z)
+Map interpretation
+-------------------
+Quaternion map:
+Alpha channel - a(0,255) -> phi(0,2pi)
+Coords - r(0,255) -> x(-1,1) (g->y, b->z respectively)
+Height map - luminance(0,255) -> angle(0,2pi) (rotation around the Z axis)
 Normal map - is blended with the source.
 
 Options
 ---------
 Rotation - w(0,1) -> angle(0,2pi), rest are axis direction coordinates
 Sensitivity - (0,255) -> angle(0,2pi) * map alpha
-Compensation - How to deal with map
-Mirror - For broken normal maps ;)
+Compensation - How to deal with a broken normal map (may be used to produce 
+strange effects)
+Mirror - For the same purpose
 
 Inputs: 1-2
 
@@ -199,8 +204,8 @@ Inputs: 1
 
 Name: Segment
 Purpose:
-Details: takes segments input 1 based on a threshold, and colors each segment
-based on input 2
+Details: takes segments from input 1 based on a threshold, and colorizes each 
+segment based on input 2
 Inputs: 2
 
 Name: Dilate

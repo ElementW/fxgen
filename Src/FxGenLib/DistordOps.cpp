@@ -114,11 +114,11 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 	fRotate = fRotate * nv_two_pi;
 
 	//Zoom
-	fZoomX=0.5f - (fZoomX/2.0f);
-	fZoomX=exp(fZoomX*6.0f);
+	//fZoomX=0.5f - (fZoomX/2.0f);
+	fZoomX=pow(.5f,fZoomX-1);
 
-	fZoomY=0.5f - (fZoomY/2.0f);
-	fZoomY=exp(fZoomY*6.0f);
+	//fZoomY=0.5f - (fZoomY/2.0f);
+	fZoomY=pow(.5f,fZoomY-1);
 
 	//Process RotoZoom
 	RGBA* pPxlSrc = pSrc->GetPixels();
@@ -353,14 +353,13 @@ static NVarsBlocDesc blocdescVortexOp[] =
 	VAR(efloat,             true, "RayX",           "0.5",          "NFloatProp")   //2
 	VAR(efloat,             true, "RayY",           "0.5",          "NFloatProp")   //3
 	VAR(efloat,             true, "Twist",      "1.28",             "NFloatProp")   //4
-	VAR(eubyte,				true, "Wrap",		"0,[0 (Off), 1 (On)]",	"NUbyteComboProp")	//5
 };
 
 
 NVortexOp::NVortexOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(6, blocdescVortexOp, 1);
+	m_pcvarsBloc = AddVarsBloc(5, blocdescVortexOp, 1);
 
 }
 
@@ -383,13 +382,11 @@ udword NVortexOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	//Get Variables Values
 	float byCenterX, byCenterY, byRayX, byRayY;
 	float byTwist;
-	ubyte wrap;
 	m_pcvarsBloc->GetValue(0, _ftime, byCenterX);
 	m_pcvarsBloc->GetValue(1, _ftime, byCenterY);
 	m_pcvarsBloc->GetValue(2, _ftime, byRayX);
 	m_pcvarsBloc->GetValue(3, _ftime, byRayY);
 	m_pcvarsBloc->GetValue(4, _ftime, byTwist);
-	m_pcvarsBloc->GetValue(5, _ftime, wrap);
 
 	//Process operator
 	sdword  dwCenterX       = byCenterX*w;
@@ -406,36 +403,18 @@ udword NVortexOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	RGBA* baseSrc = pPxSrc;
 	RGBA* pPxDst = pDst->GetPixels();
 
-	sword half_width  = w/2;
-	sword half_height = h/2;
-
 	RGBA* src;
 	//Process
 	for (sdword y=0; y<h; y++)
 	{
-		float relCenterY = dwCenterY;
-        sword diffy = abs(y-relCenterY);
 
-		if(wrap && diffy>half_height) {
-			diffy = h - diffy;
-			relCenterY = relCenterY>y ? relCenterY-h : relCenterY+h;
-		}
-
-		float dy = (float)diffy * f1_RadiusY;
+		float dy = (float)(y-dwCenterY) * f1_RadiusY;
 		float dy_2 = dy*dy;
 
 		for (sdword x=0; x<w; x++)
 		{
-			float relCenterX = dwCenterX;
-            sword diffx = abs(x-relCenterX);
-
-			if(wrap && diffx>half_width) {
-				diffx = w - diffx;
-				relCenterX = relCenterX>x ? relCenterX-w : relCenterX+w;
-			}
-
 			//Calcul distance
-			float dx = (float)diffx * f1_RadiusX;
+			float dx = (float)(x-dwCenterX) * f1_RadiusX;
 			float d = sqrt(dx*dx + dy_2);
 
 			if(d>1.0f) {
@@ -452,20 +431,20 @@ udword NVortexOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 				d=1.0f - d;
 
 				//rotate around middle
-				float nx = x - relCenterX;
-				float ny = y - relCenterY;
+				float nx = x - dwCenterX;
+				float ny = y - dwCenterY;
 
 				float rad = radians*d;
 
 				//todo: optimize this. cosf/sinf are slow
 				float bx = nx;
-				nx = bx*cosf(rad) - ny*sinf(rad) + relCenterX;
-				ny = bx*sinf(rad) + ny*cosf(rad) + relCenterY;
+				nx = bx*cosf(rad) - ny*sinf(rad) + dwCenterX;
+				ny = bx*sinf(rad) + ny*cosf(rad) + dwCenterY;
 
 				if(nx>=w) nx = nx - w;
 				if(ny>=h) ny = ny - h;
-				if(nx<0.0f) nx = w + nx;
-				if(ny<0.0f) ny = h + ny;
+				if(nx<0) nx = w + nx;
+				if(ny<0) ny = h + ny;
 
 				//bilinear sample nearest 4 pixels at rotated pos
 				int ix,iy;
@@ -558,3 +537,8 @@ udword NLookupOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	}
 	return 0;
 }
+
+
+
+
+

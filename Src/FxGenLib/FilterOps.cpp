@@ -51,8 +51,8 @@ static NMapVarsBlocDesc mapblocdescBlurOp2[] =
 
 static NVarsBlocDesc blocdescBlurOp[] =
 {
-	VAR(efloat,		true, "Width",		"0.01",		"NUFloatProp")	//0
-	VAR(efloat,		true, "Height",		"0.01",		"NUFloatProp")	//1
+	VAR(efloat,		true, "Width",		"0.01",		"NCFloatProp")	//0
+	VAR(efloat,		true, "Height",		"0.01",		"NCFloatProp")	//1
 	VAR(eubyte,		true, "Amplify",	"16",		"NUbyteProp")	//2
 	VAR(eubyte,		false, "Type",	"0,[Box,Gaussian]",	"NUbyteComboProp")	//3
 };
@@ -311,22 +311,34 @@ static NMapVarsBlocDesc mapblocdescColorsOp[] =
 	MAP(1,	eubyte,			"3",		""	)	//V1 => 3-Contrast
 };
 
+static NMapVarsBlocDesc mapblocdescColorsOp2[] =
+{
+	MAP(2,	eudword,		"0",		""	)	//V1 => 0-Color Base
+	MAP(2,	eudword,		"1",		""	)	//V1 => 1-Color Percent
+	MAP(2,	eubyte,			"2",		""	)	//V1 => 2-Brithness
+	MAP(2,	eubyte,			"3",		""	)	//V1 => 3-Contrast
+	MAP(2,	eubyte,			"5",		""	)	//V1 => 5-Alpha
+};
+
 static NVarsBlocDesc blocdescColorsOp[] =
 {
 	//eubyte,		false,	"Mode",				"0,[RGB,HLS]",	"NUbyteComboProp",	//0
-	VAR(eudword,	true,		"Color Base",			"0",						"NColorProp")				//0
-	VAR(eudword,	true,		"Color Percent",	"-1",						"NColorProp")				//1
+	VAR(eudword,	true,		"Color Base",			"0",					"NColorProp")				//0
+	VAR(eudword,	true,		"Color Percent",		"-1",					"NColorProp")				//1
 	VAR(eubyte,		true,		"Brithness",			"127",					"NUbyteProp")				//2
 	VAR(eubyte,		true,		"Contrast",				"127",					"NUbyteProp")				//3
-	VAR(eubyte,		true,		"Alpha",				"127",					"NUbyteProp")				//3
+	VAR(eubyte,		true,		"Saturation",			"127",					"NUbyteProp")				//4
+	VAR(eubyte,		true,		"Alpha",				"127",					"NUbyteProp")				//5
 };
 
 
 NColorsOp::NColorsOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(5, blocdescColorsOp, 2);
+	m_pcvarsBloc = AddVarsBloc(6, blocdescColorsOp, 3);
+//	m_pcvarsBloc = AddVarsBloc(5, blocdescColorsOp, 2);
 	m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescColorsOp);
+	m_pcvarsBloc->SetMapVarBlocDesc(5, mapblocdescColorsOp2);
 }
 
 udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
@@ -348,13 +360,14 @@ udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	//Get Variables Values
 	ubyte byMode=1;
 	RGBA ColorBase, ColorPer;
-	ubyte byBrihtness, byContrast, byAlpha;
+	ubyte byBrihtness, byContrast, bySaturation, byAlpha;
 	//m_pcvarsBloc->GetValue(0, _ftime, byMode);
 	m_pcvarsBloc->GetValue(0, _ftime, (udword&)ColorBase);
 	m_pcvarsBloc->GetValue(1, _ftime, (udword&)ColorPer);
 	m_pcvarsBloc->GetValue(2, _ftime, byBrihtness);
 	m_pcvarsBloc->GetValue(3, _ftime, byContrast);
-	m_pcvarsBloc->GetValue(4, _ftime, byAlpha);
+	m_pcvarsBloc->GetValue(4, _ftime, bySaturation);
+	m_pcvarsBloc->GetValue(5, _ftime, byAlpha);
 
 	//Process operator
 	sdword	brithness = (((sdword)byBrihtness)*2) - 256;	//-255 <> +255
@@ -392,6 +405,18 @@ udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 
 			c = (sdword) (((b - 127) * contrast)>>8) + 127;
 			b = (c < 0x00) ? 0x00 : (c > 0xff) ? 0xff : c;
+
+
+			//Saturation
+			if(/*for efficiency*/bySaturation != 127)
+			{
+				sdword l = r + g + b;
+				sdword u = (3 * r - l) * bySaturation / 127;
+				sdword v = (3 * b - l) * bySaturation / 127;
+				r = (u + l) / 3;
+				g = (l - (u + v)) / 3;
+				b = (v + l) / 3;
+			}
 
 			//Set pixel
 			r = (r<255)?r:255;				r = (r>0)?r:0;
@@ -456,7 +481,7 @@ IMPLEMENT_CLASS(NLightOp, NOperator);
 
 static NVarsBlocDesc blocdescLightOp[] =
 {
-	VAR(eudword,	true, "Ambient",		"0",				"NColorProp")	//0
+	VAR(eudword,	true, "Ambiant",		"0",				"NColorProp")	//0
 	VAR(eudword,	true, "Diffuse",		"8421504",	"NColorProp")	//1
 	VAR(eudword,	true, "Specular",		"-1",				"NColorProp")	//2
 
@@ -479,47 +504,30 @@ NLightOp::NLightOp()
 udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Two inputs (texture, normal)
-	if (m_byInputs < 2 || m_byInputs > 4)	return (udword)-1;
+	if (m_byInputs!=2)		return (udword)-1;
 
-	//Get input Texture
-	NBitmap* pSrc	= (NBitmap*)(*_pOpsInts)->m_pObj;
-	udword w = pSrc->GetWidth();
-	udword h = pSrc->GetHeight();
-
-	_pOpsInts++;
-
-	NBitmap* pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
-	if (pNorm->GetWidth()!=w || pNorm->GetHeight()!=h)			return (udword)-1;
-
-	_pOpsInts++;
-
-	NBitmap* pSpec = null; // Specular color
-	if (m_byInputs>2)
-	{
-		pSpec = (NBitmap*)(*_pOpsInts)->m_pObj;
-		if (pSpec->GetWidth()!=w || pSpec->GetHeight()!=h)			return (udword)-1;
-		_pOpsInts++;
-	}
-
-	NBitmap* pAmb = null; // Ambient color
-	if (m_byInputs>3)
-	{
-		pAmb = (NBitmap*)(*_pOpsInts)->m_pObj;
-		if (pAmb->GetWidth()!=w || pAmb->GetHeight()!=h)			return (udword)-1;
-		_pOpsInts++;
-	}
-
-	//Set Texture Size
+	//Bitmap instance
 	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+
+	//Get input Texture and Normal
+	NBitmap* pSrc	= (NBitmap*)(*_pOpsInts)->m_pObj;
+	_pOpsInts++;
+	NBitmap* pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
 	NBitmap* pDst	= (NBitmap*)m_pObj;
-	pDst->SetSize(w,h);
+
+
+	sdword w = pSrc->GetWidth();
+	sdword h = pSrc->GetHeight();
+
+	pDst->SetSize( w, h );
+	pNorm->SetSize( w, h );
 
 	/////////////////////////////////////////
 	//Get Variables Values
-	RGBA Ambient, Diffuse, Specular;
+	RGBA Ambiant, Diffuse, Specular;
 	ubyte byPosX, byPosY, byPosZ;
 	ubyte bySpecPower, byBumpPower;
-	m_pcvarsBloc->GetValue(0, _ftime, (udword&)Ambient);
+	m_pcvarsBloc->GetValue(0, _ftime, (udword&)Ambiant);
 	m_pcvarsBloc->GetValue(1, _ftime, (udword&)Diffuse);
 	m_pcvarsBloc->GetValue(2, _ftime, (udword&)Specular);
 
@@ -542,21 +550,14 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 	light.normalize();
 
-        vec3 halfV = light;
-        halfV.z += 1;
-        halfV.normalize();
-
-	float fSpecularPower	= 256.0f/(float)bySpecPower;
-	float fBumpPower			= ((float)byBumpPower) / 200.0f;
+	float fSpecularPower	= ((float)bySpecPower) / 32.0f;
+	float fBumpPower			= ((float)byBumpPower) / 32.0f;
 
 	/////////////////////////////////////////
 	// DIRECTIONAL LIGHT TYPE
-        RGBA* pPxNorm = pNorm->GetPixels();
-	RGBA* pPxSpec = pSpec == null ? null : pSpec->GetPixels();
-	RGBA* pPxAmb = pAmb == null ? null : pAmb->GetPixels();
+	RGBA* pPxNorm = pNorm->GetPixels();
 	RGBA* pPxSrc	= pSrc->GetPixels();
 	RGBA* pPxDst	= pDst->GetPixels();
-
 
 	for (udword y=0; y<h; y++)
 	{
@@ -566,23 +567,17 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 			vec3 n;
 			n.x = ((float)pPxNorm->x - 127.0f);
 			n.y = ((float)pPxNorm->y - 127.0f);
-			n.z = ((float)pPxNorm->z - 127.0f)/(0.01f+fBumpPower);
+			n.z = ((float)pPxNorm->z - 127.0f);
+
 			n.normalize();
-			pPxNorm++;
 
 			//compute the dot product between normal and light dir
-			float fDiffDot;
-			dot(fDiffDot, n, light);
-			if (fDiffDot<0.0f)	fDiffDot=0.0f;
-
-			//compute the dot product between normal and halfvector
-			float fSpecDot;
-			dot(fSpecDot, n, halfV);
-			if (fSpecDot<0.0f)	fSpecDot=0.0f;
-                        fSpecDot = powf(fSpecDot, fSpecularPower+0.000001f);
+			float fdot;
+			dot(fdot, n, light);
+			if (fdot<0.0f)	fdot=0.0f;
 
 			//Add bump on normal
-			//fdot*=fBumpPower;
+			fdot*=fBumpPower;
 
 			/*float fdotSpec=0.0;
 			if (dot > 0.0) {
@@ -593,45 +588,19 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 				fdotSpec = pow(fdot, 64);
 			}*/
 
-                        RGBA localAmbient;
-                        if (pPxAmb != null)
-                        {
-                          localAmbient.r = Ambient.r + pPxAmb->r;
-                          localAmbient.g = Ambient.g + pPxAmb->g;
-                          localAmbient.b = Ambient.b + pPxAmb->b;
-                          pPxAmb++;
-                        } else {
-                          localAmbient.r = Ambient.r;
-                          localAmbient.g = Ambient.g;
-                          localAmbient.b = Ambient.b;
-                        }
-
-                        RGBA localSpecular;
-                        if (pPxSpec != null)
-                        {
-                          localSpecular.r = (Specular.r * pPxSpec->r) >> 8;
-                          localSpecular.g = (Specular.g * pPxSpec->g) >> 8;
-                          localSpecular.b = (Specular.b * pPxSpec->b) >> 8;
-                          pPxSpec++;
-                        } else {
-                          localSpecular.r = Specular.r;
-                          localSpecular.g = Specular.g;
-                          localSpecular.b = Specular.b;
-                        }
-
 			// Color = ambient + dif*dot + dot^2 * spec
-			sdword r	= (sdword) ((sdword(pPxSrc->r*(localAmbient.r + fDiffDot*Diffuse.r)) >> 8) + (fSpecDot*localSpecular.r));
-			sdword g	= (sdword) ((sdword(pPxSrc->g*(localAmbient.g + fDiffDot*Diffuse.g)) >> 8) + (fSpecDot*localSpecular.g));
-			sdword b	= (sdword) ((sdword(pPxSrc->b*(localAmbient.b + fDiffDot*Diffuse.b)) >> 8) + (fSpecDot*localSpecular.b));
+			sdword r	= (sdword) (Ambiant.r + (fdot*Diffuse.r) + (fdot*fdot*Specular.r*fSpecularPower));
+			sdword g	= (sdword) (Ambiant.g + (fdot*Diffuse.g) + (fdot*fdot*Specular.g*fSpecularPower));
+			sdword b	= (sdword) (Ambiant.b + (fdot*Diffuse.b) + (fdot*fdot*Specular.b*fSpecularPower));
 
 			//sdword r	= pPxSrc->r + (fdot * pPxSrc->r);
 			//sdword g	= pPxSrc->g + (fdot * pPxSrc->g);
 			//sdword b	= pPxSrc->b + (fdot * pPxSrc->b);
 
 			//Summ
-			/*r = (pPxSrc->r + r) / 2;
+			r = (pPxSrc->r + r) / 2;
 			g = (pPxSrc->g + g) / 2;
-			b = (pPxSrc->b + b) / 2;*/
+			b = (pPxSrc->b + b) / 2;
 
 			pPxDst->r = (ubyte) ((r<255)?r:255);
 			pPxDst->g = (ubyte) ((g<255)?g:255);
@@ -640,6 +609,7 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 			pPxSrc++;
 			pPxDst++;
+			pPxNorm++;
 		}
 	}
 
@@ -783,9 +753,9 @@ IMPLEMENT_CLASS(NAbnormalsOp, NOperator);
 static NVarsBlocDesc blocdescAbnormalsOp[] =
 {
 	VAR(eubyte,	false, "Rotation",	"", "")	//0
-	VAR(efloat,	true, "w",	"0.25", "NFloatProp")	//1 "1.0" is full angle
-	VAR(efloat,	true, "x",	"0", "NFloatProp")	//2
-	VAR(efloat,	true, "y",	"0", "NFloatProp")	//3
+	VAR(efloat,	true, "w",	"0.0", "NCFloatProp")	//1 "1.0" is full angle
+	VAR(efloat,	true, "x",	"0.0", "NFloatProp")	//2
+	VAR(efloat,	true, "y",	"0.0", "NFloatProp")	//3
 	VAR(efloat,	true, "z",	"1.0", "NFloatProp")	//4
 	VAR(eubyte,	false, "Options",	"", "")	//5
 	VAR(eubyte,	true, "Sensitivity",	"127", "NUbyteProp")	//6
@@ -905,6 +875,135 @@ udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	return 0;
 }
 
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//							NNormalsOp class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+IMPLEMENT_CLASS(NSlopeMagnitudeOp, NOperator);
+
+static NVarsBlocDesc blocdescNSlopeMagnitudeOp[] =
+{
+	VAR(eudword,	true, "Amplify",	"64", "NUbyteProp")	//0
+};
+
+
+NSlopeMagnitudeOp::NSlopeMagnitudeOp()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(1, blocdescNSlopeMagnitudeOp, 1);
+
+}
+
+udword NSlopeMagnitudeOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+{
+	//Only one Input
+	if (m_byInputs!=1)		return (udword)-1;
+
+	//Bitmap instance
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+
+	//////////////////////////////////////////
+	//Get input texture
+	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
+	NBitmap* pDst = (NBitmap*)m_pObj;
+
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
+
+
+	/////////////////////////////////////////
+	//Get Variables Values
+	ubyte byAmp;
+	m_pcvarsBloc->GetValue(0, _ftime, byAmp);
+
+	float fAmp = (float)byAmp / 64.0f; //[0<->4]
+
+	//////////////////////////////////////////
+	// Creation des normales
+	RGBA* pcurSour = pSrc->GetPixels();
+	RGBA* pcurNorm = pDst->GetPixels();
+
+	for (udword y=0; y<h; y++)
+	{
+		for (udword x=0; x<w; x++)
+		{
+			//Y Sobel filter
+			float fPix = (float)pcurSour[ (x-1+w) % w + (((y+1) % h)*w) ].r;
+			float dY  = fPix / 255.0f * -1.0f;
+
+			fPix = (float)pcurSour[ x % w + (((y+1) % h)*w) ].r;
+			dY+= fPix / 255.0f * -2.0f;
+
+			fPix = (float)pcurSour[ (x+1) % w + (((y+1) % h)*w) ].r;
+			dY+= fPix / 255.0f * -1.0f;
+
+			fPix = (float)pcurSour[ (x-1+w) % w + (((y-1+h) % h)*w) ].r;
+			dY+= fPix / 255.0f * 1.0f;
+
+			fPix = (float)pcurSour[ x % w + (((y-1+h) % h)*w) ].r;
+			dY+= fPix / 255.0f * 2.0f;
+
+			fPix = (float)pcurSour[ (x+1) % w + (((y-1+h) % h)*w) ].r;
+			dY+= fPix / 255.0f * 1.0f;
+
+			//X Sobel filter
+			fPix = (float)pcurSour[ (x-1+w) % w + (((y-1+h) % h)*w) ].r;
+			float dX  = fPix / 255.0f * -1.0f;
+
+			fPix = (float)pcurSour[ (x-1+w) % w + ((y % h)*w) ].r;
+			dX+= fPix / 255.0f * -2.0f;
+
+			fPix = (float)pcurSour[ (x-1+w) % w + (((y+1) % h)*w) ].r;
+			dX+= fPix / 255.0f * -1.0f;
+
+			fPix = (float)pcurSour[ (x+1) % w + (((y-1+h) % h)*w) ].r;
+			dX+= fPix / 255.0f * 1.0f;
+
+			fPix = (float)pcurSour[ (x+1) % w + ((y % h)*w) ].r;
+			dX+= fPix / 255.0f * 2.0f;
+
+			fPix = (float)pcurSour[ (x+1) % w + (((y+1) % h)*w) ].r;
+			dX+= fPix / 255.0f * 1.0f;
+
+
+			// Compute the cross product of the two vectors
+			vec3 norm;
+			norm.x = -dX*4;
+			norm.y = -dY*4;
+			norm.z = 1.0f;
+
+			norm.normalize();
+
+			// Normalize
+			float nm = sqrtf(dX*dX + dY*dY);
+
+			//nm = ;
+			// now compute the dot product of the norm vector with (0,0,1)
+
+			norm.x = nm;
+			norm.y = nm;
+			norm.z = nm;
+
+
+			//norm.normalize();
+
+			// Store
+			pcurNorm->x = (ubyte) ((norm.x+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
+			pcurNorm->y = (ubyte) ((norm.y+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
+			pcurNorm->z = (ubyte) ((norm.z+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
+			pcurNorm->a = 255;
+
+			pcurNorm++;
+		}
+	}
+
+	return 0;
+}
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -1255,8 +1354,6 @@ udword NSegmentOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 	return 0;
 }
 
-
-
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
@@ -1449,4 +1546,3 @@ udword NAlphaMaskOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 
 	return 0;
 }
-

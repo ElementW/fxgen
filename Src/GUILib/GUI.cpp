@@ -851,11 +851,11 @@ NString NEditCtrl::GetText()
 		gt.flags			= GT_DEFAULT;
 		gt.codepage			= CP_ACP;
 		gt.lpDefaultChar	= null;
-#ifdef __GNUC__
-		gt.lpUsedDefaultChar= null;
-#else
+//#ifdef __GNUC__
+//		gt.lpUsedDefaultChar= null;
+//#else
 		gt.lpUsedDefChar	= null;
-#endif
+//#endif
 		udword len = ::SendMessage(m_W32HWnd, EM_GETTEXTEX, (WPARAM)&gt, (LPARAM)str.Buffer());
 		assert(len==length);
 		return str;

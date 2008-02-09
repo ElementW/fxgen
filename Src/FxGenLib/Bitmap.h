@@ -103,6 +103,8 @@ public:
 	udword				GetHeight()			{ return m_dwHeight;		}
 	RGBA*					GetPixels()			{ return m_pbyPixels;		}
 
+//	virtual void					saveBMP(char *filename);
+
 protected:
 	//Datas
 	RGBA*		m_pbyPixels;

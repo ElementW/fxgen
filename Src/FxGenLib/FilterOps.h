@@ -97,6 +97,7 @@ public:
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 };
 
+
 //-----------------------------------------------------------------
 //!	\class		NNormalsOp
 //!	\brief		Compute 2D Normals
@@ -136,6 +137,27 @@ public:
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 };
+
+//-----------------------------------------------------------------
+//!	\class		NNormalsOp
+//!	\brief		Compute 2D Normals
+//-----------------------------------------------------------------
+class FXGEN_API NSlopeMagnitudeOp : public NOperator
+{
+public:
+	DECLARE_CLASS();
+
+	NSlopeMagnitudeOp();
+
+	//Methods
+	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual const char*		GetName()			{ return "Slope Magnitude"; }	//!< Operator's Name
+	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
+
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+};
+
 
 //-----------------------------------------------------------------
 //!	\class		NInvertOp

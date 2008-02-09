@@ -15,12 +15,18 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 #pragma once
-//#include <math.h>
 
 //-----------------------------------------------------------------
 //                   Includes
 //-----------------------------------------------------------------
+//#include "noise/src/noise.h"
+//#include "noiseutils.h"
+
 #include "Core.h"
+
+#ifdef GetUserName
+#undef GetUserName
+#endif
 
 //-----------------------------------------------------------------
 //                   Macros
@@ -75,9 +81,10 @@ public:
 	virtual	udword GetColor()	= 0;				//!< Operator color
 	virtual const char* GetName()				{ return ""; }			//!< Operator's Name
 	virtual const char* GetCategory()		{ return "Misc"; }	//!< Operator's Category
-
-	virtual const char* GetUserName()		{ return null; }		//!< Operator's User Name
-
+	virtual char* GetUserName()		{ return null; }		//!< Operator's User Name
+	virtual char* GetLibnoiseCacheUserName()		{ return null; }		//!< Operator's User Name
+//	virtual noise::module::Module* GetLibnoiseModule() { return null;}
+//	virtual noise::utils::NoiseMap* GetNoiseMap() { return null; }
 	//Serialization
 	virtual	bool Save(NArchive* _s);	//!< Save object
 	virtual	bool Load(NArchive* _l);	//!< Load object

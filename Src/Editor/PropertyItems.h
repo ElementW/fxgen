@@ -140,6 +140,20 @@ public:
 };
 
 //-----------------------------------------------------------------
+//!	\class	NCFloatProp
+//! \brief	Compact Float Property Item (range 0-1)
+//-----------------------------------------------------------------
+class NCFloatProp : public NPropertyItem
+{
+public:
+	DECLARE_CLASS();
+	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
+	virtual bool		BeginEdit	(NRect& rcItem);
+	virtual bool		EndEdit		(bool bSaveChanged=true);
+	virtual	bool		AddValue(sdword dwDelta);
+};
+
+//-----------------------------------------------------------------
 //!	\class	NColorProp
 //! \brief	Color Property Item
 //-----------------------------------------------------------------
