@@ -9,8 +9,8 @@
 		<Build>
 			<Target title="Debug|Win32">
 				<Option platforms="Windows;" />
-				<Option output="..\..\W32Bin\FxGenLib_D" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="..\..\W32Bin" />
+				<Option output="../../W32Bin/libFxGenLib_D" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../W32Bin" />
 				<Option object_output="Debug" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -29,23 +29,24 @@
 					<Add option="-DFXGEN_EXPORTS" />
 				</Compiler>
 				<Linker>
+					<Add option="-pg" />
 					<Add option="-pg -lgmon" />
 					<Add library="user32" />
-					<Add library="..\..\lib\libvgvmd.a" />
-					<Add library="..\..\..\..\..\..\GTK\lib\libcairomm-1.0.dll.a" />
-					<Add library="..\..\..\..\..\..\GTK\lib\libcairo.dll.a" />
+					<Add library="../../lib/libvgvmd.a" />
+					<Add library="../../../../cairomm-1.4.6/MSVC/cairomm/libcairomm.dll" />
+					<Add library="cairo" />
 				</Linker>
 				<ExtraCommands>
 					<Add after="copy $(TargetDir)FxGenLib_D.dll ..\..\W32Bin\FxGenLib_D.dll" />
 				</ExtraCommands>
 			</Target>
 			<Target title="Release|Win32">
-				<Option platforms="Windows;" />
-				<Option output="..\..\W32Bin\FxGenLib" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="..\..\W32Bin" />
-				<Option object_output="Release" />
+				<Option platforms="Windows;Unix;" />
+				<Option output="../../W32Bin/FxGenLib.dll" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="../../W32Bin" />
+				<Option object_output="ReleaseWin32" />
 				<Option type="3" />
-				<Option compiler="gcc" />
+				<Option compiler="mingw_gnu_gcc_compiler" />
 				<Option parameters="C:\Documents and Settings\wojownik\Desktop\noise.prj" />
 				<Option host_application="Editor.exe" />
 				<Option createDefFile="1" />
@@ -63,108 +64,73 @@
 				<Linker>
 					<Add option="-s" />
 					<Add library="user32" />
-					<Add library="..\..\lib\libvgvm.a" />
-					<Add library="..\..\..\..\..\..\GTK\lib\libcairomm-1.0.dll.a" />
-					<Add library="..\..\..\..\..\..\GTK\lib\libcairo.dll.a" />
+					<Add library="../../W32Bin/libvgvm.a" />
+					<Add library="cairo" />
+					<Add library="cairomm-1.0" />
+					<Add directory="../../../cairo-dev-1.4.14/lib" />
+					<Add directory="../../../cairomm-1.4.6/MSVC/cairomm" />
 				</Linker>
 				<ExtraCommands>
 					<Add after="copy $(TargetDir) ..\..\W32Bin\" />
 				</ExtraCommands>
 			</Target>
-			<Target title="Tiny Release|Win32">
-				<Option platforms="Windows;" />
-				<Option output="Tiny Release_Win32\libFxGenLib" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
-				<Option object_output="Tiny Release_Win32" />
-				<Option type="2" />
-				<Option compiler="gcc" />
-				<Option createDefFile="1" />
-				<Compiler>
-					<Add option="-fexpensive-optimizations" />
-					<Add option="-O3" />
-					<Add option="-W" />
-					<Add option="-DWIN32" />
-					<Add option="-DNDEBUG" />
-					<Add option="-D_LIB" />
-					<Add option="-D_MODE_EDITION" />
-					<Add option="-DSTATIC_BUILD" />
-				</Compiler>
-				<Linker>
-					<Add option="-s" />
-				</Linker>
-			</Target>
-			<Target title="Release DLL|Win32">
-				<Option platforms="Windows;" />
-				<Option output="FxGenLib" prefix_auto="1" extension_auto="1" />
-				<Option object_output="Release DLL|Win32" />
+			<Target title="Release|Linux">
+				<Option platforms="Unix;Mac;" />
+				<Option output="../../LinuxBin/libFxGenLib" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../LinuxBin" />
+				<Option object_output="Release" />
 				<Option type="3" />
 				<Option compiler="gcc" />
-				<Option createDefFile="1" />
-				<Option createStaticLib="1" />
-				<Compiler>
-					<Add option="-DWIN32" />
-					<Add option="-DNDEBUG" />
-					<Add option="-D_LIB" />
-					<Add option="-DFXGEN_EXPORTS" />
-					<Add option="-W" />
-					<Add option="-g" />
-					<Add option="-O2" />
-				</Compiler>
-			</Target>
-			<Target title="Release">
-				<Option platforms="Unix;Mac;" />
-				<Option output="..\..\LinuxBin\libFxGenLib" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
-				<Option object_output="Release" />
-				<Option type="2" />
-				<Option compiler="gcc" />
 				<Option parameters="C:\Documents and Settings\wojownik\Desktop\noise.prj" />
-				<Option host_application="Editor.exe" />
+				<Option host_application="editor-gtk" />
 				<Option createDefFile="1" />
 				<Compiler>
-					<Add option="-O2" />
 					<Add option="-W" />
-					<Add option="-g" />
 					<Add option="-fPIC" />
 					<Add option="-DWIN32" />
 					<Add option="-DNDEBUG" />
 					<Add option="-D_USRDLL" />
 					<Add option="-DFXGEN_EXPORTS" />
+					<Add option="-D__LINUX__" />
+					<Add option="-DDECODE_ONLY" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="..\..\..\..\..\home\wojownik\Desktop\Desktop\FXGen\lib\libvgvm.a" />
+					<Add library="../../lib/libvgvm.a" />
 				</Linker>
 			</Target>
-			<Target title="Debug">
+			<Target title="Debug|Linux">
 				<Option platforms="Unix;Mac;" />
-				<Option output="..\..\LinuxBin\libFxGenLib_D" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
-				<Option object_output="Release" />
-				<Option type="2" />
+				<Option output="../../LinuxBin/libFxGenLib_D" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../LinuxBin" />
+				<Option object_output="Debug" />
+				<Option type="3" />
 				<Option compiler="gcc" />
 				<Option parameters="C:\Documents and Settings\wojownik\Desktop\noise.prj" />
 				<Option host_application="Editor.exe" />
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-W" />
-					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="-fPIC" />
 					<Add option="-DWIN32" />
 					<Add option="-DNDEBUG" />
 					<Add option="-D_USRDLL" />
 					<Add option="-DFXGEN_EXPORTS" />
+					<Add option="-D__LINUX__" />
 				</Compiler>
 				<Linker>
-					<Add option="-pg" />
+					<Add library="../../lib/libvgvm.a" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-DHQNOISE" />
-			<Add directory="..\..\Externals\vgvm" />
-			<Add directory="..\..\Externals" />
+			<Add directory="../../Externals/vgvm" />
+			<Add directory="../../Externals" />
+			<Add directory="../../Src" />
+			<Add directory="../noise" />
+			<Add directory="../noiseutils" />
 		</Compiler>
 		<Unit filename="Archive.cpp" />
 		<Unit filename="Archive.h" />
@@ -191,13 +157,25 @@
 		<Unit filename="RenderOps.h" />
 		<Unit filename="Stream.cpp" />
 		<Unit filename="Stream.h" />
+		<Unit filename="include/OperatorsLayout.h" />
 		<Unit filename="pch.cpp" />
-		<Unit filename="pch.h" />
-		<Unit filename="..\gcccompat\gcccompat.h" />
+		<Unit filename="pch.h">
+			<Option compile="1" />
+		</Unit>
+		<Unit filename="version.h">
+			<Option target="Release|Win32" />
+			<Option target="Release|Linux" />
+			<Option target="Debug|Linux" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />
 			<debugger />
+			<AutoVersioning>
+				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
+				<Settings autoincrement="1" date_declarations="1" do_auto_increment="0" ask_to_increment="0" language="C++" svn="0" svn_directory="" header_path="version.h" />
+				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
+			</AutoVersioning>
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

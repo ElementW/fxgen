@@ -20,6 +20,7 @@
 //-----------------------------------------------------------------
 #include "pch.h"
 #include "Bitmap.h"
+//#include "noiseutils.h"
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -84,8 +85,46 @@ void NBitmap::SetSize(udword _w, udword _h)
 		} else {
 			m_pbyPixels = (RGBA*)NMemAlloc(_w*_h*sizeof(RGBA));
 		}
-		
+
 		m_dwWidth	=_w;	m_dwHeight=_h;
 	}
 
 }
+
+////-----------------------------------------------------------------
+////!	\brief	Change bitmap size
+////!	\param	_w	Width
+////!	\param	_h	Height
+////-----------------------------------------------------------------
+//void NBitmap::saveBMP(char *filename)
+//{
+//	RGBA* pdata = m_pbyPixels;
+//
+//	noise::utils::Image *image = new noise::utils::Image( m_dwWidth, m_dwHeight );
+//
+//	for( int i = 0; i < m_dwHeight; i++ )
+//	{
+//		for( int j = 0; j < m_dwWidth; j++ )
+//		{
+//			image->SetValue( j, i,
+//				noise::utils::Color((*pdata).r,
+//									(*pdata).g,
+//									(*pdata).b,
+//									(*pdata).a));
+//
+//			*pdata++;
+//
+//		}
+//	}
+//
+//	noise::utils::WriterBMP writer;
+//
+//	std::string fname(filename);
+//	writer.SetDestFilename (fname);
+//	writer.SetSourceImage(*image);
+//
+//	writer.WriteDestFile();
+//
+//	delete image;
+//}
+//

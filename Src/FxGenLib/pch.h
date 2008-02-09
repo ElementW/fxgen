@@ -1,6 +1,7 @@
+#ifndef __GNUC__
 #pragma once
-
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#endif
 
 // Standart Includes
 #include <stdlib.h>

@@ -197,6 +197,45 @@ bool NUFloatProp::AddValue(sdword dwDelta)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
+//										NCFloatProp class Implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+IMPLEMENT_CLASS(NCFloatProp, NPropertyItem);
+
+void NCFloatProp::DrawItem(NGraphics* pdc, NRect& rcItem)
+{
+	m_strValue.Format("%0.3f", m_pvarValue->fVal);
+	pdc->DrawText(m_strValue.Buffer(), rcItem, DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+}
+
+bool NCFloatProp::BeginEdit(NRect& rcItem)
+{
+	return false;
+}
+
+bool NCFloatProp::EndEdit(bool bSaveChanged)
+{
+	return false;
+}
+
+bool NCFloatProp::AddValue(sdword dwDelta)
+{
+	m_pvarValue->fVal = m_pvarValue->fVal + ((float)dwDelta)/1000.0f;
+	m_pvarValue->fVal *= 10000;
+	m_pvarValue->fVal = floor(m_pvarValue->fVal + .5);
+	m_pvarValue->fVal /= 10000;
+	if(m_pvarValue->fVal < 0)
+		m_pvarValue->fVal = 0;
+	if(m_pvarValue->fVal > 1)
+		m_pvarValue->fVal = 1;
+	return true;
+}
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
 //										NColorProp class Implementation
 //
 //-----------------------------------------------------------------

@@ -47,7 +47,7 @@ class NObject;
 //-----------------------------------------------------------------
 class NStream
 {
-public: 
+public:
 	virtual bool	PutData(const void* _buf, udword _length) = 0;
 	virtual bool	GetData(void* _buf, udword _length) = 0;
 
@@ -73,6 +73,7 @@ public:
 	NStream &operator>>( float &_val )	{ GetData(&_val, sizeof(float)); return *this;}
 	NStream &operator>>( bool &_val	 )	{ GetData(&_val, sizeof(bool)); return *this;}
 	NStream &operator>>( char* _val	 )	{ uword l; GetData(&l, sizeof(uword)); GetData(_val, l); _val[l]=0; return *this;}
+	virtual ~NStream(){/* avoid GCC warning */}
 };
 
 //-----------------------------------------------------------------
@@ -112,7 +113,7 @@ public:
 
 	bool    Open(ubyte *_buffer = null, udword _bufferSize = 0);
 	void    Close();
-        
+
 	bool	PutData(const void* _buf, udword _length);
 	bool	GetData(void* _buf, udword _length);
 

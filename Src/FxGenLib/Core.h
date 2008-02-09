@@ -54,15 +54,17 @@
 	typedef signed char				sbyte;	// Signed 8 bit value
 	typedef unsigned short		uword;	// Unsigned 16 bit value
 	typedef signed short			sword;	// Signed 16 bit value
-#ifdef __LINUX__
-	typedef uint32_t			udword;	// Unsigned 32 bit value
+#ifndef _WIN32
 	typedef int32_t				sdword;	// Signed 32 bit value
+	typedef u_int32_t			udword;	// Unsigned 32 bit value
+	typedef int64_t		sqword;	// Signed 64 bit value
+	typedef u_int64_t	uqword; // Unsigned 64 bit value
 #else
 	typedef unsigned long			udword;	// Unsigned 32 bit value
 	typedef signed long				sdword;	// Signed 32 bit value
-#endif
 	typedef signed __int64		sqword;	// Signed 64 bit value
 	typedef unsigned __int64	uqword; // Unsigned 64 bit value
+#endif
 	typedef udword						ID;			// Identifier
 
 	//Runtime class
@@ -158,6 +160,8 @@ enum eVarType
 	efloat,
 	estring,
 	erefobj,
+	erefobj2		// This 'Hack' will allow loading and saving
+					// L_ImageRenderer, L_Curve and L_Terrace
 };
 
 //-----------------------------------------------------------------
@@ -358,8 +362,10 @@ public:
 	virtual bool Save(NArchive* _s);
 	virtual	bool Load(NArchive* _l);
 
+	//virtual void saveBMP(char* filename){}
+
 	//Variables methods
-	NVarsBloc* AddVarsBloc(udword _dwVarCount, NVarsBlocDesc* _pdesc, ubyte _byVersion);
+	NVarsBloc* AddVarsBloc(udword _dwVarCount, NVarsBlocDesc* _pdesc, ubyte _byVersion=1);
 	NVarsBloc* GetFirstVarsBloc()		{ return m_pcfirstVarsBloc; }
 	void			 RemoveVarsRef(NObject* _pobj);
 
@@ -472,12 +478,18 @@ protected:
 };
 
 
+
+
+
 //-----------------------------------------------------------------
 //	Memory System
 //-----------------------------------------------------------------
 #define NMemFree(_ptr)					free(_ptr)					//!< Free memory
 #define NMemAlloc(_len)					calloc(_len, 1)			//!< Allocate memory
 #define NMemRealloc(_ptr, _len)	realloc(_ptr, _len)	//!< Reallocate memory
+
+
+
 
 //NMemCopy
 //NMemFill
@@ -492,6 +504,16 @@ int					NFileRead(void *buffer, int size, NFILEHANDLE *handle);
 void				NFileSeek(NFILEHANDLE *handle, int pos, signed char mode);
 int					NFileTell(NFILEHANDLE *handle);
 */
+
+//-----------------------------------------------------------------
+//	Misc classes
+//-----------------------------------------------------------------
+struct GradientElem
+{
+	//NColor color;
+	float		color[4];
+	float height;
+};
 
 //-----------------------------------------------------------------
 //	Includes
