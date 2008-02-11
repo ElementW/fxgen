@@ -7,7 +7,7 @@
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     Artistic License for more details.
 
     The original version of this library can be located at:
@@ -34,8 +34,8 @@ CairoContext* createCairoContext( AllocFunc allocFunc, FreeFunc freeFunc )
   return new CairoContextImpl( allocFunc, freeFunc );
 }
 
-CairoContext::CairoContext( AllocFunc allocFunc, FreeFunc freeFunc ) 
-  : Context( allocFunc, freeFunc ) 
+CairoContext::CairoContext( AllocFunc allocFunc, FreeFunc freeFunc )
+  : Context( allocFunc, freeFunc )
 {
 }
 

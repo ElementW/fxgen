@@ -158,7 +158,9 @@
 		<Unit filename="Stream.cpp" />
 		<Unit filename="Stream.h" />
 		<Unit filename="include/OperatorsLayout.h" />
-		<Unit filename="pch.cpp" />
+		<Unit filename="pch.cpp">
+			<Option weight="0" />
+		</Unit>
 		<Unit filename="pch.h">
 			<Option compile="1" />
 		</Unit>

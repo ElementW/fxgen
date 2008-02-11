@@ -108,12 +108,14 @@ public:
 #define		MAX_PATHLEN					256
 #define		OBJARRAY_GROWSIZE		16
 
+#ifndef __GNUC__
 #ifndef max
 #define max(a,b)            (((a) > (b)) ? (a) : (b))
 #endif
 
 #ifndef min
 #define min(a,b)            (((a) < (b)) ? (a) : (b))
+#endif
 #endif
 
 #ifdef _DEBUG
@@ -159,9 +161,9 @@ enum eVarType
 	eudword,
 	efloat,
 	estring,
-	erefobj,
-	erefobj2		// This 'Hack' will allow loading and saving
-					// L_ImageRenderer, L_Curve and L_Terrace
+	erefobj//,
+//	erefobj2		// This 'Hack' will allow loading and saving
+//					// L_ImageRenderer, L_Curve and L_Terrace
 };
 
 //-----------------------------------------------------------------
@@ -272,8 +274,8 @@ protected:
 	NVarValue*					m_paVarsValues;			//!< Values array
 	ubyte								m_byVersion;				//!< Bloc version (for serialization)
 
-	NMapVarsBlocDesc*		m_pcmapVarsBlocDesc;
-	udword							m_dwMapVarsCount;	//!< Map Values Count
+	NMapVarsBlocDesc*	m_pcmapVarsBlocDesc;
+	udword				m_dwMapVarsCount;	//!< Map Values Count
 
 	NVarsBloc*					m_pcnextVarsBloc;		//!< Pointer on next variables bloc
 

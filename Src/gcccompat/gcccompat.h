@@ -33,6 +33,10 @@
 template<typename T1, typename T2>inline T1 min(T1 t1, T2 t2) { return t1 < t2 ? t1 : t2; }
 #endif
 
+#ifndef max
+template<typename T1, typename T2>inline T1 max(T1 t1, T2 t2) { return t1 > t2 ? t1 : t2; }
+#endif
+
 inline errno_t strncpy_s(
    char *strDest,
    size_t numberOfElements,

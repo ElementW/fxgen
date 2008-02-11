@@ -502,10 +502,6 @@ static NMapVarsBlocDesc mapblocdescCellOp1[] =
 	MAP(1, eubyte,	"3", "" )	//V1 => 1-Density
 	MAP(1, eudword, "4", "" )	//V1 => 2-Color
 	MAP(1, euword,	"5", "" )	//V1 => 3-Seed
-};
-
-static NMapVarsBlocDesc mapblocdescCellOp2[] =
-{
 	MAP(2, eubyte,	"0", "" )	//V1 => 0-Width
 	MAP(2, eubyte,	"1", "" )	//V1 => 1-Height
 	MAP(2, eubyte,	"2", "" )	//V1 => 2-Regularity
@@ -513,7 +509,6 @@ static NMapVarsBlocDesc mapblocdescCellOp2[] =
 	MAP(2, eudword,	"4", "" )	//V1 => 4-Color
 	MAP(2, euword,	"5", "" )	//V1 => 5-Seed
 };
-
 
 static NVarsBlocDesc blocdescCellOp[] =
 {
@@ -532,8 +527,7 @@ NCellOp::NCellOp()
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(8, blocdescCellOp, 3);
 	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
-	m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescCellOp1);
-	m_pcvarsBloc->SetMapVarBlocDesc(6, mapblocdescCellOp2);
+	m_pcvarsBloc->SetMapVarBlocDesc(10, mapblocdescCellOp1);
 }
 
 udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)

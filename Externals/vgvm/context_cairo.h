@@ -7,7 +7,7 @@
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     Artistic License for more details.
 
     The original version of this library can be located at:
@@ -46,7 +46,7 @@ protected:
   Cairo::RefPtr<Cairo::ImageSurface>    _cairoSurface;
   Cairo::RefPtr<Cairo::Context>         _cairoContext;
   Cairo::RefPtr<Cairo::Gradient>        _gradients[MAX_GRADIENT_COUNT];
-  
+
   int                                   _currentGradient;
 };
 
@@ -56,4 +56,4 @@ VGVM_EXPORT CairoContext* createCairoContext( AllocFunc allocFunc, FreeFunc free
 
 }
 
-#endif vgvm_h
+#endif // vgvm_h

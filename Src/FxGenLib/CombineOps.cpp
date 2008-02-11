@@ -24,10 +24,6 @@
 #include "pch.h"
 #include "CombineOps.h"
 #include "RectangularArray.h"
-//#ifdef __GNUC__
-//using std::max;
-//using std::min;
-//#endif
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -83,10 +79,10 @@ static NMapVarsBlocDesc mapblocdescRectOp[] =
 static NVarsBlocDesc blocdescRectOp[] =
 {
 	VAR(eudword,	true, "Color",	"-1",		"NColorProp")	//0
-	VAR(efloat,		true, "x1",			"0.0",	"NFloatProp")	//1
-	VAR(efloat,		true, "y1",			"0.0",	"NFloatProp")	//2
-	VAR(efloat,		true, "x2",			"0.5",	"NFloatProp")	//3
-	VAR(efloat,		true, "y2",			"0.5",	"NFloatProp")	//4
+	VAR(efloat,		true, "x1",			"0.0",	"NCFloatProp")	//1
+	VAR(efloat,		true, "y1",			"0.0",	"NCFloatProp")	//2
+	VAR(efloat,		true, "x2",			"0.5",	"NCFloatProp")	//3
+	VAR(efloat,		true, "y2",			"0.5",	"NCFloatProp")	//4
 };
 
 NRectOp::NRectOp()
@@ -123,10 +119,10 @@ udword NRectOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 
 	//Init
 	udword x1, x2, y1, y2;
-	x1 = max(0.f, fx1 * w);
-	x2 = min(float(w), fx2 * w);
-	y1 = max(0.f, fy1 * h);
-	y2 = min(float(h), fy2 * h);
+	x1 = max(fx1 * w, 0.f);
+	x2 = min(w, fx2 * w);
+	y1 = max(fy1 * h, 0.f);
+	y2 = min(h, fy2 * h);
 
 	//Copy Source to this bitmap
 	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
@@ -138,9 +134,9 @@ udword NRectOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 		for (udword x=x1; x<x2; x++)
 		{
 			float alpha = col.a / 255.f;
-			pPixelsD->r = pPixelsD->r * (1 - alpha) + col.r * alpha;
-			pPixelsD->g = pPixelsD->g * (1 - alpha) + col.g * alpha;
-			pPixelsD->b = pPixelsD->b * (1 - alpha) + col.b * alpha;
+			pPixelsD->r = ubyte(pPixelsD->r * (1 - alpha) + col.r * alpha);
+			pPixelsD->g = ubyte(pPixelsD->g * (1 - alpha) + col.g * alpha);
+			pPixelsD->b = ubyte(pPixelsD->b * (1 - alpha) + col.b * alpha);
 			// input alpha is preserved
 			++pPixelsD;
 		}
@@ -467,10 +463,10 @@ udword NAddOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 				{
 					float alpha = pPxSrc->a / 255.f;
 					// 1-(1-a1)(1-a2) = 1 - (1-a1-a2+a1a2) = a1+a2-a1a2
-					pPxDst->a = (pPxDst->a - pPxDst->a * alpha) + pPxSrc->a;
-					pPxDst->r = pPxSrc->r * alpha + pPxDst->r * (1 - alpha);
-					pPxDst->g = pPxSrc->g * alpha + pPxDst->g * (1 - alpha);
-					pPxDst->b = pPxSrc->b * alpha + pPxDst->b * (1 - alpha);
+					pPxDst->a = ubyte((pPxDst->a - pPxDst->a * alpha) + pPxSrc->a);
+					pPxDst->r = ubyte(pPxSrc->r * alpha + pPxDst->r * (1 - alpha));
+					pPxDst->g = ubyte(pPxSrc->g * alpha + pPxDst->g * (1 - alpha));
+					pPxDst->b = ubyte(pPxSrc->b * alpha + pPxDst->b * (1 - alpha));
 					pPxDst++;
 					pPxSrc++;
 				}
@@ -549,10 +545,10 @@ udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	m_pcvarsBloc->GetValue(6, _ftime, fGamma);
 
 	//Process operator
-	sdword	dwCenterX	= fCenterX*w;
-	sdword  dwCenterY	= fCenterY*h;
-	sdword  dwRadiusX	= fRayX*w;
-	sdword  dwRadiusY	= fRayY*h;
+	sdword	dwCenterX	= sdword(fCenterX*w);
+	sdword  dwCenterY	= sdword(fCenterY*h);
+	sdword  dwRadiusX	= sdword(fRayX*w);
+	sdword  dwRadiusY	= sdword(fRayY*h);
 
 	float fRed	= col.r;
 	float fGreen= col.g;
@@ -684,7 +680,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 	//Process operator
 	uword n = 0;
-	wCount *= _fDetailFactor;
+	wCount = uword(wCount * _fDetailFactor);
 	while( n++ < wCount )
 	{
 		// double gives better resolution
