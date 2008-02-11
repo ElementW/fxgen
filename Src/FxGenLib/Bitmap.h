@@ -38,13 +38,13 @@ struct RGBA
 	RGBA operator*(float c) const
 	{
 		RGBA retval(*this);
-		retval.a *= c;
+		retval.a = ubyte(retval.a * c);
 		return retval;
 	}
 
 	void operator*=(float c)
 	{
-		a *= c;
+		a = ubyte(a * c);
 	}
 
 	//! Non-commutative +: argument is put on top existing color based on alpha
@@ -53,10 +53,10 @@ struct RGBA
 		RGBA retval;
 		float alpha = v.a / 255.f;
 		float beta = 1- alpha; //opt
-		retval.a = v.a     +     a * beta;
-		retval.r = v.r * alpha + r * beta;
-		retval.g = v.g * alpha + g * beta;
-		retval.b = v.b * alpha + b * beta;
+		retval.a = ubyte(v.a     +     a * beta);
+		retval.r = ubyte(v.r * alpha + r * beta);
+		retval.g = ubyte(v.g * alpha + g * beta);
+		retval.b = ubyte(v.b * alpha + b * beta);
 		return retval;
 	}
 
@@ -65,10 +65,10 @@ struct RGBA
 	{
 		float alpha = v.a / 255.f;
 		float beta = 1- alpha; //opt
-		a = v.a     +     a * beta;
-		r = v.r * alpha + r * beta;
-		g = v.g * alpha + g * beta;
-		b = v.b * alpha + b * beta;
+		a = ubyte(v.a     +     a * beta);
+		r = ubyte(v.r * alpha + r * beta);
+		g = ubyte(v.g * alpha + g * beta);
+		b = ubyte(v.b * alpha + b * beta);
 	}
 };
 

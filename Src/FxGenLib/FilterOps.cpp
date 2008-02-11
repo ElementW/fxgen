@@ -39,10 +39,6 @@ static NMapVarsBlocDesc mapblocdescBlurOp[] =
 	MAP(1,	eubyte,		"0",		""	)	//V1 => 0-Width
 	MAP(1,	eubyte,		"1",		""	)	//V1 => 1-Height
 	MAP(1,	eubyte,		"2",		""	)	//V1 => 2-Amplify
-};
-
-static NMapVarsBlocDesc mapblocdescBlurOp2[] =
-{
 	MAP(2,	eubyte,		"0",		"*0.0039215"	)	//V1 => 0-Width
 	MAP(2,	eubyte,		"1",		"*0.0039215"	)	//V1 => 1-Height
 	MAP(2,	eubyte,		"2",		""	)	//V1 => 2-Amplify
@@ -61,8 +57,7 @@ NBlurOp::NBlurOp()
 {
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(4, blocdescBlurOp, 3);
-	m_pcvarsBloc->SetMapVarBlocDesc(3, mapblocdescBlurOp);
-	m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescBlurOp2); // can they work together?
+	m_pcvarsBloc->SetMapVarBlocDesc(7, mapblocdescBlurOp);
 }
 
 udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
@@ -309,10 +304,6 @@ static NMapVarsBlocDesc mapblocdescColorsOp[] =
 	MAP(1,	eudword,		"1",		""	)	//V1 => 1-Color Percent
 	MAP(1,	eubyte,			"2",		""	)	//V1 => 2-Brithness
 	MAP(1,	eubyte,			"3",		""	)	//V1 => 3-Contrast
-};
-
-static NMapVarsBlocDesc mapblocdescColorsOp2[] =
-{
 	MAP(2,	eudword,		"0",		""	)	//V1 => 0-Color Base
 	MAP(2,	eudword,		"1",		""	)	//V1 => 1-Color Percent
 	MAP(2,	eubyte,			"2",		""	)	//V1 => 2-Brithness
@@ -336,9 +327,7 @@ NColorsOp::NColorsOp()
 {
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(6, blocdescColorsOp, 3);
-//	m_pcvarsBloc = AddVarsBloc(5, blocdescColorsOp, 2);
-	m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescColorsOp);
-	m_pcvarsBloc->SetMapVarBlocDesc(5, mapblocdescColorsOp2);
+	m_pcvarsBloc->SetMapVarBlocDesc(9, mapblocdescColorsOp);
 }
 
 udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)

@@ -7,7 +7,7 @@
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     Artistic License for more details.
 
     The original version of this library can be located at:
@@ -91,7 +91,7 @@ enum ValueType
 
 struct Value
 {
-  union 
+  union
   {
     float         _float;
     int           _int;
@@ -122,7 +122,7 @@ class TypedValueList
 {
 public:
                     TypedValueList() : _valueCount( 0 ) {}
-  
+
   unsigned int      getValueCount() const { return _valueCount; }
   const TypedValue* getValues() const { return _values; }
 
@@ -130,7 +130,7 @@ public:
   {
     assert( _valueCount<32 );
     _values[_valueCount++] = value;
-    
+
     return *this;
   }
 

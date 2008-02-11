@@ -75,7 +75,7 @@ bool NVarsBloc::Save(NArchive* _s)
 			case eudword:	*_s<<pval->dwVal;									break;
 			case efloat:	*_s<<pval->fVal;									break;
 			case erefobj:	_s->PutMappedObj(pval->pcRefObj);	break;
-			case erefobj2: break;
+//			case erefobj2: break;
 			case estring:	*_s<<(const char*)pval->szVal; /* cast for GCC - Olter */	break;
 			default:	assert(0);														break;
 		}
@@ -118,7 +118,7 @@ bool NVarsBloc::Load(NArchive* _l)
 				case eudword:	*_l>>pval->dwVal;										break;
 				case efloat:	*_l>>pval->fVal;										break;
 				case erefobj:	SetValue(i, 0, _l->GetMappedObj());	break;
-				case erefobj2: break;
+//				case erefobj2: break;
 				case estring:	*_l>>pval->szVal;					break;
 				default:	assert(0);															break;
 			}
@@ -173,7 +173,7 @@ void NVarsBloc::Init(udword _dwVarsCount, NVarsBlocDesc* _pvarsBlocDesc, NObject
 			case eudword:	pval->dwVal=(udword)atof(pdesc->pszDefValue);	break;
 			case efloat:	pval->fVal=(float)atof(pdesc->pszDefValue);		break;
 			case erefobj:	pval->pcRefObj=null;	break;
-			case erefobj2: break;
+//			case erefobj2: break;
 			case estring:	strcpy_s(pval->szVal, sizeof(pval->szVal), pdesc->pszDefValue);			break;
 			default:	assert(0);																				break;
 		}
@@ -194,8 +194,8 @@ void NVarsBloc::RemoveVarsRef(NObject* _pobj)
 		NVarsBlocDesc* pdesc = m_pcvarsblocDesc + i;
 		if (pdesc->eType==erefobj && pval->pcRefObj==_pobj)
 			SetValue(i, 0, (NObject*)null);
-		if (pdesc->eType==erefobj2 && pval->pcRefObj==_pobj)
-			SetValue(i, 0, (NObject*)null);
+//		if (pdesc->eType==erefobj2 && pval->pcRefObj==_pobj)
+//			SetValue(i, 0, (NObject*)null);
 	}
 
 }
@@ -316,7 +316,7 @@ void NVarsBloc::SetValue(udword _idx, float _fTime, const char*	_val)
 void NVarsBloc::SetMapVarBlocDesc(udword _dwMapVarsCount, NMapVarsBlocDesc* _pmapVarsBlocDesc)
 {
 	m_pcmapVarsBlocDesc = _pmapVarsBlocDesc;
-	m_dwMapVarsCount		= _dwMapVarsCount;
+	m_dwMapVarsCount  = _dwMapVarsCount;
 }
 
 //-----------------------------------------------------------------
@@ -376,7 +376,7 @@ void NVarsBloc::DoVarBlocVersion_Mapping(NArchive* _l, ubyte _byVersion)
 							MapValueTo(arVal.pcRefObj, j);
 						break;
 
-						case erefobj2: break;
+//						case erefobj2: break;
 
 						case estring:
 							*_l>>arVal.szVal;

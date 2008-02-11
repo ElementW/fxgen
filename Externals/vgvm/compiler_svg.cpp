@@ -7,7 +7,7 @@
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     Artistic License for more details.
 
     The original version of this library can be located at:
@@ -58,7 +58,7 @@ public:
   ElementIndexer(ElementIdPair *elements, int &elementCount) : elements(elements), elementCount(elementCount) {}
 
 	  virtual bool VisitEnter( const TiXmlElement& element, const TiXmlAttribute* /*firstAttribute*/ )
-  { 
+  {
     const char *id = element.Attribute("id");
     if (id != 0)
     {
@@ -66,7 +66,7 @@ public:
       elements[elementCount].id = id;
       elementCount++;
     }
-    return true; 
+    return true;
   }
 };
 
@@ -117,26 +117,26 @@ public:
 
         token = strtok(0, ";");
       }
-      
+
       delete[] styleCopy;
     }
 
-    _output->addOperation( OP_ADD_GRADIENT_STOP, TypedValueList() << TypedValue( offset ) << 
-                                                                     TypedValue( stopColor.r/255.0f ) << 
-                                                                     TypedValue( stopColor.g/255.0f ) << 
-                                                                     TypedValue( stopColor.b/255.0f ) << 
-                                                                     TypedValue( stopOpacity ) ); 
+    _output->addOperation( OP_ADD_GRADIENT_STOP, TypedValueList() << TypedValue( offset ) <<
+                                                                     TypedValue( stopColor.r/255.0f ) <<
+                                                                     TypedValue( stopColor.g/255.0f ) <<
+                                                                     TypedValue( stopColor.b/255.0f ) <<
+                                                                     TypedValue( stopOpacity ) );
   }
 
-  virtual bool VisitEnter(const TiXmlElement& element, const TiXmlAttribute* /*firstAttribute*/ )	
-  { 
+  virtual bool VisitEnter(const TiXmlElement& element, const TiXmlAttribute* /*firstAttribute*/ )
+  {
     if (strcmp(element.Value(), "stop") == 0)
     {
       double offset = 0.0f;
       element.Attribute("offset", &offset);
       executeGradientStop( (float)offset, element.Attribute("style") );
     }
-    return true; 
+    return true;
   }
 };
 
@@ -160,7 +160,7 @@ public:
   ElementIdPair *_elements;
   int _elementCount;
 
-  SVGConverter( Program* output, ElementIdPair *elements, int elementCount ) 
+  SVGConverter( Program* output, ElementIdPair *elements, int elementCount )
     : _output( output ), _stackPointer( 0 ), _gradientCount( 0 ), _elements( elements ), _elementCount( elementCount )
   {
     _fillStack[0] = false;
@@ -183,7 +183,7 @@ public:
     float fillOpacity = 1.0f;
     FillRule fillRule = FR_WINDING;
     int fillGradient = -1;
-    
+
     float opacity = 1;
 
     if (style != 0)
@@ -304,7 +304,7 @@ public:
 
         token = strtok(0, ";");
       }
-      
+
       delete[] styleCopy;
     }
 
@@ -312,9 +312,9 @@ public:
     {
       if (fillGradient == -1)
       {
-        _output->addOperation( OP_SOURCE_COLOR, TypedValueList() << TypedValue( fillColor.r/255.0f) << 
-                                                                    TypedValue( fillColor.g/255.0f) << 
-                                                                    TypedValue( fillColor.b/255.0f) << 
+        _output->addOperation( OP_SOURCE_COLOR, TypedValueList() << TypedValue( fillColor.r/255.0f) <<
+                                                                    TypedValue( fillColor.g/255.0f) <<
+                                                                    TypedValue( fillColor.b/255.0f) <<
                                                                     TypedValue( fillOpacity * opacity ) );
       }
       else
@@ -337,9 +337,9 @@ public:
     {
       if (strokeGradient == -1)
       {
-        _output->addOperation( OP_SOURCE_COLOR, TypedValueList() << TypedValue( strokeColor.r/255.0f) << 
-                                                                    TypedValue( strokeColor.g/255.0f) << 
-                                                                    TypedValue( strokeColor.b/255.0f) << 
+        _output->addOperation( OP_SOURCE_COLOR, TypedValueList() << TypedValue( strokeColor.r/255.0f) <<
+                                                                    TypedValue( strokeColor.g/255.0f) <<
+                                                                    TypedValue( strokeColor.b/255.0f) <<
                                                                     TypedValue( strokeOpacity * opacity ) );
       }
       else
@@ -437,7 +437,7 @@ public:
   }
 
   virtual bool VisitEnter( const TiXmlElement& element, const TiXmlAttribute* firstAttribute )
-  { 
+  {
     const char *value = element.Value();
     if( strcmp( element.Value(), "svg" ) == 0 )
     {
@@ -457,7 +457,7 @@ public:
       element.Attribute("y", &y);
       element.Attribute("width", &w);
       element.Attribute("height", &h);
-      
+
       _output->addOperation( OP_PUSH_STATE );
       executeTransform(element.Attribute("transform"));
       _output->addOperation( OP_RECTANGLE, TypedValueList() << TypedValue( (float)x ) << TypedValue( (float)y ) << TypedValue( (float)w ) << TypedValue( (float)h ) );
@@ -507,7 +507,7 @@ public:
               } else break;
             }
 
-            grabNext = false; 
+            grabNext = false;
           } else if (token[0] == 'M' || token[0] == 'm')
           {
             Operations operation = token[0] == 'M' ? OP_MOVE_TO : OP_MOVE_TO_RELATIVE;
@@ -563,9 +563,9 @@ public:
 
         _gradients[_gradientCount].matrix = executeTransform(element.Attribute("gradientTransform"), false);
         cairo_matrix_invert(&_gradients[_gradientCount].matrix);
-        
+
         StopParser stopParser( _output );
-        element.Accept( &stopParser ); 
+        element.Accept( &stopParser );
 
         const char *xlink = element.Attribute("xlink:href");
         if (xlink != 0)
@@ -579,7 +579,7 @@ public:
             }
           }
         }
-        
+
         _gradientCount++;
       }
 
@@ -596,12 +596,12 @@ public:
       _gradients[_gradientCount].id = element.Attribute("id");
       if( _gradients[_gradientCount].id != 0 )
       {
-        _output->addOperation( OP_CREATE_RADIAL_GRADIENT, TypedValueList() << TypedValue( _gradientCount ) << 
-                                                                              TypedValue( (float)fx ) << 
-                                                                              TypedValue( (float)fy ) << 
-                                                                              TypedValue( 0.0f ) << 
-                                                                              TypedValue( (float)cx ) << 
-                                                                              TypedValue( (float)cy ) << 
+        _output->addOperation( OP_CREATE_RADIAL_GRADIENT, TypedValueList() << TypedValue( _gradientCount ) <<
+                                                                              TypedValue( (float)fx ) <<
+                                                                              TypedValue( (float)fy ) <<
+                                                                              TypedValue( 0.0f ) <<
+                                                                              TypedValue( (float)cx ) <<
+                                                                              TypedValue( (float)cy ) <<
                                                                               TypedValue( (float)r ) );
 
         _gradients[_gradientCount].matrix = executeTransform(element.Attribute("gradientTransform"), false);
@@ -622,25 +622,25 @@ public:
             }
           }
         }
-        
+
         _gradientCount++;
       }
 
       return false;
     }
 
-    return true; 
+    return true;
   }
-	  
-  virtual bool VisitExit(const TiXmlElement& element)		
-  { 
+
+  virtual bool VisitExit(const TiXmlElement& element)
+  {
     const char *value = element.Value();
     if (strcmp(element.Value(), "g") == 0)
     {
       _output->addOperation( OP_POP_STATE );
       _stackPointer--;
     }
-    return true; 
+    return true;
   }
 };
 
@@ -653,7 +653,7 @@ bool compileSVG( const TiXmlDocument* svgDocument, Program* program )
   program->addOperation( OP_PUSH_STATE );
   ElementIndexer indexer( elements, elementCount );
   svgDocument->Accept(&indexer);
-  
+
   SVGConverter converter( program, elements, elementCount );
   svgDocument->Accept(&converter);
   program->addOperation( OP_POP_STATE );

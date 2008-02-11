@@ -7,7 +7,7 @@
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     Artistic License for more details.
 
     The original version of this library can be located at:
@@ -29,7 +29,7 @@ namespace cairo
 class VGVM_EXPORT CairoContext : public Context
 {
 public:
-  
+
   virtual void setOutput( unsigned char* outputBuffer, unsigned int width, unsigned int height, bool alpha ) = 0;
 protected:
 

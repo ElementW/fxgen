@@ -7,7 +7,7 @@
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     Artistic License for more details.
 
     The original version of this library can be located at:
@@ -26,7 +26,7 @@ namespace vgvm
 
 Program::Program( AllocFunc allocFunc, FreeFunc freeFunc )
   : MemoryHandler( allocFunc, freeFunc ),
-    _program( 0 ), 
+    _program( 0 ),
     _programSize( 0 ),
     _reservedSize( 0 )
 {
@@ -68,7 +68,7 @@ void Program::resize( unsigned int newSize )
   }
 
   unsigned char* newProgram = (unsigned char*)_alloc( newSize );
-  
+
   if( _program != 0 )
   {
     memcpy( newProgram, _program, _reservedSize < newSize ? _reservedSize : newSize );
@@ -106,7 +106,7 @@ void Program::addOperation( Operations operation, const TypedValueList& argument
 
 Context::Context( AllocFunc allocFunc, FreeFunc freeFunc )
   : MemoryHandler( allocFunc, freeFunc ),
-    _registerCount( 0 ), 
+    _registerCount( 0 ),
     _registers( 0 )
 {
 }
@@ -124,7 +124,7 @@ void Context::setRegisterCount( unsigned int registerCount )
   }
 
   Value* newRegisters = (Value*)_alloc( sizeof(Value) * registerCount );
-  
+
   if( _registers != 0 )
   {
     memcpy( newRegisters, _registers, sizeof( Value ) * (_registerCount < registerCount ? _registerCount : registerCount) );

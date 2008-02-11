@@ -6,13 +6,13 @@
 			<Depends filename="../Src/FxGenLib/FxGenLib.cbp" />
 			<Depends filename="../Src/GUILib/GUILib.cbp" />
 		</Project>
-		<Project filename="../Src/FxGenLib/FxGenLib.cbp" active="1">
+		<Project filename="../Src/FxGenLib/FxGenLib.cbp">
 			<Depends filename="../Externals/vgvm/vgvm.cbp" />
 		</Project>
 		<Project filename="../Externals/vgvm/vgvm.cbp" />
 		<Project filename="../Examples/BMP Extractor/test.cbp" />
 		<Project filename="../../cairomm-1.4.6/MSVC/cairomm/cairomm.cbp" />
 		<Project filename="../Externals/tinyxml/tinyxml_lib.cbp" />
-		<Project filename="../gtk/editor-gtk.cbp" />
+		<Project filename="../Src/editorgtk/editor-gtk.cbp" active="1" />
 	</Workspace>
 </CodeBlocks_workspace_file>

@@ -45,9 +45,9 @@ static NVarsBlocDesc blocdescRotoZoomOp[] =
 {
 	VAR(eubyte,	false, "Set Width",		"0,[0 (Default),1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
 	VAR(eubyte,	false, "Set Height",	"0,[0 (Default),1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//1
-	VAR(efloat,		true, "CenterX",	"0.5",		"NFloatProp")	//2
-	VAR(efloat,		true, "CenterY",	"0.5",		"NFloatProp")	//3
-	VAR(efloat,		true, "Rotate",		"0.0",		"NFloatProp")	//4
+	VAR(efloat,		true, "CenterX",	"0.5",		"NCFloatProp")	//2
+	VAR(efloat,		true, "CenterY",	"0.5",		"NCFloatProp")	//3
+	VAR(efloat,		true, "Rotate",		"0.0",		"NCFloatProp")	//4
 	VAR(efloat,		true, "ZoomX",		"1.0",		"NFloatProp")	//5
 	VAR(efloat,		true, "ZoomY",		"1.0",		"NFloatProp")	//6
 	VAR(eubyte,		true, "Wrap",			"1,[0 (Off), 1 (On)]",	"NUbyteComboProp")	//7
