@@ -567,7 +567,6 @@ udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	//Process
 	for (sdword y=0; y<h; y++)
 	{
-
 		float dy = (float)(y-dwCenterY) * f1_RadiusY;
 		float dy_2 = dy*dy;
 

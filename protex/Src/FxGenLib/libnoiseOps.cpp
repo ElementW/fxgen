@@ -2012,12 +2012,13 @@ static NVarsBlocDesc blocdescNModelConcentricDepthSphere[] =
 	VAR(efloat,		true, "theta1",			"-180.0",	"NFloatProp")	//4
 	VAR(efloat,		true, "theta2",			"180.0",	"NFloatProp")	//5
 	VAR(efloat,		true, "radius",			"1.0",	"NFloatProp")	//6
+	VAR(efloat,		true, "depth",			"1.0",	"NFloatProp")	//7
 };
 
 NModelConcentricDepthSphere::NModelConcentricDepthSphere()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(6, blocdescNModelConcentricDepthSphere);
+	m_pcvarsBloc = AddVarsBloc(7, blocdescNModelConcentricDepthSphere);
 }
 
 udword NModelConcentricDepthSphere::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
@@ -2039,6 +2040,7 @@ udword NModelConcentricDepthSphere::Process(float _ftime, NOperator** _pOpsInts,
 	float theta1 = -180.0f;
 	float theta2 =  180.0f;
 	float radius = 1.0f;
+	float depth = 1.0f;
 
 	m_pcvarsBloc->GetValue(0, _ftime, (uword&)height);
 	m_pcvarsBloc->GetValue(1, _ftime, (float&)phi1);
@@ -2046,6 +2048,7 @@ udword NModelConcentricDepthSphere::Process(float _ftime, NOperator** _pOpsInts,
 	m_pcvarsBloc->GetValue(3, _ftime, (float&)theta1);
 	m_pcvarsBloc->GetValue(4, _ftime, (float&)theta2);
 	m_pcvarsBloc->GetValue(5, _ftime, (float&)radius);
+	m_pcvarsBloc->GetValue(6, _ftime, (float&)depth);
 
 	height = (int)nv_clamp( height, 32, 8192 );
 	phi1 = (int)nv_clamp( phi1, -90.0f, 0.0f );
@@ -2056,6 +2059,7 @@ udword NModelConcentricDepthSphere::Process(float _ftime, NOperator** _pOpsInts,
 	m_heightMapBuilder.SetSamplingRadius(radius);
 	m_heightMapBuilder.SetBounds (phi1, phi2, theta1, theta2); // degrees
 	m_heightMapBuilder.SetDestSize (height * 2, height);
+	//m_heightMapBuilder.setD
 	m_heightMapBuilder.SetSourceModule (*m);
 	m_heightMapBuilder.SetDestNoiseMap (m_heightMap);
 	m_heightMapBuilder.Build ();

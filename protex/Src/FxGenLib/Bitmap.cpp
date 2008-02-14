@@ -100,33 +100,52 @@ void NBitmap::SetSize(udword _w, udword _h)
 //-----------------------------------------------------------------
 void NBitmap::saveBMP(char *filename)
 {
-	RGBA* pdata = m_pbyPixels;
+	
 
-	noise::utils::Image *image = new noise::utils::Image( m_dwWidth, m_dwHeight );
+	int divide_by_128_w = m_dwWidth / 128;
+	int tiles_per_row = divide_by_128_w;
 
-	for( int i = 0; i < m_dwHeight; i++ )
+	for( int X = 0; X < tiles_per_row; X++ )
 	{
-		for( int j = 0; j < m_dwWidth; j++ )
+		for( int Y = 0; Y < tiles_per_row; Y++ )
 		{
-			image->SetValue( j, i, 
-				noise::utils::Color((*pdata).r, 
-									(*pdata).g, 
-									(*pdata).b, 
-									(*pdata).a));
 
-			*pdata++;
+			RGBA* pdata = m_pbyPixels ;
+			noise::utils::Image *image = new noise::utils::Image( 128, 128 );
 
+			for( int i = 0; i < 128	; i++ )
+			{
+				for( int j = 0; j < 128; j++ )
+				{
+					// I = i+X*128;
+					// J = j+Y*128
+					// pdata index = (i*128+j)
+					int index = ((128 * m_dwWidth * X) + i*m_dwWidth) + (Y*128 + j);
+					image->SetValue( j, 127-i, 
+						noise::utils::Color(pdata[index].r, 
+											pdata[index].g, 
+											pdata[index].b, 
+											pdata[index].a));
+
+					//int offset = 1+(X*divide_by_128_w + Y)*128;
+					//*pdata++;
+
+				}
+			}
+
+			noise::utils::WriterBMP writer;
+
+			std::string fname(filename);
+			char buff[256];
+			sprintf(buff, "%d%d.bmp", X, Y);
+			fname+=buff;
+			writer.SetDestFilename (fname);
+			writer.SetSourceImage(*image);
+			
+			writer.WriteDestFile();
+
+			delete image;
 		}
 	}
-
-	noise::utils::WriterBMP writer;
-
-	std::string fname(filename);
-	writer.SetDestFilename (fname);
-	writer.SetSourceImage(*image);
-	
-	writer.WriteDestFile();
-
-	delete image;
 }
 

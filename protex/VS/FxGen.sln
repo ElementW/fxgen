@@ -17,19 +17,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Editor", "..\Src\Editor\Edi
 		{D09B1D9E-17D5-4F94-8308-0D30D4FEB588} = {D09B1D9E-17D5-4F94-8308-0D30D4FEB588}
 	EndProjectSection
 EndProject
-<<<<<<< .mine
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1D491AC5-750C-4705-8B7D-C3678297EF48}"
-	ProjectSection(SolutionItems) = preProject
-		..\FxGen API.txt = ..\FxGen API.txt
-		..\Src\FxGen TODO.txt = ..\Src\FxGen TODO.txt
-	EndProjectSection
-=======
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libnoise", "..\Src\noise\libnoise.vcproj", "{408579FB-6940-4E2D-9634-2836887558AC}"
-
-
-
-
->>>>>>> .theirs
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

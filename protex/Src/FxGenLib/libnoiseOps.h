@@ -23,8 +23,8 @@
 //-----------------------------------------------------------------
 
 #include "EngineOp.h"
-#include "noise/src/noise.h"
-#include "noiseutils/noiseutils.h"
+#include "../noise/src/noise.h"
+#include "noiseutils.h"
 
 #ifdef GetUserName
 #undef GetUserName

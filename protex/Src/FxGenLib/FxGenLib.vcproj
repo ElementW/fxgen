@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="FxGenLib"
 	ProjectGUID="{D39F9951-FC48-4410-93AC-CEAF6934BF3F}"
 	RootNamespace="FxGenLib"
@@ -42,8 +42,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\Externals\vgvm;..\..\Externals\cairo;..\..\Externals\vgvm"
-				PreprocessorDefinitions="WIN32;_DEBUG;_USRDLL;FXGEN_EXPORTS;BUILDING_VGVM_DLL;_CRT_SECURE_NO_DEPRECATE "
+				AdditionalIncludeDirectories="../../externals/;../../externals/vgvm/"
+				PreprocessorDefinitions="WIN32;_DEBUG;_USRDLL;FXGEN_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -64,9 +64,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cairo.lib cairomm-1.0d.lib libnoise.lib gdi32.lib user32.lib comdlg32.lib comctl32.lib"
+				AdditionalDependencies="libnoise.lib cairo.lib cairomm-1.0d.lib "
 				OutputFile="$(OutDir)\$(ProjectName)_D.dll"
-				AdditionalLibraryDirectories="..\..\Externals\cairo;..\..\Externals\vgvm;"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
@@ -123,8 +122,7 @@
 				Optimization="2"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="..\..\Externals\vgvm;..\..\Externals\cairo;..\..\Externals\vgvm"
-				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;FXGEN_EXPORTS;BUILDING_VGVM_DLL;_CRT_SECURE_NO_DEPRECATE "
+				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;FXGEN_EXPORTS"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				EnableEnhancedInstructionSet="2"
@@ -146,9 +144,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cairo.lib cairomm-1.0.lib user32.lib"
-				OutputFile="..\..\W32Bin\$(ProjectName).dll"
-				AdditionalLibraryDirectories="..\..\Externals\cairo;..\..\Externals\vgvm;"
+				AdditionalDependencies="user32.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -204,7 +200,6 @@
 				Optimization="1"
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="..\..\Externals\vgvm;..\..\Externals\cairo;..\..\Externals\vgvm"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_MODE_EDITION"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
@@ -271,8 +266,7 @@
 				Optimization="2"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="..\..\Externals\vgvm;..\..\Externals\cairo;..\..\Externals\vgvm"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;FXGEN_EXPORTS;BUILDING_VGVM_DLL"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;FXGEN_EXPORTS"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -292,8 +286,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cairo.lib cairomm-1.0.lib"
-				AdditionalLibraryDirectories="..\..\Externals\cairo;..\..\Externals\vgvm;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -473,86 +465,6 @@
 			<File
 				RelativePath=".\RenderOps.h"
 				>
-			</File>
-		</Filter>
-		<Filter
-			Name="VGVM"
-			>
-			<File
-				RelativePath="..\..\Externals\vgvm\context_cairo.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Tiny Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release DLL|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\Externals\vgvm\context_cairo.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Externals\vgvm\vgvm.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Tiny Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release DLL|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter

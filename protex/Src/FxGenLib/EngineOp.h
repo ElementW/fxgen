@@ -63,7 +63,7 @@ class NObject;
 //-----------------------------------------------------------------
 typedef	void (__cdecl FXGEN_OPSPROCESSCB)(udword _dwCurrentOp, udword _dwTotalOps);
 
-#include "noise/src/noise.h"
+#include "../noise/src/noise.h"
 #include "noiseutils.h"
 
 //-----------------------------------------------------------------
