@@ -120,7 +120,7 @@ void NBitmap::saveBMP(char *filename)
 					// I = i+X*128;
 					// J = j+Y*128
 					// pdata index = (i*128+j)
-					int index = ((128 * m_dwWidth * X) + i*m_dwWidth) + (Y*128 + j);
+					int index = ((128 * m_dwWidth * X) + (i-X)*m_dwWidth) + (Y*128 + (j-Y));
 					image->SetValue( j, 127-i, 
 						noise::utils::Color(pdata[index].r, 
 											pdata[index].g, 
