@@ -750,7 +750,7 @@ udword NNoiseOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NVectorOp, NOperator);
+/*IMPLEMENT_CLASS(NVectorOp, NOperator);
 
 static void* vgvmAlloc( size_t size )
 {
@@ -862,3 +862,4 @@ udword NVectorOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 
 	return 0;
 }
+*/

@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------
 //                   Forward declarations
 //-----------------------------------------------------------------
+
 namespace vgvm
 {
 	namespace cairo
@@ -34,6 +35,8 @@ namespace vgvm
 	}
 	class Program;
 }
+//using namespace vgvm;
+//using namespace vgvm::cairo;
 
 //-----------------------------------------------------------------
 //                   Prototypes
@@ -164,7 +167,7 @@ public:
 //!	\class		NVectorOp
 //!	\brief		Render vector graphics
 //-----------------------------------------------------------------
-class FXGEN_API NVectorOp : public NOperator
+/*class FXGEN_API NVectorOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -189,4 +192,4 @@ private:
 
 	vgvm::cairo::CairoContext*	m_pContext;
 	vgvm::Program*			m_pProgram;
-};
+};*/

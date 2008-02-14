@@ -924,8 +924,8 @@ void NoiseMapBuilderDepthPlane::Build ()
   double zExtent = m_upperZBound - m_lowerZBound;
   double xDelta  = xExtent / (double)m_destWidth ;
   double zDelta  = zExtent / (double)m_destHeight;
-  double xCur    = m_lowerXBound;
-  double zCur    = m_lowerZBound;
+  double xCur    = m_lowerXBound;// - 0.5*xDelta;
+  double zCur    = m_lowerZBound;// - 0.5*zDelta;
 
   // Fill every point in the noise map with the output values from the model.
   for (int z = 0; z < m_destHeight; z++) {

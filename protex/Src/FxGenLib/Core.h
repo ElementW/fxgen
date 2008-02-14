@@ -19,6 +19,7 @@
 #ifdef __GNUC__
 #include "gcccompat/gcccompat.h"
 #endif
+#include <string.h>
 
 //-----------------------------------------------------------------
 //                   Macros
