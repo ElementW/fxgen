@@ -956,6 +956,7 @@ void NCurveDlg::OnOpen()
 	//Save File Dialog
 	NFileDialog dlg;
 	dlg.Create("Opening Curve...", (NWnd*)this, true);
+	
 	if (dlg.DoModal())
 	{
 		NString str = dlg.GetPathName();
