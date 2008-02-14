@@ -1335,6 +1335,7 @@ bool NFileDialog::Create(char* name, NWnd* parent, bool open, bool multiselect)
 
 	mOfn.lStructSize		= sizeof(OPENFILENAME);
 	mOfn.hInstance			= GetModuleHandle (null);
+	SetCurrentDirectory("../");
 
   if (parent!=null)		mOfn.hwndOwner = parent->m_W32HWnd;
 	else								mOfn.hwndOwner = null;
