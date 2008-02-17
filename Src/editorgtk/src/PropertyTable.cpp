@@ -17,7 +17,9 @@
 
 #include <pch.h>
 #include "globals.h"
-
+#include "tinyxml.h"
+#include "vgvm/vgvm.h"
+#include "vgvm/compilers/svg.h"
 
 /// Split an FxGen ubyte combo definition into a set of strings
 vector<string> parse_fxgen_combo_string(string csv)
@@ -51,6 +53,7 @@ PropertyTable::PropertyTable(GtkTable*cobject, const RefPtr<Xml>& refGlade)
 */
 void PropertyTable::AdjustProperty(Gtk::Widget* w, int i, OperatorWidget* op)
 {
+	window->project_modified = true;
 	NVarValue* val = op->op->m_pcvarsBloc->GetValues() + i;
 	int type = op->op->m_pcvarsBloc->GetBlocDesc()[i].eType;
 
@@ -98,6 +101,7 @@ void PropertyTable::AdjustProperty(Gtk::Widget* w, int i, OperatorWidget* op)
 			break;
 		}
 		op->parent->release(*op);
+//		op->parent->update(op->op, op->op->m_wPosX, op->op->m_wPosY);
 		return;
 	}
 
@@ -111,13 +115,48 @@ void PropertyTable::AdjustProperty(Gtk::Widget* w, int i, OperatorWidget* op)
 		return;
 	}
 
-	Gtk::ComboBox* cb = dynamic_cast<Gtk::ComboBox*>(w);
-	if(cb)
+	Gtk::ComboBoxText* cbt = dynamic_cast<Gtk::ComboBoxText*>(w);
+	if(cbt)
 	{
-		val->byVal = cb->get_active_row_number();
+		val->byVal = cbt->get_active_row_number();
 		op->parent->release(*op);
 		return;
 	}
+
+	Gtk::ComboBox* cb = dynamic_cast<Gtk::ComboBox*>(w);
+	if(cb)
+	{
+		NObject* tp1 = (NObject*)(void*)((*cb->get_active())[columns_pattern.m_col_ptr]);
+		NOperator* tp = dynamic_cast<NOperator*>(tp1);
+		if(tp)
+		{
+			if(val->pcRefObj)
+				op->op->RemoveRef(val->pcRefObj);
+			val->pcRefObj = tp1;
+				op->op->AddRef(val->pcRefObj);
+			op->update_label();
+			op->parent->release(*op);
+		}
+		return;
+	}
+
+	Gtk::FileChooserButton* fcb = dynamic_cast<Gtk::FileChooserButton*>(w);
+	if(fcb && dynamic_cast<NVectorOp*>(op->op))
+	{
+		TiXmlDocument svgDocument(fcb->get_filename().c_str());
+		if (svgDocument.LoadFile() && svgDocument.FirstChildElement()->Value() != string("svg"))
+			return;
+		// the idea is taken from NVectorDataProp::BeginEdit()
+		vgvm::Program* pProgram = new vgvm::Program(malloc, free);
+		vgvm::svg::compileSVG(&svgDocument, pProgram);
+
+		NVectorOp* vop = dynamic_cast<NVectorOp*>(op->op);
+		if(vop)
+			vop->SetVectorData(pProgram->getBuffer(), pProgram->getSize());
+
+		delete pProgram;
+		return;
+	} // other operator types that use files are not known now, but they can exist
 }
 
 /// Find out how properties should be displayed and connect the signal callback to each of them
@@ -157,9 +196,9 @@ void PropertyTable::DisplayOperatorProperties(OperatorWidget* op)
 		}
 
 		// look for known control names; they can be followed by optional data such as numeric limits
-		string ref = desc[i].pszCLASSGUI;
+		string classname = desc[i].pszCLASSGUI;
 
-		if(ref.find("NColorProp") == 0)
+		if(classname.find("NColorProp") == 0)
 		{
 			Gtk::ColorButton* cb = Gtk::manage(new Gtk::ColorButton(Gdk::Color(hex_color(n))));
 			cb->set_use_alpha();
@@ -167,7 +206,7 @@ void PropertyTable::DisplayOperatorProperties(OperatorWidget* op)
 			display_item = cb;
 			cb->signal_color_set().connect(bind(bind(bind(mem_fun(*this,&PropertyTable::AdjustProperty),op), i),display_item));
 		}
-		else if(ref.find("NFloatProp") == 0)
+		else if(classname.find("NFloatProp") == 0)
 		{
 			Gtk::SpinButton* sb = Gtk::manage(new Gtk::SpinButton(.02, 3));
 			sb->set_range(-1e6,1e6);
@@ -176,7 +215,7 @@ void PropertyTable::DisplayOperatorProperties(OperatorWidget* op)
 			display_item = sb;
 			sb->signal_changed().connect(bind(bind(bind(mem_fun(*this,&PropertyTable::AdjustProperty),op), i),display_item));
 		}
-		else if(ref.find("NUwordProp") == 0)
+		else if(classname.find("NUwordProp") == 0)
 		{
 			Gtk::SpinButton* sb = Gtk::manage(new Gtk::SpinButton(1, 0));
 			sb->set_range(0,65535);
@@ -185,14 +224,14 @@ void PropertyTable::DisplayOperatorProperties(OperatorWidget* op)
 			display_item = sb;
 			sb->signal_changed().connect(bind(bind(bind(mem_fun(*this,&PropertyTable::AdjustProperty),op), i),display_item));
 		}
-		else if(ref.find("NUbyteProp") == 0)
+		else if(classname.find("NUbyteProp") == 0)
 		{
 			Gtk::HScale* hs = Gtk::manage(new Gtk::HScale(0, 256, 1));
 			hs->set_value(n);
 			display_item = hs;
 			hs->signal_value_changed().connect(bind(bind(bind(mem_fun(*this,&PropertyTable::AdjustProperty),op), i),display_item));
 		}
-		else if(ref.find("NUbyteComboProp") == 0)
+		else if(classname.find("NUbyteComboProp") == 0)
 		{
 			Gtk::ComboBoxText* cbt = Gtk::manage(new Gtk::ComboBoxText);
 			vector<string> data = parse_fxgen_combo_string(desc[i].pszDefValue);
@@ -202,7 +241,7 @@ void PropertyTable::DisplayOperatorProperties(OperatorWidget* op)
 			display_item = cbt;
 			cbt->signal_changed().connect(bind(bind(bind(mem_fun(*this,&PropertyTable::AdjustProperty),op), i),display_item));
 		}
-		else if(ref.find("NCFloatProp") == 0)
+		else if(classname.find("NCFloatProp") == 0)
 		{
 #if 1
 			Gtk::SpinButton* sb = Gtk::manage(new Gtk::SpinButton(.003, 4));
@@ -218,7 +257,7 @@ void PropertyTable::DisplayOperatorProperties(OperatorWidget* op)
 			hs->signal_value_changed().connect(bind(bind(bind(mem_fun(*this,&PropertyTable::AdjustProperty),op), i),display_item));
 #endif
 		}
-		else if(ref.find("NStringProp") == 0)
+		else if(classname.find("NStringProp") == 0)
 		{
 			Gtk::Entry* e = Gtk::manage(new Gtk::Entry);
 			e->set_max_length(sizeof(values[i].szVal));
@@ -226,22 +265,50 @@ void PropertyTable::DisplayOperatorProperties(OperatorWidget* op)
 			display_item = e;
 			e->signal_changed().connect(bind(bind(bind(mem_fun(*this,&PropertyTable::AdjustProperty),op), i),display_item));
 		}
-		else if(ref.find("NUseStoredOpsProp") == 0)
+		else if(classname.find("NUseStoredOpsProp") == 0)
 		{
-//			Glib::RefPtr<Gtk::ListStore>store=Gtk::ListStore::create();
-			display_item = Gtk::manage(new Gtk::ComboBox);
-			;
+			// prepare a Gtk::TreeModel from NTreeNode* data
+			Glib::RefPtr<Gtk::TreeStore> model = Gtk::TreeStore::create(columns_pattern);
+			Gtk::ComboBox* cb = Gtk::manage(new Gtk::ComboBox(model));
+			for(NTreeNode* pnode = NEngineOp::GetEngine()->GetRootGroup(); pnode; pnode = pnode->GetSon())
+			{
+				NObjectArray& arrayObjs = pnode->GetObjsArray();
+				for (unsigned idx = 0; idx < arrayObjs.Count(); idx++)
+				{
+					NOperatorsPage* ppage = (NOperatorsPage*)arrayObjs[idx];
+					NObjectArray storedOp;
+					ppage->GetOpsFromClassName("NStoreOp", storedOp);
+					Gtk::TreeModel::iterator row = model->append(); // row for a page
+					(*row)[columns_pattern.m_col_name] = ppage->GetName();
+
+					for (unsigned i=0; i < storedOp.Count(); i++)
+					{
+						NOperator* storeop = (NOperator*)storedOp[i];
+						if (strlen(storeop->GetUserName())) // only named ones
+						{
+							// row for an operator
+							Gtk::TreeModel::iterator subrow = model->append(row->children());
+							(*subrow)[columns_pattern.m_col_name] = storeop->GetUserName();
+							(*subrow)[columns_pattern.m_col_ptr] = storeop;
+							if(storeop == pointer)
+								cb->set_active(subrow);
+						}
+					}
+				}
+			}
+			cb->pack_start(columns_pattern.m_col_name);
+			display_item = cb;
+			cb->signal_changed().connect(bind(bind(bind(mem_fun(*this,&PropertyTable::AdjustProperty),op), i),display_item));
 		}
-		else if(ref.find("NVectorDataProp") == 0)
+		else if(classname.find("NVectorDataProp") == 0)
 		{
-			display_item = Gtk::manage(new Gtk::FileChooserButton);
-			;
+			Gtk::FileChooserButton* fcb = Gtk::manage(new Gtk::FileChooserButton);
+			display_item = fcb;
+			fcb->signal_current_folder_changed().connect(bind(bind(bind(mem_fun(*this,&PropertyTable::AdjustProperty),op), i),display_item));
 		}
 
-		if(display_item) // i.e. found out how to display
-		{
+		if(display_item) // if set, there is something to display
 			attach(*display_item, 1, 2, i+1, i+2);
-		}
 	}
 	show_all_children();
 }

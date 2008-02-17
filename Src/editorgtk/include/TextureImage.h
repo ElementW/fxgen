@@ -26,6 +26,7 @@ class TextureImage : public Gtk::Image
 	public:
 		TextureImage(GtkImage* cobject, const RefPtr<Xml>& refGlade);
 		void SetBitmap(NBitmap*);
+		void clear();
 	protected:
 	private:
 };

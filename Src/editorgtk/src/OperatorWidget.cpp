@@ -17,7 +17,7 @@
 
 #include "pch.h"
 #include "globals.h"
-#define RESIZE_HANDLE .15
+#define RESIZE_HANDLE .1
 
 /** Create a web color string from a windows dword color value
 \param number An ARGB color value
@@ -45,8 +45,9 @@ Glib::ustring hex_color(int number)
 
 // static members
 OperatorWidget* OperatorWidget::active_op(NULL);
-OperatorWidget* OperatorWidget::current_op(NULL);
-//vector<OperatorWidget*> OperatorWidget::selected_ops;
+OperatorWidget* OperatorWidget::preview_op(NULL);
+vector<OperatorWidget*> OperatorWidget::ops_group;
+vector<NObject*> OperatorWidget::clipboard;
 
 
 /// Keep the operator's label valid despite of where it's coming from
@@ -62,23 +63,42 @@ void OperatorWidget::update_label()
 }
 
 
+/*
+STATE_NORMAL
+STATE_ACTIVE - can change properties
+STATE_INSENSITIVE - displays image
+STATE_PRELIGHT - displays image and can change properties
+*/
+
 OperatorWidget::OperatorWidget(NOperator* _op)
         :op(_op), parent(NULL), x0(0), y0(0), xi(0), resizable(false), moved(true)
 {
     add(frame);
-    frame.set_shadow_type(Gtk::SHADOW_OUT);
+    frame.set_shadow_type(Gtk::SHADOW_NONE);
     frame.add(vbox);
     update_label();
 
-    modify_bg(Gtk::STATE_NORMAL, Gdk::Color(hex_color(op->GetColor())));
+    Gdk::Color color(hex_color(op->GetColor()));
+    modify_bg(Gtk::STATE_NORMAL, color);
+    modify_bg(Gtk::STATE_ACTIVE, color);
+    modify_bg_pixmap(Gtk::STATE_NORMAL, "operator-inactive-center.png");
+    modify_bg_pixmap(Gtk::STATE_ACTIVE, "operator-active-center.png");
+    modify_bg_pixmap(Gtk::STATE_INSENSITIVE, "operator-inactive-center.png");
+    modify_bg_pixmap(Gtk::STATE_PRELIGHT, "operator-active-center.png");
+
     vbox.pack_start(label, false, false, 0);
+
+    context_menu.add("", "Copy", &OperatorWidget::copy_clipboard);
+    context_menu.add("", "Cut", &OperatorWidget::cut_clipboard);
+    context_menu.add("", "Delete", mem_fun(this, &OperatorWidget::suicide));
+    context_menu.show_all_children();
     //ctor
 }
 
 /// control operator movement
 bool OperatorWidget::on_motion_notify_event(GdkEventMotion* event)
 {
-    parent = dynamic_cast<OperatorsLayout*>(get_parent()->get_parent());
+    parent = dynamic_cast<OperatorsLayout*>(get_parent());
     if (parent && event->state&GDK_BUTTON1_MASK)
     {
         if (event->x > (1-RESIZE_HANDLE) * get_width() && resizable) // resize: todo set the constant to an appropriate value
@@ -102,7 +122,7 @@ bool OperatorWidget::on_motion_notify_event(GdkEventMotion* event)
 /// notify the layout to align the operator to its grid
 bool OperatorWidget::on_button_release_event(GdkEventButton* event)
 {
-    parent = dynamic_cast<OperatorsLayout*>(get_parent()->get_parent());
+    parent = dynamic_cast<OperatorsLayout*>(get_parent());
     if (parent)
         if (moved)
             while (!parent->release(*this))
@@ -117,11 +137,29 @@ bool OperatorWidget::on_button_release_event(GdkEventButton* event)
 }
 
 /// activate the operator
+void OperatorWidget::activate()
+{
+    if (active_op)
+        if (active_op != preview_op)
+            active_op->set_state(Gtk::STATE_NORMAL);
+        else
+        {
+            active_op->set_state(Gtk::STATE_INSENSITIVE);
+            active_op->set_sensitive();
+        }
+    if (preview_op == this)
+        set_state(Gtk::STATE_PRELIGHT);
+    else
+        set_state(Gtk::STATE_ACTIVE);
+    active_op = this;
+    if (op)
+        property_table->DisplayOperatorProperties(this);
+}
+
 bool OperatorWidget::on_button_press_event(GdkEventButton* event)
 {
-    current_op = this;
-    if(op)
-		property_table->DisplayOperatorProperties(this);
+    activate();
+
     if (event->type == GDK_2BUTTON_PRESS)
     {
         if (resizable && event->x >= get_width() * (1-RESIZE_HANDLE))
@@ -131,17 +169,15 @@ bool OperatorWidget::on_button_press_event(GdkEventButton* event)
         }
         else
         {
-            if (active_op)
-            {
-                active_op->set_state(Gtk::STATE_NORMAL);
-                active_op->frame.set_shadow_type(Gtk::SHADOW_OUT);
-            }
-            set_state(Gtk::STATE_ACTIVE);
-            frame.set_shadow_type(Gtk::SHADOW_IN);
-            active_op = this;
+            if (preview_op)
+                preview_op->set_state(Gtk::STATE_NORMAL);
+            set_state(Gtk::STATE_PRELIGHT);
+            preview_op = this;
             UpdateImage();
         }
     }
+    else if (event->button == 3)
+        context_menu.popup(event->button, event->time);
 
     return true;
 }
@@ -160,4 +196,59 @@ void OperatorWidget::UpdateImage()
         if (bitmap)
             image->SetBitmap(bitmap);
     }
+}
+
+/** operator widget must commit this function due to no parent during construction, which could remove() it
+\fixme Add a callback for the realize signal, set parent there.
+*/
+void OperatorWidget::suicide()
+{
+    parent = dynamic_cast<OperatorsLayout*>(get_parent());
+    if (parent)
+        parent->remove(*this);
+    if (preview_op == this)
+    {
+        preview_op = NULL;
+        image->clear();
+    }
+}
+
+/// copy selected operators to the clipboard
+void OperatorWidget::copy_clipboard()
+{
+    if (active_op)
+    {
+        clipboard.clear();
+        NObject* op = NRTClass::CreateByName(((string("N")+active_op->op->GetName())+"Op").c_str());
+        if (op)
+        {
+            *op = (NObject&)*active_op;
+            clipboard.push_back(op);
+        }
+    }
+}
+
+/// copy selected operators to the clipboard and remove them from the layout
+void OperatorWidget::cut_clipboard()
+{
+    copy_clipboard();
+    delete_ops();
+}
+
+/// remove selected operators from the layout
+void OperatorWidget::delete_ops()
+{
+    if (active_op)
+        active_op->suicide();
+}
+
+OperatorWidget::~OperatorWidget()
+{
+}
+
+/// clear static data
+void OperatorWidget::cleanup()
+{
+    active_op = preview_op = NULL;
+    ops_group.clear();
 }

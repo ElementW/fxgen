@@ -37,8 +37,28 @@ struct CustomFileFilter2: public Gtk::FileFilter
 	}
 };
 
+class WindowTitleAsterisk
+{
+	Gtk::Window* window;
+	bool value;
+public:
+	WindowTitleAsterisk(Gtk::Window* w): window(w), value(false) {}
+	void operator=(bool b)
+	{
+		value = b;
+		Glib::ustring title = window->get_title();
+		if(!value && title.size() && title[title.size()-1] == '*')
+			window->set_title(title.substr(0, title.size() - 1));
+		if(value && ((title.size() && title[title.size()-1] != '*') || title.empty()))
+			window->set_title(title + '*');
+	}
+	operator bool() {return value;}
+};
+
 class MainWindow : public Gtk::Window
 {
+		CustomFileFilter1 filter_fxgen;
+		CustomFileFilter2 filter_all;
 	public:
 		MainWindow(GtkWindow*cobject, const RefPtr<Xml>& refGlade);
 		bool on_delete_event(GdkEventAny*);
@@ -48,11 +68,9 @@ class MainWindow : public Gtk::Window
 		void SaveProject(string filename);
 		void QuickSaveProject();
 		string filename;
+		WindowTitleAsterisk project_modified;
+//		Glib::Mutex library_mutex; ///<\fixme there should be a single mutex for all users of the library
 		~MainWindow();
-	protected:
-		CustomFileFilter1 filter_fxgen;
-		CustomFileFilter2 filter_all;
-	private:
 };
 
 #endif // SMARTWINDOW_H

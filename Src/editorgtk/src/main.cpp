@@ -26,31 +26,28 @@ OperatorsLayout* operators_layout;
 bool project_modified  = false;
 ProjectTree* project_tree;
 PropertyTable* property_table;
-DynamicMenu* dynamic_menu;
-
+MainMenu* main_menu;
+NamedPointerColumns columns_pattern;
 
 int main(int argc, char *argv[])
 {
+	Glib::thread_init();
+	bool check = NEngineOp::GetEngine()->m_bEngineLock; // will refuse to start if the engine is not thread-safe
     Gtk::Main app(argc, argv);
     RefPtr<Xml> refXml;
-    try {
-		refXml = Xml::create("editor.glade");
-    }
-    catch(...)
-    {
-		Gtk::MessageDialog("File editor.glade was not found in current directory.\nProgram will quit.", false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK, true).run();
-    	exit(1);
-	}
+	refXml = Xml::create_from_buffer(editor_glade, strlen(editor_glade));
 
 	// create global objects
     refXml->get_widget_derived("window1", window);
     refXml->get_widget_derived("image1", image);
-    refXml->get_widget_derived("eventbox1", operators_layout);
-    project_tree = new ProjectTree;
+    refXml->get_widget_derived("fixed1", operators_layout);
+    refXml->get_widget_derived("treeview1", project_tree);
     refXml->get_widget_derived("table1", property_table);
-	dynamic_menu = new DynamicMenu(*window);
-// load image (temporary)
-    window->LoadProject("test.prj");
+	main_menu = new MainMenu(*window);
+	window->ClearProject();
+
+	if(argc > 1 && Glib::file_test(argv[1], Glib::FILE_TEST_EXISTS))
+		window->LoadProject(argv[1]);
 
     app.run(*window);
 
