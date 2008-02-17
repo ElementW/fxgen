@@ -32,9 +32,9 @@
 					<Add option="-pg" />
 					<Add option="-pg -lgmon" />
 					<Add library="user32" />
-					<Add library="../../lib/libvgvmd.a" />
-					<Add library="../../../../cairomm-1.4.6/MSVC/cairomm/libcairomm.dll" />
-					<Add library="cairo" />
+					<Add library="vgvmd" />
+					<Add library="cairo-2" />
+					<Add library="cairomm-1.0" />
 				</Linker>
 				<ExtraCommands>
 					<Add after="copy $(TargetDir)FxGenLib_D.dll ..\..\W32Bin\FxGenLib_D.dll" />
@@ -46,7 +46,7 @@
 				<Option working_dir="../../W32Bin" />
 				<Option object_output="ReleaseWin32" />
 				<Option type="3" />
-				<Option compiler="mingw_gnu_gcc_compiler" />
+				<Option compiler="gcc" />
 				<Option parameters="C:\Documents and Settings\wojownik\Desktop\noise.prj" />
 				<Option host_application="Editor.exe" />
 				<Option createDefFile="1" />
@@ -64,11 +64,11 @@
 				<Linker>
 					<Add option="-s" />
 					<Add library="user32" />
-					<Add library="../../W32Bin/libvgvm.a" />
-					<Add library="cairo" />
+					<Add library="vgvm" />
+					<Add library="cairo-2" />
 					<Add library="cairomm-1.0" />
-					<Add directory="../../../cairo-dev-1.4.14/lib" />
 					<Add directory="../../../cairomm-1.4.6/MSVC/cairomm" />
+					<Add directory="../../W32Bin" />
 				</Linker>
 				<ExtraCommands>
 					<Add after="copy $(TargetDir) ..\..\W32Bin\" />
@@ -123,6 +123,40 @@
 					<Add library="../../lib/libvgvm.a" />
 				</Linker>
 			</Target>
+			<Target title="Release|Mingw32">
+				<Option platforms="Windows;Unix;" />
+				<Option output="../../W32Bin/FxGenLib.dll" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="../../W32Bin" />
+				<Option object_output="ReleaseMingw32" />
+				<Option type="3" />
+				<Option compiler="mingw_gnu_gcc_compiler" />
+				<Option parameters="C:\Documents and Settings\wojownik\Desktop\noise.prj" />
+				<Option host_application="Editor.exe" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
+					<Add option="-W" />
+					<Add option="-ffast-math" />
+					<Add option="-DWIN32" />
+					<Add option="-DNDEBUG" />
+					<Add option="-D_USRDLL" />
+					<Add option="-DFXGEN_EXPORTS" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="user32" />
+					<Add library="vgvm" />
+					<Add library="cairo-2" />
+					<Add library="cairomm-1.0" />
+					<Add directory="../../../cairomm-1.4.6/MSVC/cairomm" />
+					<Add directory="../../W32Bin" />
+				</Linker>
+				<ExtraCommands>
+					<Add after="copy $(TargetDir) ..\..\W32Bin\" />
+				</ExtraCommands>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-DHQNOISE" />
@@ -168,7 +202,9 @@
 			<Option target="Release|Win32" />
 			<Option target="Release|Linux" />
 			<Option target="Debug|Linux" />
+			<Option target="Release|Mingw32" />
 		</Unit>
+		<Unit filename="../gcccompat/gcccompat.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

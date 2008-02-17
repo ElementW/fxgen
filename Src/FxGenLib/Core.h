@@ -525,3 +525,32 @@ struct GradientElem
 	#include "Archive.h"
 	#include "Bitmap.h"
 	#include "Controllers.h"
+
+
+//-----------------------------------------------------------------
+/// Mutex-like class for safe thread operation
+/// Usage: static bool mutex; { NMutexLock lock(mutex); /* will unlock at end of the scope */ }
+///\author Sebastian Olter (qduaty@gmail.com)
+//-----------------------------------------------------------------
+class NMutexLock
+{
+	int awakening; // how much time has to wait for mutex release
+	bool myfault; // can release only if it is set
+	bool& _mutex; // global data (i.e. actual mutex)
+	public:
+	NMutexLock(bool& mutex, int a = 10): awakening(a), myfault(false), _mutex(mutex) { lock(); }
+	void lock()
+	{
+		while(_mutex)
+		{
+			#ifdef _WIN32
+			Sleep(awakening);
+			#else
+			usleep(awakening);
+			#endif
+		}
+		myfault = _mutex = true;
+	}
+	void release() { if(myfault) myfault = _mutex = false; }
+	~NMutexLock() { release(); }
+};

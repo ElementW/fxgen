@@ -49,31 +49,46 @@ NObject* _FindNodeFromClassName(NTreeNode* _pParent, char* _pszClassName)
 	return null;
 }
 
-ProjectTree::ProjectTree()
+ProjectTree::ProjectTree(GtkTreeView*cobject, const RefPtr<Xml>& refGlade)
+: Gtk::TreeView(cobject)
 {
+	model = Gtk::TreeStore::create(columns_pattern);
+	set_model(model);
+	append_column("Pages", columns_pattern.m_col_name);
+	set_headers_visible(false);
+	// connect the operators_layout to the selection so that clicking on a page name will display its content
+	get_selection()->signal_changed().connect(bind(mem_fun(operators_layout, &OperatorsLayout::display_selected_page), this));
 	//ctor
 }
 
+
+void ProjectTree::fill_tree(Gtk::TreeIter iter)
+{
+	;
+}
+
+/// Find all pages in the project and display them.
 void ProjectTree::DisplayProject(NEngineOp* project)
 {
-	operators_layout->clear();
-	NTreeNode* root_group = project->GetRootGroup();
-	NOperatorsPage* page = dynamic_cast<NOperatorsPage*>(_FindNodeFromClassName(root_group, "NOperatorsPage"));
-	if(page)
+	clear();
+
+	for(NTreeNode* pnode = project->GetRootGroup(); pnode; pnode = pnode->GetSon())
 	{
-		operators_layout->page = page;
-		operators_layout->clear();
-		NObjectArray& array = page->m_arrayOps;
-		for(unsigned i = 0; i < array.Count(); i++)
+		NObjectArray& arrayObjs = pnode->GetObjsArray();
+		for (unsigned idx = 0; idx < arrayObjs.Count(); idx++)
 		{
-			NOperator* op = dynamic_cast<NOperator*>(array[i]);
-			if(op)
-			{
-				int x = op->m_wPosX;
-				int y = op->m_wPosY;
-				int w = op->m_wWidth;
-				operators_layout->add(op, x, y, w);
-			}
+			NOperatorsPage* ppage = (NOperatorsPage*)arrayObjs[idx];
+			Gtk::TreeModel::iterator row = model->append(); // row for a page
+			(*row)[columns_pattern.m_col_name] = ppage->GetName();
+			(*row)[columns_pattern.m_col_ptr] = ppage;
 		}
 	}
+	;
+}
+
+/// Prepare for a new project
+void ProjectTree::clear()
+{
+	operators_layout->clear();
+	model->clear();
 }

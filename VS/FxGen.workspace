@@ -11,7 +11,6 @@
 		</Project>
 		<Project filename="../Externals/vgvm/vgvm.cbp" />
 		<Project filename="../Examples/BMP Extractor/test.cbp" />
-		<Project filename="../../cairomm-1.4.6/MSVC/cairomm/cairomm.cbp" />
 		<Project filename="../Externals/tinyxml/tinyxml_lib.cbp" />
 		<Project filename="../Src/editorgtk/editor-gtk.cbp" active="1" />
 	</Workspace>

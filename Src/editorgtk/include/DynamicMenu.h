@@ -19,10 +19,10 @@
 #define DYNAMICMENU_H
 
 /// Maintain all menus in the application
-class DynamicMenu : public Gtk::Menu
+class MainMenu : public Gtk::Menu
 {
 	public:
-		DynamicMenu(MainWindow&);
+		MainMenu(MainWindow&);
 
 		template<typename T1> void add(Glib::ustring name, T1 label)
 		{
@@ -49,6 +49,14 @@ class DynamicMenu : public Gtk::Menu
 		Glib::RefPtr<Gtk::ActionGroup> ag;
 		MainWindow* window;
 	private:
+};
+
+
+class DynamicMenu: public Gtk::Menu
+{
+	public:
+	void add(Glib::ustring group, Glib::ustring name, sigc::slot0<void>);
+	Gtk::MenuItem* get_child_by_label(Glib::ustring);
 };
 
 #endif // DYNAMICMENU_H

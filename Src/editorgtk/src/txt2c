@@ -1,0 +1,5 @@
+#!/bin/bash
+name=$(echo $(basename "$1")|tr ".-" _)
+echo const char* $name= > "$name.cpp"
+cat "$1" | sed s/\\\\/\\\\\\\\/ | sed s/\"/\\\\\"/g | sed s/^/\"/ | sed s/$/\"/ >> "$name.cpp"
+echo \; >> "$name.cpp"

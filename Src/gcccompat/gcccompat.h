@@ -28,6 +28,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
+#include <unistd.h>
 
 #ifndef min
 template<typename T1, typename T2>inline T1 min(T1 t1, T2 t2) { return t1 < t2 ? t1 : t2; }

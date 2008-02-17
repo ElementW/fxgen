@@ -24,9 +24,19 @@
 
 extern MainWindow* window;
 extern TextureImage* image;
-extern bool project_modified;
 extern ProjectTree* project_tree;
 extern OperatorsLayout* operators_layout;
 extern PropertyTable* property_table;
 Glib::ustring hex_color(int number);
-extern DynamicMenu* dynamic_menu;
+extern MainMenu* main_menu;
+extern char* menu_xml;
+extern char* editor_glade;
+
+struct NamedPointerColumns: public Gtk::TreeModelColumnRecord
+{
+	NamedPointerColumns() { add(m_col_name); add(m_col_ptr); }
+	Gtk::TreeModelColumn<Glib::ustring> m_col_name;
+	Gtk::TreeModelColumn<void*> m_col_ptr;
+};
+
+extern NamedPointerColumns columns_pattern;

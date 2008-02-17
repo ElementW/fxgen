@@ -198,6 +198,7 @@ public:
 
 	//Editor Operators Resources management
 	void GetBitmap(NObject** _ppobj, ubyte _byObjType=OBJRES_TYPE_INTERMEDIATE);
+	bool m_bEngineLock; // public allows this variable to be checked for existence by external programs
 
 protected:
 	//Internal Methods

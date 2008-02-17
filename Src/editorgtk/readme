@@ -1,0 +1,29 @@
+A portable editor for FxGen, written in GTKMM.
+
+Requirements:
+to run: 
+- gtkmm 2.8+
+- thread-safe version of fxgen (rev. 96+)
+to build: 
+- gtkmm-devel 2.8+
+- thread-safe version of fxgen (rev. 96+)
+- boost (for lexical_cast, needed for testing; you may disable it in pch.h)
+- Code::Blocks IDE
+
+Current version (rev. 96), when compared to the original win32 editor, 
+lacks the following functionalities:
+- project browser is read-only and displays a flat list of pages
+- clipboard usage leads to a segmentation fault
+- editing properties of an operator may block the main menu - click 
+everywhere to unlock it
+- half of functions don't work when built on windows
+- multiple/rubberband selection is not implemented
+- the thread sometimes forgets to refresh the preview - click anywhere to 
+refresh it manually
+- no preview zoom
+- no tga export
+
+Anyway, following features were added:
+- smooth operation, no lock-ups
+- better color control that can pick any color from the screen on linux; 
+perhaps it will work on cygwin as well

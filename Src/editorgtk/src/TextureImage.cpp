@@ -24,6 +24,7 @@ TextureImage::TextureImage(GtkImage* cobject, const RefPtr<Xml>& refGlade)
 	//ctor
 }
 
+/// attach a NBitmap
 void TextureImage::SetBitmap(NBitmap* bitmap)
 {
 	size_t w = bitmap->GetWidth(), h = bitmap->GetHeight();
@@ -33,5 +34,11 @@ void TextureImage::SetBitmap(NBitmap* bitmap)
 	RefPtr<Gdk::Pixbuf> buf = Gdk::Pixbuf::create_from_data(
 		reinterpret_cast<const guint8*>(bitmap->GetPixels()), Gdk::COLORSPACE_RGB, true, bpp, w, h, rowstride);
 
+	set(buf);
+}
+
+void TextureImage::clear()
+{
+	RefPtr<Gdk::Pixbuf> buf = Gdk::Pixbuf::create(Gdk::COLORSPACE_RGB, false, 8, 1, 1);
 	set(buf);
 }

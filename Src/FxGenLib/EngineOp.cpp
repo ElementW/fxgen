@@ -689,6 +689,7 @@ void NEngineOp::Execute(float _ftime, NOperator* _popFinal, float _fDetailFactor
 {
 	if (_popFinal!=null)
 	{
+		NMutexLock lock(m_bEngineLock);
 		//Flag operators that need process calls
 		ComputeInvaliddOps(_popFinal);
 
@@ -788,7 +789,6 @@ void NEngineOp::_Execute(float _ftime, NOperator* _popFinal, float _fDetailFacto
 
 		pccurOP = pccurOP->m_pnextOpToProcess;
 	}
-
 }
 
 //-----------------------------------------------------------------

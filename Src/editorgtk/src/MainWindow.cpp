@@ -21,8 +21,9 @@
 #include "globals.h"
 
 MainWindow::MainWindow(GtkWindow* cobject, const RefPtr<Xml>& refGlade)
-:Gtk::Window(cobject)
+:Gtk::Window(cobject), project_modified(this)
 {
+//	modify_bg(Gtk::STATE_NORMAL, Gdk::Color("#737373"));
 	//ctor
 }
 
@@ -34,7 +35,7 @@ MainWindow::~MainWindow()
 bool MainWindow::on_delete_event(GdkEventAny*)
 {
 	if(project_modified && ConfirmProjectLoss() != Gtk::RESPONSE_OK)
-		return true;
+		return true; // stop signal propagation
 	return false;
 }
 
@@ -80,8 +81,8 @@ void MainWindow::SaveProject(string _filename)
     if (engine->SaveProject(_filename.c_str()))
     {
     	filename = _filename;
-		project_modified = false;
 		set_title(Glib::filename_display_basename(filename));
+		project_modified = false;
     }
 	else
 		Gtk::MessageDialog dlg("Problem saving file.", false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK, true);
@@ -91,16 +92,32 @@ void MainWindow::ClearProject()
 {
 	if(project_modified)
 	{
-		if(window->ConfirmProjectLoss() == Gtk::RESPONSE_CANCEL)
+		if(ConfirmProjectLoss() == Gtk::RESPONSE_CANCEL)
 			return;
 	}
 
-	window->filename.clear();
+	image->clear();
+	OperatorWidget::cleanup();
+	filename.clear();
+	set_title("");
+
+	project_tree->clear();
 
     NEngineOp* engine = NEngineOp::GetEngine();
 	engine->Clear();
-	project_tree->clear();
-	;
+
+// Copied from the original editor - is there any other way to do this?
+	//Create empty project
+	NTreeNode* prootNode = engine->GetRootGroup();
+	NTreeNode* pNewGrpNode = new NTreeNode;
+	pNewGrpNode->SetName("Group");
+	prootNode->AddSon(pNewGrpNode);
+
+	NOperatorsPage* ppage = new NOperatorsPage;
+	ppage->SetName("Page");
+	pNewGrpNode->GetObjsArray().AddItem(ppage);
+// -----------------------------------
+	project_tree->DisplayProject(NEngineOp::GetEngine());
 }
 
 void MainWindow::LoadProject(string _filename, bool append)
@@ -124,6 +141,7 @@ void MainWindow::LoadProject(string _filename, bool append)
 		else return;
 	}
 
+    ClearProject();
     NEngineOp* engine = NEngineOp::GetEngine();
     if (engine->LoadProject(_filename.c_str()))
     {
@@ -132,6 +150,6 @@ void MainWindow::LoadProject(string _filename, bool append)
 		project_modified = false;
 		project_tree->DisplayProject(NEngineOp::GetEngine());
 	}
-	else
-		ClearProject();
+//	else
+//		ClearProject();
 }

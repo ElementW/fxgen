@@ -20,10 +20,14 @@
 
 #include <fxgen_pch.h>
 
-struct ProjectTree : public Gtk::TreeStore
+class ProjectTree : public Gtk::TreeView
 {
-	ProjectTree();
+	RefPtr<Gtk::TreeStore> model;
+	void fill_tree(Gtk::TreeIter iter);
+	public:
+	ProjectTree(GtkTreeView*cobject, const RefPtr<Xml>& refGlade);
 	void DisplayProject(NEngineOp*);
+	void clear();
 };
 
 #endif // PROJECTTREE_H
