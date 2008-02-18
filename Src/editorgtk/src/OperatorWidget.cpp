@@ -48,7 +48,7 @@ OperatorWidget* OperatorWidget::active_op(NULL);
 OperatorWidget* OperatorWidget::preview_op(NULL);
 vector<OperatorWidget*> OperatorWidget::ops_group;
 vector<NObject*> OperatorWidget::clipboard;
-
+float OperatorWidget::detail(1.0);
 
 /// Keep the operator's label valid despite of where it's coming from
 void OperatorWidget::update_label()
@@ -191,7 +191,7 @@ void OperatorWidget::UpdateImage()
     NEngineOp* engine = NEngineOp::GetEngine();
     if (engine)
     {
-        engine->Execute(0.f/*time*/, op, 1.0f/*detail*/, NULL/*FXGEN_OPSPROCESSCB* _cbOpsProcess*/);
+        engine->Execute(0.f/*time*/, op, detail, NULL/*FXGEN_OPSPROCESSCB* _cbOpsProcess*/);
         NBitmap* bitmap = dynamic_cast<NBitmap*>(op->m_pObj);
         if (bitmap)
             image->SetBitmap(bitmap);

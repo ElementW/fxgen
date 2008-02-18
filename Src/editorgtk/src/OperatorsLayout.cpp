@@ -66,10 +66,12 @@ void OperatorsLayout::update_op()
 			if (engine)
 			{
 				if(OperatorWidget::preview_op)
-					engine->Execute(0.f/*time*/, OperatorWidget::preview_op->op, 1.0f/*detail*/, NULL/*FXGEN_OPSPROCESSCB* _cbOpsProcess*/);
-				image->queue_draw();
+					engine->Execute(0.f/*time*/, OperatorWidget::preview_op->op, OperatorWidget::detail, NULL/*FXGEN_OPSPROCESSCB* _cbOpsProcess*/);
+//			image->queue_draw();
 			}
 		}
+		else
+			image->queue_draw(); // now we are sure the image will be updated after its data was processed
 #ifdef _WIN32
 			Sleep(1);
 #else

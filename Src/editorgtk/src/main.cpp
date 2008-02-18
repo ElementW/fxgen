@@ -32,7 +32,7 @@ NamedPointerColumns columns_pattern;
 int main(int argc, char *argv[])
 {
 	Glib::thread_init();
-	bool check = NEngineOp::GetEngine()->m_bEngineLock; // will refuse to start if the engine is not thread-safe
+	NEngineOp::GetEngine()->m_bEngineLock; // will refuse to start if the engine is not thread-safe
     Gtk::Main app(argc, argv);
     RefPtr<Xml> refXml;
 	refXml = Xml::create_from_buffer(editor_glade, strlen(editor_glade));

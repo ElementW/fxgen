@@ -85,6 +85,7 @@
 				<Option host_application="editor-gtk" />
 				<Option createDefFile="1" />
 				<Compiler>
+					<Add option="-O3" />
 					<Add option="-W" />
 					<Add option="-fPIC" />
 					<Add option="-DWIN32" />
@@ -92,7 +93,7 @@
 					<Add option="-D_USRDLL" />
 					<Add option="-DFXGEN_EXPORTS" />
 					<Add option="-D__LINUX__" />
-					<Add option="-DDECODE_ONLY" />
+					<Add option="-DTHREADS_ENABLED" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -118,6 +119,7 @@
 					<Add option="-D_USRDLL" />
 					<Add option="-DFXGEN_EXPORTS" />
 					<Add option="-D__LINUX__" />
+					<Add option="-DTHREADS_ENABLED" />
 				</Compiler>
 				<Linker>
 					<Add library="../../lib/libvgvm.a" />

@@ -84,6 +84,8 @@ void ProjectTree::DisplayProject(NEngineOp* project)
 		}
 	}
 	;
+	// select first page
+	get_selection()->select(model->children().begin());
 }
 
 /// Prepare for a new project

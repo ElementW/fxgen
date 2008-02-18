@@ -21,7 +21,6 @@
 TextureImage::TextureImage(GtkImage* cobject, const RefPtr<Xml>& refGlade)
 : Gtk::Image(cobject)
 {
-	//ctor
 }
 
 /// attach a NBitmap
