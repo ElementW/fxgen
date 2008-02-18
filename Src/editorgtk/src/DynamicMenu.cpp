@@ -18,6 +18,11 @@
 #include "pch.h"
 #include "globals.h"
 
+void set_current_detail(int value)
+{
+	OperatorWidget::detail = (1<<value) * 0.5;
+}
+
 MainMenu::MainMenu(MainWindow& w): window(&w)
 {
 	ag = Gtk::ActionGroup::create();
@@ -49,14 +54,14 @@ MainMenu::MainMenu(MainWindow& w): window(&w)
 	// detail radio group
 	add("DetailMenuAction", "Detail");
 	Gtk::RadioAction::Group radio1;
-	add(radio1, "low-detail", "Low");
+	add(radio1, "low-detail", "Low", bind(&set_current_detail, 0));
 	Glib::RefPtr<Gtk::RadioAction>radioaction = Gtk::RadioAction::create(radio1, "normal-detail", "Normal");
-	ag->add(radioaction);
+	ag->add(radioaction, bind(&set_current_detail, 1));
+	add(radio1, "high-detail", "High", bind(&set_current_detail, 2));
+	add(radio1, "fine-detail", "Fine", bind(&set_current_detail, 3));
+	add(radio1, "realistic-detail", "Realistic", bind(&set_current_detail, 4));
+	add(radio1, "ultra-detail", "Ultra", bind(&set_current_detail, 5));
 	radioaction->set_active();
-	add(radio1, "high-detail", "High");
-	add(radio1, "fine-detail", "Fine");
-	add(radio1, "realistic-detail", "Realistic");
-	add(radio1, "ultra-detail", "Ultra");
 
 	add("HelpMenuAction", "Help");
 	add("help-about", Gtk::Stock::ABOUT);

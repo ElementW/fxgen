@@ -198,7 +198,9 @@ public:
 
 	//Editor Operators Resources management
 	void GetBitmap(NObject** _ppobj, ubyte _byObjType=OBJRES_TYPE_INTERMEDIATE);
+#ifdef THREADS_ENABLED
 	bool m_bEngineLock; // public allows this variable to be checked for existence by external programs
+#endif
 
 protected:
 	//Internal Methods

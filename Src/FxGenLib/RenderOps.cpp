@@ -496,7 +496,7 @@ udword NGradientOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 //-----------------------------------------------------------------
 IMPLEMENT_CLASS(NCellOp, NOperator);
 
-static NMapVarsBlocDesc mapblocdescCellOp1[] =
+static NMapVarsBlocDesc mapblocdescCellOp[] =
 {
 	MAP(1, eubyte,	"2", "" )	//V1 => 0-Regularity
 	MAP(1, eubyte,	"3", "" )	//V1 => 1-Density
@@ -527,7 +527,7 @@ NCellOp::NCellOp()
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(8, blocdescCellOp, 3);
 	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
-	m_pcvarsBloc->SetMapVarBlocDesc(10, mapblocdescCellOp1);
+	m_pcvarsBloc->SetMapVarBlocDesc(10, mapblocdescCellOp);
 }
 
 udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)

@@ -182,7 +182,7 @@ void PropertyTable::DisplayOperatorProperties(OperatorWidget* op)
 		Gtk::Widget* display_item = NULL;
 		double f = 0;
 		uint32_t n = 0;
-		void *pointer = NULL;
+		void *p = NULL;
 
 		// retrieve data value - they generally fit into three types
 		switch(desc[i].eType)
@@ -191,8 +191,8 @@ void PropertyTable::DisplayOperatorProperties(OperatorWidget* op)
 			case euword: n = values[i].wVal; break;
 			case eudword: n = values[i].dwVal; break;
 			case efloat: f = values[i].fVal; break;
-			case estring: pointer = values[i].szVal; break;
-			case erefobj: pointer = values[i].pcRefObj; break;
+			case estring: p = values[i].szVal; break;
+			case erefobj: p = values[i].pcRefObj; break;
 		}
 
 		// look for known control names; they can be followed by optional data such as numeric limits
@@ -290,7 +290,7 @@ void PropertyTable::DisplayOperatorProperties(OperatorWidget* op)
 							Gtk::TreeModel::iterator subrow = model->append(row->children());
 							(*subrow)[columns_pattern.m_col_name] = storeop->GetUserName();
 							(*subrow)[columns_pattern.m_col_ptr] = storeop;
-							if(storeop == pointer)
+							if(storeop == p)
 								cb->set_active(subrow);
 						}
 					}

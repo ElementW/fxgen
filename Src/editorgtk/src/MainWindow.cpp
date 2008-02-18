@@ -118,6 +118,7 @@ void MainWindow::ClearProject()
 	pNewGrpNode->GetObjsArray().AddItem(ppage);
 // -----------------------------------
 	project_tree->DisplayProject(NEngineOp::GetEngine());
+	project_modified = false;
 }
 
 void MainWindow::LoadProject(string _filename, bool append)
@@ -141,15 +142,13 @@ void MainWindow::LoadProject(string _filename, bool append)
 		else return;
 	}
 
+    project_modified = false;
     ClearProject();
     NEngineOp* engine = NEngineOp::GetEngine();
     if (engine->LoadProject(_filename.c_str()))
     {
     	filename = _filename;
 		window->set_title(Glib::filename_display_basename(filename));
-		project_modified = false;
 		project_tree->DisplayProject(NEngineOp::GetEngine());
 	}
-//	else
-//		ClearProject();
 }

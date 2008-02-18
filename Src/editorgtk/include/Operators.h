@@ -27,6 +27,7 @@ class OperatorWidget : public Gtk::EventBox
     friend class OperatorsLayout;
     friend class PropertyTable;
     friend class MainWindow;
+    friend void set_current_detail(int);
 	// no explicit instantiation
     OperatorWidget(NOperator*);
     ~OperatorWidget();
@@ -52,6 +53,7 @@ class OperatorWidget : public Gtk::EventBox
     static OperatorWidget* preview_op; // currently modified operator
     static vector<OperatorWidget*> ops_group; // used for selections
     static vector<NObject*> clipboard;
+    static float detail;
 	static void copy_clipboard();
 	static void cut_clipboard();
 	static void delete_ops();

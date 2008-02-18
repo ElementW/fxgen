@@ -689,7 +689,9 @@ void NEngineOp::Execute(float _ftime, NOperator* _popFinal, float _fDetailFactor
 {
 	if (_popFinal!=null)
 	{
+#ifdef THREADS_ENABLED
 		NMutexLock lock(m_bEngineLock);
+#endif
 		//Flag operators that need process calls
 		ComputeInvaliddOps(_popFinal);
 
@@ -869,6 +871,9 @@ void NEngineOp::InvalidateAllOps()
 
 void NEngineOp::_InvalidateAllOps(NTreeNode* _pnode)
 {
+#ifdef THREADS_ENABLED
+	NMutexLock lock(m_bEngineLock);
+#endif
 	//Parse Alls Pages...
 	NObjectArray& arrayObjs = _pnode->GetObjsArray();
 	udword dwCount = arrayObjs.Count();

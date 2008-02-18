@@ -28,6 +28,7 @@
                         <child>
                           <widget class="GtkImage" id="image1">
                             <property name="visible">True</property>
+                            <property name="can_focus">True</property>
                             <property name="stock">gtk-missing-image</property>
                           </widget>
                         </child>
@@ -178,6 +179,7 @@
                             <child>
                               <widget class="GtkFixed" id="fixed1">
                                 <property name="visible">True</property>
+                                <property name="can_focus">True</property>
                                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                               </widget>
                             </child>

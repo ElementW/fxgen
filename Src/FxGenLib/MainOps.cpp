@@ -85,15 +85,23 @@ udword NStoreOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 //-----------------------------------------------------------------
 IMPLEMENT_CLASS(NStoreResultOp, NOperator);
 
+static NMapVarsBlocDesc mapblocdescStoreResultOp[] =
+{
+	MAP(1, estring,	"0", "" )	//V1 => 0-name
+};
+
 static NVarsBlocDesc blocdescStoreResultOp[] =
 {
 	VAR(estring,	false, "Name", "",	"NStringProp")	//0
+	VAR(eubyte,	false, "Type", "0,[Preview,Diffuse,Normal,Specular,Height]",	"NUbyteComboProp")	//1
 };
 
 NStoreResultOp::NStoreResultOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(1, blocdescStoreResultOp, 1);
+	m_pcvarsBloc = AddVarsBloc(2, blocdescStoreResultOp, 2);
+	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
+	m_pcvarsBloc->SetMapVarBlocDesc(1, mapblocdescStoreResultOp);
 }
 
 NStoreResultOp::~NStoreResultOp()

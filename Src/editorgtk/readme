@@ -10,7 +10,7 @@ to build:
 - boost (for lexical_cast, needed for testing; you may disable it in pch.h)
 - Code::Blocks IDE
 
-Current version (rev. 96), when compared to the original win32 editor, 
+Current version (rev. 97), when compared to the original win32 editor, 
 lacks the following functionalities:
 - project browser is read-only and displays a flat list of pages
 - clipboard usage leads to a segmentation fault
@@ -18,10 +18,8 @@ lacks the following functionalities:
 everywhere to unlock it
 - half of functions don't work when built on windows
 - multiple/rubberband selection is not implemented
-- the thread sometimes forgets to refresh the preview - click anywhere to 
-refresh it manually
 - no preview zoom
-- no tga export
+- no image export
 
 Anyway, following features were added:
 - smooth operation, no lock-ups
