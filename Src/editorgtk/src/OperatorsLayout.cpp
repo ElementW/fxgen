@@ -18,42 +18,6 @@
 #include "pch.h"
 #include "globals.h"
 
-//-----------------------------------------------------------------
-//!	\brief	Return First RTClass from a super class name
-//!	\author	Johann Nadalutti (fxgen@free.fr)
-//-----------------------------------------------------------------
-NRTClass* GetFirstClassBySuperClass(char* _pszSuperClassName)
-{
-	NRTClass* pcurRTC = NRTClass::m_pFirstRTClass;
-	while (pcurRTC!=null)
-	{
-		if (strcmp(pcurRTC->m_pszSuperClassName, _pszSuperClassName) == 0)
-			return pcurRTC;
-		pcurRTC = pcurRTC->m_pNextRTC;
-	}
-
-	return null;
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Return Next RTClass from a super class name
-//!	\author	Johann Nadalutti (fxgen@free.fr)
-//-----------------------------------------------------------------
-NRTClass* GetNextClassBySuperClass(char* _pszSuperClassName, NRTClass* _prtclass)
-{
-	_prtclass = _prtclass->m_pNextRTC;
-
-	while (_prtclass!=null)
-	{
-		if (strcmp(_prtclass->m_pszSuperClassName, _pszSuperClassName) == 0)
-			return _prtclass;
-
-		_prtclass = _prtclass->m_pNextRTC;
-	}
-
-	return null;
-}
-
 /// thread routine for operators' updating
 void OperatorsLayout::update_op()
 {
@@ -127,13 +91,26 @@ void OperatorsLayout::add(NOperator* op)
     put(*widget);
 }
 
-/// move the operator, coords in pixels
+/// move the operator, coords relative, in pixels
 void OperatorsLayout::move(OperatorWidget&widget, int x, int y)
 {
-    // add relative offsets
-    operators[&widget].first += x;
-    operators[&widget].second += y;
-    Gtk::Fixed::move(widget, operators[&widget].first, operators[&widget].second);
+	if(OperatorWidget::ops_group.size())
+	{
+		std::map<OperatorWidget*, void*>::iterator i;
+		for(i = OperatorWidget::ops_group.begin(); i != OperatorWidget::ops_group.end(); i++)
+		{
+			// add relative offsets
+			operators[i->first].first += x;
+			operators[i->first].second += y;
+			Gtk::Fixed::move(*i->first, operators[i->first].first, operators[i->first].second);
+		}
+	}
+	else
+	{
+		operators[&widget].first += x;
+		operators[&widget].second += y;
+		Gtk::Fixed::move(widget, operators[&widget].first, operators[&widget].second);
+	}
 	window->project_modified = true;
 }
 
@@ -163,7 +140,7 @@ bool OperatorsLayout::release(OperatorWidget& widget)
         }
     }
 
-    Gtk::Fixed::move(widget, x, y);
+    move(widget, x - operators[&widget].first, y - operators[&widget].second);
     if(width_request) // new operators, which weren't ever seen, have it set to 0
 		widget.set_size_request(width_request, grid_size);
     // store
@@ -223,6 +200,8 @@ bool OperatorsLayout::on_button_press_event(GdkEventButton* event)
    	    context_menu.get_child_by_label("Paste")->set_sensitive(!OperatorWidget::clipboard.empty());
 		context_menu.popup(event->button, event->time);
     }
+    else if (event->button == 1)
+		OperatorWidget::clear_selection();
 
 	return false;
 }

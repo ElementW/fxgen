@@ -18,6 +18,7 @@
 
 #ifndef SMARTWINDOW_H
 #define SMARTWINDOW_H
+#include "MainMenu.h"
 
 struct CustomFileFilter1: public Gtk::FileFilter
 {
@@ -59,6 +60,7 @@ class MainWindow : public Gtk::Window
 {
 		CustomFileFilter1 filter_fxgen;
 		CustomFileFilter2 filter_all;
+		MainMenu* main_menu;
 	public:
 		MainWindow(GtkWindow*cobject, const RefPtr<Xml>& refGlade);
 		bool on_delete_event(GdkEventAny*);

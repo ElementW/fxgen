@@ -16,7 +16,6 @@
 //-----------------------------------------------------------------
 
 #include "MainWindow.h"
-#include "DynamicMenu.h"
 #include "ProjectTree.h"
 #include "TextureImage.h"
 #include "Operators.h"
@@ -27,9 +26,6 @@ extern TextureImage* image;
 extern ProjectTree* project_tree;
 extern OperatorsLayout* operators_layout;
 extern PropertyTable* property_table;
-Glib::ustring hex_color(int number);
-extern MainMenu* main_menu;
-extern char* menu_xml;
 extern char* editor_glade;
 
 struct NamedPointerColumns: public Gtk::TreeModelColumnRecord
@@ -40,3 +36,9 @@ struct NamedPointerColumns: public Gtk::TreeModelColumnRecord
 };
 
 extern NamedPointerColumns columns_pattern;
+vector<string> parse_fxgen_combo_string(string csv);
+Glib::ustring hex_color(int number);
+NRTClass* GetFirstClassBySuperClass(char* _pszSuperClassName);
+NRTClass* GetNextClassBySuperClass(char* _pszSuperClassName, NRTClass* _prtclass);
+
+

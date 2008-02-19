@@ -97,7 +97,8 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="../../lib/libvgvm.a" />
+					<Add library="libvgvm.a" />
+					<Add directory="../../LinuxBin" />
 				</Linker>
 			</Target>
 			<Target title="Debug|Linux">
@@ -122,7 +123,8 @@
 					<Add option="-DTHREADS_ENABLED" />
 				</Compiler>
 				<Linker>
-					<Add library="../../lib/libvgvm.a" />
+					<Add library="libvgvmd.a" />
+					<Add directory="../../LinuxBin" />
 				</Linker>
 			</Target>
 			<Target title="Release|Mingw32">

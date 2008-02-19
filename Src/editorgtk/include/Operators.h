@@ -19,6 +19,7 @@
 #define OPERATORS_H
 
 #include "fxgen_pch.h"
+#include "DynamicMenu.h"
 
 class OperatorsLayout;
 
@@ -30,7 +31,10 @@ class OperatorWidget : public Gtk::EventBox
     friend void set_current_detail(int);
 	// no explicit instantiation
     OperatorWidget(NOperator*);
-    ~OperatorWidget();
+
+	enum StateType {STATE_NORMAL, STATE_PREVIEW, STATE_SELECTED, STATE_PREVIEW_SELECTED, STATE_ACTIVE, STATE_PREVIEW_ACTIVE};
+	void set_state(StateType, bool = true);
+	int state;
 
 	// mouse signal handlers
     bool on_button_press_event(GdkEventButton* event);
@@ -51,9 +55,10 @@ class OperatorWidget : public Gtk::EventBox
     void UpdateImage();
     static OperatorWidget* active_op; // this will be executed on any changes on a page
     static OperatorWidget* preview_op; // currently modified operator
-    static vector<OperatorWidget*> ops_group; // used for selections
+    static std::map<OperatorWidget*, void*> ops_group; // used for selections
     static vector<NObject*> clipboard;
     static float detail;
+    static void clear_selection();
 	static void copy_clipboard();
 	static void cut_clipboard();
 	static void delete_ops();

@@ -74,6 +74,7 @@
 			<Add library="tinyxml_lib" />
 		</Linker>
 		<Unit filename="include/DynamicMenu.h" />
+		<Unit filename="include/MainMenu.h" />
 		<Unit filename="include/MainWindow.h" />
 		<Unit filename="include/Operators.h" />
 		<Unit filename="include/ProjectTree.h" />
@@ -87,12 +88,14 @@
 			<Option compile="1" />
 		</Unit>
 		<Unit filename="src/DynamicMenu.cpp" />
+		<Unit filename="src/MainMenu.cpp" />
 		<Unit filename="src/MainWindow.cpp" />
 		<Unit filename="src/OperatorWidget.cpp" />
 		<Unit filename="src/OperatorsLayout.cpp" />
 		<Unit filename="src/ProjectTree.cpp" />
 		<Unit filename="src/PropertyTable.cpp" />
 		<Unit filename="src/TextureImage.cpp" />
+		<Unit filename="src/Utilities.cpp" />
 		<Unit filename="src/editor.glade" />
 		<Unit filename="src/editor_glade.cpp" />
 		<Unit filename="src/main.cpp" />
