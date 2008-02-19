@@ -129,7 +129,7 @@ bool NMemoryStream::PutData(const void* _buf, udword _length)
 //-----------------------------------------------------------------
 bool NMemoryStream::GetData(void* _buf, udword _length)
 {
-  if ((m_dwBufPos+_length)>=m_dwBufSize)
+  if ((m_dwBufPos+_length)>m_dwBufSize)
     return false;
 
   memcpy(_buf, m_pbyBuffer+m_dwBufPos, _length);
