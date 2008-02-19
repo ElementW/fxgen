@@ -20,9 +20,13 @@
 #include "fxgen_pch.h"
 #include "globals.h"
 
+extern MainMenu* main_menu;
+
 MainWindow::MainWindow(GtkWindow* cobject, const RefPtr<Xml>& refGlade)
 :Gtk::Window(cobject), project_modified(this)
 {
+	main_menu = new MainMenu(*this);
+
 //	modify_bg(Gtk::STATE_NORMAL, Gdk::Color("#737373"));
 	//ctor
 }

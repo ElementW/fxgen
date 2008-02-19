@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
 		for (udword i=0; i<carrayOps.Count(); i++)
 		{
 			NStoreResultOp* pFinalResultOp = (NStoreResultOp*)carrayOps[i];
-			peng->ProcessFinalResult(pFinalResultOp, 0.0f, 1.0f, LocalProgress);
+			peng->ProcessFinalResult(pFinalResultOp, 0.0f, 2.0f, LocalProgress);
 		}
 
 		//Free Memory

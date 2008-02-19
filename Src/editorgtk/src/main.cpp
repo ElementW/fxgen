@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //! \file		main.cpp
-//! \brief	FxGen GTK editor
+//! \brief	FxGen GTK editor - main file, global objects
 //!
 //!	\author	Sebastian Olter (qduaty@gmail.com)
 //!	\date		07-02-2008
@@ -17,16 +17,13 @@
 
 #include "pch.h"
 #include "globals.h"
-#include "fxgen_pch.h"
 
 // globals
 MainWindow* window;
 TextureImage* image;
 OperatorsLayout* operators_layout;
-bool project_modified  = false;
 ProjectTree* project_tree;
 PropertyTable* property_table;
-MainMenu* main_menu;
 NamedPointerColumns columns_pattern;
 
 int main(int argc, char *argv[])
@@ -43,7 +40,6 @@ int main(int argc, char *argv[])
     refXml->get_widget_derived("fixed1", operators_layout);
     refXml->get_widget_derived("treeview1", project_tree);
     refXml->get_widget_derived("table1", property_table);
-	main_menu = new MainMenu(*window);
 	window->ClearProject();
 
 	if(argc > 1 && Glib::file_test(argv[1], Glib::FILE_TEST_EXISTS))

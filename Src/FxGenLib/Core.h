@@ -541,7 +541,7 @@ class NMutexLock
 	NMutexLock(bool& mutex, int a = 10): awakening(a), myfault(false), _mutex(mutex) { lock(); }
 	void lock()
 	{
-		while(_mutex)
+		while(!myfault && _mutex)
 		{
 			#ifdef _WIN32
 			Sleep(awakening);

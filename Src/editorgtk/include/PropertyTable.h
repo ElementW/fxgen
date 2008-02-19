@@ -25,6 +25,7 @@ struct PropertyTable : public Gtk::Table
 		PropertyTable(GtkTable*cobject, const RefPtr<Xml>& refGlade);
 		void DisplayOperatorProperties(OperatorWidget*);
 		void AdjustProperty(Gtk::Widget* w, int i, OperatorWidget* op);
+		void clear();
 };
 
 #endif // PROPERTYTABLE_H

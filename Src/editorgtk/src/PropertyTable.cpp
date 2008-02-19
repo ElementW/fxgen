@@ -21,25 +21,6 @@
 #include "vgvm/vgvm.h"
 #include "vgvm/compilers/svg.h"
 
-/// Split an FxGen ubyte combo definition into a set of strings
-vector<string> parse_fxgen_combo_string(string csv)
-{
-	vector<string> retval;
-	string::size_type first_comma = csv.find(',');
-	csv.erase(0, first_comma + 2); // get rid of the default value
-
-	while(csv.size() > 1)
-	{
-		first_comma = csv.find(',');
-		if(first_comma == string::npos)
-			first_comma = csv.find(']');
-		retval.push_back(csv.substr(0, first_comma));
-		csv.erase(0, first_comma + 1);
-	}
-
-	return retval;
-}
-
 PropertyTable::PropertyTable(GtkTable*cobject, const RefPtr<Xml>& refGlade)
 :Gtk::Table(cobject)
 {
@@ -163,7 +144,7 @@ void PropertyTable::AdjustProperty(Gtk::Widget* w, int i, OperatorWidget* op)
 void PropertyTable::DisplayOperatorProperties(OperatorWidget* op)
 {
 	// init
-	children().clear();
+	clear();
 	NVarsBloc* bloc = op->op->m_pcvarsBloc;
 	if(!bloc) return; // operators that don't have a bloc, don't need to be processed here
 	NVarsBlocDesc* desc = bloc->GetBlocDesc();
@@ -312,3 +293,9 @@ void PropertyTable::DisplayOperatorProperties(OperatorWidget* op)
 	}
 	show_all_children();
 }
+
+void PropertyTable::clear()
+{
+	children().clear();
+}
+

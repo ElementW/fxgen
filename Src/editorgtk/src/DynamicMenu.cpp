@@ -18,64 +18,6 @@
 #include "pch.h"
 #include "globals.h"
 
-void set_current_detail(int value)
-{
-	OperatorWidget::detail = (1<<value) * 0.5;
-}
-
-MainMenu::MainMenu(MainWindow& w): window(&w)
-{
-	ag = Gtk::ActionGroup::create();
-	uim = Gtk::UIManager::create();
-	uim->insert_action_group(ag);
-	uim->add_ui_from_string(menu_xml);
-	window->add_accel_group(uim->get_accel_group());
-
-	// add actions
-	add("FileMenuAction", "File");
-	add("clear-project", Gtk::Stock::NEW, mem_fun(window, &MainWindow::ClearProject));
-	add("load-project", Gtk::Stock::OPEN, bind(bind(mem_fun(window, &MainWindow::LoadProject),false),string()));
-	add("append-project", "Append...");
-	add("import-data", "Import...");
-	add("save-project", Gtk::Stock::SAVE, mem_fun(window, &MainWindow::QuickSaveProject));
-	add("save-project-as", Gtk::Stock::SAVE_AS, bind(mem_fun(window, &MainWindow::SaveProject),string()));
-	add("export-image", "Export...");
-	add("exit", Gtk::Stock::QUIT, &Gtk::Main::quit);
-	add("EditMenuAction", "Edit");
-	add("copy-clipboard", Gtk::Stock::COPY);
-	add("cut-clipboard", Gtk::Stock::CUT);
-	add("paste-clipboard", Gtk::Stock::PASTE);
-#ifndef _WIN32
-	add("edit-delete", Gtk::Stock::DELETE);
-#endif
-	add("InsertMenuAction", "Insert");
-	add("ViewMenuAction", "View");
-
-	// detail radio group
-	add("DetailMenuAction", "Detail");
-	Gtk::RadioAction::Group radio1;
-	add(radio1, "low-detail", "Low", bind(&set_current_detail, 0));
-	Glib::RefPtr<Gtk::RadioAction>radioaction = Gtk::RadioAction::create(radio1, "normal-detail", "Normal");
-	ag->add(radioaction, bind(&set_current_detail, 1));
-	add(radio1, "high-detail", "High", bind(&set_current_detail, 2));
-	add(radio1, "fine-detail", "Fine", bind(&set_current_detail, 3));
-	add(radio1, "realistic-detail", "Realistic", bind(&set_current_detail, 4));
-	add(radio1, "ultra-detail", "Ultra", bind(&set_current_detail, 5));
-	radioaction->set_active();
-
-	add("HelpMenuAction", "Help");
-	add("help-about", Gtk::Stock::ABOUT);
-
-	//it must(?) be here, after all actions were created
-	Gtk::Box* box = dynamic_cast<Gtk::Box*>(window->get_child());
-	Gtk::MenuBar* mb = (Gtk::MenuBar*)uim->get_widget("/MenuBar");
-	if(box&&mb)
-	{
-		box->pack_start(*mb, Gtk::PACK_SHRINK);
-		box->reorder_child(*mb, 0);
-	}
-}
-
 /** Add a new text-only item to a submenu, with a callback connected
 \param group Name for the submenu. It will be created if necessary. If empty, items are added to the menu itself.
 */
