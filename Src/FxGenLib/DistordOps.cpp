@@ -160,34 +160,34 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 			float WeightFactors = (1.0f-uf) * (1.0f-vf);
 			RGBA* ptexel = pPxlSrc + ((vt%th)*tw) + (ut%tw);
 
-			Color.r = ((sdword)ptexel->r	* WeightFactors);
-			Color.g = ((sdword)ptexel->g	* WeightFactors);
-			Color.b = ((sdword)ptexel->b	* WeightFactors);
-			Color.a = ((sdword)ptexel->a	* WeightFactors);
+			Color.r = (sdword)(ptexel->r	* WeightFactors);
+			Color.g = (sdword)(ptexel->g	* WeightFactors);
+			Color.b = (sdword)(ptexel->b	* WeightFactors);
+			Color.a = (sdword)(ptexel->a	* WeightFactors);
 
 			//Texel2
 			WeightFactors = uf * (1.0f-vf);
 			ptexel = pPxlSrc + ((vt%th)*tw) + ((ut+1)%tw);
-			Color.r+= ((sdword)ptexel->r	* WeightFactors);
-			Color.g+= ((sdword)ptexel->g	* WeightFactors);
-			Color.b+= ((sdword)ptexel->b	* WeightFactors);
-			Color.a+= ((sdword)ptexel->a	* WeightFactors);
+			Color.r+= (sdword)(ptexel->r	* WeightFactors);
+			Color.g+= (sdword)(ptexel->g	* WeightFactors);
+			Color.b+= (sdword)(ptexel->b	* WeightFactors);
+			Color.a+= (sdword)(ptexel->a	* WeightFactors);
 
 			//Texel3
 			WeightFactors = (1.0f-uf) * vf;
 			ptexel = pPxlSrc + (((vt+1)%th)*tw) + (ut%tw);
-			Color.r+= ((sdword)ptexel->r	* WeightFactors);
-			Color.g+= ((sdword)ptexel->g	* WeightFactors);
-			Color.b+= ((sdword)ptexel->b	* WeightFactors);
-			Color.a+= ((sdword)ptexel->a	* WeightFactors);
+			Color.r+= (sdword)(ptexel->r	* WeightFactors);
+			Color.g+= (sdword)(ptexel->g	* WeightFactors);
+			Color.b+= (sdword)(ptexel->b	* WeightFactors);
+			Color.a+= (sdword)(ptexel->a	* WeightFactors);
 
 			//Texel4
 			WeightFactors = uf * vf;
 			ptexel = pPxlSrc + (((vt+1)%th)*tw) + ((ut+1)%tw);
-			Color.r+= ((sdword)ptexel->r	* WeightFactors);
-			Color.g+= ((sdword)ptexel->g	* WeightFactors);
-			Color.b+= ((sdword)ptexel->b	* WeightFactors);
-			Color.a+= ((sdword)ptexel->a	* WeightFactors);
+			Color.r+= (sdword)(ptexel->r	* WeightFactors);
+			Color.g+= (sdword)(ptexel->g	* WeightFactors);
+			Color.b+= (sdword)(ptexel->b	* WeightFactors);
+			Color.a+= (sdword)(ptexel->a	* WeightFactors);
 
 			//Pixel
 			pPxlDst->r = (ubyte)Color.r;
@@ -299,34 +299,34 @@ udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 			float WeightFactors = (1.0f-uf) * (1.0f-vf);
 			RGBA* ptexel = pPxSrc + ((vt%h)*w) + (ut%w);
 
-			Color.r = ((sdword)ptexel->r	* WeightFactors);
-			Color.g = ((sdword)ptexel->g	* WeightFactors);
-			Color.b = ((sdword)ptexel->b	* WeightFactors);
-			Color.a = ((sdword)ptexel->a	* WeightFactors);
+			Color.r = (ubyte)(ptexel->r	* WeightFactors);
+			Color.g = (ubyte)(ptexel->g	* WeightFactors);
+			Color.b = (ubyte)(ptexel->b	* WeightFactors);
+			Color.a = (ubyte)(ptexel->a	* WeightFactors);
 
 			//Texel2
 			WeightFactors = uf * (1.0f-vf);
 			ptexel = pPxSrc + ((vt%h)*w) + ((ut+1)%w);
-			Color.r+= ((sdword)ptexel->r	* WeightFactors);
-			Color.g+= ((sdword)ptexel->g	* WeightFactors);
-			Color.b+= ((sdword)ptexel->b	* WeightFactors);
-			Color.a+= ((sdword)ptexel->a	* WeightFactors);
+			Color.r+= (ubyte)(ptexel->r	* WeightFactors);
+			Color.g+= (ubyte)(ptexel->g	* WeightFactors);
+			Color.b+= (ubyte)(ptexel->b	* WeightFactors);
+			Color.a+= (ubyte)(ptexel->a	* WeightFactors);
 
 			//Texel3
 			WeightFactors = (1.0f-uf) * vf;
 			ptexel = pPxSrc + (((vt+1)%h)*w) + (ut%w);
-			Color.r+= ((sdword)ptexel->r	* WeightFactors);
-			Color.g+= ((sdword)ptexel->g	* WeightFactors);
-			Color.b+= ((sdword)ptexel->b	* WeightFactors);
-			Color.a+= ((sdword)ptexel->a	* WeightFactors);
+			Color.r+= (ubyte)(ptexel->r	* WeightFactors);
+			Color.g+= (ubyte)(ptexel->g	* WeightFactors);
+			Color.b+= (ubyte)(ptexel->b	* WeightFactors);
+			Color.a+= (ubyte)(ptexel->a	* WeightFactors);
 
 			//Texel4
 			WeightFactors = uf * vf;
 			ptexel = pPxSrc + (((vt+1)%h)*w) + ((ut+1)%w);
-			Color.r+= ((sdword)ptexel->r	* WeightFactors);
-			Color.g+= ((sdword)ptexel->g	* WeightFactors);
-			Color.b+= ((sdword)ptexel->b	* WeightFactors);
-			Color.a+= ((sdword)ptexel->a	* WeightFactors);
+			Color.r+= (ubyte)(ptexel->r	* WeightFactors);
+			Color.g+= (ubyte)(ptexel->g	* WeightFactors);
+			Color.b+= (ubyte)(ptexel->b	* WeightFactors);
+			Color.a+= (ubyte)(ptexel->a	* WeightFactors);
 
 			*pPxDst++ = Color;
 
@@ -389,10 +389,10 @@ udword NVortexOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	m_pcvarsBloc->GetValue(4, _ftime, byTwist);
 
 	//Process operator
-	sdword  dwCenterX       = byCenterX*w;
-	sdword  dwCenterY       = byCenterY*h;
-	sdword  dwRadiusX       = byRayX*w;
-	sdword  dwRadiusY       = byRayY*h;
+	sdword  dwCenterX       = (sdword)(byCenterX*w);
+	sdword  dwCenterY       = (sdword)(byCenterY*h);
+	sdword  dwRadiusX       = (sdword)(byRayX*w);
+	sdword  dwRadiusY       = (sdword)(byRayY*h);
 
 	float   f1_RadiusX = 1.0f/(float)dwRadiusX;
 	float   f1_RadiusY = 1.0f/(float)dwRadiusY;
@@ -528,8 +528,8 @@ udword NLookupOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	{
 		for (udword x=0; x < w; x++)
 		{
-			udword u = pPxTexCoords->r * scaleW;
-			udword v = pPxTexCoords->g * scaleH;
+			udword u = (udword)(pPxTexCoords->r * scaleW);
+			udword v = (udword)(pPxTexCoords->g * scaleH);
 			pPxTexCoords++;
 
 			*pPxDst++ = pPxSrc[(v*tw) + u];

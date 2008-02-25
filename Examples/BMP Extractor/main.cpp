@@ -12,6 +12,7 @@
 //#include "gcccompat/gcccompat.h"
 //#endif
 
+float DETAIL = 8.0;
 
 using namespace std;
 
@@ -107,8 +108,13 @@ int main(int argc, char *argv[])
 
 	if(argc == 1)
 	{
-		printf("Use project file name as an argument.\n");
+		printf("Usage:\n%s <file.prj> [quality]\n", argv[0]);
 		return 1;
+	}
+
+	if(argc == 3)
+	{
+		DETAIL = atof(argv[2]);
 	}
 
 	NEngineOp* peng = NEngineOp::GetEngine();
@@ -125,7 +131,7 @@ int main(int argc, char *argv[])
 		for (udword i=0; i<carrayOps.Count(); i++)
 		{
 			NStoreResultOp* pFinalResultOp = (NStoreResultOp*)carrayOps[i];
-			peng->ProcessFinalResult(pFinalResultOp, 0.0f, 2.0f, LocalProgress);
+			peng->ProcessFinalResult(pFinalResultOp, 0.0f, DETAIL, LocalProgress);
 		}
 
 		//Free Memory

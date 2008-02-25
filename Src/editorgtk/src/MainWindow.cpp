@@ -92,6 +92,41 @@ void MainWindow::SaveProject(string _filename)
 		Gtk::MessageDialog dlg("Problem saving file.", false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK, true);
 }
 
+void MainWindow::ExportImage() // temporary - add file types!!!
+{
+	string _filename = Glib::path_get_basename(filename);
+	// retrieve operator's saved name, if exists
+	OperatorWidget* preview_op = OperatorWidget::preview_op;
+	if(preview_op && (dynamic_cast<NStoreOp*>(preview_op->op) || dynamic_cast<NStoreResultOp*>(preview_op->op)))
+	{
+		_filename += string(".") + preview_op->op->GetUserName();
+		// name suffix
+		if(dynamic_cast<NStoreResultOp*>(preview_op->op))
+		{
+			NVarsBloc* bloc = preview_op->op->m_pcvarsBloc;
+			if(bloc->Count() > 1) // just in case
+			{
+				NVarsBlocDesc* desc = bloc->GetBlocDesc();
+				vector<string> data = parse_fxgen_combo_string(desc[1].pszDefValue);
+				NVarValue* values = bloc->GetValues();
+				_filename += string(".") + data[values[1].byVal];
+			}
+		}
+	}
+
+	Gtk::FileChooserDialog dlg(*(Gtk::Window*)this, "Export", Gtk::FILE_CHOOSER_ACTION_SAVE);
+	dlg.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+	dlg.add_button(Gtk::Stock::OK, Gtk::RESPONSE_OK);
+	dlg.add_filter(filter_jpeg);
+	dlg.add_filter(filter_all);
+	dlg.set_current_name(_filename);
+	int response = dlg.run();
+	if(response == Gtk::RESPONSE_OK)
+		_filename = dlg.get_filename();
+	else return;
+	image->get_pixbuf()->save(_filename, "jpeg");
+}
+
 void MainWindow::ClearProject()
 {
 	if(project_modified)

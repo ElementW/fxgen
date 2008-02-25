@@ -119,8 +119,8 @@ public:
 #endif
 
 #ifdef _DEBUG
-#define TRACE	gDebugLog
 void FXGEN_API gDebugLog(const char* fmt, ... );
+#define TRACE	gDebugLog
 #else
 #define TRACE
 #endif
@@ -534,23 +534,14 @@ struct GradientElem
 //-----------------------------------------------------------------
 class NMutexLock
 {
-	int awakening; // how much time has to wait for mutex release
+	protected:
 	bool myfault; // can release only if it is set
 	bool& _mutex; // global data (i.e. actual mutex)
+	bool _debug; // very useful variable
 	public:
-	NMutexLock(bool& mutex, int a = 10): awakening(a), myfault(false), _mutex(mutex) { lock(); }
-	void lock()
-	{
-		while(!myfault && _mutex)
-		{
-			#ifdef _WIN32
-			Sleep(awakening);
-			#else
-			usleep(awakening);
-			#endif
-		}
-		myfault = _mutex = true;
-	}
-	void release() { if(myfault) myfault = _mutex = false; }
-	~NMutexLock() { release(); }
+	NMutexLock(bool& mutex, bool _lock = true, bool debug = false): myfault(false), _mutex(mutex), _debug(debug) { if(_lock) lock(); }
+	void lock();
+	bool trylock();
+	void release();
+	~NMutexLock();
 };

@@ -119,9 +119,9 @@ udword NRectOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 
 	//Init
 	udword x1, x2, y1, y2;
-	x1 = max(fx1 * w, 0.f);
+	x1 = max(0, fx1 * w);
 	x2 = min(w, fx2 * w);
-	y1 = max(fy1 * h, 0.f);
+	y1 = max(0, fy1 * h);
 	y2 = min(h, fy2 * h);
 
 	//Copy Source to this bitmap
@@ -689,18 +689,18 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 		double a = 2.0f*3.141592f*myfRandom();
 
 		// determine line length
-		sdword count = byLength * _fDetailFactor;
+		sdword count = (sdword)(byLength * _fDetailFactor);
 
 		if(normals.width && byMode == 2)
 		{
 			RGBA &N = normals(x,y);
 			vec3 normal(N.r - 127, N.g - 127, 0);
-			count *= normal.norm() * normal.norm() /8 /* adjusted value */;
-			count = min((float)count, byLength * _fDetailFactor);
+			count = (sdword)(count * normal.norm() * normal.norm() / 8) /* adjusted value */;
+			count = min(count, byLength * _fDetailFactor);
 		}
 
 		if(byMode == 0)
-			count *= myfRandom() * 2; // E=1
+			count = (sdword)(count * myfRandom() * 2); // E=1
 
 		// draw a line
 		while( --count >= 0 )

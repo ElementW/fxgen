@@ -81,8 +81,8 @@
 				<Option object_output="Release" />
 				<Option type="3" />
 				<Option compiler="gcc" />
-				<Option parameters="C:\Documents and Settings\wojownik\Desktop\noise.prj" />
-				<Option host_application="editor-gtk" />
+				<Option parameters="brickstone.prj" />
+				<Option host_application="./editor-gtk" />
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-O3" />
@@ -94,6 +94,7 @@
 					<Add option="-DFXGEN_EXPORTS" />
 					<Add option="-D__LINUX__" />
 					<Add option="-DTHREADS_ENABLED" />
+					<Add option="-DBrickStoneWorks" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -108,11 +109,11 @@
 				<Option object_output="Debug" />
 				<Option type="3" />
 				<Option compiler="gcc" />
-				<Option parameters="C:\Documents and Settings\wojownik\Desktop\noise.prj" />
-				<Option host_application="Editor.exe" />
+				<Option host_application="./editor-gtk_d" />
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-W" />
+					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="-fPIC" />
 					<Add option="-DWIN32" />
@@ -121,8 +122,10 @@
 					<Add option="-DFXGEN_EXPORTS" />
 					<Add option="-D__LINUX__" />
 					<Add option="-DTHREADS_ENABLED" />
+					<Add option="-DBrickStoneWorks" />
 				</Compiler>
 				<Linker>
+					<Add option="-pg" />
 					<Add library="libvgvmd.a" />
 					<Add directory="../../LinuxBin" />
 				</Linker>
@@ -160,6 +163,33 @@
 				<ExtraCommands>
 					<Add after="copy $(TargetDir) ..\..\W32Bin\" />
 				</ExtraCommands>
+			</Target>
+			<Target title="Static Debug|Linux">
+				<Option platforms="Unix;Mac;" />
+				<Option output="../../LinuxBin/libFxGenLib_D" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="Debug" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option host_application="./editor-gtk_d" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-W" />
+					<Add option="-pg" />
+					<Add option="-g" />
+					<Add option="-fPIC" />
+					<Add option="-DWIN32" />
+					<Add option="-DNDEBUG" />
+					<Add option="-D_USRDLL" />
+					<Add option="-DFXGEN_EXPORTS" />
+					<Add option="-D__LINUX__" />
+					<Add option="-DTHREADS_ENABLED" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg" />
+					<Add library="libvgvmd.a" />
+					<Add directory="../../LinuxBin" />
+				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
@@ -207,6 +237,7 @@
 			<Option target="Release|Linux" />
 			<Option target="Debug|Linux" />
 			<Option target="Release|Mingw32" />
+			<Option target="Static Debug|Linux" />
 		</Unit>
 		<Unit filename="../gcccompat/gcccompat.h" />
 		<Extensions>

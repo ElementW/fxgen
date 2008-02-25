@@ -38,6 +38,15 @@ struct CustomFileFilter2: public Gtk::FileFilter
 	}
 };
 
+struct CustomFileFilter3: public Gtk::FileFilter
+{
+	CustomFileFilter3()
+	{
+		add_pattern("*.jp*g");
+		set_name("JPEG image export");
+	}
+};
+
 class WindowTitleAsterisk
 {
 	Gtk::Window* window;
@@ -60,6 +69,7 @@ class MainWindow : public Gtk::Window
 {
 		CustomFileFilter1 filter_fxgen;
 		CustomFileFilter2 filter_all;
+		CustomFileFilter3 filter_jpeg;
 		MainMenu* main_menu;
 	public:
 		MainWindow(GtkWindow*cobject, const RefPtr<Xml>& refGlade);
@@ -69,6 +79,7 @@ class MainWindow : public Gtk::Window
 		void LoadProject(string filename, bool append = false);
 		void SaveProject(string filename);
 		void QuickSaveProject();
+		void ExportImage();
 		string filename;
 		WindowTitleAsterisk project_modified;
 //		Glib::Mutex library_mutex; ///<\fixme there should be a single mutex for all users of the library

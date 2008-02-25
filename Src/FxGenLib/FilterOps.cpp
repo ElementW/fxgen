@@ -171,10 +171,10 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
               x=0;
               while (x<w)
               {
-                sdword r = (sum.r*wamp);
-                sdword g = (sum.g*wamp);
-                sdword b = (sum.b*wamp);
-                sdword a = (sum.a*wamp);
+                sdword r = sdword(sum.r*wamp);
+                sdword g = sdword(sum.g*wamp);
+                sdword b = sdword(sum.b*wamp);
+                sdword a = sdword(sum.a*wamp);
 
                 RGBA& px = pPxDst[(x+bw/2)%w];
                 px.r= (ubyte) ((r<255)?r:255);
@@ -255,10 +255,10 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
               y=0;
               while (y<h)
               {
-                sdword r = (sum.r*hamp);
-                sdword g = (sum.g*hamp);
-                sdword b = (sum.b*hamp);
-                sdword a = (sum.a*hamp);
+                sdword r = sdword(sum.r*hamp);
+                sdword g = sdword(sum.g*hamp);
+                sdword b = sdword(sum.b*hamp);
+                sdword a = sdword(sum.a*hamp);
 
                 RGBA& px = pPxDst[((y+bh/2)%h)*w];
                 px.r= (ubyte) ((r<255)?r:255);
@@ -367,8 +367,8 @@ udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	fconstrast = fconstrast*fconstrast*fconstrast;
 	contrast=(sdword)(fconstrast*256.0f);
 
-	ubyte minalpha = (byAlpha >=127) ? (byAlpha - 127) * 2.f - (byAlpha - 127) / 128.f : 0;
-	ubyte maxalpha = (byAlpha <=127) ? byAlpha * 2.f + byAlpha / 127.f : 255;
+	ubyte minalpha = (byAlpha >=127) ? ubyte((byAlpha - 127) * 2.f - (byAlpha - 127) / 128.f) : 0;
+	ubyte maxalpha = (byAlpha <=127) ? ubyte(byAlpha * 2.f + byAlpha / 127.f) : 255;
 	float alphamult = (maxalpha - minalpha) / 255.;
 
 	RGBA* pPxSrc = pSrc->GetPixels();
@@ -415,7 +415,7 @@ udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 			pPxDst->r = (ubyte) r;
 			pPxDst->g = (ubyte) g;
 			pPxDst->b = (ubyte) b;
-			pPxDst->a = pPxSrc->a * alphamult + minalpha;
+			pPxDst->a = ubyte(pPxSrc->a * alphamult + minalpha);
 			pPxDst++;
 			pPxSrc++;
 		}
@@ -548,9 +548,9 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	RGBA* pPxSrc	= pSrc->GetPixels();
 	RGBA* pPxDst	= pDst->GetPixels();
 
-	for (udword y=0; y<h; y++)
+	for (sdword y=0; y<h; y++)
 	{
-		for (udword x=0; x<w; x++)
+		for (sdword x=0; x<w; x++)
 		{
 			//Normalized normal map
 			vec3 n;
@@ -848,9 +848,9 @@ udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 			v = rotation * v * rotation.Inverse();
 			v.Normalize();
 
-			pcurDst(x,y).r = v.x * 127.5f + 127.5f;
-			pcurDst(x,y).g = v.y * 127.5f + 127.5f;
-			pcurDst(x,y).b = v.z * 127.5f + 127.5f;
+			pcurDst(x,y).r = ubyte(v.x * 127.5f + 127.5f);
+			pcurDst(x,y).g = ubyte(v.y * 127.5f + 127.5f);
+			pcurDst(x,y).b = ubyte(v.z * 127.5f + 127.5f);
 			pcurDst(x,y).a = pcurSrc(x,y).a;
 
 			// mirroring - for broken normal maps
@@ -1067,7 +1067,7 @@ static inline ubyte expandIntensity(ubyte intensity, float ratio, ubyte threshol
 {
   if (intensity<threshold)
   {
-    sword newIntensity = threshold - (threshold-intensity)*ratio;
+    sword newIntensity = threshold - sword((threshold-intensity)*ratio);
     return newIntensity<0 ? 0 : newIntensity;
   } else {
     return intensity;
@@ -1078,7 +1078,7 @@ static inline ubyte compressIntensity(ubyte intensity, float ratio, ubyte thresh
 {
   if (intensity<threshold)
   {
-    sword newIntensity = threshold - (threshold-intensity)/ratio;
+    sword newIntensity = threshold - sword((threshold-intensity)/ratio);
     return newIntensity<0 ? 0 : newIntensity;
   } else {
     return intensity;
@@ -1513,12 +1513,12 @@ udword NAlphaMaskOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 					if(c1.norm() && c2.norm()) // else - use existing value to avoid hot-spots
 						dot(correctness, c1, c2);
 
-					pPxDst->a *= correctness;
+					pPxDst->a = ubyte(pPxDst->a * correctness);
 				}
 				else // monochrome mask
 				{
 					float alpha = (pPxAlpha->r + pPxAlpha->g + pPxAlpha->b) / 3. / 255.;
-					pPxDst->a *= alpha;
+					pPxDst->a = ubyte(pPxDst->a * alpha);
 				}
 
 				pPxAlpha++;
