@@ -22,6 +22,25 @@
 #include "Core.h"
 
 //-----------------------------------------------------------------
+//!	localeless atof() for proper interpretation of default values
+//!	\author Sebastian Olter (qduaty@gmail.com)
+//-----------------------------------------------------------------
+double my_atof(const char* s)
+{
+	const char* point = strchr(s, '.');
+	int integer = atol(s);
+	double frac = 0.;
+	if(point)
+	{
+		frac = atol(++point);
+		for(unsigned i = 0; i < strlen(point); i++)
+			frac /= 10.;
+	}
+	return integer + frac;
+}
+
+
+//-----------------------------------------------------------------
 //                   Variables
 //-----------------------------------------------------------------
 NRTClass* NRTClass::m_pFirstRTClass=null;
@@ -171,9 +190,8 @@ void NVarsBloc::Init(udword _dwVarsCount, NVarsBlocDesc* _pvarsBlocDesc, NObject
 			case eubyte:	pval->byVal=(ubyte)atol(pdesc->pszDefValue);	break;
 			case euword:	pval->wVal=(uword)atol(pdesc->pszDefValue);		break;
 			case eudword:	pval->dwVal=(udword)atof(pdesc->pszDefValue);	break;
-			case efloat:	pval->fVal=(float)atof(pdesc->pszDefValue);		break;
+			case efloat:	pval->fVal=(float)my_atof(pdesc->pszDefValue);		break;
 			case erefobj:	pval->pcRefObj=null;	break;
-//			case erefobj2: break;
 			case estring:	strcpy_s(pval->szVal, sizeof(pval->szVal), pdesc->pszDefValue);			break;
 			default:	assert(0);																				break;
 		}
@@ -224,7 +242,7 @@ bool NVarsBloc::IsAnimated()
 void NVarsBloc::GetValue(udword _idx, float _fTime, ubyte& _val)
 {
 	if (m_paVarsValues[_idx].pcCtrlObj)
-		_val = ((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
+		_val = (ubyte)((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
 	else
 		_val = m_paVarsValues[_idx].byVal;
 }
@@ -232,7 +250,7 @@ void NVarsBloc::GetValue(udword _idx, float _fTime, ubyte& _val)
 void NVarsBloc::GetValue(udword _idx, float _fTime, uword&	_val)
 {
 	if (m_paVarsValues[_idx].pcCtrlObj)
-		_val = ((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
+		_val = (uword)((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
 	else
 		_val = m_paVarsValues[_idx].wVal;
 
@@ -241,7 +259,7 @@ void NVarsBloc::GetValue(udword _idx, float _fTime, uword&	_val)
 void NVarsBloc::GetValue(udword _idx, float _fTime, udword&	_val)
 {
 	if (m_paVarsValues[_idx].pcCtrlObj)
-		_val = ((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
+		_val = (udword)((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
 	else
 		_val = m_paVarsValues[_idx].dwVal;
 }
@@ -1286,7 +1304,9 @@ void NObjectGarbage::Compact(ubyte _byTypeMask, udword _dwTimevalidityMs)
 	NMemFree(ptoFree);
 	m_dwCount = dwCount;
 
+#ifdef _DEBUG
 	TRACE("NObjectGarbage::Compact CompactedCount<%d> NewCount<%d>\n", dwCompacted, dwCount);
+#endif
 
 }
 
@@ -1315,7 +1335,9 @@ void NObjectGarbage::GetInstance(NObject** _ppobj, ubyte _byAsType)
 					m_aobjects = (NObjGarbageDesc*)NMemRealloc(m_aobjects, m_dwSize*sizeof(NObjGarbageDesc));
 				}
 
+#ifdef _DEBUG
 				TRACE("NObjectGarbage::GetInstance Count<%d> ObjPtr<0x%X>\n", m_dwCount, _ppobj);
+#endif
 			}
 		}
 
@@ -1344,7 +1366,9 @@ void NObjectGarbage::RemoveEntry(NObject** _ppobj)
 
 			memcpy(m_aobjects+i, m_aobjects+i+1, (m_dwSize-i-1) * sizeof(NObjGarbageDesc*));
 			m_dwCount--;
+#ifdef _DEBUG
 			TRACE("NObjectGarbage::RemoveEntry Count<%d>\n", m_dwCount);
+#endif
 			break;
 		}
 	}
@@ -1367,11 +1391,46 @@ void NObjectGarbage::RemoveEntry(NObject** _ppobj)
 //-----------------------------------------------------------------
 void gDebugLog(const char* _fmt, ... )
 {
-#ifdef _WIN32
-	//char buf[256];
-	//wvsprintf(buf, _fmt, (char *)(&_fmt+1));
-	//OutputDebugString(buf);
-#else
-#warning Empty function
-#endif
 }
+
+//-----------------------------------------------------------------
+/// NMutexLock methods
+///\author Sebastian Olter (qduaty@gmail.com)
+//-----------------------------------------------------------------
+void NMutexLock::lock()
+{
+	if(_debug) printf("%d %s\n", this, __PRETTY_FUNCTION__);
+	while(!myfault && _mutex)
+	{
+		#ifdef _WIN32
+		Sleep(10);
+		#else
+		usleep(10);
+		#endif
+	}
+	myfault = _mutex = true;
+}
+
+bool NMutexLock::trylock()
+{
+	if(!myfault && _mutex)
+		return false;
+	return myfault = _mutex = true;
+}
+
+void NMutexLock::release()
+{
+	if(myfault)
+	{
+		myfault = _mutex = false;
+		if(_debug) printf("%d %s\n", this, __PRETTY_FUNCTION__);
+	}
+	else if(_debug)
+		printf("%d %s - %s\n", this, "Not my fault", __PRETTY_FUNCTION__);
+}
+
+NMutexLock::~NMutexLock()
+{
+	release();
+}
+//-----------------------------------------------------------------

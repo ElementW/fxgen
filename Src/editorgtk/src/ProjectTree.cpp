@@ -19,7 +19,6 @@
 #include "globals.h"
 
 //-----------------------------------------------------------------
-//!	\brief	Select first page found from a root node
 //!	\author	Johann Nadalutti (fxgen@free.fr)
 //-----------------------------------------------------------------
 NObject* _FindNodeFromClassName(NTreeNode* _pParent, char* _pszClassName)
@@ -67,7 +66,7 @@ void ProjectTree::fill_tree(Gtk::TreeIter iter)
 	;
 }
 
-/// Find all pages in the project and display them.
+/// Find all pages in the project and display first of them.
 void ProjectTree::DisplayProject(NEngineOp* project)
 {
 	clear();

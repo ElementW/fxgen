@@ -20,11 +20,19 @@
 #include "MainMenu.h"
 #include "DynamicMenu.h"
 #include "Operators.h"
+#include "globals.h"
+
 extern char* menu_xml;
 
 void set_current_detail(int value)
 {
+	if(image)
+		image->clear();
 	OperatorWidget::detail = (1<<value) * 0.5;
+	NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+	NEngineOp::GetEngine()->InvalidateAllOps();
+	if(OperatorWidget::preview_op)
+		OperatorWidget::preview_op->UpdateImage();
 }
 
 MainMenu::MainMenu(MainWindow& w): window(&w)
@@ -38,12 +46,12 @@ MainMenu::MainMenu(MainWindow& w): window(&w)
 	// add actions
 	add("FileMenuAction", "File");
 	add("clear-project", Gtk::Stock::NEW, mem_fun(window, &MainWindow::ClearProject));
-	add("load-project", Gtk::Stock::OPEN, bind(bind(mem_fun(window, &MainWindow::LoadProject),false),string()));
+	add("load-project", Gtk::Stock::OPEN, bind(bind(mem_fun(window, &MainWindow::LoadProject),false),""));
 	add("append-project", "Append...");
 	add("import-data", "Import...");
 	add("save-project", Gtk::Stock::SAVE, mem_fun(window, &MainWindow::QuickSaveProject));
-	add("save-project-as", Gtk::Stock::SAVE_AS, bind(mem_fun(window, &MainWindow::SaveProject),string()));
-	add("export-image", "Export...");
+	add("save-project-as", Gtk::Stock::SAVE_AS, bind(mem_fun(window, &MainWindow::SaveProject),""));
+	add("export-image", "Export...", mem_fun(window, &MainWindow::ExportImage));
 	add("exit", Gtk::Stock::QUIT, &Gtk::Main::quit);
 	add("EditMenuAction", "Edit");
 	add("copy-clipboard", Gtk::Stock::COPY);

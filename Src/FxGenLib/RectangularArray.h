@@ -99,7 +99,7 @@ template < typename T, bool bilc = true > struct RectangularArray
 		double cy1 = (y - floor(y)) * (ceil(x) - x);
 		double cx2 = (x - floor(x)) * (ceil(y) - y);
 		double cx1 = 1 - (cx2 + cy1 + cy2);
-		size_t ox = x, oy = y, oxn, oyn;
+		size_t ox = (size_t)x, oy = (size_t)y, oxn, oyn;
 		T *x1, *y1, *x2, *y2;
 
 		if (height)

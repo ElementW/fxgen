@@ -49,7 +49,10 @@ OperatorWidget::OperatorWidget(NOperator* _op)
 bool OperatorWidget::on_button_press_event(GdkEventButton* event)
 {
     if (event->button == 3) // popup menu
+    {
+        activate();
         context_menu.popup(event->button, event->time);
+    }
     else if (event->state & Gdk::CONTROL_MASK) // multiple selection
     {
         if (ops_group.find(this) != ops_group.end())
@@ -232,14 +235,23 @@ void OperatorWidget::suicide()
         preview_op = NULL;
         image->clear();
     }
+    if (active_op == this)
+    {
+        active_op = NULL;
+        property_table->clear();
+    }
+    if(ops_group.find(this) != ops_group.end())
+		ops_group.erase(this);
 }
 
 /// remove selected operators from the layout
 void OperatorWidget::delete_ops()
 {
 	std::map<OperatorWidget*,void*>::iterator i;
+
 	for(i=ops_group.begin(); i!= ops_group.end(); i++)
         i->first->suicide();
+
 }
 
 /// clear static data

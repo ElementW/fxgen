@@ -27,6 +27,8 @@
 //-----------------------------------------------------------------
 struct RGBA
 {
+	RGBA() {}
+	RGBA(ubyte R, ubyte G, ubyte B, ubyte A): r(R), g(G), b(B), a(A) {}
 	union
 	{
 		struct { ubyte r, g, b, a;	};

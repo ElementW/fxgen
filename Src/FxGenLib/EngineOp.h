@@ -46,7 +46,7 @@
 //-----------------------------------------------------------------
 #define	MAX_CONTEXTS	256		//!< Max Stack contexts
 #define	MAX_DEPTH			64		//!< Max Stack Hierarchical depth
-#define	MAX_CHANNELS	256		//!< Max channels animation (1-256)
+#define	MAX_CHANNELS	255		//!< Max channels animation (1-255)
 
 #define	OBJRES_TYPE_INTERMEDIATE	1		//!< Intermediate allocated bitmaps
 #define	OBJRES_TYPE_STORED				2		//!< Stored bitmaps

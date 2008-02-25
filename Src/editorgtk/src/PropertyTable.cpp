@@ -196,6 +196,31 @@ void PropertyTable::DisplayOperatorProperties(OperatorWidget* op)
 			display_item = sb;
 			sb->signal_changed().connect(bind(bind(bind(mem_fun(*this,&PropertyTable::AdjustProperty),op), i),display_item));
 		}
+		else if(classname.find("NUFloatProp") == 0)
+		{
+			Gtk::SpinButton* sb = Gtk::manage(new Gtk::SpinButton(.02, 3));
+			sb->set_range(0,1e6);
+			sb->set_increments(.001, .01);
+			sb->set_value(f);
+			display_item = sb;
+			sb->signal_changed().connect(bind(bind(bind(mem_fun(*this,&PropertyTable::AdjustProperty),op), i),display_item));
+		}
+		else if(classname.find("NCFloatProp") == 0)
+		{
+#if 0
+			Gtk::SpinButton* sb = Gtk::manage(new Gtk::SpinButton(.003, 4));
+			sb->set_range(0,1);
+			sb->set_increments(.0001, .001);
+			sb->set_value(f);
+			display_item = sb;
+			sb->signal_changed().connect(bind(bind(bind(mem_fun(*this,&PropertyTable::AdjustProperty),op), i),display_item));
+#else
+			Gtk::HScale* hs = Gtk::manage(new Gtk::HScale(0, 1.0001, .0001));
+			hs->set_value(f);
+			display_item = hs;
+			hs->signal_value_changed().connect(bind(bind(bind(mem_fun(*this,&PropertyTable::AdjustProperty),op), i),display_item));
+#endif
+		}
 		else if(classname.find("NUwordProp") == 0)
 		{
 			Gtk::SpinButton* sb = Gtk::manage(new Gtk::SpinButton(1, 0));
@@ -221,22 +246,6 @@ void PropertyTable::DisplayOperatorProperties(OperatorWidget* op)
 			cbt->set_active(n);
 			display_item = cbt;
 			cbt->signal_changed().connect(bind(bind(bind(mem_fun(*this,&PropertyTable::AdjustProperty),op), i),display_item));
-		}
-		else if(classname.find("NCFloatProp") == 0)
-		{
-#if 1
-			Gtk::SpinButton* sb = Gtk::manage(new Gtk::SpinButton(.003, 4));
-			sb->set_range(0,1);
-			sb->set_increments(.0001, .001);
-			sb->set_value(f);
-			display_item = sb;
-			sb->signal_changed().connect(bind(bind(bind(mem_fun(*this,&PropertyTable::AdjustProperty),op), i),display_item));
-#else
-			Gtk::HScale* hs = Gtk::manage(new Gtk::HScale(0, 1.0001, .0001));
-			hs->set_value(f);
-			display_item = hs;
-			hs->signal_value_changed().connect(bind(bind(bind(mem_fun(*this,&PropertyTable::AdjustProperty),op), i),display_item));
-#endif
 		}
 		else if(classname.find("NStringProp") == 0)
 		{

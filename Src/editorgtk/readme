@@ -20,7 +20,6 @@ everywhere to unlock it
 - half of functions don't work when built on windows
 - rubberband selection is not implemented (multiple selection already works)
 - no preview zoom (but detail management works)
-- no image export
 
 Anyway, following features were added:
 - smooth operation, no lock-ups

@@ -135,10 +135,22 @@ bool NArchive::Read()
         m_pStream->GetData(&h, sizeof(NSFHeader));
 
 	//Check if it's a NSF file
-	if (h.NSFId!=NSF_HEADERID)		{ ERR("Not an NSF File",0); return false; }
+	if (h.NSFId!=NSF_HEADERID)
+	{
+#ifdef _DEBUG
+		ERR("Not an NSF File",0);
+#endif
+		return false;
+	}
 
 	//Check version
-	if (h.Version!=NSF_VERSION)		{ ERR("NSF Bad Version",0); return false; }
+	if (h.Version!=NSF_VERSION)
+	{
+#ifdef _DEBUG
+		ERR("NSF Bad Version",0);
+#endif
+		return false;
+	}
 
 	//Read GUIDs Table
 	m_wGuidsCount = h.GUIDCount;
@@ -295,12 +307,14 @@ NObject* NArchive::GetClass()
 		//Get Class ID from idx
 		*this >> idx;
 		ID CLASSID = GetGUIDFromIdx(idx);
+#ifdef _DEBUG
 		if (!CLASSID)							ERR("Class's ID not registered",0);
-
+#endif
 		//Create Run-Time Class
 		pobj = NRTClass::CreateByID(CLASSID);
+#ifdef _DEBUG
 		if (!pobj)								ERR("Can't create RTClass",0);
-
+#endif
 		//Serialize class
 		if (pobj)	pobj->Load(this);
 
@@ -311,12 +325,15 @@ NObject* NArchive::GetClass()
 		*this >> idx;
 		pobj = m_carrayMappedObjs[idx];
 
+#ifdef _DEBUG
 		if (idx!=0 && !pobj)				ERR("Mapped object not found!", 0);
-
+#endif
 	//////////////////////////////////////////
 	} else {
 
+#ifdef _DEBUG
 		ERR("Unsupported Tag",0);
+#endif
 	}
 
 	return pobj;
@@ -363,10 +380,14 @@ NObject* NArchive::GetMappedObj()
 	{
 		uword idx;	*this >> idx;	//Get Object Idx	(rk. idx=0 obj=null)
 		NObject* pobj = m_carrayMappedObjs[idx];
+#ifdef _DEBUG
 		if (idx!=0 && !pobj)				ERR("Mapped object not found!", 0);
+#endif
 		return pobj;
 	}
 
+#ifdef _DEBUG
 	ERR("Unsupported Tag",0);
+#endif
 	return null;
 }

@@ -21,6 +21,7 @@
 /// thread routine for operators' updating
 void OperatorsLayout::update_op()
 {
+	int  update_image = 0;
 	while(!kill_thread)
 	{
 		if(need_update)
@@ -33,13 +34,17 @@ void OperatorsLayout::update_op()
 					engine->Execute(0.f/*time*/, OperatorWidget::preview_op->op, OperatorWidget::detail, NULL/*FXGEN_OPSPROCESSCB* _cbOpsProcess*/);
 //			image->queue_draw();
 			}
+			update_image = 1;
 		}
-		else
-			image->queue_draw(); // now we are sure the image will be updated after its data was processed
+		else if(update_image)
+		{
+			update_image--;
+			image->queue_draw();
+		}
 #ifdef _WIN32
-			Sleep(1);
+			Sleep(10);
 #else
-			usleep(1);
+			usleep(10);
 #endif
 	}
 }
@@ -140,6 +145,7 @@ bool OperatorsLayout::release(OperatorWidget& widget)
         }
     }
 
+    // move to a relative position
     move(widget, x - operators[&widget].first, y - operators[&widget].second);
     if(width_request) // new operators, which weren't ever seen, have it set to 0
 		widget.set_size_request(width_request, grid_size);
@@ -189,7 +195,6 @@ void OperatorsLayout::add_new(uint32_t CLASSID)
 	}
 }
 
-/// Popup menu request handler
 bool OperatorsLayout::on_button_press_event(GdkEventButton* event)
 {
 	last_x = (int)event->x;
@@ -210,8 +215,7 @@ bool OperatorsLayout::on_button_press_event(GdkEventButton* event)
 void OperatorsLayout::remove(OperatorWidget& widget)
 {
 	Gtk::Fixed::remove(widget);
-	std::map<OperatorWidget*,pair<int,int> >::iterator iter = operators.find(&widget);
-	operators.erase(iter);
+	operators.erase(&widget);
 	page->DeleteOp(widget.op);
 	window->project_modified = true;
 }

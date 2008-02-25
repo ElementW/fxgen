@@ -486,6 +486,9 @@ void NOperatorsPage::GetOpsFromClassName(const char* _pszClassName, NObjectArray
 //-----------------------------------------------------------------
 void NOperatorsPage::InvalidateAllOps()
 {
+#ifdef THREADS_ENABLED
+	NMutexLock lock(NEngineOp::GetEngine()->m_bEngineLock);
+#endif
 	for (udword i=0; i<m_arrayOps.Count(); i++)
 	{
 		NOperator* pccurOP = (NOperator*)m_arrayOps[i];
@@ -871,9 +874,6 @@ void NEngineOp::InvalidateAllOps()
 
 void NEngineOp::_InvalidateAllOps(NTreeNode* _pnode)
 {
-#ifdef THREADS_ENABLED
-	NMutexLock lock(m_bEngineLock);
-#endif
 	//Parse Alls Pages...
 	NObjectArray& arrayObjs = _pnode->GetObjsArray();
 	udword dwCount = arrayObjs.Count();
