@@ -16,6 +16,7 @@
 //-----------------------------------------------------------------
 
 #include "pch.h"
+#include "fxgen_pch.h"
 #include "globals.h"
 
 /// thread routine for operators' updating
@@ -66,7 +67,7 @@ OperatorsLayout::OperatorsLayout(GtkFixed* cobject, const RefPtr<Xml>& refGlade)
 
 	// context menu initialization - the idea is taken from NOperatorsWnd::InitCtxMenu()
 	NRTClass* prtc;
-	for (prtc = GetFirstClassBySuperClass("NOperator"); prtc; prtc = GetNextClassBySuperClass("NOperator", prtc))
+	for (prtc = NRTClass::GetFirstClassBySuperClass("NOperator"); prtc; prtc = NRTClass::GetNextClassBySuperClass("NOperator", prtc))
 	{
 		NOperator* pop = (NOperator*)prtc->m_pCreateCB();
 		Glib::ustring category = pop->GetCategory();

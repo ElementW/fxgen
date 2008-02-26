@@ -17,36 +17,7 @@
 
 #include "pch.h"
 #include "globals.h"
-
-//-----------------------------------------------------------------
-//!	\author	Johann Nadalutti (fxgen@free.fr)
-//-----------------------------------------------------------------
-NObject* _FindNodeFromClassName(NTreeNode* _pParent, char* _pszClassName)
-{
-	//Sons
-	NTreeNode* pnode = _pParent->GetSon();
-	while (pnode)
-	{
-		//Objects array
-		NObjectArray& array = pnode->GetObjsArray();
-		for (udword i=0; i<array.Count(); i++)
-		{
-			NObject* pobj = array[i];
-			if (strcmp(pobj->GetRTClass()->m_pszClassName, _pszClassName) == 0)
-				return pobj;
-		}
-
-		//Son Nodes
-		NObject* pfind = _FindNodeFromClassName(pnode, _pszClassName);
-		if (pfind)
-			return pfind;
-
-		//Next brothers nodes
-		pnode = pnode->GetBrother();
-	}
-
-	return null;
-}
+#include "fxgen_pch.h"
 
 ProjectTree::ProjectTree(GtkTreeView*cobject, const RefPtr<Xml>& refGlade)
 : Gtk::TreeView(cobject)

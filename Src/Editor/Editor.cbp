@@ -166,6 +166,7 @@
 					<Add directory="../FxGenLib" />
 					<Add directory="../GUILib" />
 					<Add directory="../../externals/vgvm/trunk/include" />
+					<Add directory="../../W32Bin" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="../FxGenLib" />
@@ -178,12 +179,13 @@
 					<Add library="opengl32" />
 					<Add library="user32" />
 					<Add library="gdi32" />
-					<Add library="libGUILib.a" />
-					<Add library="libFxGenLib.a" />
+					<Add library="GUILib" />
+					<Add library="FxGenLib" />
 					<Add library="tinyxml_lib" />
 					<Add library="vgvm" />
 					<Add library="cairo" />
 					<Add directory="/t/GTK/lib" />
+					<Add directory="../../W32Bin" />
 				</Linker>
 			</Target>
 		</Build>
@@ -192,9 +194,6 @@
 			<Add directory="../../Externals/tinyxml" />
 			<Add directory="../../Externals/vgvm" />
 		</Compiler>
-		<Linker>
-			<Add directory="../../W32Bin" />
-		</Linker>
 		<Unit filename="../../Operators.txt" />
 		<Unit filename="Editor.cpp" />
 		<Unit filename="Editor.h" />

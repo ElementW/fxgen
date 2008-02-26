@@ -46,8 +46,8 @@ protected:
 	//Methods
 	void InitCtxMenu();
 
-	NRTClass* GetFirstClassBySuperClass(char* _pszSuperClassName);
-	NRTClass* GetNextClassBySuperClass(char* _pszSuperClassName, NRTClass* _prtclass);
+//	NRTClass* GetFirstClassBySuperClass(char* _pszSuperClassName);
+//	NRTClass* GetNextClassBySuperClass(char* _pszSuperClassName, NRTClass* _prtclass);
 
 	//Events
 	EVT_DECLARE_HANDLER(OnPageSelected);

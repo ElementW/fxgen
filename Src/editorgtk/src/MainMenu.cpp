@@ -28,7 +28,7 @@ void set_current_detail(int value)
 {
 	if(image)
 		image->clear();
-	OperatorWidget::detail = (1<<value) * 0.5;
+	OperatorWidget::detail = (1<<(value + 2)) / 8.0;
 	NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
 	NEngineOp::GetEngine()->InvalidateAllOps();
 	if(OperatorWidget::preview_op)
@@ -66,13 +66,15 @@ MainMenu::MainMenu(MainWindow& w): window(&w)
 	// detail radio group
 	add("DetailMenuAction", "Detail");
 	Gtk::RadioAction::Group radio1;
-	add(radio1, "low-detail", "Low", bind(&set_current_detail, 0));
+	add(radio1, "micro-detail", "Micro (1/8)", bind(&set_current_detail, -2));
+	add(radio1, "tiny-detail", "Tiny (1/4)", bind(&set_current_detail, -1));
+	add(radio1, "low-detail", "Low (1/2)", bind(&set_current_detail, 0));
 	Glib::RefPtr<Gtk::RadioAction>radioaction = Gtk::RadioAction::create(radio1, "normal-detail", "Normal");
 	ag->add(radioaction, bind(&set_current_detail, 1));
-	add(radio1, "high-detail", "High", bind(&set_current_detail, 2));
-	add(radio1, "fine-detail", "Fine", bind(&set_current_detail, 3));
-	add(radio1, "realistic-detail", "Realistic", bind(&set_current_detail, 4));
-	add(radio1, "ultra-detail", "Ultra", bind(&set_current_detail, 5));
+	add(radio1, "high-detail", "High (2x)", bind(&set_current_detail, 2));
+	add(radio1, "fine-detail", "Fine (4x)", bind(&set_current_detail, 3));
+	add(radio1, "realistic-detail", "Realistic (8x)", bind(&set_current_detail, 4));
+	add(radio1, "ultra-detail", "Ultra (16x)", bind(&set_current_detail, 5));
 	radioaction->set_active();
 
 	add("HelpMenuAction", "Help");

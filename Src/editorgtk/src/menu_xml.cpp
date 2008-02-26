@@ -21,6 +21,8 @@ const char* menu_xml=
 "		</menu>"
 "		<menu name=\"ViewMenu\" action=\"ViewMenuAction\">"
 "			<menu name=\"DetailMenu\" action=\"DetailMenuAction\">"
+"				<menuitem name=\"Micro\" action=\"micro-detail\"/>"
+"				<menuitem name=\"Tiny\" action=\"tiny-detail\"/>"
 "				<menuitem name=\"Low\" action=\"low-detail\"/>"
 "				<menuitem name=\"Normal\" action=\"normal-detail\"/>"
 "				<menuitem name=\"High\" action=\"high-detail\"/>"

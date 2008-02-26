@@ -5,6 +5,7 @@
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
 //!					Anders Stenberg (anders.stenberg@gmail.com)
+//!					Sebastian Olter (qduaty@gmail.com)
 //!
 //!	\date		07-05-2007
 //!

@@ -10,10 +10,11 @@
 			<Depends filename="../Externals/vgvm/vgvm.cbp" />
 		</Project>
 		<Project filename="../Externals/vgvm/vgvm.cbp" />
-		<Project filename="../Examples/BMP Extractor/test.cbp" active="1" />
+		<Project filename="../Examples/BMP Extractor/test.cbp" />
 		<Project filename="../Externals/tinyxml/tinyxml_lib.cbp" />
-		<Project filename="../Src/editorgtk/editor-gtk.cbp">
+		<Project filename="../Src/editorgtk/editor-gtk.cbp" active="1">
 			<Depends filename="../Src/FxGenLib/FxGenLib.cbp" />
 		</Project>
+		<Project filename="../../../../home/wojownik/dev/CYC/cyc.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

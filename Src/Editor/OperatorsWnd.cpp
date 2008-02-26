@@ -76,7 +76,7 @@ void NOperatorsWnd::InitCtxMenu()
 	m_wndMenu.Create("Operators:", this);
 
 	//Create Operators list sorted by category
-	NRTClass* prtc = GetFirstClassBySuperClass("NOperator");
+	NRTClass* prtc = NRTClass::GetFirstClassBySuperClass("NOperator");
 	while (prtc)
 	{
 		//Create operator in order to get operator name and categorie
@@ -110,7 +110,7 @@ void NOperatorsWnd::InitCtxMenu()
 		delete pop;
 
 		//Next RTC
-		prtc = GetNextClassBySuperClass("NOperator", prtc);
+		prtc = NRTClass::GetNextClassBySuperClass("NOperator", prtc);
 	}
 
 }
@@ -173,40 +173,41 @@ void NOperatorsWnd::OnDeletedOperator(NOperator* pop)
 	pfrm->DeletedOperator(pop);
 }
 
-//-----------------------------------------------------------------
-//!	\brief	Return First RTClass from a super class name
-//-----------------------------------------------------------------
-NRTClass* NOperatorsWnd::GetFirstClassBySuperClass(char* _pszSuperClassName)
-{
-	NRTClass* pcurRTC = NRTClass::m_pFirstRTClass;
-	while (pcurRTC!=null)
-	{
-		if (strcmp(pcurRTC->m_pszSuperClassName, _pszSuperClassName) == 0)
-			return pcurRTC;
-		pcurRTC = pcurRTC->m_pNextRTC;
-	}
-
-	return null;
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Return Next RTClass from a super class name
-//-----------------------------------------------------------------
-NRTClass* NOperatorsWnd::GetNextClassBySuperClass(char* _pszSuperClassName, NRTClass* _prtclass)
-{
-	_prtclass = _prtclass->m_pNextRTC;
-
-	while (_prtclass!=null)
-	{
-		if (strcmp(_prtclass->m_pszSuperClassName, _pszSuperClassName) == 0)
-			return _prtclass;
-
-		_prtclass = _prtclass->m_pNextRTC;
-	}
-
-	return null;
-}
-
+// generic editor functions, moved to fxgenlib - S.O.
+////-----------------------------------------------------------------
+////!	\brief	Return First RTClass from a super class name
+////-----------------------------------------------------------------
+//NRTClass* NOperatorsWnd::GetFirstClassBySuperClass(char* _pszSuperClassName)
+//{
+//	NRTClass* pcurRTC = NRTClass::m_pFirstRTClass;
+//	while (pcurRTC!=null)
+//	{
+//		if (strcmp(pcurRTC->m_pszSuperClassName, _pszSuperClassName) == 0)
+//			return pcurRTC;
+//		pcurRTC = pcurRTC->m_pNextRTC;
+//	}
+//
+//	return null;
+//}
+//
+////-----------------------------------------------------------------
+////!	\brief	Return Next RTClass from a super class name
+////-----------------------------------------------------------------
+//NRTClass* NOperatorsWnd::GetNextClassBySuperClass(char* _pszSuperClassName, NRTClass* _prtclass)
+//{
+//	_prtclass = _prtclass->m_pNextRTC;
+//
+//	while (_prtclass!=null)
+//	{
+//		if (strcmp(_prtclass->m_pszSuperClassName, _pszSuperClassName) == 0)
+//			return _prtclass;
+//
+//		_prtclass = _prtclass->m_pNextRTC;
+//	}
+//
+//	return null;
+//}
+//
 
 
 //-----------------------------------------------------------------
