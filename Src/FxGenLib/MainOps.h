@@ -50,7 +50,7 @@ public:
 	virtual	udword	GetColor()		{ return 0x004080FF;	}
 	virtual const char*		GetName()			{ return "Store";	}		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Misc"; }		//!< Operator's Category
-	virtual char*		GetUserName();											//!< Operator's User Name
+	virtual const char*		GetUserName();											//!< Operator's User Name
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
@@ -73,7 +73,7 @@ public:
 	virtual	udword	GetColor()		{ return 0x000000FF;	}
 	virtual const char*		GetName()			{ return "Store Result";	}	//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Misc";	}					//!< Operator's Category
-	virtual char*		GetUserName();														//!< Operator's User Name
+	virtual const char*		GetUserName();														//!< Operator's User Name
 
 	//Bitmap Access
 	NBitmap* GetBitmap();
@@ -98,7 +98,7 @@ public:
 	virtual	udword	GetColor()		{ return 0x00e36464;	}
 	virtual const char*		GetName()			{ return "Load"; }		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Misc"; }		//!< Operator's Category
-	virtual char*		GetUserName();											//!< Operator's User Name
+	virtual const char*		GetUserName();											//!< Operator's User Name
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);

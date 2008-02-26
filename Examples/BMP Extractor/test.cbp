@@ -71,6 +71,35 @@
 					<Add directory="../../LinuxBin" />
 				</Linker>
 			</Target>
+			<Target title="Linux Release 32">
+				<Option platforms="Unix;Mac;" />
+				<Option output="../../LinuxBin32/test" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release32/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="Bricks.prj" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-m32" />
+					<Add option="-D__LINUX__" />
+					<Add option="-DDECODE_ONLY" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-m32" />
+					<Add library="FxGenLib" />
+					<Add library="cairomm-1.0" />
+					<Add library="../../lib/libvgvm.a" />
+					<Add library="cairo" />
+					<Add library="png" />
+					<Add library="z" />
+					<Add library="fontconfig" />
+					<Add library="freetype" />
+					<Add library="xml2" />
+					<Add library="expat" />
+					<Add directory="../../LinuxBin32" />
+				</Linker>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
@@ -85,6 +114,11 @@
 			<envvars />
 			<code_completion />
 			<debugger />
+			<AutoVersioning>
+				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
+				<Settings autoincrement="1" date_declarations="1" do_auto_increment="0" ask_to_increment="0" language="C++" svn="0" svn_directory="" header_path="version.h" />
+				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
+			</AutoVersioning>
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

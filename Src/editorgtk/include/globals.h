@@ -38,7 +38,5 @@ struct NamedPointerColumns: public Gtk::TreeModelColumnRecord
 extern NamedPointerColumns columns_pattern;
 vector<string> parse_fxgen_combo_string(string csv);
 Glib::ustring hex_color(int number);
-NRTClass* GetFirstClassBySuperClass(char* _pszSuperClassName);
-NRTClass* GetNextClassBySuperClass(char* _pszSuperClassName, NRTClass* _prtclass);
 
 

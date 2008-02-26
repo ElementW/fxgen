@@ -11,7 +11,7 @@ THREADS_ENABLED to be defined
 - boost (for lexical_cast, needed for testing; you may disable it in pch.h)
 - Code::Blocks IDE
 
-Current version (rev. 98), when compared to the original win32 editor, 
+Current version (rev. 101), when compared to the original win32 editor, 
 lacks the following functionalities:
 - project browser is read-only and displays a flat list of pages
 - clipboard usage leads to a segmentation fault
@@ -25,3 +25,4 @@ Anyway, following features were added:
 - smooth operation, no lock-ups
 - better color control that can pick any color from the screen on linux; 
 perhaps it will work on cygwin as well
+- export to common image formats (all from gtk, by default: bmp, jpeg, tiff, png, and ico).

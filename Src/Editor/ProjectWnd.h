@@ -48,7 +48,7 @@ protected:
 	NTreeNode*			GetSelectedGroup();
 	NOperatorsPage* GetSelectedPage();
 
-	NObject* _FindNodeFromClassName(NTreeNode* _pParent, char* _pszClassName);
+//	NObject* _FindNodeFromClassName(NTreeNode* _pParent, char* _pszClassName);
 
 	// Messages Notify
 	void OnTreeSelChange();

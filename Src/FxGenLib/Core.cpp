@@ -997,6 +997,40 @@ ID NRTClass::MakeClassID(const char* _pszClassName)
 }
 
 //-----------------------------------------------------------------
+//!	\brief	Return First RTClass from a super class name
+//-----------------------------------------------------------------
+NRTClass* NRTClass::GetFirstClassBySuperClass(const char* _pszSuperClassName)
+{
+	NRTClass* pcurRTC = NRTClass::m_pFirstRTClass;
+	while (pcurRTC!=null)
+	{
+		if (strcmp(pcurRTC->m_pszSuperClassName, _pszSuperClassName) == 0)
+			return pcurRTC;
+		pcurRTC = pcurRTC->m_pNextRTC;
+	}
+
+	return null;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Return Next RTClass from a super class name
+//-----------------------------------------------------------------
+NRTClass* NRTClass::GetNextClassBySuperClass(const char* _pszSuperClassName, NRTClass* _prtclass)
+{
+	_prtclass = _prtclass->m_pNextRTC;
+
+	while (_prtclass!=null)
+	{
+		if (strcmp(_prtclass->m_pszSuperClassName, _pszSuperClassName) == 0)
+			return _prtclass;
+
+		_prtclass = _prtclass->m_pNextRTC;
+	}
+
+	return null;
+}
+
+//-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
 //							NTreeNode class implementation
@@ -1218,6 +1252,32 @@ NTreeNode* NTreeNode::GetSonFromName(const char* _pszNodeName)
 	return pnodeFound;
 }
 
+NObject* NTreeNode::_FindNodeFromClassName(NTreeNode* _pParent, char* _pszClassName)
+{
+	//Sons
+	NTreeNode* pnode = _pParent->GetSon();
+	while (pnode)
+	{
+		//Objects array
+		NObjectArray& array = pnode->GetObjsArray();
+		for (udword i=0; i<array.Count(); i++)
+		{
+			NObject* pobj = array[i];
+			if (strcmp(pobj->GetRTClass()->m_pszClassName, _pszClassName) == 0)
+				return pobj;
+		}
+
+		//Son Nodes
+		NObject* pfind = _FindNodeFromClassName(pnode, _pszClassName);
+		if (pfind)
+			return pfind;
+
+		//Next brothers nodes
+		pnode = pnode->GetBrother();
+	}
+
+	return null;
+}
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------

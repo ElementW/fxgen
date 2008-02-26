@@ -36,7 +36,7 @@ struct BMP // Windows Bitmap header
 
 	void write(string filename, const RGBA* data)
 	{
-		printf("%d",sizeof(RGBA));
+		printf("%d",(int)sizeof(RGBA));
 		FILE* f = fopen(filename.c_str(), "wb");
 		/* put header */
 		fwrite((char*)this + 2, sizeof(BMP), 1, f);

@@ -22,7 +22,6 @@
 #include "ProjectWnd.h"
 #include "resource.h"
 #include "EnterNameDlg.h"
-
 //-----------------------------------------------------------------
 //			Defines
 //-----------------------------------------------------------------
@@ -311,7 +310,7 @@ void NProjectWnd::SelectFirstPage()
 	if (m_popsProject)
 	{
 		NTreeNode* pRoot = m_popsProject->GetRootGroup();
-		NObject* pobj = _FindNodeFromClassName(pRoot, "NOperatorsPage");
+		NObject* pobj = NTreeNode::_FindNodeFromClassName(pRoot, "NOperatorsPage");
 		if (pobj)
 		{
 			udword idx = GetItemIdxFromObject(pobj);
@@ -333,32 +332,33 @@ void NProjectWnd::SelectFirstPage()
 
 }
 
-//-----------------------------------------------------------------
-//!	\brief	Select first page found from a root node
-//-----------------------------------------------------------------
-NObject* NProjectWnd::_FindNodeFromClassName(NTreeNode* _pParent, char* _pszClassName)
-{
-	//Sons
-	NTreeNode* pnode = _pParent->GetSon();
-	while (pnode)
-	{
-		//Objects array
-		NObjectArray& array = pnode->GetObjsArray();
-		for (udword i=0; i<array.Count(); i++)
-		{
-			NObject* pobj = array[i];
-			if (strcmp(pobj->GetRTClass()->m_pszClassName, _pszClassName) == 0)
-				return pobj;
-		}
-
-		//Son Nodes
-		NObject* pfind = _FindNodeFromClassName(pnode, _pszClassName);
-		if (pfind)
-			return pfind;
-
-		//Next brothers nodes
-		pnode = pnode->GetBrother();
-	}
-
-	return null;
-}
+// generic editor function, moved to fxgenlib - S.O.
+////-----------------------------------------------------------------
+////!	\brief	Select first page found from a root node
+////-----------------------------------------------------------------
+//NObject* NProjectWnd::_FindNodeFromClassName(NTreeNode* _pParent, char* _pszClassName)
+//{
+//	//Sons
+//	NTreeNode* pnode = _pParent->GetSon();
+//	while (pnode)
+//	{
+//		//Objects array
+//		NObjectArray& array = pnode->GetObjsArray();
+//		for (udword i=0; i<array.Count(); i++)
+//		{
+//			NObject* pobj = array[i];
+//			if (strcmp(pobj->GetRTClass()->m_pszClassName, _pszClassName) == 0)
+//				return pobj;
+//		}
+//
+//		//Son Nodes
+//		NObject* pfind = _FindNodeFromClassName(pnode, _pszClassName);
+//		if (pfind)
+//			return pfind;
+//
+//		//Next brothers nodes
+//		pnode = pnode->GetBrother();
+//	}
+//
+//	return null;
+//}

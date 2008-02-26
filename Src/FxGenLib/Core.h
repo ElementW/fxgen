@@ -85,6 +85,8 @@ public:
 	static NObject*		CreateByID(ID _CLASSID);
 	static NObject*		CreateByName(const char* _pszClassName);
 	static ID					MakeClassID(const char* _pszClassName);
+	static NRTClass* GetFirstClassBySuperClass(const char* _pszSuperClassName);
+	static NRTClass* GetNextClassBySuperClass(const char* _pszSuperClassName, NRTClass* _prtclass);
 
 //Datas
 	RTCLASS_HANDLER*	m_pCreateCB;		//!< CallBack for class creation
@@ -364,8 +366,6 @@ public:
 	virtual bool Save(NArchive* _s);
 	virtual	bool Load(NArchive* _l);
 
-	//virtual void saveBMP(char* filename){}
-
 	//Variables methods
 	NVarsBloc* AddVarsBloc(udword _dwVarCount, NVarsBlocDesc* _pdesc, ubyte _byVersion=1);
 	NVarsBloc* GetFirstVarsBloc()		{ return m_pcfirstVarsBloc; }
@@ -432,6 +432,7 @@ public:
 	udword GetSonsCount();
 
 	udword FindSon(NTreeNode* _pnode);
+	static NObject* _FindNodeFromClassName(NTreeNode* _pParent, char* _pszClassName);
 
 	//Serialization
 	virtual bool Save(NArchive* _s);	//!< Save object
