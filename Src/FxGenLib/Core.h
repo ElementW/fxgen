@@ -14,7 +14,9 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef CORE_H
+#define CORE_H
+
 
 #ifdef __GNUC__
 #include "gcccompat/gcccompat.h"
@@ -546,3 +548,5 @@ class NMutexLock
 	void release();
 	~NMutexLock();
 };
+
+#endif //CORE_H

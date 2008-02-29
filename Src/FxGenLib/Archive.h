@@ -16,7 +16,8 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef ARCHIVE_H
+#define ARCHIVE_H
 
 //-----------------------------------------------------------------
 // Includes
@@ -129,4 +130,6 @@ protected:
 	ID*						m_pGuidsArray;			//!< Unique GUIDs array
 	NObjectArray	m_carrayMappedObjs;	//!< Unique Mapped objects
 };
+
+#endif //ARCHIVE_H
 

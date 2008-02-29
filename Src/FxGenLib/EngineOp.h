@@ -14,7 +14,9 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef ENGINEOP_H
+#define ENGINEOP_H
+
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -228,3 +230,5 @@ protected:
 	//Garbages for media (bitmaps ...)
 	NObjectGarbage	m_bitmapsAlloc;
 };
+
+#endif //ENGINEOP_H

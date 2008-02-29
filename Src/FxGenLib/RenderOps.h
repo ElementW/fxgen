@@ -17,7 +17,9 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef RENDEROPS_H
+#define RENDEROPS_H
+
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -27,14 +29,14 @@
 //-----------------------------------------------------------------
 //                   Forward declarations
 //-----------------------------------------------------------------
-namespace vgvm
+/*namespace vgvm
 {
 	namespace cairo
 	{
 		class CairoContext;
 	}
 	class Program;
-}
+}*/
 
 //-----------------------------------------------------------------
 //                   Prototypes
@@ -165,7 +167,7 @@ public:
 //!	\class		NVectorOp
 //!	\brief		Render vector graphics
 //-----------------------------------------------------------------
-class FXGEN_API NVectorOp : public NOperator
+/*class FXGEN_API NVectorOp : public NOperator
 {
 public:
 	DECLARE_CLASS();
@@ -190,4 +192,6 @@ private:
 
 	vgvm::cairo::CairoContext*	m_pContext;
 	vgvm::Program*			m_pProgram;
-};
+};*/
+
+#endif //RENDEROPS_H

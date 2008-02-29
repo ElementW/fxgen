@@ -14,7 +14,9 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef CONTROLLERS_H
+#define CONTROLLERS_H
+
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -52,3 +54,5 @@ protected:
 	// Variables Bloc
 	NVarsBloc* m_pcvarsBloc;
 };
+
+#endif //CONTROLLERS_H

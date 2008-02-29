@@ -1,6 +1,7 @@
 //	The Ultimate BMP Extractor v. 1.0
 //	(fxgen API test)
 //	Copyright (C) 2007 Sebastian Olter (qduaty@gmail.com)
+//										 Johann Nadalutti (fxgen@free.fr)
 //	This file is provided for free in the terms of GNU General Public License (GPL) v.2
 //	Link it with fxgenlib
 

@@ -16,7 +16,9 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef FILTEROPS_H
+#define FILTEROPS_H
+
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -278,3 +280,5 @@ public:
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 };
+
+#endif //FILTEROPS_H

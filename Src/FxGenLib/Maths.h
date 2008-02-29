@@ -15,7 +15,9 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef MATHS_H
+#define MATHS_H
+
 
 //-----------------------------------------------------------------
 //                   Macros
@@ -491,3 +493,5 @@ __forceinline void FloatToInt(int *int_pointer, float f)
 
 extern FXGEN_API void SetSeedValue(unsigned int dwSeedValue);
 extern FXGEN_API unsigned int  myRandom(int=0);
+
+#endif //MATHS_H
