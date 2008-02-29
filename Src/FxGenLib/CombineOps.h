@@ -16,7 +16,8 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef COMBINEOPS_H
+#define COMBINEOPS_H
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -182,3 +183,5 @@ public:
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 };
+
+#endif //COMBINEOPS_H

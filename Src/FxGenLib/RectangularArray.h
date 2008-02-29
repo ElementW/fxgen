@@ -14,7 +14,12 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef RECTANGULARARRAY_H
+#define RECTANGULARARRAY_H
+
+//-----------------------------------------------------------------
+// Includes
+//-----------------------------------------------------------------
 #include <math.h>
 
 //! Simple wrapper for pixel arrays, which allows safe operation as an option.
@@ -162,3 +167,5 @@ template <typename T> T mod(T num)
 {
 	return max(num, -num);
 }
+
+#endif //RECTANGULARARRAY_H

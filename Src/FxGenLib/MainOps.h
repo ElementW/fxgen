@@ -14,7 +14,9 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef MAINOPS_H
+#define MAINOPS_H
+
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -126,3 +128,5 @@ public:
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 
 };
+
+#endif //MAINOPS_H

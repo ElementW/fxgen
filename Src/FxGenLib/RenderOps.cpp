@@ -23,8 +23,8 @@
 //-----------------------------------------------------------------
 #include "pch.h"
 #include "RenderOps.h"
-#include "vgvm/vgvm.h"
-#include "vgvm/contexts/cairo.h"
+//#include "vgvm/vgvm.h"
+//#include "vgvm/contexts/cairo.h"
 #include "RectangularArray.h"
 
 //-----------------------------------------------------------------
@@ -740,7 +740,7 @@ udword NNoiseOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NVectorOp, NOperator);
+/*IMPLEMENT_CLASS(NVectorOp, NOperator);
 
 static void* vgvmAlloc( size_t size )
 {
@@ -852,3 +852,4 @@ udword NVectorOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 
 	return 0;
 }
+*/

@@ -16,7 +16,9 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef DISTORDOPS_H
+#define DISTORDOPS_H
+
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -160,3 +162,5 @@ public:
 	virtual udword Process(float _ftime, NOperator** _pOpsInts);
 };
 */
+
+#endif //DISTORDOPS_H

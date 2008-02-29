@@ -9,8 +9,8 @@
 		<Build>
 			<Target title="Debug|Win32">
 				<Option platforms="Windows;" />
-				<Option output="../../W32Bin/libFxGenLib_D" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="../../W32Bin" />
+				<Option output="..\..\W32Bin\libFxGenLib_D" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\..\W32Bin" />
 				<Option object_output="Debug" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -29,12 +29,9 @@
 					<Add option="-DFXGEN_EXPORTS" />
 				</Compiler>
 				<Linker>
-					<Add option="-pg" />
 					<Add option="-pg -lgmon" />
+					<Add option="-pg" />
 					<Add library="user32" />
-					<Add library="vgvmd" />
-					<Add library="cairo-2" />
-					<Add library="cairomm-1.0" />
 				</Linker>
 				<ExtraCommands>
 					<Add after="copy $(TargetDir)FxGenLib_D.dll ..\..\W32Bin\FxGenLib_D.dll" />
@@ -42,8 +39,8 @@
 			</Target>
 			<Target title="Release|Win32">
 				<Option platforms="Windows;Unix;" />
-				<Option output="../../W32Bin/FxGenLib.dll" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="../../W32Bin" />
+				<Option output="..\..\W32Bin\FxGenLib.dll" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="..\..\W32Bin" />
 				<Option object_output="ReleaseWin32" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -64,11 +61,7 @@
 				<Linker>
 					<Add option="-s" />
 					<Add library="user32" />
-					<Add library="vgvm" />
-					<Add library="cairo-2" />
-					<Add library="cairomm-1.0" />
-					<Add directory="../../../cairomm-1.4.6/MSVC/cairomm" />
-					<Add directory="../../W32Bin" />
+					<Add directory="..\..\W32Bin" />
 				</Linker>
 				<ExtraCommands>
 					<Add after="copy $(TargetDir) ..\..\W32Bin\" />
@@ -76,13 +69,13 @@
 			</Target>
 			<Target title="Release|Linux">
 				<Option platforms="Unix;Mac;" />
-				<Option output="../../LinuxBin/libFxGenLib" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="../../LinuxBin" />
+				<Option output="..\..\LinuxBin\libFxGenLib" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\..\LinuxBin" />
 				<Option object_output="Release" />
 				<Option type="3" />
-				<Option compiler="gnu_gcc_compiler_42" />
+				<Option compiler="gcc" />
 				<Option parameters="brickstone.prj" />
-				<Option host_application="./editor-gtk" />
+				<Option host_application=".\editor-gtk" />
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-O3" />
@@ -98,18 +91,17 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="libvgvm.a" />
-					<Add directory="../../LinuxBin" />
+					<Add directory="..\..\LinuxBin" />
 				</Linker>
 			</Target>
 			<Target title="Debug|Linux">
 				<Option platforms="Unix;Mac;" />
-				<Option output="../../LinuxBin/libFxGenLib_D" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="../../LinuxBin" />
+				<Option output="..\..\LinuxBin\libFxGenLib_D" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\..\LinuxBin" />
 				<Option object_output="Debug" />
 				<Option type="3" />
-				<Option compiler="gnu_gcc_compiler_42" />
-				<Option host_application="./editor-gtk_d" />
+				<Option compiler="gcc" />
+				<Option host_application=".\editor-gtk_d" />
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-W" />
@@ -125,18 +117,18 @@
 					<Add option="-DBrickStoneWorks" />
 				</Compiler>
 				<Linker>
+					<Add option="-pg -lgmon" />
 					<Add option="-pg" />
-					<Add library="libvgvmd.a" />
-					<Add directory="../../LinuxBin" />
+					<Add directory="..\..\LinuxBin" />
 				</Linker>
 			</Target>
 			<Target title="Release|Mingw32">
 				<Option platforms="Windows;Unix;" />
-				<Option output="../../W32Bin/FxGenLib.dll" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="../../W32Bin" />
+				<Option output="..\..\W32Bin\FxGenLib.dll" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="..\..\W32Bin" />
 				<Option object_output="ReleaseMingw32" />
 				<Option type="3" />
-				<Option compiler="mingw_gnu_gcc_compiler" />
+				<Option compiler="gcc" />
 				<Option parameters="C:\Documents and Settings\wojownik\Desktop\noise.prj" />
 				<Option host_application="Editor.exe" />
 				<Option createDefFile="1" />
@@ -154,11 +146,7 @@
 				<Linker>
 					<Add option="-s" />
 					<Add library="user32" />
-					<Add library="vgvm" />
-					<Add library="cairo-2" />
-					<Add library="cairomm-1.0" />
-					<Add directory="../../../cairomm-1.4.6/MSVC/cairomm" />
-					<Add directory="../../W32Bin" />
+					<Add directory="..\..\W32Bin" />
 				</Linker>
 				<ExtraCommands>
 					<Add after="copy $(TargetDir) ..\..\W32Bin\" />
@@ -166,12 +154,12 @@
 			</Target>
 			<Target title="Static Debug|Linux">
 				<Option platforms="Unix;Mac;" />
-				<Option output="../../LinuxBin/libFxGenLib_D" prefix_auto="1" extension_auto="1" />
+				<Option output="..\..\LinuxBin\libFxGenLib_D" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="Debug" />
 				<Option type="2" />
 				<Option compiler="gcc" />
-				<Option host_application="./editor-gtk_d" />
+				<Option host_application=".\editor-gtk_d" />
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-W" />
@@ -186,20 +174,20 @@
 					<Add option="-DTHREADS_ENABLED" />
 				</Compiler>
 				<Linker>
+					<Add option="-pg -lgmon" />
 					<Add option="-pg" />
-					<Add library="libvgvmd.a" />
-					<Add directory="../../LinuxBin" />
+					<Add directory="..\..\LinuxBin" />
 				</Linker>
 			</Target>
 			<Target title="Release|Linux32">
 				<Option platforms="Unix;Mac;" />
-				<Option output="../../LinuxBin32/libFxGenLib" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="../../LinuxBin32" />
+				<Option output="..\..\LinuxBin32\libFxGenLib" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\..\LinuxBin32" />
 				<Option object_output="Release32" />
 				<Option type="3" />
 				<Option compiler="gcc" />
 				<Option parameters="brickstone.prj" />
-				<Option host_application="./editor-gtk" />
+				<Option host_application=".\editor-gtk" />
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-O3" />
@@ -217,24 +205,22 @@
 				<Linker>
 					<Add option="-s" />
 					<Add option="-m32" />
-					<Add library="vgvm" />
-					<Add directory="../../LinuxBin32" />
+					<Add directory="..\..\LinuxBin32" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-DHQNOISE" />
-			<Add directory="../../Externals/vgvm" />
-			<Add directory="../../Externals" />
-			<Add directory="../../Src" />
-			<Add directory="../noise" />
-			<Add directory="../noiseutils" />
+			<Add directory="..\..\Externals\vgvm" />
+			<Add directory="..\..\Externals" />
+			<Add directory="..\..\Src" />
+			<Add directory="..\noise" />
+			<Add directory="..\noiseutils" />
 		</Compiler>
 		<Unit filename="Archive.cpp" />
 		<Unit filename="Archive.h" />
 		<Unit filename="Bitmap.cpp" />
 		<Unit filename="Bitmap.h" />
-		<Unit filename="BrickStone.cpp" />
 		<Unit filename="CombineOps.cpp" />
 		<Unit filename="CombineOps.h" />
 		<Unit filename="Controllers.cpp" />
@@ -256,22 +242,13 @@
 		<Unit filename="RenderOps.h" />
 		<Unit filename="Stream.cpp" />
 		<Unit filename="Stream.h" />
-		<Unit filename="include/OperatorsLayout.h" />
 		<Unit filename="pch.cpp">
 			<Option weight="0" />
 		</Unit>
 		<Unit filename="pch.h">
 			<Option compile="1" />
 		</Unit>
-		<Unit filename="version.h">
-			<Option target="Release|Win32" />
-			<Option target="Release|Linux" />
-			<Option target="Debug|Linux" />
-			<Option target="Release|Mingw32" />
-			<Option target="Static Debug|Linux" />
-			<Option target="Release|Linux32" />
-		</Unit>
-		<Unit filename="../gcccompat/gcccompat.h" />
+		<Unit filename="..\gcccompat\gcccompat.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
