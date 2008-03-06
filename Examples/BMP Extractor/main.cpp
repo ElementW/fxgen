@@ -151,19 +151,6 @@ int main(int argc, char *argv[])
 			BMP bmp(pbmp->GetWidth(), pbmp->GetHeight());
 			bmp.write(string(pszName) + ".bmp", pbmp->GetPixels());
 		}
-
-		/*peng->ProcessOperators(0.0f, 1.f, GlobalProgress, LocalProgress);
-		peng->CompactMemory();	//!< Keep just final result bitmaps in memory
-
-		for (int i = 0; i < peng->GetFinalResultCount(); i++)
-		{
-			NBitmap* pbmp =	peng->GetFinalResultBitmapByIdx(i);
-			printf("\nWriting result: %s", pbmp->GetName());
-
-			BMP bmp(pbmp->GetWidth(), pbmp->GetHeight());
-
-			bmp.write(string(pbmp->GetName()) + ".bmp", pbmp->GetPixels());
-		}*/
 	}
 	else
 		printf("Project file \"%s\" is broken or unreadable.\n", argv[1]);

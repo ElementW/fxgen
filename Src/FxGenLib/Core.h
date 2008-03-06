@@ -38,6 +38,7 @@
 //-----------------------------------------------------------------
 // Class Prototypes
 //-----------------------------------------------------------------
+  class NRTClassModule;
 	class NRTClass;
 	class NArchive;
 	class NObject;
@@ -72,6 +73,34 @@
 	//Runtime class
 	typedef	NObject* (__cdecl RTCLASS_HANDLER)(void);	//Callback for class creation
 
+
+//-----------------------------------------------------------------
+//!	\class		NRTClassModule
+//!	\brief		RuntimeClass Module description
+//-----------------------------------------------------------------
+class FXGEN_API NRTClassModule
+{
+public:
+  NRTClassModule(const char* _pszModuleName);
+
+  //Methods
+  //static void RegisterRTClassModule(NRTClassModule* _pmodule);
+
+  //Datas
+	const char*			m_pszModuleName;				//!< Module's name
+
+	NRTClassModule* m_pNextRTClassModule;   //!< Next Run-Time class Module
+
+	static NRTClassModule* m_pFirstRTClassModule;   //!< First Run-Time class Module
+	static NRTClassModule* m_pLastRTClassModule;    //!< Last Run-Time class Module
+
+  //Datas for RTClasses
+	NRTClass* m_pFirstRTClass;	//!< First RTClass description for this module
+	NRTClass* m_pLastRTClass;	  //!< Last RTClass description for this module
+};
+
+extern NRTClassModule* _pLocalRTClassModule;  //!< Must had been defined in application and per dynamic libraries(dll, so)
+
 //-----------------------------------------------------------------
 //!	\class		NRTClass
 //!	\brief		RuntimeClass description
@@ -86,9 +115,10 @@ public:
 //Methods
 	static NObject*		CreateByID(ID _CLASSID);
 	static NObject*		CreateByName(const char* _pszClassName);
+
 	static ID					MakeClassID(const char* _pszClassName);
-	static NRTClass* GetFirstClassBySuperClass(const char* _pszSuperClassName);
-	static NRTClass* GetNextClassBySuperClass(const char* _pszSuperClassName, NRTClass* _prtclass);
+	//static NRTClass* GetFirstClassBySuperClass(const char* _pszSuperClassName);
+	//static NRTClass* GetNextClassBySuperClass(const char* _pszSuperClassName, NRTClass* _prtclass);
 
 //Datas
 	RTCLASS_HANDLER*	m_pCreateCB;		//!< CallBack for class creation
@@ -98,9 +128,6 @@ public:
 	NRTClass*		m_pNextRTC;						//!< Next Run-Time class
 	ID					CLASSID;							//!< Class ID (Generate from name)
 	ID					SUPERCLASSID;					//!< Super class ID (Generate from name)
-
-	static NRTClass* m_pFirstRTClass;	//!< First RTClass description
-	static NRTClass* m_pLastRTClass;	//!< Last RTClass description
 };
 
 
@@ -483,19 +510,12 @@ protected:
 };
 
 
-
-
-
 //-----------------------------------------------------------------
 //	Memory System
 //-----------------------------------------------------------------
 #define NMemFree(_ptr)					free(_ptr)					//!< Free memory
 #define NMemAlloc(_len)					calloc(_len, 1)			//!< Allocate memory
 #define NMemRealloc(_ptr, _len)	realloc(_ptr, _len)	//!< Reallocate memory
-
-
-
-
 //NMemCopy
 //NMemFill
 
@@ -513,6 +533,9 @@ int					NFileTell(NFILEHANDLE *handle);
 //-----------------------------------------------------------------
 //	Misc classes
 //-----------------------------------------------------------------
+
+//###JN### To remove from here
+
 struct GradientElem
 {
 	//NColor color;
@@ -531,10 +554,13 @@ struct GradientElem
 
 
 //-----------------------------------------------------------------
-/// Mutex-like class for safe thread operation
-/// Usage: static bool mutex; { NMutexLock lock(mutex); /* will unlock at end of the scope */ }
-///\author Sebastian Olter (qduaty@gmail.com)
+//! \brief Mutex-like class for safe thread operation
+//! \note Usage: static bool mutex; { NMutexLock lock(mutex); /* will unlock at end of the scope */ }
+//! \author Sebastian Olter (qduaty@gmail.com)
 //-----------------------------------------------------------------
+
+//###JN### To remove from here
+
 class NMutexLock
 {
 	protected:

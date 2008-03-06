@@ -14,7 +14,7 @@
 				<Option object_output="Debug" />
 				<Option type="3" />
 				<Option compiler="gcc" />
-				<Option host_application="Editor_D.exe" />
+				<Option host_application="TestModulesd.exe" />
 				<Option createDefFile="1" />
 				<Option createStaticLib="1" />
 				<Compiler>
