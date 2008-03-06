@@ -25,6 +25,9 @@
 //!	localeless atof() for proper interpretation of default values
 //!	\author Sebastian Olter (qduaty@gmail.com)
 //-----------------------------------------------------------------
+
+//###JN### to remove from here
+
 double my_atof(const char* s)
 {
 	const char* point = strchr(s, '.');
@@ -43,8 +46,10 @@ double my_atof(const char* s)
 //-----------------------------------------------------------------
 //                   Variables
 //-----------------------------------------------------------------
-NRTClass* NRTClass::m_pFirstRTClass=null;
-NRTClass* NRTClass::m_pLastRTClass=null;
+NRTClassModule* _pLocalRTClassModule = NULL;
+
+NRTClassModule* NRTClassModule::m_pFirstRTClassModule=null;
+NRTClassModule* NRTClassModule::m_pLastRTClassModule=null;
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -904,13 +909,43 @@ void NObjectArray::Sort(CompareFnc _cmp)
 	qsort(m_pBuffer, m_dwCount, sizeof(NObject*), _cmp);
 }
 
+//-----------------------------------------------------------------
+//
+//									NRTClassModule class implementation
+//
+//-----------------------------------------------------------------
 
+//-----------------------------------------------------------------
+//!	\brief	Constructor
+//!	\param	_pszModuleName				Module name for RTClasses
+//-----------------------------------------------------------------
+NRTClassModule::NRTClassModule(const char* _pszModuleName)
+{
+  if (m_pFirstRTClassModule==null)  m_pFirstRTClassModule = this;
+  if (m_pLastRTClassModule)         m_pLastRTClassModule->m_pNextRTClassModule = this;
+
+  m_pszModuleName = _pszModuleName;
+
+  m_pFirstRTClass = null;
+  m_pLastRTClass = null;
+
+  m_pLastRTClassModule=this;
+}
+
+//-----------------------------------------------------------------
+//!	\brief  Register a new runtimeclass module
+//!	\param	_pmodule  the new RTClassModule
+//-----------------------------------------------------------------
+/*void NRTClassModule::RegisterRTClassModule(NRTClassModule* _pmodule)
+{
+}*/
 
 //-----------------------------------------------------------------
 //
 //									NRTClass class implementation
 //
 //-----------------------------------------------------------------
+
 
 //-----------------------------------------------------------------
 //!	\brief	Constructor
@@ -920,8 +955,13 @@ void NObjectArray::Sort(CompareFnc _cmp)
 //-----------------------------------------------------------------
 NRTClass::NRTClass(RTCLASS_HANDLER*	_pcreateCB, const char* _pszClassName, const char* _pszSuperClassName)
 {
-	if (m_pFirstRTClass==null)	m_pFirstRTClass = this;
-	if (m_pLastRTClass)					m_pLastRTClass->m_pNextRTC = this;
+  if (_pLocalRTClassModule==null)
+    _pLocalRTClassModule = new NRTClassModule("FxGenCore"); //##JN### temp
+
+  NRTClassModule* pmod = _pLocalRTClassModule;  //Must had been defined in application and per dynamic libraries(dll, so)
+
+	if (pmod->m_pFirstRTClass==null)	pmod->m_pFirstRTClass = this;
+	if (pmod->m_pLastRTClass)					pmod->m_pLastRTClass->m_pNextRTC = this;
 
 	m_pCreateCB					= _pcreateCB;
 	m_pszClassName			= _pszClassName;
@@ -931,7 +971,7 @@ NRTClass::NRTClass(RTCLASS_HANDLER*	_pcreateCB, const char* _pszClassName, const
 	CLASSID						= MakeClassID(_pszClassName);
 	SUPERCLASSID			= MakeClassID(_pszSuperClassName);
 
-	m_pLastRTClass = this;
+	pmod->m_pLastRTClass = this;
 }
 
 
@@ -942,14 +982,21 @@ NRTClass::NRTClass(RTCLASS_HANDLER*	_pcreateCB, const char* _pszClassName, const
 //-----------------------------------------------------------------
 NObject* NRTClass::CreateByID(ID _CLASSID)
 {
-	NRTClass* pcurRTC = m_pFirstRTClass;
-	while (pcurRTC!=null)
-	{
-		if (pcurRTC->CLASSID == _CLASSID)
-			return pcurRTC->m_pCreateCB();
+  NRTClassModule* pmod = NRTClassModule::m_pFirstRTClassModule;
+  while (pmod)
+  {
+    NRTClass* pcurRTC = pmod->m_pFirstRTClass;
+    while (pcurRTC!=null)
+    {
+      if (pcurRTC->CLASSID == _CLASSID)
+        return pcurRTC->m_pCreateCB();
 
-		pcurRTC = pcurRTC->m_pNextRTC;
-	}
+      pcurRTC = pcurRTC->m_pNextRTC;
+    }
+
+    pmod=pmod->m_pNextRTClassModule;
+  }
+
 
 	return null;
 }
@@ -962,14 +1009,21 @@ NObject* NRTClass::CreateByID(ID _CLASSID)
 //-----------------------------------------------------------------
 NObject* NRTClass::CreateByName(const char* _pszClassName)
 {
-	NRTClass* pcurRTC = m_pFirstRTClass;
-	while (pcurRTC!=null)
-	{
-		if (strcmp(pcurRTC->m_pszClassName, _pszClassName) == 0)
-			return pcurRTC->m_pCreateCB();
+  NRTClassModule* pmod = NRTClassModule::m_pFirstRTClassModule;
+  while (pmod)
+  {
+    NRTClass* pcurRTC = pmod->m_pFirstRTClass;
 
-		pcurRTC = pcurRTC->m_pNextRTC;
-	}
+    while (pcurRTC!=null)
+    {
+      if (strcmp(pcurRTC->m_pszClassName, _pszClassName) == 0)
+        return pcurRTC->m_pCreateCB();
+
+      pcurRTC = pcurRTC->m_pNextRTC;
+    }
+
+    pmod=pmod->m_pNextRTClassModule;
+  }
 
 	return null;
 }
@@ -993,7 +1047,7 @@ ID NRTClass::MakeClassID(const char* _pszClassName)
 //-----------------------------------------------------------------
 //!	\brief	Return First RTClass from a super class name
 //-----------------------------------------------------------------
-NRTClass* NRTClass::GetFirstClassBySuperClass(const char* _pszSuperClassName)
+/*NRTClass* NRTClass::GetFirstClassBySuperClass(const char* _pszSuperClassName)
 {
 	NRTClass* pcurRTC = NRTClass::m_pFirstRTClass;
 	while (pcurRTC!=null)
@@ -1022,7 +1076,7 @@ NRTClass* NRTClass::GetNextClassBySuperClass(const char* _pszSuperClassName, NRT
 	}
 
 	return null;
-}
+}*/
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -1445,7 +1499,10 @@ void NObjectGarbage::RemoveEntry(NObject** _ppobj)
 //-----------------------------------------------------------------
 void gDebugLog(const char* _fmt, ... )
 {
+  //###TOFIX###
 }
+
+
 
 //-----------------------------------------------------------------
 /// NMutexLock methods

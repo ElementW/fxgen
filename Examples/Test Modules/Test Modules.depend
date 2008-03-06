@@ -1,0 +1,47 @@
+# depslib dependency file v1.0
+1204820068 source:d:\temp\cle\fxgen\examples\test modules\main.cpp
+	<iostream>
+	"../../Src/FxGenLib/EngineOp.h"
+	"../../Src/FxGenLib/MainOps.h"
+
+1204277178 d:\temp\cle\fxgen\src\fxgenlib\engineop.h
+	"Core.h"
+
+1204817933 d:\temp\cle\fxgen\src\fxgenlib\core.h
+	"gcccompat/gcccompat.h"
+	"Maths.h"
+	"Stream.h"
+	"Archive.h"
+	"Bitmap.h"
+	"Controllers.h"
+
+1203956045 d:\temp\cle\fxgen\src\gcccompat\gcccompat.h
+	<sys/types.h>
+	<string.h>
+	<stdio.h>
+	<math.h>
+	<unistd.h>
+	<stdarg.h>
+	<windows.h>
+	<windowsx.h>
+	<commdlg.h>
+	<commctrl.h>
+	<richedit.h>
+
+1204277271 d:\temp\cle\fxgen\src\fxgenlib\maths.h
+
+1204277596 d:\temp\cle\fxgen\src\fxgenlib\stream.h
+	"Core.h"
+
+1204276987 d:\temp\cle\fxgen\src\fxgenlib\archive.h
+	"Core.h"
+
+1204277037 d:\temp\cle\fxgen\src\fxgenlib\bitmap.h
+	"Core.h"
+
+1204277087 d:\temp\cle\fxgen\src\fxgenlib\controllers.h
+	"Core.h"
+
+1204277235 d:\temp\cle\fxgen\src\fxgenlib\mainops.h
+	"EngineOp.h"
+
