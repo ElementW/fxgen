@@ -347,7 +347,7 @@ void NVarsBloc::DoVarBlocVersion_Mapping(NArchive* _l, ubyte _byVersion)
 	udword dwOldVarsCount;
 	*_l>>dwOldVarsCount;
 
-	NMapVarsBlocDesc* pcmapvarsBloc = m_pcmapVarsBlocDesc;
+//	NMapVarsBlocDesc* pcmapvarsBloc = m_pcmapVarsBlocDesc;
 
 	for (udword i=0; i<m_dwMapVarsCount; i++)
 	{
@@ -459,7 +459,7 @@ void NVarsBloc::MapValueTo(double _fval, udword _idx, const char* _pszExpression
 
 void NVarsBloc::MapValueTo(NObject* _val, udword _idx)
 {
-	NVarValue* pval = m_paVarsValues + _idx;
+//	NVarValue* pval = m_paVarsValues + _idx;
 	NVarsBlocDesc* pdesc = m_pcvarsblocDesc + _idx;
 
 	assert(pdesc->eType==erefobj);
@@ -1060,9 +1060,9 @@ ID NRTClass::MakeClassID(const char* _pszClassName)
 	return null;
 }
 
-//-----------------------------------------------------------------
-//!	\brief	Return Next RTClass from a super class name
-//-----------------------------------------------------------------
+-----------------------------------------------------------------
+!	\brief	Return Next RTClass from a super class name
+-----------------------------------------------------------------
 NRTClass* NRTClass::GetNextClassBySuperClass(const char* _pszSuperClassName, NRTClass* _prtclass)
 {
 	_prtclass = _prtclass->m_pNextRTC;

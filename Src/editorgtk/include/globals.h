@@ -27,6 +27,7 @@ extern ProjectTree* project_tree;
 extern OperatorsLayout* operators_layout;
 extern PropertyTable* property_table;
 extern char* editor_glade;
+extern NRTClassModule* _pLocalRTClassModule;
 
 struct NamedPointerColumns: public Gtk::TreeModelColumnRecord
 {

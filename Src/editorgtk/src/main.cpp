@@ -25,11 +25,13 @@ OperatorsLayout* operators_layout;
 ProjectTree* project_tree;
 PropertyTable* property_table;
 NamedPointerColumns columns_pattern;
+NRTClassModule* _pLocalRTClassModule;
 
 int main(int argc, char *argv[])
 {
 	Glib::thread_init();
 	NEngineOp::GetEngine()->m_bEngineLock; // will refuse to start if the engine is not thread-safe
+	_pLocalRTClassModule = NRTClassModule::m_pFirstRTClassModule;
     Gtk::Main app(argc, argv);
     RefPtr<Xml> refXml;
 	refXml = Xml::create_from_buffer(editor_glade, strlen(editor_glade));

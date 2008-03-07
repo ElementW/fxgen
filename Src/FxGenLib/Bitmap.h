@@ -82,6 +82,8 @@ struct RGBA
 //-----------------------------------------------------------------
 struct RGBAI
 {
+	RGBAI(){}
+	RGBAI(sdword R, sdword G, sdword B, sdword A): r(R), g(G), b(B), a(A) {}
 	sdword r,g,b,a;
 };
 

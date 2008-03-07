@@ -12,6 +12,8 @@
 	<time.h>
 	<string.h>
 
+1203956047 
+
 1203333666 source:d:\temp\cle\fxgen\src\fxgenlib\bitmap.cpp
 	"pch.h"
 	"Bitmap.h"
@@ -27,6 +29,8 @@
 	"Bitmap.h"
 	"Controllers.h"
 
+1204817933 rs.h"
+
 1203956045 d:\temp\cle\fxgen\src\gcccompat\gcccompat.h
 	<sys/types.h>
 	<string.h>
@@ -39,6 +43,8 @@
 	<commdlg.h>
 	<commctrl.h>
 	<richedit.h>
+
+1203956045 h>
 
 1204277271 d:\temp\cle\fxgen\src\fxgenlib\maths.h
 
@@ -56,8 +62,12 @@
 	"CombineOps.h"
 	"RectangularArray.h"
 
+1204277888 arArray.h"
+
 1204277064 d:\temp\cle\fxgen\src\fxgenlib\combineops.h
 	"EngineOp.h"
+
+1204277888 h"
 
 1204277178 d:\temp\cle\fxgen\src\fxgenlib\engineop.h
 	"Core.h"
@@ -78,6 +88,8 @@
 	"pch.h"
 	"DistordOps.h"
 
+1203956047 s.h"
+
 1204277152 d:\temp\cle\fxgen\src\fxgenlib\distordops.h
 	"EngineOp.h"
 
@@ -85,6 +97,8 @@
 	"pch.h"
 	"EngineOp.h"
 	"gcccompat/gcccompat.h"
+
+1203956046 /gcccompat.h"
 
 1203956047 source:d:\temp\cle\fxgen\src\fxgenlib\filterops.cpp
 	"pch.h"
@@ -97,6 +111,8 @@
 1204214773 source:d:\temp\cle\fxgen\src\fxgenlib\mainops.cpp
 	"pch.h"
 	"MainOps.h"
+
+1203956047 "
 
 1204277235 d:\temp\cle\fxgen\src\fxgenlib\mainops.h
 	"EngineOp.h"
@@ -123,6 +139,8 @@
 1203333644 d:\temp\cle\fxgen\externals\vgvm\vgvm\contexts\cairo.h
 	"vgvm/vgvm.h"
 
+1203333644 .h"
+
 1203493786 source:d:\temp\cle\fxgen\src\fxgenlib\stream.cpp
 	"pch.h"
 	"Stream.h"
@@ -140,4 +158,144 @@
 	<stdio.h>
 	<time.h>
 	<string.h>
+
+1203173752 source:c:\svn\fxgen\src\fxgenlib\pch.h
+	<stdlib.h>
+	<malloc.h>
+	<memory.h>
+	<math.h>
+	<assert.h>
+	<stdio.h>
+	<time.h>
+	<string.h>
+
+1204578125 source:/usr/src/fxgen/Src/FxGenLib/Archive.cpp
+	"pch.h"
+	"Archive.h"
+
+1203173752 /usr/src/fxgen/Src/FxGenLib/pch.h
+	<stdlib.h>
+	<malloc.h>
+	<memory.h>
+	<math.h>
+	<assert.h>
+	<stdio.h>
+	<time.h>
+	<string.h>
+
+1204910800 /usr/src/fxgen/Src/FxGenLib/Archive.h
+	"Core.h"
+
+1204913000 /usr/src/fxgen/Src/FxGenLib/Core.h
+	"gcccompat/gcccompat.h"
+	"Maths.h"
+	"Stream.h"
+	"Archive.h"
+	"Bitmap.h"
+	"Controllers.h"
+
+1203433912 /usr/src/fxgen/Src/gcccompat/gcccompat.h
+	<sys/types.h>
+	<string.h>
+	<stdio.h>
+	<math.h>
+	<unistd.h>
+	<stdarg.h>
+	<windows.h>
+	<windowsx.h>
+	<commdlg.h>
+	<commctrl.h>
+	<richedit.h>
+
+1204910868 /usr/src/fxgen/Src/FxGenLib/Maths.h
+
+1204910800 /usr/src/fxgen/Src/FxGenLib/Stream.h
+	"Core.h"
+
+1204910800 /usr/src/fxgen/Src/FxGenLib/Bitmap.h
+	"Core.h"
+
+1204910868 /usr/src/fxgen/Src/FxGenLib/Controllers.h
+	"Core.h"
+
+1203173752 source:/usr/src/fxgen/Src/FxGenLib/Bitmap.cpp
+	"pch.h"
+	"Bitmap.h"
+
+1203173752 source:/usr/src/fxgen/Src/FxGenLib/Controllers.cpp
+	"pch.h"
+	"Controllers.h"
+	"EngineOp.h"
+
+1204910800 /usr/src/fxgen/Src/FxGenLib/EngineOp.h
+	"Core.h"
+
+1203433770 source:/usr/src/fxgen/Src/FxGenLib/EngineOp.cpp
+	"pch.h"
+	"EngineOp.h"
+	"gcccompat/gcccompat.h"
+
+1203791963 source:/usr/src/fxgen/Src/FxGenLib/Maths.cpp
+	"pch.h"
+	"Core.h"
+	"Maths.h"
+
+1203173752 source:/usr/src/fxgen/Src/FxGenLib/pch.h
+	<stdlib.h>
+	<malloc.h>
+	<memory.h>
+	<math.h>
+	<assert.h>
+	<stdio.h>
+	<time.h>
+	<string.h>
+
+1204723491 source:/usr/src/fxgen/Src/FxGenLib/CombineOps.cpp
+	"pch.h"
+	"CombineOps.h"
+	"RectangularArray.h"
+
+1204910800 /usr/src/fxgen/Src/FxGenLib/CombineOps.h
+	"EngineOp.h"
+
+1204910800 /usr/src/fxgen/Src/FxGenLib/RectangularArray.h
+	<math.h>
+
+1204723568 source:/usr/src/fxgen/Src/FxGenLib/DistordOps.cpp
+	"pch.h"
+	"DistordOps.h"
+
+1204910868 /usr/src/fxgen/Src/FxGenLib/DistordOps.h
+	"EngineOp.h"
+
+1204740490 source:/usr/src/fxgen/Src/FxGenLib/FilterOps.cpp
+	"pch.h"
+	"FilterOps.h"
+	"RectangularArray.h"
+
+1204910800 /usr/src/fxgen/Src/FxGenLib/FilterOps.h
+	"EngineOp.h"
+
+1204722761 source:/usr/src/fxgen/Src/FxGenLib/MainOps.cpp
+	"pch.h"
+	"MainOps.h"
+
+1204910868 /usr/src/fxgen/Src/FxGenLib/MainOps.h
+	"EngineOp.h"
+
+1204910868 source:/usr/src/fxgen/Src/FxGenLib/RenderOps.cpp
+	"pch.h"
+	"RenderOps.h"
+	"RectangularArray.h"
+
+1204910800 /usr/src/fxgen/Src/FxGenLib/RenderOps.h
+	"EngineOp.h"
+
+1204740362 source:/usr/src/fxgen/Src/FxGenLib/Stream.cpp
+	"pch.h"
+	"Stream.h"
+
+1204912989 source:/usr/src/fxgen/Src/FxGenLib/Core.cpp
+	"pch.h"
+	"Core.h"
 
