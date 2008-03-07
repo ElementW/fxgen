@@ -258,7 +258,7 @@ udword NAddOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 	udword rcolPercent = colPercent.r;
 	udword gcolPercent = colPercent.g;
 	udword bcolPercent = colPercent.b;
-	udword acolPercent = 255;
+//	udword acolPercent = 255;
 
 	///////////////////////////////////////////////////////////
 	//Add n Sources

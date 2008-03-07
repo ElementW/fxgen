@@ -153,14 +153,13 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 
               // Accumulation precalc
               sdword x = 0;
-              RGBAI sum;
-              memset(&sum,0, sizeof(RGBAI));
+              RGBAI sum(0,0,0,0);
               while (x<bw)
               {
-                sum.r+=(sdword)pAccu->r;
-                sum.g+=(sdword)pAccu->g;
-                sum.b+=(sdword)pAccu->b;
-                sum.a+=(sdword)pAccu->a;
+                sum.r+=pAccu->r;
+                sum.g+=pAccu->g;
+                sum.b+=pAccu->b;
+                sum.a+=pAccu->a;
                 pAccu++;
                 ++x;
               }
@@ -182,17 +181,17 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
                 px.b= (ubyte) ((b<255)?b:255);
                 px.a= (ubyte) ((a<255)?a:255);
 
-                sum.r-=(sdword)pPxSrc->r;
-                sum.g-=(sdword)pPxSrc->g;
-                sum.b-=(sdword)pPxSrc->b;
-				sum.a-=(sdword)pPxSrc->a;
+                sum.r-=pPxSrc->r;
+                sum.g-=pPxSrc->g;
+                sum.b-=pPxSrc->b;
+				sum.a-=pPxSrc->a;
                 pPxSrc++;
 
-                RGBA& ac = pAccu[(x+bw)%w];
-                sum.r+=(sdword)ac.r;
-                sum.g+=(sdword)ac.g;
-                sum.b+=(sdword)ac.b;
-                sum.a+=(sdword)ac.a;
+                RGBA ac = pAccu[(x+bw)%w];
+                sum.r+=ac.r;
+                sum.g+=ac.g;
+                sum.b+=ac.b;
+                sum.a+=ac.a;
 
                 ++x;
               }
@@ -237,14 +236,13 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 
               // Accumulation Precalc
               sdword y = 0;
-              RGBAI sum;
-              memset(&sum, 0, sizeof(RGBAI));
+              RGBAI sum(0,0,0,0);
               while (y<bh)
               {
-                sum.r+=(sdword)pAccu->r;
-                sum.g+=(sdword)pAccu->g;
-                sum.b+=(sdword)pAccu->b;
-                sum.a+=(sdword)pAccu->a;
+                sum.r+=pAccu->r;
+                sum.g+=pAccu->g;
+                sum.b+=pAccu->b;
+                sum.a+=pAccu->a;
                 pAccu+=w;
                 ++y;
               }
@@ -266,17 +264,17 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
                 px.b= (ubyte) ((b<255)?b:255);
                 px.a= (ubyte) ((a<255)?a:255);
 
-                sum.r-=(sdword)pPxSrc->r;
-                sum.g-=(sdword)pPxSrc->g;
-                sum.b-=(sdword)pPxSrc->b;
-				sum.a-=(sdword)pPxSrc->a;
+                sum.r-=pPxSrc->r;
+                sum.g-=pPxSrc->g;
+                sum.b-=pPxSrc->b;
+				sum.a-=pPxSrc->a;
                 pPxSrc+=w;
 
-                RGBA& ac = pAccu[((y+bh)%h)*w];
-                sum.r+=(sdword)ac.r;
-                sum.g+=(sdword)ac.g;
-                sum.b+=(sdword)ac.b;
-                sum.a+=(sdword)ac.a;
+                RGBA ac = pAccu[((y+bh)%h)*w];
+                sum.r+=ac.r;
+                sum.g+=ac.g;
+                sum.b+=ac.b;
+                sum.a+=ac.a;
 
                 ++y;
               }
@@ -347,7 +345,7 @@ udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	pDst->SetSize(w,h);
 
 	//Get Variables Values
-	ubyte byMode=1;
+//	ubyte byMode=1;
 	RGBA ColorBase, ColorPer;
 	ubyte byBrihtness, byContrast, bySaturation, byAlpha;
 	//m_pcvarsBloc->GetValue(0, _ftime, byMode);
@@ -910,7 +908,7 @@ udword NSlopeMagnitudeOp::Process(float _ftime, NOperator** _pOpsInts, float _fD
 	ubyte byAmp;
 	m_pcvarsBloc->GetValue(0, _ftime, byAmp);
 
-	float fAmp = (float)byAmp / 64.0f; //[0<->4]
+//	float fAmp = (float)byAmp / 64.0f; //[0<->4]
 
 	//////////////////////////////////////////
 	// Creation des normales

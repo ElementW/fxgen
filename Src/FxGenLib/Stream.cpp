@@ -70,7 +70,7 @@ bool NMemoryStream::Open(ubyte *_buffer, udword _bufferSize)
     m_dwBufSize	= NSF_BUFSTARTSIZE;
     m_pbyBuffer	= (ubyte*)NMemAlloc(m_dwBufSize);
   }
-  
+
   m_dwBufPos = 0;
   return true;
 }
@@ -201,7 +201,7 @@ NFileStream::~NFileStream()
 bool NFileStream::Open(const char* _filename, bool _writing)
 {
   m_pFile = fopen(_filename, _writing ? "wb" : "rb");
-  
+
   return m_pFile != null;
 }
 

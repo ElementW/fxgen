@@ -403,7 +403,7 @@ udword NVortexOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	RGBA* baseSrc = pPxSrc;
 	RGBA* pPxDst = pDst->GetPixels();
 
-	RGBA* src;
+//	RGBA* src;
 	//Process
 	for (sdword y=0; y<h; y++)
 	{

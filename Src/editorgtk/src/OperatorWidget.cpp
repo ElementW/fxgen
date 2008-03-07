@@ -134,7 +134,7 @@ bool OperatorWidget::on_motion_notify_event(GdkEventMotion* event)
     parent = dynamic_cast<OperatorsLayout*>(get_parent());
     if (parent && event->state&GDK_BUTTON1_MASK)
     {
-        if (event->x > (1-RESIZE_HANDLE) * get_width() && resizable && ops_group.empty()) // resize: todo set the constant to an appropriate value
+        if (event->x > (1-RESIZE_HANDLE) * get_width() && resizable /*&& ops_group.empty()*/) // resize
         {
             if (xi == 0) // initial size backup (for collisions)
                 xi = get_width();
@@ -276,7 +276,6 @@ void OperatorWidget::clear_selection()
 
 void OperatorWidget::set_state(StateType _state, bool set_true)
 {
-//	Gtk::MessageDialog(lexical_cast<string>(_state)).run();
 	if(set_true)
 	{
 		state |= _state;

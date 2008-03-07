@@ -65,15 +65,19 @@ OperatorsLayout::OperatorsLayout(GtkFixed* cobject, const RefPtr<Xml>& refGlade)
 	tid = Glib::Thread::create(mem_fun(this, &OperatorsLayout::update_op), true);
 	tid->set_priority(Glib::THREAD_PRIORITY_LOW);
 
-	// context menu initialization - the idea is taken from NOperatorsWnd::InitCtxMenu()
-	NRTClass* prtc;
-	for (prtc = NRTClass::GetFirstClassBySuperClass("NOperator"); prtc; prtc = NRTClass::GetNextClassBySuperClass("NOperator", prtc))
-	{
-		NOperator* pop = (NOperator*)prtc->m_pCreateCB();
-		Glib::ustring category = pop->GetCategory();
-		Glib::ustring name = pop->GetName();
-		context_menu.add(category, name, bind(mem_fun(this, &OperatorsLayout::add_new),prtc->CLASSID));
-	}
+	// context menu initialization
+	if(_pLocalRTClassModule)
+		for (NRTClass* prtc = _pLocalRTClassModule->m_pFirstRTClass; prtc; prtc = prtc->m_pNextRTC)
+		{
+			NOperator* pop = dynamic_cast<NOperator*>(prtc->m_pCreateCB());
+			if(pop)
+			{
+				Glib::ustring category = pop->GetCategory();
+				Glib::ustring name = pop->GetName();
+				context_menu.add(category, name, bind(mem_fun(this, &OperatorsLayout::add_new),prtc->CLASSID));
+			}
+		}
+
     context_menu.add("", "Paste", mem_fun(this, &OperatorsLayout::paste_clipboard));
    	context_menu.show_all_children();
 }

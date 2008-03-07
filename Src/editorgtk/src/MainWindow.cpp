@@ -98,6 +98,11 @@ void MainWindow::SaveProject(string _filename)
         else return;
     }
 
+	// add extension, if needed
+	pair<string,string>name = parse_filename(_filename);
+	if(name.second != "prj")
+		_filename += ".prj";
+
     NEngineOp* engine = NEngineOp::GetEngine();
     if (engine->SaveProject(_filename.c_str()))
     {
@@ -186,7 +191,6 @@ void MainWindow::ExportImage()
 
 	// Check if user provided an extension (will override format)
 	try{
-		Gtk::MessageDialog(name.second).run();
 		for (iter = formats.begin(); iter != formats.end(); iter++)
 		{
 			extensions = iter->get_extensions();
@@ -198,7 +202,6 @@ void MainWindow::ExportImage()
 	catch(Glib::ustring& name)
 	{
 		format = name;
-		Gtk::MessageDialog(name).run();
 	}
 
 	// Save image
