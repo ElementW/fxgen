@@ -1,0 +1,64 @@
+# depslib dependency file v1.0
+1203333666 source:d:\temp\cle\fxgen\plugins\vector\pch.cpp
+	"pch.h"
+
+1203333667 d:\temp\cle\fxgen\plugins\vector\pch.h
+	<stdlib.h>
+	<malloc.h>
+	<memory.h>
+	<math.h>
+	<assert.h>
+	<stdio.h>
+	<time.h>
+	<string.h>
+
+1205153215 source:d:\temp\cle\fxgen\plugins\vector\vectorop.cpp
+	"pch.h"
+	"VectorOp.h"
+
+1205153262 d:\temp\cle\fxgen\plugins\vector\vectorop.h
+	"../../Src/FxGenLib/EngineOp.h"
+	"../../Src/FxGenLib/MainOps.h"
+	"../../Src/FxGenLib/Bitmap.h"
+
+1204277178 d:\temp\cle\fxgen\src\fxgenlib\engineop.h
+	"Core.h"
+
+1204903184 d:\temp\cle\fxgen\src\fxgenlib\core.h
+	"gcccompat/gcccompat.h"
+	"Maths.h"
+	"Stream.h"
+	"Archive.h"
+	"Bitmap.h"
+	"Controllers.h"
+
+1203956045 d:\temp\cle\fxgen\src\gcccompat\gcccompat.h
+	<sys/types.h>
+	<string.h>
+	<stdio.h>
+	<math.h>
+	<unistd.h>
+	<stdarg.h>
+	<windows.h>
+	<windowsx.h>
+	<commdlg.h>
+	<commctrl.h>
+	<richedit.h>
+
+1204277271 d:\temp\cle\fxgen\src\fxgenlib\maths.h
+
+1204277596 d:\temp\cle\fxgen\src\fxgenlib\stream.h
+	"Core.h"
+
+1204276987 d:\temp\cle\fxgen\src\fxgenlib\archive.h
+	"Core.h"
+
+1205153325 d:\temp\cle\fxgen\src\fxgenlib\bitmap.h
+	"Core.h"
+
+1204277087 d:\temp\cle\fxgen\src\fxgenlib\controllers.h
+	"Core.h"
+
+1204277235 d:\temp\cle\fxgen\src\fxgenlib\mainops.h
+	"EngineOp.h"
+

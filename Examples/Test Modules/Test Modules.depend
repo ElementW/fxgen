@@ -1,8 +1,7 @@
 # depslib dependency file v1.0
-1204820068 source:d:\temp\cle\fxgen\examples\test modules\main.cpp
+1205153819 source:d:\temp\cle\fxgen\examples\test modules\main.cpp
 	<iostream>
 	"../../Src/FxGenLib/EngineOp.h"
-	"../../Src/FxGenLib/MainOps.h"
 
 1204820068 /FxGenLib/MainOps.h"
 
@@ -11,7 +10,7 @@
 
 1204277087 
 
-1204817933 d:\temp\cle\fxgen\src\fxgenlib\core.h
+1205154380 d:\temp\cle\fxgen\src\fxgenlib\core.h
 	"gcccompat/gcccompat.h"
 	"Maths.h"
 	"Stream.h"
@@ -44,7 +43,7 @@
 1204276987 d:\temp\cle\fxgen\src\fxgenlib\archive.h
 	"Core.h"
 
-1204277037 d:\temp\cle\fxgen\src\fxgenlib\bitmap.h
+1205153325 d:\temp\cle\fxgen\src\fxgenlib\bitmap.h
 	"Core.h"
 
 1204277087 d:\temp\cle\fxgen\src\fxgenlib\controllers.h

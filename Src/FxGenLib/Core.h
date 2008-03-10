@@ -84,7 +84,7 @@ public:
   NRTClassModule(const char* _pszModuleName);
 
   //Methods
-  //static void RegisterRTClassModule(NRTClassModule* _pmodule);
+  static NRTClassModule* RegisterModule(const char* _pszModuleName);
 
   //Datas
 	const char*			m_pszModuleName;				//!< Module's name
@@ -94,12 +94,13 @@ public:
 	static NRTClassModule* m_pFirstRTClassModule;   //!< First Run-Time class Module
 	static NRTClassModule* m_pLastRTClassModule;    //!< Last Run-Time class Module
 
-  //Datas for RTClasses
+  //Datas for RTClasses for this module
 	NRTClass* m_pFirstRTClass;	//!< First RTClass description for this module
 	NRTClass* m_pLastRTClass;	  //!< Last RTClass description for this module
 };
 
-extern NRTClassModule* _pLocalRTClassModule;  //!< Must had been defined in application and per dynamic libraries(dll, so)
+extern const char* GetModuleName();  //!< Must had been defined in application and per dynamic libraries(dll, so)
+
 
 //-----------------------------------------------------------------
 //!	\class		NRTClass
@@ -110,24 +111,25 @@ class FXGEN_API NRTClass
 public:
 
 //Constructor
-	NRTClass(RTCLASS_HANDLER*	_pcreateCB, const char* _pszClassName, const char* _pszSuperClassName);
+	NRTClass(RTCLASS_HANDLER*	_pcreateCB, const char* _pszClassName, const char* _pszSuperClassName, const char* _pszModuleName);
 
 //Methods
-	static NObject*		CreateByID(ID _CLASSID);
+	static NObject*		CreateByID(ID _CLASSID);    // ###JN### will be removed
 	static NObject*		CreateByName(const char* _pszClassName);
 
-	static ID					MakeClassID(const char* _pszClassName);
-	//static NRTClass* GetFirstClassBySuperClass(const char* _pszSuperClassName);
-	//static NRTClass* GetNextClassBySuperClass(const char* _pszSuperClassName, NRTClass* _prtclass);
+	static ID					MakeClassID(const char* _pszClassName); // ###JN### will be removed
+	static NRTClass*  GetFirstClassBySuperClass(const char* _pszSuperClassName);
+	static NRTClass*  GetNextClassBySuperClass(const char* _pszSuperClassName, NRTClass* _prtclass);
 
 //Datas
 	RTCLASS_HANDLER*	m_pCreateCB;		//!< CallBack for class creation
 	const char*				m_pszClassName;				//!< Class's name
 	const char*				m_pszSuperClassName;	//!< Super class's name
 
-	NRTClass*		m_pNextRTC;						//!< Next Run-Time class
+	NRTClass*		m_pNextRTC;						//!< Next Run-Time class belong to one module
 	ID					CLASSID;							//!< Class ID (Generate from name)
 	ID					SUPERCLASSID;					//!< Super class ID (Generate from name)
+	NRTClassModule* m_pRTClassModule;   //!< Run-Time class Module for this Class
 };
 
 
@@ -173,7 +175,7 @@ void FXGEN_API gDebugLog(const char* fmt, ... );
 
 #define IMPLEMENT_CLASS(class_name, superclass_name) \
 	extern NObject* class_name##CB()	{ return new class_name(); }\
-	NRTClass	class_name::m_RTClass((RTCLASS_HANDLER*)&class_name##CB, #class_name, #superclass_name );
+	NRTClass	class_name::m_RTClass((RTCLASS_HANDLER*)&class_name##CB, #class_name, #superclass_name, GetModuleName() );
 
 
 //Variables

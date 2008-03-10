@@ -91,7 +91,7 @@ struct RGBAI
 //!	\class	NBitmap
 //!	\brief	Bitmap resource type
 //-----------------------------------------------------------------
-class NBitmap : public NObject
+class FXGEN_API NBitmap : public NObject
 {
 public:
 	//Constructor-Destructor
