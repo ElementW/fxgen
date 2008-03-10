@@ -1,0 +1,24 @@
+EXPORTS
+    _Z11NVectorOpCBv @1
+    _Z13GetModuleNamev @2
+    _ZN7NBitmap9GetPixelsEv @3
+    _ZN7NObject7SetNameEPKc @4
+    _ZN9NOperator11GetUserNameEv @5
+    _ZN9NVectorOp10GetRTClassEv @6
+    _ZN9NVectorOp11GetCategoryEv @7
+    _ZN9NVectorOp7GetNameEv @8
+    _ZN9NVectorOp7ProcessEfPP9NOperatorf @9
+    _ZN9NVectorOp8GetColorEv @10
+    _ZN9NVectorOp9m_RTClassE @11 DATA
+    _ZN9NVectorOpC1Ev @12
+    _ZN9NVectorOpC2Ev @13
+    _ZN9NVectorOpD0Ev @14
+    _ZN9NVectorOpD1Ev @15
+    _ZN9NVectorOpD2Ev @16
+    _ZTI7NObject @17 DATA
+    _ZTI9NOperator @18 DATA
+    _ZTI9NVectorOp @19 DATA
+    _ZTS7NObject @20 DATA
+    _ZTS9NOperator @21 DATA
+    _ZTS9NVectorOp @22 DATA
+    _ZTV9NVectorOp @23 DATA

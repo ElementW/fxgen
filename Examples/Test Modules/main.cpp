@@ -3,16 +3,31 @@
 using namespace std;
 
 #include "../../Src/FxGenLib/EngineOp.h"
-#include "../../Src/FxGenLib/MainOps.h"
-
 
 int main()
 {
-  	NEngineOp* peng = NEngineOp::GetEngine();
+  //Get FxGenEngine
+  //NEngineOp* peng = NEngineOp::GetEngine();
 
-  cout << NRTClassModule::m_pFirstRTClassModule->m_pszModuleName << endl;
-  cout << NRTClassModule::m_pFirstRTClassModule->m_pFirstRTClass->m_pszClassName << endl;
+  //Load a new module (or plugins)
+  HMODULE hmod = LoadLibrary("libVector_D.dll");
 
-    cout << "Hello world!" << endl;
-    return 0;
+  //Display RTClass by Modules
+  NRTClassModule* pmod = NRTClassModule::m_pFirstRTClassModule;
+  while (pmod)
+  {
+    NRTClass* prtClass = pmod->m_pFirstRTClass;
+    while (prtClass)
+    {
+      cout << pmod->m_pszModuleName << ":" << prtClass->m_pszClassName << endl;
+      prtClass = prtClass->m_pNextRTC;
+    }
+
+    pmod = pmod->m_pNextRTClassModule;
+  }
+
+  //Free Module
+  FreeModule(hmod);
+
+  return 0;
 }
