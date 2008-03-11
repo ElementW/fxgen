@@ -18,7 +18,7 @@
 #include "pch.h"
 #include "globals.h"
 #define RESIZE_HANDLE .1
-
+#include "msvccompat.h"
 
 // static members
 OperatorWidget* OperatorWidget::active_op(NULL);

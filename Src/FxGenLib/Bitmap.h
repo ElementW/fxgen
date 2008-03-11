@@ -38,6 +38,11 @@ struct RGBA
 		struct { ubyte x, y, z, w;	};
 	};
 
+	float grey()
+	{
+		return (r + g + b) / 3.f;
+	}
+
 	RGBA operator*(float c) const
 	{
 		RGBA retval(*this);

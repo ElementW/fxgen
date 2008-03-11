@@ -6,14 +6,13 @@
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Debug">
+			<Target title="Debug|Linux">
 				<Option platforms="Unix;Mac;" />
 				<Option output="../../LinuxBin/editor-gtk_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../../LinuxBin/" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gnu_gcc_compiler_42" />
-				<Option parameters="brickstone.prj" />
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
@@ -25,7 +24,7 @@
 					<Add directory="../../LinuxBin" />
 				</Linker>
 			</Target>
-			<Target title="Release">
+			<Target title="Release|Linux">
 				<Option platforms="Unix;Mac;" />
 				<Option output="../../LinuxBin/editor-gtk" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../../LinuxBin/" />
@@ -50,7 +49,6 @@
 				<Option object_output="obj/win32Release/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option parameters="test.prj" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>
@@ -85,6 +83,25 @@
 					<Add directory="../../LinuxBin32" />
 				</Linker>
 			</Target>
+			<Target title="Windows Debug">
+				<Option platforms="Windows;" />
+				<Option output="../../W32Bin/editor-gtkd" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../W32Bin" />
+				<Option object_output="obj/win32Debug/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add option="`pkg-config libglademm-2.4 gthread-2.0 --libs`" />
+					<Add library="FxGenLib_D" />
+					<Add library="cairo" />
+					<Add directory="../../W32Bin" />
+					<Add directory="C:/GTK/lib" />
+				</Linker>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
@@ -111,9 +128,15 @@
 		<Unit filename="include/pch.h">
 			<Option compile="1" />
 		</Unit>
-		<Unit filename="src/BrickStone.cpp" />
+		<Unit filename="src/BrickStone.cpp">
+			<Option target="Release|Linux" />
+			<Option target="Release|Linux32" />
+		</Unit>
 		<Unit filename="src/DynamicMenu.cpp" />
-		<Unit filename="src/ImageOp.cpp" />
+		<Unit filename="src/ImageOp.cpp">
+			<Option target="Release|Linux" />
+			<Option target="Release|Linux32" />
+		</Unit>
 		<Unit filename="src/MainMenu.cpp" />
 		<Unit filename="src/MainWindow.cpp" />
 		<Unit filename="src/OperatorWidget.cpp" />

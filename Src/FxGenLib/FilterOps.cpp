@@ -367,7 +367,7 @@ udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 
 	ubyte minalpha = (byAlpha >=127) ? ubyte((byAlpha - 127) * 2.f - (byAlpha - 127) / 128.f) : 0;
 	ubyte maxalpha = (byAlpha <=127) ? ubyte(byAlpha * 2.f + byAlpha / 127.f) : 255;
-	float alphamult = (maxalpha - minalpha) / 255.;
+	float alphamult = (maxalpha - minalpha) / 255.f;
 
 	RGBA* pPxSrc = pSrc->GetPixels();
 	RGBA* pPxDst = pDst->GetPixels();
@@ -828,7 +828,7 @@ udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 
 				else if(comp == 1) // height
 				{
-					float sum = pcurQuat(x,y).r+pcurQuat(x,y).g+pcurQuat(x,y).b;
+					float sum = pcurQuat(x,y).grey();
 					quat current(2 * nv_pi * sum / 765.f * sensitivity,	vec3(0,0,1));
 
 					rotation = current * rotation0;
@@ -1515,7 +1515,7 @@ udword NAlphaMaskOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 				}
 				else // monochrome mask
 				{
-					float alpha = (pPxAlpha->r + pPxAlpha->g + pPxAlpha->b) / 3. / 255.;
+					float alpha = (pPxAlpha->r + pPxAlpha->g + pPxAlpha->b) / 3.f / 255.f;
 					pPxDst->a = ubyte(pPxDst->a * alpha);
 				}
 

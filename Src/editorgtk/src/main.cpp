@@ -25,6 +25,8 @@ OperatorsLayout* operators_layout;
 ProjectTree* project_tree;
 PropertyTable* property_table;
 NamedPointerColumns columns_pattern;
+//NRTClassModule _LocalRTClassModule("editor-gtk");
+//NRTClassModule* _pLocalRTClassModule = &_LocalRTClassModule;
 NRTClassModule* _pLocalRTClassModule;
 
 int main(int argc, char *argv[])

@@ -20,6 +20,7 @@
 
 #include "fxgen_pch.h"
 #include "DynamicMenu.h"
+#include "msvccompat.h"
 
 class OperatorsLayout;
 
