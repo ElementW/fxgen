@@ -1069,9 +1069,9 @@ NRTClass* NRTClass::GetFirstClassBySuperClass(const char* _pszSuperClassName)
 	return null;
 }
 
------------------------------------------------------------------
-!	\brief	Return Next RTClass from a super class name
------------------------------------------------------------------
+//-----------------------------------------------------------------
+//!	\brief	Return Next RTClass from a super class name
+//-----------------------------------------------------------------
 NRTClass* NRTClass::GetNextClassBySuperClass(const char* _pszSuperClassName, NRTClass* _prtclass)
 {
   NRTClassModule* pmod = _prtclass->m_pRTClassModule;
@@ -1552,7 +1552,9 @@ NRTClassModule* NRTClassModule::RegisterModule(const char* _pszModuleName)
 //-----------------------------------------------------------------
 void NMutexLock::lock()
 {
+#ifdef __GNUC__ // there are no such __PRETTY_FUNCTION__'s anywhere else so don't remove this line
 	if(_debug) printf("%d %s\n", this, __PRETTY_FUNCTION__);
+#endif
 	while(!myfault && _mutex)
 	{
 		#ifdef _WIN32
@@ -1576,10 +1578,14 @@ void NMutexLock::release()
 	if(myfault)
 	{
 		myfault = _mutex = false;
+#ifdef __GNUC__
 		if(_debug) printf("%d %s\n", this, __PRETTY_FUNCTION__);
+#endif
 	}
+#ifdef __GNUC__
 	else if(_debug)
 		printf("%d %s - %s\n", this, "Not my fault", __PRETTY_FUNCTION__);
+#endif
 }
 
 NMutexLock::~NMutexLock()

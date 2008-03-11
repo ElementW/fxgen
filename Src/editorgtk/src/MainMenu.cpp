@@ -22,7 +22,7 @@
 #include "Operators.h"
 #include "globals.h"
 
-extern char* menu_xml;
+extern const char* menu_xml;
 
 void set_current_detail(int value)
 {
@@ -32,7 +32,9 @@ void set_current_detail(int value)
 	NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
 	NEngineOp::GetEngine()->InvalidateAllOps();
 	if(OperatorWidget::preview_op)
+	{
 		OperatorWidget::preview_op->UpdateImage();
+	}
 }
 
 MainMenu::MainMenu(MainWindow& w): window(&w)

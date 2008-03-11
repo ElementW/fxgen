@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="9,00"
 	Name="FxGenLib"
 	ProjectGUID="{D39F9951-FC48-4410-93AC-CEAF6934BF3F}"
 	RootNamespace="FxGenLib"
 	Keyword="Win32Proj"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -43,7 +44,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\Externals\vgvm;..\..\Externals\cairo;..\..\Externals\vgvm"
-				PreprocessorDefinitions="WIN32;_DEBUG;_USRDLL;FXGEN_EXPORTS;BUILDING_VGVM_DLL;_CRT_SECURE_NO_DEPRECATE "
+				PreprocessorDefinitions="THREADS_ENABLED"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -68,6 +69,8 @@
 				OutputFile="$(OutDir)\$(ProjectName)_D.dll"
 				AdditionalLibraryDirectories="..\..\Externals\cairo;..\..\Externals\vgvm;"
 				GenerateDebugInformation="true"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -88,11 +91,8 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy debug\$(TargetName).lib ..\..\W32Bin\$(TargetName).lib&#x0D;&#x0A;copy debug\$(TargetFileName) ..\..\W32Bin\$(TargetFileName)&#x0D;&#x0A;"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -124,7 +124,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="..\..\Externals\vgvm;..\..\Externals\cairo;..\..\Externals\vgvm"
-				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;FXGEN_EXPORTS;BUILDING_VGVM_DLL;_CRT_SECURE_NO_DEPRECATE "
+				PreprocessorDefinitions="THREADS_ENABLED;FXGEN_EXPORTS"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				EnableEnhancedInstructionSet="2"
@@ -149,6 +149,8 @@
 				AdditionalDependencies="cairo.lib cairomm-1.0.lib user32.lib"
 				OutputFile="..\..\W32Bin\$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\..\Externals\cairo;..\..\Externals\vgvm;"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -169,11 +171,8 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetDir)$(TargetFileName) ..\..\W32Bin\$(TargetFileName)"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -205,7 +204,7 @@
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="..\..\Externals\vgvm;..\..\Externals\cairo;..\..\Externals\vgvm"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_MODE_EDITION"
+				PreprocessorDefinitions="THREADS_ENABLED"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -272,7 +271,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="..\..\Externals\vgvm;..\..\Externals\cairo;..\..\Externals\vgvm"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;FXGEN_EXPORTS;BUILDING_VGVM_DLL"
+				PreprocessorDefinitions="THREADS_ENABLED"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -294,6 +293,8 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="cairo.lib cairomm-1.0.lib"
 				AdditionalLibraryDirectories="..\..\Externals\cairo;..\..\Externals\vgvm;"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -312,9 +313,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -343,10 +341,6 @@
 			</File>
 			<File
 				RelativePath=".\EngineOp.h"
-				>
-			</File>
-			<File
-				RelativePath=".\noiseutils.cpp"
 				>
 			</File>
 		</Filter>
@@ -451,14 +445,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libnoiseOps.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\libnoiseOps.h"
-				>
-			</File>
-			<File
 				RelativePath=".\MainOps.cpp"
 				>
 			</File>
@@ -475,112 +461,8 @@
 				>
 			</File>
 		</Filter>
-		<Filter
-			Name="VGVM"
-			>
-			<File
-				RelativePath="..\..\Externals\vgvm\context_cairo.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Tiny Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release DLL|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\Externals\vgvm\context_cairo.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Externals\vgvm\vgvm.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Tiny Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release DLL|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-		</Filter>
-		<Filter
-			Name="gForge"
-			>
-			<File
-				RelativePath=".\Crater.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Crater.h"
-				>
-			</File>
-			<File
-				RelativePath=".\fftn.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\gForge.h"
-				>
-			</File>
-			<File
-				RelativePath=".\rand.cpp"
-				>
-			</File>
-		</Filter>
 		<File
-			RelativePath=".\noiseutils.h"
+			RelativePath="..\gcccompat\gcccompat.h"
 			>
 		</File>
 		<File
@@ -621,10 +503,6 @@
 		</File>
 		<File
 			RelativePath=".\pch.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Editor\pch.h"
 			>
 		</File>
 	</Files>

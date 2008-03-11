@@ -240,16 +240,18 @@ void MainWindow::ClearProject()
     NEngineOp* engine = NEngineOp::GetEngine();
     engine->Clear();
 
-// Copied from the original editor - is there any other way to do this?
     //Create empty project
     NTreeNode* prootNode = engine->GetRootGroup();
-    NTreeNode* pNewGrpNode = new NTreeNode;
-    pNewGrpNode->SetName("Group");
-    prootNode->AddSon(pNewGrpNode);
+//    if(prootNode)
+//    {
+        NTreeNode* pNewGrpNode = new NTreeNode;
+        pNewGrpNode->SetName("Group");
+        prootNode->AddSon(pNewGrpNode);
+        NOperatorsPage* ppage = new NOperatorsPage;
+        ppage->SetName("Page");
+        pNewGrpNode->GetObjsArray().AddItem(ppage);
+//    }
 
-    NOperatorsPage* ppage = new NOperatorsPage;
-    ppage->SetName("Page");
-    pNewGrpNode->GetObjsArray().AddItem(ppage);
 // -----------------------------------
     project_tree->DisplayProject(NEngineOp::GetEngine());
     project_modified = false;

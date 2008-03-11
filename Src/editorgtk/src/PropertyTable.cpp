@@ -15,11 +15,12 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 
-#include <pch.h>
+#include "pch.h"
 #include "globals.h"
-#include "tinyxml.h"
-#include "vgvm/vgvm.h"
-#include "vgvm/compilers/svg.h"
+//#include "tinyxml.h"
+//#include "vgvm/vgvm.h"
+//#include "vgvm/compilers/svg.h"
+#include "msvccompat.h"
 
 namespace
 {

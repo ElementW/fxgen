@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 #include <vector>
-#include <boost/lexical_cast.hpp>
+//#include <boost/lexical_cast.hpp>
 using Glib::RefPtr;
 using Gnome::Glade::Xml;
 using std::map;
@@ -12,4 +12,4 @@ using std::string;
 using std::vector;
 using sigc::bind;
 using sigc::mem_fun;
-using boost::lexical_cast;
+//using boost::lexical_cast;

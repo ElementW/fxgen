@@ -640,7 +640,7 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 
 			if(chessboard)
 			{
-				bool cfc = ((xo%2)^(yo%2));
+				bool cfc = (xo&1)^(yo&1);
 				float coeff = (1 - 2 * cfc) / 2.5f;
 				pPxDst->r = (ubyte)((cfc + coeff * minDist)*col.r);
 				pPxDst->g = (ubyte)((cfc + coeff * minDist)*col.g);

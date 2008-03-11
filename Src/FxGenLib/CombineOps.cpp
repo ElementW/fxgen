@@ -694,7 +694,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 		if(normals.width && byMode == 2)
 		{
 			RGBA &N = normals(x,y);
-			vec3 normal(N.r - 127, N.g - 127, 0);
+			vec3 normal(N.r - 127.f, N.g - 127.f, 0.f);
 			count = (sdword)(count * normal.norm() * normal.norm() / 8) /* adjusted value */;
 			count = min(count, byLength * _fDetailFactor);
 		}

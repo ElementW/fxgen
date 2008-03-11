@@ -1,6 +1,7 @@
 #ifndef __GNUC__
 #pragma once
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#include <windows.h>
 #endif
 
 // Standart Includes
@@ -12,4 +13,3 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
-
