@@ -35,7 +35,7 @@ const char* GetModuleName()  { return "Vector"; }
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NVectorOp, NOperator);
+FIMPLEMENT_CLASS(NVectorOp, NOperator);
 
 /*static void* vgvmAlloc( size_t size )
 {

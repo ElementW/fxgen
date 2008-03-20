@@ -51,7 +51,7 @@ extern const char* GetModuleName();  //!< Must had been defined in application a
 class NVectorOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NVectorOp();
 	~NVectorOp();

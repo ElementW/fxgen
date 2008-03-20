@@ -5,10 +5,13 @@
 		<Project filename="..\Examples\Test Modules\Test Modules.cbp">
 			<Depends filename="..\Src\FxGenLib\FxGenLib.cbp" />
 		</Project>
-		<Project filename="..\Examples\BMP Extractor\test.cbp" active="1">
+		<Project filename="..\Examples\BMP Extractor\test.cbp">
 			<Depends filename="..\Src\FxGenLib\FxGenLib.cbp" />
 		</Project>
 		<Project filename="..\Plugins\Vector\Vector.cbp">
+			<Depends filename="..\Src\FxGenLib\FxGenLib.cbp" />
+		</Project>
+		<Project filename="..\FxGenEditor\FxGenEditor.cbp" active="1">
 			<Depends filename="..\Src\FxGenLib\FxGenLib.cbp" />
 		</Project>
 	</Workspace>
