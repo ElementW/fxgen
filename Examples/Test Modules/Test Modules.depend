@@ -100,3 +100,45 @@
 1204910868 /usr/src/fxgen/Src/FxGenLib/MainOps.h
 	"EngineOp.h"
 
+1205153820 source:c:\datas\projects\fxgen\examples\test modules\main.cpp
+	<iostream>
+	"../../Src/FxGenLib/EngineOp.h"
+
+1204277180 c:\datas\projects\fxgen\src\fxgenlib\engineop.h
+	"Core.h"
+
+1205154382 c:\datas\projects\fxgen\src\fxgenlib\core.h
+	"gcccompat/gcccompat.h"
+	"Maths.h"
+	"Stream.h"
+	"Archive.h"
+	"Bitmap.h"
+	"Controllers.h"
+
+1203956046 c:\datas\projects\fxgen\src\gcccompat\gcccompat.h
+	<sys/types.h>
+	<string.h>
+	<stdio.h>
+	<math.h>
+	<unistd.h>
+	<stdarg.h>
+	<windows.h>
+	<windowsx.h>
+	<commdlg.h>
+	<commctrl.h>
+	<richedit.h>
+
+1204277272 c:\datas\projects\fxgen\src\fxgenlib\maths.h
+
+1204277598 c:\datas\projects\fxgen\src\fxgenlib\stream.h
+	"Core.h"
+
+1204276988 c:\datas\projects\fxgen\src\fxgenlib\archive.h
+	"Core.h"
+
+1205186199 c:\datas\projects\fxgen\src\fxgenlib\bitmap.h
+	"Core.h"
+
+1204277088 c:\datas\projects\fxgen\src\fxgenlib\controllers.h
+	"Core.h"
+
