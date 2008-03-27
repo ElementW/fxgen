@@ -2,7 +2,8 @@
 1203333666 source:d:\temp\cle\fxgen\src\fxgenlib\pch.cpp
 	"pch.h"
 
-1203333667 d:\temp\cle\fxgen\src\fxgenlib\pch.h
+1206024651 d:\temp\cle\fxgen\src\fxgenlib\pch.h
+	<windows.h>
 	<stdlib.h>
 	<malloc.h>
 	<memory.h>
@@ -14,14 +15,14 @@
 
 1203956047 
 
-1203333666 source:d:\temp\cle\fxgen\src\fxgenlib\bitmap.cpp
+1206024651 source:d:\temp\cle\fxgen\src\fxgenlib\bitmap.cpp
 	"pch.h"
 	"Bitmap.h"
 
-1205153325 d:\temp\cle\fxgen\src\fxgenlib\bitmap.h
+1206540302 d:\temp\cle\fxgen\src\fxgenlib\bitmap.h
 	"Core.h"
 
-1205154380 d:\temp\cle\fxgen\src\fxgenlib\core.h
+1206540301 d:\temp\cle\fxgen\src\fxgenlib\core.h
 	"gcccompat/gcccompat.h"
 	"Maths.h"
 	"Stream.h"
@@ -31,7 +32,7 @@
 
 1204817933 rs.h"
 
-1203956045 d:\temp\cle\fxgen\src\gcccompat\gcccompat.h
+1206024648 d:\temp\cle\fxgen\src\gcccompat\gcccompat.h
 	<sys/types.h>
 	<string.h>
 	<stdio.h>
@@ -46,51 +47,51 @@
 
 1203956045 h>
 
-1204277271 d:\temp\cle\fxgen\src\fxgenlib\maths.h
+1206024651 d:\temp\cle\fxgen\src\fxgenlib\maths.h
 
-1204277596 d:\temp\cle\fxgen\src\fxgenlib\stream.h
+1206024650 d:\temp\cle\fxgen\src\fxgenlib\stream.h
 	"Core.h"
 
-1204276987 d:\temp\cle\fxgen\src\fxgenlib\archive.h
+1206024651 d:\temp\cle\fxgen\src\fxgenlib\archive.h
 	"Core.h"
 
-1204277087 d:\temp\cle\fxgen\src\fxgenlib\controllers.h
+1206540302 d:\temp\cle\fxgen\src\fxgenlib\controllers.h
 	"Core.h"
 
-1203956046 source:d:\temp\cle\fxgen\src\fxgenlib\combineops.cpp
+1206024651 source:d:\temp\cle\fxgen\src\fxgenlib\combineops.cpp
 	"pch.h"
 	"CombineOps.h"
 	"RectangularArray.h"
 
 1204277888 arArray.h"
 
-1204277064 d:\temp\cle\fxgen\src\fxgenlib\combineops.h
+1206024650 d:\temp\cle\fxgen\src\fxgenlib\combineops.h
 	"EngineOp.h"
 
 1204277888 h"
 
-1204277178 d:\temp\cle\fxgen\src\fxgenlib\engineop.h
+1206024650 d:\temp\cle\fxgen\src\fxgenlib\engineop.h
 	"Core.h"
 
-1204277515 d:\temp\cle\fxgen\src\fxgenlib\rectangulararray.h
+1206024650 d:\temp\cle\fxgen\src\fxgenlib\rectangulararray.h
 	<math.h>
 
-1203333666 source:d:\temp\cle\fxgen\src\fxgenlib\controllers.cpp
+1206024650 source:d:\temp\cle\fxgen\src\fxgenlib\controllers.cpp
 	"pch.h"
 	"Controllers.h"
 	"EngineOp.h"
 
-1204903206 source:d:\temp\cle\fxgen\src\fxgenlib\core.cpp
+1206024651 source:d:\temp\cle\fxgen\src\fxgenlib\core.cpp
 	"pch.h"
 	"Core.h"
 
-1203956047 source:d:\temp\cle\fxgen\src\fxgenlib\distordops.cpp
+1206024651 source:d:\temp\cle\fxgen\src\fxgenlib\distordops.cpp
 	"pch.h"
 	"DistordOps.h"
 
 1203956047 s.h"
 
-1204277152 d:\temp\cle\fxgen\src\fxgenlib\distordops.h
+1206024651 d:\temp\cle\fxgen\src\fxgenlib\distordops.h
 	"EngineOp.h"
 
 1203956046 source:d:\temp\cle\fxgen\src\fxgenlib\engineop.cpp
@@ -117,7 +118,7 @@
 1204277235 d:\temp\cle\fxgen\src\fxgenlib\mainops.h
 	"EngineOp.h"
 
-1203956047 source:d:\temp\cle\fxgen\src\fxgenlib\maths.cpp
+1206024651 source:d:\temp\cle\fxgen\src\fxgenlib\maths.cpp
 	"pch.h"
 	"Core.h"
 	"Maths.h"
@@ -141,15 +142,16 @@
 
 1203333644 .h"
 
-1203493786 source:d:\temp\cle\fxgen\src\fxgenlib\stream.cpp
+1206024651 source:d:\temp\cle\fxgen\src\fxgenlib\stream.cpp
 	"pch.h"
 	"Stream.h"
 
-1203956047 source:d:\temp\cle\fxgen\src\fxgenlib\archive.cpp
+1206024651 source:d:\temp\cle\fxgen\src\fxgenlib\archive.cpp
 	"pch.h"
 	"Archive.h"
 
-1203333667 source:d:\temp\cle\fxgen\src\fxgenlib\pch.h
+1206024651 source:d:\temp\cle\fxgen\src\fxgenlib\pch.h
+	<windows.h>
 	<stdlib.h>
 	<malloc.h>
 	<memory.h>

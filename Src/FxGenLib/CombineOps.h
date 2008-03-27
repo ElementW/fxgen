@@ -44,7 +44,7 @@
 class FXGEN_API NNopOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x009696c0;	}
@@ -63,7 +63,7 @@ public:
 class FXGEN_API NRectOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NRectOp();
 
@@ -84,7 +84,7 @@ public:
 class FXGEN_API NPixelsOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NPixelsOp();
 
@@ -104,7 +104,7 @@ public:
 class FXGEN_API NAddOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NAddOp();
 
@@ -124,7 +124,7 @@ public:
 class FXGEN_API NGlowOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NGlowOp();
 
@@ -146,7 +146,7 @@ public:
 class FXGEN_API NCrackOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NCrackOp();
 
@@ -171,7 +171,7 @@ public:
 class FXGEN_API NLerpOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NLerpOp();
 

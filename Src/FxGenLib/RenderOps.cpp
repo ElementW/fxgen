@@ -34,7 +34,7 @@
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NFlatOp, NOperator);
+FIMPLEMENT_CLASS(NFlatOp, NOperator);
 
 static NMapVarsBlocDesc mapblocdescFlatOp[] =
 {
@@ -101,7 +101,7 @@ udword NFlatOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NCloudOp, NOperator);
+FIMPLEMENT_CLASS(NCloudOp, NOperator);
 
 static NMapVarsBlocDesc mapblocdescCloudOp[] =
 {
@@ -398,7 +398,7 @@ void NCloudOp::Normalize()
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NGradientOp, NOperator);
+FIMPLEMENT_CLASS(NGradientOp, NOperator);
 
 static NMapVarsBlocDesc mapblocdescGradientOp[] =
 {
@@ -494,7 +494,7 @@ udword NGradientOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NCellOp, NOperator);
+FIMPLEMENT_CLASS(NCellOp, NOperator);
 
 static NMapVarsBlocDesc mapblocdescCellOp[] =
 {
@@ -670,7 +670,7 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NNoiseOp, NOperator);
+FIMPLEMENT_CLASS(NNoiseOp, NOperator);
 
 static NVarsBlocDesc blocdescNoiseOp[] =
 {
@@ -740,7 +740,7 @@ udword NNoiseOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-/*IMPLEMENT_CLASS(NVectorOp, NOperator);
+/*FIMPLEMENT_CLASS(NVectorOp, NOperator);
 
 static void* vgvmAlloc( size_t size )
 {

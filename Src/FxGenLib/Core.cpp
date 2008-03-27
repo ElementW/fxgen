@@ -486,7 +486,7 @@ void NVarsBloc::MapValueTo(const char* _val, udword _idx)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NObject, NObject);
+FIMPLEMENT_CLASS(NObject, NObject);
 
 //-----------------------------------------------------------------
 //!	\brief	Constructor
@@ -1100,7 +1100,7 @@ NRTClass* NRTClass::GetNextClassBySuperClass(const char* _pszSuperClassName, NRT
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NTreeNode, NObject);
+FIMPLEMENT_CLASS(NTreeNode, NObject);
 
 //-----------------------------------------------------------------
 //!	\brief	Constructor

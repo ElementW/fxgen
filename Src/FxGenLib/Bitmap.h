@@ -103,7 +103,7 @@ public:
 					NBitmap();
 	virtual	~NBitmap();
 
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	//Methods
 	void SetSize(udword _w, udword _h);

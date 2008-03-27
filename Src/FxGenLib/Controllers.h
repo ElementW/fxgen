@@ -43,7 +43,7 @@ class NObject;
 class FXGEN_API NController :	public NObject
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NController();
 	virtual ~NController();

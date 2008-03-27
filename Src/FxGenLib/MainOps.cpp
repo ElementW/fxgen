@@ -28,7 +28,7 @@
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NStoreOp, NOperator);
+FIMPLEMENT_CLASS(NStoreOp, NOperator);
 
 static NVarsBlocDesc blocdescStoreOp[] =
 {
@@ -83,7 +83,7 @@ udword NStoreOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NStoreResultOp, NOperator);
+FIMPLEMENT_CLASS(NStoreResultOp, NOperator);
 
 static NMapVarsBlocDesc mapblocdescStoreResultOp[] =
 {
@@ -157,7 +157,7 @@ NBitmap* NStoreResultOp::GetBitmap()
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NLoadOp, NOperator);
+FIMPLEMENT_CLASS(NLoadOp, NOperator);
 
 static NVarsBlocDesc blocdescLoadOp[] =
 {
@@ -221,7 +221,7 @@ udword NLoadOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NChannelAnimFX1Op, NOperator);
+FIMPLEMENT_CLASS(NChannelAnimFX1Op, NOperator);
 
 static NVarsBlocDesc blocdescChanAnimFX1Op[] =
 {

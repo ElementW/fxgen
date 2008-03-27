@@ -1789,13 +1789,14 @@
 
 1186407652 c:\wxwidgets-2.8.7\include\wx\msw\rcdefs.h
 
-1206017428 source:d:\temp\cle\fxgen\fxgeneditor\fxgeneditormain.cpp
+1206541072 source:d:\temp\cle\fxgen\fxgeneditor\fxgeneditormain.cpp
 	"wx_pch.h"
 	"FxGenEditorMain.h"
 	"EventsList.h"
 	"ProjectTreeCtrl.h"
 	"OperatorsCtrl.h"
 	"OperatorResultCtrl.h"
+	"PropertiesCtrl.h"
 	"..\Src\FxGenLib\Core.h"
 	"..\Src\FxGenLib\EngineOp.h"
 
@@ -1813,7 +1814,7 @@
 1206016474 d:\temp\cle\fxgen\fxgeneditor\fxgeneditorapp.h
 	<wx/app.h>
 
-1206016474 source:d:\temp\cle\fxgen\fxgeneditor\fxgeneditorapp.cpp
+1206539214 source:d:\temp\cle\fxgen\fxgeneditor\fxgeneditorapp.cpp
 	"wx_pch.h"
 	"FxGenEditorApp.h"
 	"FxGenEditorMain.h"
@@ -1914,7 +1915,7 @@
 	"wx/treebase.h"
 	"wx/hashmap.h"
 
-1205853749 d:\temp\cle\fxgen\src\fxgenlib\core.h
+1206540301 d:\temp\cle\fxgen\src\fxgenlib\core.h
 	"gcccompat/gcccompat.h"
 	"Maths.h"
 	"Stream.h"
@@ -1922,24 +1923,24 @@
 	"Bitmap.h"
 	"Controllers.h"
 
-1204277272 d:\temp\cle\fxgen\src\fxgenlib\maths.h
+1206024651 d:\temp\cle\fxgen\src\fxgenlib\maths.h
 
-1204277598 d:\temp\cle\fxgen\src\fxgenlib\stream.h
+1206024650 d:\temp\cle\fxgen\src\fxgenlib\stream.h
 	"Core.h"
 
-1204276988 d:\temp\cle\fxgen\src\fxgenlib\archive.h
+1206024651 d:\temp\cle\fxgen\src\fxgenlib\archive.h
 	"Core.h"
 
-1205853750 d:\temp\cle\fxgen\src\fxgenlib\bitmap.h
+1206540302 d:\temp\cle\fxgen\src\fxgenlib\bitmap.h
 	"Core.h"
 
-1205853751 d:\temp\cle\fxgen\src\fxgenlib\controllers.h
+1206540302 d:\temp\cle\fxgen\src\fxgenlib\controllers.h
 	"Core.h"
 
-1205853751 d:\temp\cle\fxgen\src\fxgenlib\engineop.h
+1206540301 d:\temp\cle\fxgen\src\fxgenlib\engineop.h
 	"Core.h"
 
-1203956046 d:\temp\cle\fxgen\src\gcccompat\gcccompat.h
+1206024648 d:\temp\cle\fxgen\src\gcccompat\gcccompat.h
 	<sys/types.h>
 	<string.h>
 	<stdio.h>
@@ -1954,15 +1955,17 @@
 
 1206013658 d:\temp\cle\fxgen\fxgeneditor\eventslist.h
 
-1206016842 source:d:\temp\cle\fxgen\fxgeneditor\projecttreectrl.cpp
+1206545673 source:d:\temp\cle\fxgen\fxgeneditor\projecttreectrl.cpp
 	"EventsList.h"
 	"wx_pch.h"
 	"EventsList.h"
 	"ProjectTreeCtrl.h"
 
-1206017244 d:\temp\cle\fxgen\fxgeneditor\projecttreectrl.h
+1206541788 d:\temp\cle\fxgen\fxgeneditor\projecttreectrl.h
 	<wx/wx.h>
 	<wx/treectrl.h>
+	"..\Src\FxGenLib\Core.h"
+	"..\Src\FxGenLib\EngineOp.h"
 
 1206019013 source:d:\temp\cle\fxgen\fxgeneditor\operatorresultctrl.cpp
 	"EventsList.h"

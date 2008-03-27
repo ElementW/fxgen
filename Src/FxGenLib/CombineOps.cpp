@@ -32,7 +32,7 @@
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NNopOp,	NOperator);
+FIMPLEMENT_CLASS(NNopOp,	NOperator);
 
 udword NNopOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
@@ -64,7 +64,7 @@ udword NNopOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NRectOp, NOperator);
+FIMPLEMENT_CLASS(NRectOp, NOperator);
 
 static NMapVarsBlocDesc mapblocdescRectOp[] =
 {
@@ -152,7 +152,7 @@ udword NRectOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NPixelsOp,NOperator);
+FIMPLEMENT_CLASS(NPixelsOp,NOperator);
 
 static NVarsBlocDesc blocdescPixelsOp[] =
 {
@@ -216,7 +216,7 @@ udword NPixelsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NAddOp, NOperator);
+FIMPLEMENT_CLASS(NAddOp, NOperator);
 
 static NVarsBlocDesc blocdescAddOp[] =
 {
@@ -484,7 +484,7 @@ udword NAddOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NGlowOp, NOperator);
+FIMPLEMENT_CLASS(NGlowOp, NOperator);
 
 static NMapVarsBlocDesc mapblocdescGlowOp[] =
 {
@@ -602,7 +602,7 @@ udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NCrackOp, NOperator);
+FIMPLEMENT_CLASS(NCrackOp, NOperator);
 
 static NMapVarsBlocDesc mapblocdescCrackOp[] =
 {
@@ -748,7 +748,7 @@ float NCrackOp::myfRandom()
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NLerpOp, NOperator);
+FIMPLEMENT_CLASS(NLerpOp, NOperator);
 
 NLerpOp::NLerpOp()
 {

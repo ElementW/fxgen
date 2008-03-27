@@ -4,6 +4,9 @@
 #include <wx/wx.h>
 #include <wx/treectrl.h>
 
+#include "..\Src\FxGenLib\Core.h"
+#include "..\Src\FxGenLib\EngineOp.h"
+
 class wxProjectTreeCtrl : public wxTreeCtrl
 {
     DECLARE_DYNAMIC_CLASS(wxProjectTreeCtrl)
@@ -22,6 +25,13 @@ public:
     DECLARE_EVENT_TABLE()
     virtual void OnFxGenProjectLoaded( wxCommandEvent& event );
     virtual void OnFxGenProjectNew( wxCommandEvent& event );
+
+  //Methods
+  void DisplayFxGenProject(NTreeNode* _prootNode);
+  void _AddItemsFromTreeNodes(NTreeNode* _pparentNode, wxTreeItemId _pparentItem);
+
+  //Datas
+  NTreeNode *m_prootNode;
 };
 
 

@@ -22,6 +22,8 @@ IMPLEMENT_APP(FxGenEditorApp);
 
 bool FxGenEditorApp::OnInit()
 {
+    wxImage::AddHandler(new wxPNGHandler);
+
     FxGenEditorFrame* frame = new FxGenEditorFrame(0L);
     frame->SetIcon(wxICON(aaaa)); // To Set App Icon
     frame->Show();

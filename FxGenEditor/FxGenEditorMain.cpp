@@ -118,39 +118,47 @@ void FxGenEditorFrame::OnNew( wxCommandEvent& event )
 {
   //wxEvent(int winid = 0, wxEventType commandType = wxEVT_NULL );
   {
-    wxMessageBox(_("Send New Event"), _("FxGen"));
+    //wxMessageBox(_("Send New Event"), _("FxGen"));
 
-    wxCommandEvent  fxevent( wxEVT_FXGEN_PROJECT, -1);
+    wxCommandEvent  fxevent( wxEVT_FXGEN_PROJECT, wsID_FXGEN_PRJ_NEW);
     fxevent.SetEventObject( this );
-    GetEventHandler()->ProcessEvent( fxevent );
-
+    //GetEventHandler()->ProcessEvent( fxevent );
+    wxPostEvent( GetEventHandler(), fxevent );
   }
-
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Open an FxGen Project
+//!	\brief	Open a FxGen Project
 //-----------------------------------------------------------------
 void FxGenEditorFrame::OnOpen( wxCommandEvent& event )
 {
   wxString filename = wxFileSelector(_("Choose a FxGen file to open"));
+  //wxString filename = _T("D:\\Temp\\Cle\\FxGen\\Datas\\Bricks.prj");
+
   if ( !filename.empty() )
   {
     //Clear Old FxGen Project
     NEngineOp::GetEngine()->Clear();
 
     //Emit Event if project loaded
-    if ( NEngineOp::GetEngine()->LoadProject((const char*)filename.c_str()))
+    //if (NEngineOp::GetEngine()->LoadProject("D:\\Temp\\Cle\\FxGen\\Datas\\Bricks.prj"))
+    if ( NEngineOp::GetEngine()->LoadProject(filename.ToAscii() )==true)
     {
+      wxMessageBox(filename.c_str(), _("FxGen"));
+
       //wxEvent(int winid = 0, wxEventType commandType = wxEVT_NULL );
       wxCommandEvent  fxevent( wxEVT_FXGEN_PROJECT, wsID_FXGEN_PRJ_LOADED);
       fxevent.SetEventObject( this );
-      GetEventHandler()->ProcessEvent( fxevent );
+      //GetEventHandler()->ProcessEvent( fxevent );
+      wxPostEvent( GetEventHandler(), fxevent );
     }
   }
 
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Create a new FxGen Project
+//-----------------------------------------------------------------
 void FxGenEditorFrame::OnFxGenProjectNew( wxCommandEvent& event )
 {
   wxMessageBox(_("FxGenEditorFrame Project Loaded new"), _("FxGen"));

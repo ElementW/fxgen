@@ -43,7 +43,7 @@
 class FXGEN_API NStoreOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NStoreOp();
 	virtual ~NStoreOp();
@@ -66,7 +66,7 @@ public:
 class FXGEN_API NStoreResultOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NStoreResultOp();
 	virtual ~NStoreResultOp();
@@ -92,7 +92,7 @@ public:
 class FXGEN_API NLoadOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NLoadOp();
 
@@ -115,7 +115,7 @@ public:
 class FXGEN_API NChannelAnimFX1Op : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NChannelAnimFX1Op();
 

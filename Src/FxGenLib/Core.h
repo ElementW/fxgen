@@ -169,11 +169,11 @@ void FXGEN_API gDebugLog(const char* fmt, ... );
 			}
 
 //Runtime class
-#define DECLARE_CLASS() \
+#define FDECLARE_CLASS() \
 	static NRTClass	m_RTClass;\
 	virtual NRTClass* GetRTClass()		{ return &m_RTClass; }
 
-#define IMPLEMENT_CLASS(class_name, superclass_name) \
+#define FIMPLEMENT_CLASS(class_name, superclass_name) \
 	extern NObject* class_name##CB()	{ return new class_name(); }\
 	NRTClass	class_name::m_RTClass((RTCLASS_HANDLER*)&class_name##CB, #class_name, #superclass_name, GetModuleName() );
 
@@ -385,7 +385,7 @@ public:
 	NObject();
 	virtual	~NObject();
 
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	//Methods
 	virtual void	SetName(const char* _pszName)	{ strncpy(m_szName, _pszName, sizeof(m_szName)); }	//!< Affecte le nom de l'objet
@@ -446,7 +446,7 @@ public:
 	NTreeNode();
 	virtual ~NTreeNode();
 
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	//Methods
 	NObjectArray& GetObjsArray()		{ return m_carrayObjects; }	//!< Objects Array Access
