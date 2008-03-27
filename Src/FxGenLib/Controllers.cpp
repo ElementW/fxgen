@@ -29,7 +29,7 @@
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NController, NObject);
+FIMPLEMENT_CLASS(NController, NObject);
 
 static NVarsBlocDesc blocdescControllersOp[] =
 {

@@ -43,7 +43,7 @@
 class FXGEN_API NRotoZoomOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NRotoZoomOp();
 	virtual ~NRotoZoomOp();
@@ -65,7 +65,7 @@ public:
 class FXGEN_API NDistortOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NDistortOp();
 
@@ -86,7 +86,7 @@ public:
 class FXGEN_API NVortexOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NVortexOp();
 
@@ -107,7 +107,7 @@ public:
 class FXGEN_API NLookupOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NLookupOp();
 
@@ -128,7 +128,7 @@ public:
 class NCraterOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NCraterOp();
 
@@ -149,7 +149,7 @@ public:
 class NCraterSphereOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NCraterSphereOp();
 

@@ -45,7 +45,7 @@
 class FXGEN_API NBlurOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NBlurOp();
 
@@ -65,7 +65,7 @@ public:
 class FXGEN_API NColorsOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NColorsOp();
 
@@ -86,7 +86,7 @@ public:
 class FXGEN_API NLightOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NLightOp();
 
@@ -107,7 +107,7 @@ public:
 class FXGEN_API NNormalsOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NNormalsOp();
 
@@ -127,7 +127,7 @@ public:
 class FXGEN_API NAbnormalsOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NAbnormalsOp();
 
@@ -147,7 +147,7 @@ public:
 class FXGEN_API NSlopeMagnitudeOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NSlopeMagnitudeOp();
 
@@ -168,7 +168,7 @@ public:
 class FXGEN_API NInvertOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x009696c0;	}
@@ -186,7 +186,7 @@ public:
 class FXGEN_API NThresholdOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NThresholdOp();
 
@@ -206,7 +206,7 @@ public:
 class FXGEN_API NAlphaOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NAlphaOp();
 
@@ -226,7 +226,7 @@ public:
 class FXGEN_API NSegmentOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NSegmentOp();
 
@@ -247,7 +247,7 @@ public:
 class FXGEN_API NDilateOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NDilateOp();
 
@@ -268,7 +268,7 @@ public:
 class FXGEN_API NAlphaMaskOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NAlphaMaskOp();
 

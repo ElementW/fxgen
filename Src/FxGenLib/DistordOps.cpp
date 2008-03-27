@@ -30,7 +30,7 @@
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NRotoZoomOp, NOperator);
+FIMPLEMENT_CLASS(NRotoZoomOp, NOperator);
 
 static NMapVarsBlocDesc mapblocdescRotoZoomOp[] =
 {
@@ -216,7 +216,7 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NDistortOp, NOperator);
+FIMPLEMENT_CLASS(NDistortOp, NOperator);
 
 static NVarsBlocDesc blocdescDistortOp[] =
 {
@@ -344,7 +344,7 @@ udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NVortexOp, NOperator);
+FIMPLEMENT_CLASS(NVortexOp, NOperator);
 
 static NVarsBlocDesc blocdescVortexOp[] =
 {
@@ -488,7 +488,7 @@ udword NVortexOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NLookupOp, NOperator);
+FIMPLEMENT_CLASS(NLookupOp, NOperator);
 
 NLookupOp::NLookupOp()
 {

@@ -12,6 +12,9 @@ int main()
   //Load a new module (or plugins)
   HMODULE hmod = LoadLibrary("libVector_D.dll");
 
+  if (NEngineOp::GetEngine()->LoadProject("D:\\Temp\\Cle\\FxGen\\Datas\\Bricks.prj"))
+    cout << "Project loaded" << endl;
+
   //Display RTClass by Modules
   NRTClassModule* pmod = NRTClassModule::m_pFirstRTClassModule;
   while (pmod)

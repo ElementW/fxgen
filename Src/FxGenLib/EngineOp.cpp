@@ -138,7 +138,7 @@ bool NOperator::Load(NArchive* _l)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NOperatorsPage, NObject);
+FIMPLEMENT_CLASS(NOperatorsPage, NObject);
 
 //-----------------------------------------------------------------
 // Constructor

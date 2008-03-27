@@ -120,7 +120,7 @@ public:
 class FXGEN_API NOperatorsPage : public NObject
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NOperatorsPage();
 	virtual ~NOperatorsPage();

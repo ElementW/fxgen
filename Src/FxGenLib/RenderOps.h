@@ -56,7 +56,7 @@
 class FXGEN_API NFlatOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NFlatOp();
 
@@ -76,7 +76,7 @@ public:
 class FXGEN_API NCloudOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NCloudOp();
 
@@ -109,7 +109,7 @@ public:
 class FXGEN_API NGradientOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NGradientOp();
 
@@ -130,7 +130,7 @@ public:
 class FXGEN_API NCellOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NCellOp();
 
@@ -150,7 +150,7 @@ public:
 class FXGEN_API NNoiseOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NNoiseOp();
 
@@ -170,7 +170,7 @@ public:
 /*class FXGEN_API NVectorOp : public NOperator
 {
 public:
-	DECLARE_CLASS();
+	FDECLARE_CLASS();
 
 	NVectorOp();
 	~NVectorOp();

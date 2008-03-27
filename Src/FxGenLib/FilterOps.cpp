@@ -32,7 +32,7 @@
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NBlurOp, NOperator);
+FIMPLEMENT_CLASS(NBlurOp, NOperator);
 
 static NMapVarsBlocDesc mapblocdescBlurOp[] =
 {
@@ -294,7 +294,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NColorsOp, NOperator);
+FIMPLEMENT_CLASS(NColorsOp, NOperator);
 
 static NMapVarsBlocDesc mapblocdescColorsOp[] =
 {
@@ -464,7 +464,7 @@ ubyte NColorsOp::ToRGB1(float rm1, float rm2, float rh)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NLightOp, NOperator);
+FIMPLEMENT_CLASS(NLightOp, NOperator);
 
 static NVarsBlocDesc blocdescLightOp[] =
 {
@@ -612,7 +612,7 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NNormalsOp, NOperator);
+FIMPLEMENT_CLASS(NNormalsOp, NOperator);
 
 static NVarsBlocDesc blocdescNormalsOp[] =
 {
@@ -735,7 +735,7 @@ udword NNormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NAbnormalsOp, NOperator);
+FIMPLEMENT_CLASS(NAbnormalsOp, NOperator);
 
 static NVarsBlocDesc blocdescAbnormalsOp[] =
 {
@@ -870,7 +870,7 @@ udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NSlopeMagnitudeOp, NOperator);
+FIMPLEMENT_CLASS(NSlopeMagnitudeOp, NOperator);
 
 static NVarsBlocDesc blocdescNSlopeMagnitudeOp[] =
 {
@@ -999,7 +999,7 @@ udword NSlopeMagnitudeOp::Process(float _ftime, NOperator** _pOpsInts, float _fD
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NInvertOp, NOperator);
+FIMPLEMENT_CLASS(NInvertOp, NOperator);
 
 udword NInvertOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
@@ -1046,7 +1046,7 @@ udword NInvertOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NThresholdOp, NOperator);
+FIMPLEMENT_CLASS(NThresholdOp, NOperator);
 
 static NVarsBlocDesc blocdescThresholdOp[] =
 {
@@ -1185,7 +1185,7 @@ udword NThresholdOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NAlphaOp, NOperator);
+FIMPLEMENT_CLASS(NAlphaOp, NOperator);
 
 NAlphaOp::NAlphaOp(){}
 
@@ -1236,7 +1236,7 @@ udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NSegmentOp, NOperator);
+FIMPLEMENT_CLASS(NSegmentOp, NOperator);
 
 static NVarsBlocDesc blocdescSegmentOp[] =
 {
@@ -1348,7 +1348,7 @@ udword NSegmentOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NDilateOp, NOperator);
+FIMPLEMENT_CLASS(NDilateOp, NOperator);
 
 
 static NVarsBlocDesc blocdescDilateOp[] =
@@ -1440,7 +1440,7 @@ udword NDilateOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-IMPLEMENT_CLASS(NAlphaMaskOp, NOperator);
+FIMPLEMENT_CLASS(NAlphaMaskOp, NOperator);
 
 
 static NVarsBlocDesc blocdescAlphaMaskOp[] =

@@ -22,9 +22,13 @@ END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS(wxOperatorsCtrl, wxControl)
 
+//-----------------------------------------------------------------
+//!	\brief	Constructor
+//-----------------------------------------------------------------
 wxOperatorsCtrl::wxOperatorsCtrl(wxWindow *parent, wxWindowID id,
                const wxPoint& pos, const wxSize& size, long style,
                const wxValidator &validator,  const wxString& name)
     : wxControl(parent, id, pos, size, style, validator, name)
 {
+
 }
