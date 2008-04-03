@@ -17,6 +17,7 @@
 
 BEGIN_EVENT_TABLE(wxProjectTreeCtrl, wxTreeCtrl)
 //EVT_COMMAND  (wsID_FXGEN_PRJ_NEW, wxEVT_FXGEN_PROJECT, wxProjectTreeCtrl::OnFxGenProjectNew)
+  EVT_TREE_SEL_CHANGED(-1, wxProjectTreeCtrl::OnTreeSelChanged)
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS(wxProjectTreeCtrl, wxTreeCtrl)
@@ -71,7 +72,8 @@ void wxProjectTreeCtrl::DisplayFxGenProject(NTreeNode* _prootNode)
 	m_prootNode = _prootNode;
 
 	//Make Items From TreeNodes
-	wxTreeItemId pitemRoot = AddRoot(_T("Root"));
+	wxFxGenItemData* pitemData = new wxFxGenItemData(NULL);
+	wxTreeItemId pitemRoot = AddRoot(_T("Root"),-1,-1,pitemData);
 	_AddItemsFromTreeNodes(m_prootNode, pitemRoot);
 
 }
@@ -83,14 +85,16 @@ void wxProjectTreeCtrl::_AddItemsFromTreeNodes(NTreeNode* _pparentNode, wxTreeIt
 	while (pnode)
 	{
 		//Parent
-		wxTreeItemId pitem = AppendItem(_pparentItem, wxString::FromAscii(pnode->GetName()) );//new QTreeWidgetItem(_pparentItem);
+    wxFxGenItemData* pitemData = new wxFxGenItemData(pnode);
+		wxTreeItemId pitem = AppendItem(_pparentItem, wxString::FromAscii(pnode->GetName()),-1,-1, pitemData );
 
 		//Objects array
 		NObjectArray& array = pnode->GetObjsArray();
 		for (udword i=0; i<array.Count(); i++)
 		{
 			NObject* pobj = array[i];
-			wxTreeItemId pitemObs = AppendItem(pitem, wxString::FromAscii(pobj->GetName()) );//new QTreeWidgetItem(pitem);
+	    wxFxGenItemData* pitemData = new wxFxGenItemData(pobj);
+			wxTreeItemId pitemObs = AppendItem(pitem, wxString::FromAscii(pobj->GetName()),-1,-1, pitemData );
 		}
 
 		//Son Nodes
@@ -102,28 +106,18 @@ void wxProjectTreeCtrl::_AddItemsFromTreeNodes(NTreeNode* _pparentNode, wxTreeIt
 
 }
 
-/*
-void QProjectsTreeWidget::selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected )
+
+//-----------------------------------------------------------------
+//!	\brief	Return Selected Operator Page
+//-----------------------------------------------------------------
+NOperatorsPage* wxProjectTreeCtrl::GetSelectedPage()
 {
-	//QMessageBox::warning(this, tr("Application"), tr("QProjectsTreeWidget::currentItemChanged"));
-
-	//GetFxGen Page
-	NOperatorsPage* ppage = GetSelectedPage();
-
-	///Emit Signal
-	emit FxGenProjectSelPageChanged(ppage);
-}
-
-
-NOperatorsPage* QProjectsTreeWidget::GetSelectedPage()
-{
-	QTreeWidgetItem* pitem = currentItem();
-
+	wxTreeItemId itemSel = GetSelection();
 
 	//Get Selected Object
-	NObject* pobj = GetSelectedItemObj();
+	NObject* pobj = ((wxFxGenItemData*)GetItemData(itemSel))->m_pobj;
 
-	//Check if selected item is a TreeNode
+	//Check if selected item is a NOperatorsPage
 	if (pobj!=null)
 	{
 		if (strcmp(pobj->GetRTClass()->m_pszClassName, "NOperatorsPage")==0 )
@@ -132,4 +126,19 @@ NOperatorsPage* QProjectsTreeWidget::GetSelectedPage()
 
 	return null;
 }
-*/
+
+//-----------------------------------------------------------------
+//!	\brief	Event Tree Item Sel Changed
+//-----------------------------------------------------------------
+void wxProjectTreeCtrl::OnTreeSelChanged(wxTreeEvent& event)
+{
+  NOperatorsPage* ppage = GetSelectedPage();
+  if (ppage)
+  {
+    wxCommandEvent  fxevent( wxEVT_FXGEN_PROJECT, wsID_FXGEN_PAGE_CHANGED);
+    fxevent.SetClientData(ppage);
+    fxevent.SetEventObject( this );
+    wxPostEvent( GetEventHandler(), fxevent );
+  }
+
+}

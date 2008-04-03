@@ -7,6 +7,18 @@
 #include "..\Src\FxGenLib\Core.h"
 #include "..\Src\FxGenLib\EngineOp.h"
 
+
+class wxFxGenItemData : public wxTreeItemData
+{
+  public:
+    wxFxGenItemData(NObject* _pobj) : wxTreeItemData()
+    {
+      m_pobj = _pobj;
+    }
+
+    NObject* m_pobj;
+};
+
 class wxProjectTreeCtrl : public wxTreeCtrl
 {
     DECLARE_DYNAMIC_CLASS(wxProjectTreeCtrl)
@@ -21,49 +33,21 @@ public:
                const wxValidator &validator = wxDefaultValidator,
                const wxString& name = wxTreeCtrlNameStr);
 
+  //Events
+  DECLARE_EVENT_TABLE()
+  void OnTreeSelChanged(wxTreeEvent& event);
+
   //FxGen Events
-    DECLARE_EVENT_TABLE()
-    virtual void OnFxGenProjectLoaded( wxCommandEvent& event );
-    virtual void OnFxGenProjectNew( wxCommandEvent& event );
+  virtual void OnFxGenProjectLoaded( wxCommandEvent& event );
+  virtual void OnFxGenProjectNew( wxCommandEvent& event );
 
   //Methods
   void DisplayFxGenProject(NTreeNode* _prootNode);
   void _AddItemsFromTreeNodes(NTreeNode* _pparentNode, wxTreeItemId _pparentItem);
+	NOperatorsPage* GetSelectedPage();
 
   //Datas
   NTreeNode *m_prootNode;
 };
-
-
-/*
-class QProjectsTreeWidget : public QTreeWidget
-{
-    Q_OBJECT
-
-public:
-    QProjectsTreeWidget(QWidget *parent = 0);
-
-//Send Signals
-signals:
-	void FxGenProjectSelPageChanged(NOperatorsPage* _ppage);
-
-//Received signals
-public slots:
-	void FxGenProjectLoaded();
-
-protected:
-	//Methods
-	void DisplayFxGenProject(NTreeNode* _prootNode);
-	void _AddItemsFromTreeNodes(NTreeNode* _pparentNode, QTreeWidgetItem* _pparentItem);
-	NOperatorsPage* GetSelectedPage();
-
-	virtual void selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected );
-
-
-	//Datas
-	NTreeNode* m_prootNode;	//!< Root Node Ptr
-};
-*/
-
 
 #endif // PROJECTTREEWIDGET_H_INCLUDED

@@ -2,8 +2,9 @@
 #define EVENTSLIST_H_INCLUDED
 
 //Events Identifiers
-#define   wsID_FXGEN_PRJ_NEW         wxID_HIGHEST + 1
-#define   wsID_FXGEN_PRJ_LOADED      wxID_HIGHEST + 2
+#define   wsID_FXGEN_PRJ_NEW          wxID_HIGHEST + 1
+#define   wsID_FXGEN_PRJ_LOADED       wxID_HIGHEST + 2
+#define   wsID_FXGEN_PAGE_CHANGED     wxID_HIGHEST + 3
 
 //Events Types
 BEGIN_DECLARE_EVENT_TYPES()

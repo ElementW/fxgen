@@ -133,7 +133,6 @@ void FxGenEditorFrame::OnNew( wxCommandEvent& event )
 void FxGenEditorFrame::OnOpen( wxCommandEvent& event )
 {
   wxString filename = wxFileSelector(_("Choose a FxGen file to open"));
-  //wxString filename = _T("D:\\Temp\\Cle\\FxGen\\Datas\\Bricks.prj");
 
   if ( !filename.empty() )
   {
@@ -141,10 +140,9 @@ void FxGenEditorFrame::OnOpen( wxCommandEvent& event )
     NEngineOp::GetEngine()->Clear();
 
     //Emit Event if project loaded
-    //if (NEngineOp::GetEngine()->LoadProject("D:\\Temp\\Cle\\FxGen\\Datas\\Bricks.prj"))
     if ( NEngineOp::GetEngine()->LoadProject(filename.ToAscii() )==true)
     {
-      wxMessageBox(filename.c_str(), _("FxGen"));
+      //wxMessageBox(filename.c_str(), _("FxGen"));
 
       //wxEvent(int winid = 0, wxEventType commandType = wxEVT_NULL );
       wxCommandEvent  fxevent( wxEVT_FXGEN_PROJECT, wsID_FXGEN_PRJ_LOADED);
