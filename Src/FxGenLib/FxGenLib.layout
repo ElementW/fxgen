@@ -2,7 +2,7 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug|Win32" />
 	<File name="Archive.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="837" topLine="0" />
+		<Cursor position="1187" topLine="0" />
 	</File>
 	<File name="Archive.h" open="0" top="0" tabpos="0">
 		<Cursor position="933" topLine="0" />
@@ -10,49 +10,49 @@
 	<File name="Bitmap.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="1225" topLine="0" />
 	</File>
-	<File name="Bitmap.h" open="1" top="0" tabpos="12">
+	<File name="Bitmap.h" open="0" top="0" tabpos="12">
 		<Cursor position="2899" topLine="64" />
 	</File>
-	<File name="CombineOps.cpp" open="1" top="0" tabpos="4">
+	<File name="CombineOps.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="21874" topLine="709" />
 	</File>
-	<File name="CombineOps.h" open="1" top="0" tabpos="13">
+	<File name="CombineOps.h" open="0" top="0" tabpos="13">
 		<Cursor position="5297" topLine="132" />
 	</File>
-	<File name="Controllers.cpp" open="1" top="0" tabpos="8">
+	<File name="Controllers.cpp" open="0" top="0" tabpos="8">
 		<Cursor position="1249" topLine="0" />
 	</File>
-	<File name="Controllers.h" open="1" top="0" tabpos="11">
+	<File name="Controllers.h" open="0" top="0" tabpos="11">
 		<Cursor position="1611" topLine="6" />
 	</File>
-	<File name="Core.cpp" open="1" top="0" tabpos="1">
+	<File name="Core.cpp" open="0" top="0" tabpos="1">
 		<Cursor position="32266" topLine="1061" />
 	</File>
-	<File name="Core.h" open="1" top="0" tabpos="2">
+	<File name="Core.h" open="0" top="0" tabpos="2">
 		<Cursor position="15496" topLine="407" />
 	</File>
-	<File name="DistordOps.cpp" open="1" top="0" tabpos="9">
+	<File name="DistordOps.cpp" open="0" top="0" tabpos="9">
 		<Cursor position="14685" topLine="449" />
 	</File>
-	<File name="DistordOps.h" open="1" top="0" tabpos="14">
+	<File name="DistordOps.h" open="0" top="0" tabpos="14">
 		<Cursor position="4737" topLine="110" />
 	</File>
-	<File name="EngineOp.cpp" open="1" top="0" tabpos="3">
+	<File name="EngineOp.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="4146" topLine="140" />
 	</File>
-	<File name="EngineOp.h" open="1" top="0" tabpos="6">
+	<File name="EngineOp.h" open="0" top="0" tabpos="6">
 		<Cursor position="4427" topLine="122" />
 	</File>
-	<File name="FilterOps.cpp" open="1" top="0" tabpos="10">
+	<File name="FilterOps.cpp" open="0" top="0" tabpos="10">
 		<Cursor position="40437" topLine="1401" />
 	</File>
-	<File name="FilterOps.h" open="1" top="0" tabpos="15">
+	<File name="FilterOps.h" open="0" top="0" tabpos="15">
 		<Cursor position="8584" topLine="229" />
 	</File>
-	<File name="MainOps.cpp" open="1" top="0" tabpos="7">
+	<File name="MainOps.cpp" open="0" top="0" tabpos="7">
 		<Cursor position="4921" topLine="182" />
 	</File>
-	<File name="MainOps.h" open="1" top="0" tabpos="16">
+	<File name="MainOps.h" open="0" top="0" tabpos="16">
 		<Cursor position="3784" topLine="76" />
 	</File>
 	<File name="Maths.h" open="0" top="0" tabpos="0">
@@ -61,7 +61,7 @@
 	<File name="RectangularArray.h" open="0" top="0" tabpos="0">
 		<Cursor position="755" topLine="0" />
 	</File>
-	<File name="RenderOps.cpp" open="1" top="0" tabpos="5">
+	<File name="RenderOps.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="20006" topLine="701" />
 	</File>
 	<File name="RenderOps.h" open="0" top="0" tabpos="3">

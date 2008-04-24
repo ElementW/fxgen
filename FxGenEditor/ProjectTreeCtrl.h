@@ -29,7 +29,7 @@ public:
     wxProjectTreeCtrl(wxWindow *parent, wxWindowID id = wxID_ANY,
                const wxPoint& pos = wxDefaultPosition,
                const wxSize& size = wxDefaultSize,
-               long style = wxTR_DEFAULT_STYLE,
+               long style = wxTR_HAS_BUTTONS|wxTR_SINGLE|wxTR_EDIT_LABELS|wxTR_ROW_LINES|wxTR_HIDE_ROOT|wxTR_FULL_ROW_HIGHLIGHT,
                const wxValidator &validator = wxDefaultValidator,
                const wxString& name = wxTreeCtrlNameStr);
 

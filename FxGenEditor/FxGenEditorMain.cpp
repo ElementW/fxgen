@@ -68,7 +68,7 @@ FxGenEditorFrame::FxGenEditorFrame(wxFrame *frame) : GUIFrame(frame)
   m_mgr.SetManagedWindow(this);
 
   // create several text controls
-  wxProjectTreeCtrl*    pprojectCtrl = new wxProjectTreeCtrl(this, -1, wxDefaultPosition, wxSize(200,150), wxNO_BORDER);
+  wxProjectTreeCtrl*    pprojectCtrl = new wxProjectTreeCtrl(this, -1, wxDefaultPosition, wxSize(200,150));
   wxOperatorResultCtrl* presultCtrl = new wxOperatorResultCtrl(this, -1, wxDefaultPosition, wxSize(200,150), wxNO_BORDER);
   wxOperatorsCtrl*      poperatorCtrl = new wxOperatorsCtrl(this, -1, wxDefaultPosition, wxSize(200,150), wxNO_BORDER);
   wxPropertiesCtrl*     ppropertiesCtrl = new wxPropertiesCtrl(this, -1, wxDefaultPosition, wxSize(200,150), wxNO_BORDER);

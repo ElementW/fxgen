@@ -73,7 +73,7 @@ void wxProjectTreeCtrl::DisplayFxGenProject(NTreeNode* _prootNode)
 
 	//Make Items From TreeNodes
 	wxFxGenItemData* pitemData = new wxFxGenItemData(NULL);
-	wxTreeItemId pitemRoot = AddRoot(_T("Root"),-1,-1,pitemData);
+	wxTreeItemId pitemRoot = AddRoot(_T(".Root"),-1,-1,pitemData);
 	_AddItemsFromTreeNodes(m_prootNode, pitemRoot);
 
 }

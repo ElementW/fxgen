@@ -12,6 +12,7 @@
 
 // basic wxWidgets headers
 #include <wx/wxprec.h>
+#include <wx/dcbuffer.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -25,5 +26,8 @@
 //  #include "..\Src\FxGenLib\Core.h"
 //  #include "..\Src\FxGenLib\EngineOp.h"
 #endif // WX_PRECOMP
+
+
+
 
 #endif // WX_PCH_H_INCLUDED

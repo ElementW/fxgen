@@ -1,6 +1,7 @@
 # depslib dependency file v1.0
-1205941072 source:d:\temp\cle\fxgen\fxgeneditor\wx_pch.h
+1208953970 source:d:\temp\cle\fxgen\fxgeneditor\wx_pch.h
 	<wx/wxprec.h>
+	<wx/dcbuffer.h>
 	<wx/wx.h>
 
 1186411292 c:\wxwidgets-2.8.7\include\wx\wxprec.h
@@ -1750,12 +1751,12 @@
 
 1186411252 c:\wxwidgets-2.8.7\include\wx\msw\filedlg.h
 
-1205940177 source:d:\temp\cle\fxgen\fxgeneditor\guiframe.cpp
+1209044809 source:d:\temp\cle\fxgen\fxgeneditor\guiframe.cpp
 	"wx/wxprec.h"
 	<wx/wx.h>
 	"GUIFrame.h"
 
-1205940177 d:\temp\cle\fxgen\fxgeneditor\guiframe.h
+1208857653 d:\temp\cle\fxgen\fxgeneditor\guiframe.h
 	<wx/string.h>
 	<wx/bitmap.h>
 	<wx/image.h>
@@ -1768,7 +1769,7 @@
 	<wx/statusbr.h>
 	<wx/frame.h>
 
-1205760596 source:d:\temp\cle\fxgen\fxgeneditor\resource.rc
+1208857653 source:d:\temp\cle\fxgen\fxgeneditor\resource.rc
 	"wx/msw/wx.rc"
 
 1186411252 c:\wxwidgets-2.8.7\include\wx\msw\wx.rc
@@ -1789,7 +1790,7 @@
 
 1186411252 c:\wxwidgets-2.8.7\include\wx\msw\rcdefs.h
 
-1207134507 source:d:\temp\cle\fxgen\fxgeneditor\fxgeneditormain.cpp
+1209045764 source:d:\temp\cle\fxgen\fxgeneditor\fxgeneditormain.cpp
 	"wx_pch.h"
 	"FxGenEditorMain.h"
 	"EventsList.h"
@@ -1800,21 +1801,22 @@
 	"..\Src\FxGenLib\Core.h"
 	"..\Src\FxGenLib\EngineOp.h"
 
-1205941072 d:\temp\cle\fxgen\fxgeneditor\wx_pch.h
+1208953970 d:\temp\cle\fxgen\fxgeneditor\wx_pch.h
 	<wx/wxprec.h>
+	<wx/dcbuffer.h>
 	<wx/wx.h>
 
-1206017289 d:\temp\cle\fxgen\fxgeneditor\fxgeneditormain.h
+1208857653 d:\temp\cle\fxgen\fxgeneditor\fxgeneditormain.h
 	<wx/wx.h>
 	"wx/aui/aui.h"
 	<wx/treectrl.h>
 	"FxGenEditorApp.h"
 	"GUIFrame.h"
 
-1206020074 d:\temp\cle\fxgen\fxgeneditor\fxgeneditorapp.h
+1208857653 d:\temp\cle\fxgen\fxgeneditor\fxgeneditorapp.h
 	<wx/app.h>
 
-1206542814 source:d:\temp\cle\fxgen\fxgeneditor\fxgeneditorapp.cpp
+1208857653 source:d:\temp\cle\fxgen\fxgeneditor\fxgeneditorapp.cpp
 	"wx_pch.h"
 	"FxGenEditorApp.h"
 	"FxGenEditorMain.h"
@@ -1915,7 +1917,7 @@
 	"wx/treebase.h"
 	"wx/hashmap.h"
 
-1206543901 d:\temp\cle\fxgen\src\fxgenlib\core.h
+1208857628 d:\temp\cle\fxgen\src\fxgenlib\core.h
 	"gcccompat/gcccompat.h"
 	"Maths.h"
 	"Stream.h"
@@ -1923,24 +1925,24 @@
 	"Bitmap.h"
 	"Controllers.h"
 
-1206028251 d:\temp\cle\fxgen\src\fxgenlib\maths.h
+1208857628 d:\temp\cle\fxgen\src\fxgenlib\maths.h
 
-1206028250 d:\temp\cle\fxgen\src\fxgenlib\stream.h
+1208857628 d:\temp\cle\fxgen\src\fxgenlib\stream.h
 	"Core.h"
 
-1206028251 d:\temp\cle\fxgen\src\fxgenlib\archive.h
+1208857628 d:\temp\cle\fxgen\src\fxgenlib\archive.h
 	"Core.h"
 
-1206543902 d:\temp\cle\fxgen\src\fxgenlib\bitmap.h
+1208857628 d:\temp\cle\fxgen\src\fxgenlib\bitmap.h
 	"Core.h"
 
-1206543902 d:\temp\cle\fxgen\src\fxgenlib\controllers.h
+1208857628 d:\temp\cle\fxgen\src\fxgenlib\controllers.h
 	"Core.h"
 
-1206543901 d:\temp\cle\fxgen\src\fxgenlib\engineop.h
+1208857628 d:\temp\cle\fxgen\src\fxgenlib\engineop.h
 	"Core.h"
 
-1206028248 d:\temp\cle\fxgen\src\gcccompat\gcccompat.h
+1208857613 d:\temp\cle\fxgen\src\gcccompat\gcccompat.h
 	<sys/types.h>
 	<string.h>
 	<stdio.h>
@@ -1953,49 +1955,54 @@
 	<commctrl.h>
 	<richedit.h>
 
-1207139743 d:\temp\cle\fxgen\fxgeneditor\eventslist.h
+1209045376 d:\temp\cle\fxgen\fxgeneditor\eventslist.h
 
-1207141839 source:d:\temp\cle\fxgen\fxgeneditor\projecttreectrl.cpp
+1209044906 source:d:\temp\cle\fxgen\fxgeneditor\projecttreectrl.cpp
 	"EventsList.h"
 	"wx_pch.h"
 	"EventsList.h"
 	"ProjectTreeCtrl.h"
 
-1207140686 d:\temp\cle\fxgen\fxgeneditor\projecttreectrl.h
+1209045083 d:\temp\cle\fxgen\fxgeneditor\projecttreectrl.h
 	<wx/wx.h>
 	<wx/treectrl.h>
 	"..\Src\FxGenLib\Core.h"
 	"..\Src\FxGenLib\EngineOp.h"
 
-1206022613 source:d:\temp\cle\fxgen\fxgeneditor\operatorresultctrl.cpp
+1208857653 source:d:\temp\cle\fxgen\fxgeneditor\operatorresultctrl.cpp
 	"EventsList.h"
 	"wx_pch.h"
 	"EventsList.h"
 	"OperatorResultCtrl.h"
 
-1206022657 d:\temp\cle\fxgen\fxgeneditor\operatorresultctrl.h
+1208857653 d:\temp\cle\fxgen\fxgeneditor\operatorresultctrl.h
 	<wx/wx.h>
 	<wx/control.h>
 
-1207223567 source:d:\temp\cle\fxgen\fxgeneditor\operatorsctrl.cpp
+1209046158 source:d:\temp\cle\fxgen\fxgeneditor\operatorsctrl.cpp
 	"EventsList.h"
 	"wx_pch.h"
 	"EventsList.h"
 	"OperatorsCtrl.h"
 
-1207223346 d:\temp\cle\fxgen\fxgeneditor\operatorsctrl.h
+1209046332 d:\temp\cle\fxgen\fxgeneditor\operatorsctrl.h
 	<wx/wx.h>
 	<wx/control.h>
 	"..\Src\FxGenLib\Core.h"
 	"..\Src\FxGenLib\EngineOp.h"
 
-1206022884 source:d:\temp\cle\fxgen\fxgeneditor\propertiesctrl.cpp
+1208857653 source:d:\temp\cle\fxgen\fxgeneditor\propertiesctrl.cpp
 	"EventsList.h"
 	"wx_pch.h"
 	"EventsList.h"
 	"PropertiesCtrl.h"
 
-1206022855 d:\temp\cle\fxgen\fxgeneditor\propertiesctrl.h
+1208857653 d:\temp\cle\fxgen\fxgeneditor\propertiesctrl.h
 	<wx/wx.h>
 	<wx/control.h>
+
+1186411292 c:\wxwidgets-2.8.7\include\wx\dcbuffer.h
+	"wx/dcmemory.h"
+	"wx/dcclient.h"
+	"wx/window.h"
 
