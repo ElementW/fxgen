@@ -64,6 +64,9 @@ public:
   void Reset();
 	void DisplayOperatorsPage(NOperatorsPage* _popsPage);
 
+	//Members Access
+	NOperator*	GetMarkedShowOperator()		{ return m_popMarkedShow; }
+
   //Events
   DECLARE_EVENT_TABLE()
   void OnPaint(wxPaintEvent& event);
@@ -78,12 +81,23 @@ public:
 
 protected:
   //Methods
- 	void DisplayOperator(wxPaintDC* _pdc, NOperator* _pop);
+ 	void DisplayOperator(wxBufferedPaintDC* _pdc, NOperator* _pop);
   void GetOperatorRect(NOperator* _pop, wxRect& _rc);
-  void Draw3dRect(wxPaintDC* _pdc, const wxRect& _rc, const wxColor& _clrTopLeft, const wxColor& _clrBottomRight);
+  void Draw3dRect(wxBufferedPaintDC* _pdc, const wxRect& _rc, const wxColor& _clrTopLeft, const wxColor& _clrBottomRight);
+
+	bool IsMovedSelOperatorsCollide(sdword _dwoffsetX, sdword _dwoffsetY);
+	bool IsOpRectCollide(wxRect& _rcItemTest, bool _bExcludeSel);
+
+	NOperator*	GetOperatorAt(wxPoint& _pt, bool& _bResizeZone);
 
 	//Selection Methods
-	bool IsOperatorSelected(NOperator* pcbloc);
+	bool IsOperatorSelected(NOperator* _pcbloc);
+	void SelectOperatorsIntoRect(wxRect& _rc);
+	void SelectOperator(NOperator* _pop);
+
+	//Cursor Methods
+	void DisplayCursor(wxBufferedPaintDC* _pdc);
+  void SetCursorPos(sdword _dwX, sdword _dwY);
 
 	// Datas
 	float		m_fPosX, m_fPosY, m_fStartPosXPan, m_fStartPosYPan;
@@ -110,65 +124,29 @@ protected:
 	//Datas cursor
 	sdword	m_dwCursorX, m_dwCursorY;
 
-
 /*
 	void	PlaceOperator(ID CLASSID);
 
-	void	SelectOperator(NOperator* pop);
 	void	DeleteOperatorsSelected();
 
-	void	Update();	//!< MAJ de l'affichage
 	void	Update(float _ftime);
 
 	virtual void	OnMarkShowOperator(NOperator* pop);			//OVERLOAD
 	virtual void	OnDeletingOperator(NOperator* pop)	{}	//OVERRIDE
 	virtual void	OnDeletedOperator(NOperator* pop)		{}	//OVERRIDE
 
-	//Members Access
-	NOperator*	GetMarkedShowOperator()		{ return m_popMarkedShow; }
 
 protected:
 	// Internal methods
 	NOperator*	AddOperator(sword x, sword y, sword w, ID CLASSID);
 	void				DeleteOperator(NOperator* pop);
-	void				Reset();
 
-	NOperator*	GetOperatorAt(NPoint& pt, bool& bResizeZone);
 	void				UpdateCursor(NPoint& pt);
-	void				SelectOperatorsIntoRect(NRect& rc);
-	void				GetOperatorRect(NOperator* _pop, NRect& _rc);
-
-	void				DisplayOperator(NGraphics* _pdc, NOperator* _pop);
-
-	bool				IsMovedSelOperatorsCollide(sdword _dwoffsetX, sdword _dwoffsetY);
-	bool				IsOpRectCollide(NRect _rcItemTest, bool _bExcludeSel);
 
 	// Clipboard Methods
 	void CopyOperatorsSelectedToClipboard();
 	void PasteOperatorsFromClipboard();
 	void ClearClipboard();
-
-	//Selection Methods
-	bool				IsOperatorSelected(NOperator* pcbloc);
-
-	//Cursor Methods
-	void				DisplayCursor(NGraphics* _pdc);
-	void				SetCursorPos(sdword _dwX, sdword _dwY);
-
-
-protected:
-	//Win32 Messages Dispatching
-	virtual	void	OnPaint();
-	virtual void	OnSize();
-	virtual void	OnMouseMove(udword flags, NPoint pos );
-	virtual void	OnMButtonDown(udword flags, NPoint pos);
-	virtual void	OnMButtonUp(udword flags, NPoint pos);
-	virtual void	OnLeftButtonUp(udword flags, NPoint pos);
-	virtual void	OnLeftButtonDown(udword flags, NPoint pos);
-	virtual	void	OnLeftButtonDblClk(udword flags, NPoint point);
-	virtual void	OnRightButtonDown(udword flags, NPoint pos);
-	virtual	void	OnMouseWheel(udword flags, sword zDelta, NPoint pos);
-	virtual	void	OnKeyDown(udword dwchar);
 */
 };
 
