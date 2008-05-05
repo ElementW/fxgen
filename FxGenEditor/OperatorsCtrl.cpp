@@ -18,6 +18,8 @@
 //-----------------------------------------------------------------
 // 			Includes
 //-----------------------------------------------------------------
+#include "wx/wx.h"
+#include "wx/dcbuffer.h"
 #include "EventsList.h"
 
 #ifdef WX_PRECOMP
@@ -95,7 +97,7 @@ wxOperatorsCtrl::wxOperatorsCtrl(wxWindow *parent, wxWindowID id,
 //-----------------------------------------------------------------
 void wxOperatorsCtrl::OnPaint(wxPaintEvent& event)
 {
-  wxBufferedPaintDC dc(this); //Double buffered
+  wxAutoBufferedPaintDC dc(this); //Double buffered
 
 	/////////////////////////////////////////////////
   //Draw Background
@@ -407,7 +409,7 @@ void wxOperatorsCtrl::Reset()
 //-----------------------------------------------------------------
 //!	\brief  Display an operator
 //-----------------------------------------------------------------
-void wxOperatorsCtrl::DisplayOperator(wxBufferedPaintDC* _pdc, NOperator* _pop)
+void wxOperatorsCtrl::DisplayOperator(wxDC* _pdc, NOperator* _pop)
 {
   _pdc->SetPen(*wxTRANSPARENT_PEN);
 
@@ -435,7 +437,7 @@ void wxOperatorsCtrl::DisplayOperator(wxBufferedPaintDC* _pdc, NOperator* _pop)
 	if (m_popMarkedShow==_pop)
 	{
 	  brCap.SetColour(0,255,0);
- 	  _pdc->SetPen(*);
+ 	  _pdc->SetPen(*wxBLACK_PEN);
 	  _pdc->DrawRectangle(rcMark);
 	}
 
@@ -479,7 +481,7 @@ void wxOperatorsCtrl::DisplayOperator(wxBufferedPaintDC* _pdc, NOperator* _pop)
 //-----------------------------------------------------------------
 //!	\brief  Display cursor
 //-----------------------------------------------------------------
-void wxOperatorsCtrl::DisplayCursor(wxBufferedPaintDC* _pdc)
+void wxOperatorsCtrl::DisplayCursor(wxDC* _pdc)
 {
 	if (m_bMovingBloc)
 	{
@@ -563,7 +565,7 @@ void wxOperatorsCtrl::OnFxGenPageChanged( wxCommandEvent& event )
 //-----------------------------------------------------------------
 //!	\brief	Display 3D Rectangle
 //-----------------------------------------------------------------
-void wxOperatorsCtrl::Draw3dRect(wxBufferedPaintDC* _pdc, const wxRect& _rc, const wxColor& _clrTopLeft, const wxColor& _clrBottomRight)
+void wxOperatorsCtrl::Draw3dRect(wxDC* _pdc, const wxRect& _rc, const wxColor& _clrTopLeft, const wxColor& _clrBottomRight)
 {
   wxPen pen;
   pen.SetColour( _clrTopLeft );

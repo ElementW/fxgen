@@ -81,9 +81,9 @@ public:
 
 protected:
   //Methods
- 	void DisplayOperator(wxBufferedPaintDC* _pdc, NOperator* _pop);
+ 	void DisplayOperator(wxDC* _pdc, NOperator* _pop);
   void GetOperatorRect(NOperator* _pop, wxRect& _rc);
-  void Draw3dRect(wxBufferedPaintDC* _pdc, const wxRect& _rc, const wxColor& _clrTopLeft, const wxColor& _clrBottomRight);
+  void Draw3dRect(wxDC* _pdc, const wxRect& _rc, const wxColor& _clrTopLeft, const wxColor& _clrBottomRight);
 
 	bool IsMovedSelOperatorsCollide(sdword _dwoffsetX, sdword _dwoffsetY);
 	bool IsOpRectCollide(wxRect& _rcItemTest, bool _bExcludeSel);
@@ -96,7 +96,7 @@ protected:
 	void SelectOperator(NOperator* _pop);
 
 	//Cursor Methods
-	void DisplayCursor(wxBufferedPaintDC* _pdc);
+	void DisplayCursor(wxDC* _pdc);
   void SetCursorPos(sdword _dwX, sdword _dwY);
 
 	// Datas
