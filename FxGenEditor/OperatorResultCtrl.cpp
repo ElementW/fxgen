@@ -1,3 +1,5 @@
+#include "wx/wx.h"
+
 #include "EventsList.h"
 
 #ifdef WX_PRECOMP

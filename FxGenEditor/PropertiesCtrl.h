@@ -6,6 +6,8 @@
 
 extern const wxChar wxPropertiesCtrlNameStr[];
 
+class NOperator;
+
 class wxPropertiesCtrl : public wxControl
 {
     DECLARE_DYNAMIC_CLASS(wxPropertiesCtrl)
@@ -20,6 +22,11 @@ public:
                const wxValidator &validator = wxDefaultValidator,
                const wxString& name = wxPropertiesCtrlNameStr);
 
+    void OnOperatorSelectionChanged(wxCommandEvent& event);
+
+    void Update(NOperator* _pop);
+
+    wxSizer *m_psizer;
 
   //FxGen Events
     DECLARE_EVENT_TABLE()
