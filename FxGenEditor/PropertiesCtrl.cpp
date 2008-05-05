@@ -1,6 +1,7 @@
 #include "wx/wx.h"
 #include "wx/dcbuffer.h"
 #include "wx/clrpicker.h"
+#include "wx/tokenzr.h"
 
 #include "EventsList.h"
 
@@ -83,7 +84,7 @@ public:
       if(HasCapture())
       {
         sdword move = _event.GetX()-m_lastMouseX;
-        move *= abs(move); // Get some acceleration when moving fast
+        move *= 1+(abs(move)/5); // Get some acceleration when moving fast
         m_offset += move;
         m_lastMouseX = _event.GetX();
         Refresh();
@@ -331,6 +332,55 @@ protected:
   wxSizer* m_pSizer;
 };
 
+class NUbyteComboPropControl : public PropertyControl
+{
+  DECLARE_DYNAMIC_CLASS( NUbyteComboPropControl );
+
+public:
+  void Create( wxWindow* _pParent, NOperator* _pop, udword _dwIndex )
+  {
+    m_pop = _pop;
+    m_dwIndex = _dwIndex;
+
+    wxPanel::Create( _pParent );
+
+    m_pSizer = new wxBoxSizer( wxHORIZONTAL );
+    SetSizer( m_pSizer );
+
+    m_pComboBox = new wxComboBox( this, wxID_ANY, wxT( "" ), wxDefaultPosition, wxDefaultSize, 0, 0, wxCB_READONLY | wxCB_DROPDOWN );
+    m_pSizer->Add( m_pComboBox, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND );
+
+    wxStringTokenizer tokenizer( wxString::FromAscii( m_pop->m_pcvarsBloc->GetBlocDesc()[m_dwIndex].pszDefValue ), wxT(",[]") );
+    wxString defaultValue = tokenizer.GetNextToken();
+    while(tokenizer.HasMoreTokens())
+    {
+      m_pComboBox->Append(tokenizer.GetNextToken());
+    }
+    m_pComboBox->Delete(0); // Delete default item
+
+    ubyte bValue;
+    m_pop->m_pcvarsBloc->GetValue(m_dwIndex, 0.0f, bValue);
+    m_pComboBox->SetSelection(bValue);
+    
+    m_pSizer->Layout();
+
+    Connect(wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler(NUbyteComboPropControl::OnComboBox));
+  }
+
+  void OnComboBox(wxCommandEvent& _event)
+  {
+    ubyte bValue = m_pComboBox->GetSelection();
+    m_pop->m_pcvarsBloc->SetValue(m_dwIndex, 0.0f, bValue);
+  }
+
+protected:
+  udword m_dwIndex;
+  NOperator* m_pop;
+
+  wxComboBox* m_pComboBox;
+  wxSizer* m_pSizer;
+};
+
 class NUbytePropControl : public NumericPropControl<ubyte, 0>
 {
   DECLARE_DYNAMIC_CLASS( NUbytePropControl );
@@ -378,6 +428,7 @@ IMPLEMENT_DYNAMIC_CLASS( NUdwordPropControl, PropertyControl );
 IMPLEMENT_DYNAMIC_CLASS( NFloatPropControl, PropertyControl );
 IMPLEMENT_DYNAMIC_CLASS( NCFloatPropControl, PropertyControl );
 IMPLEMENT_DYNAMIC_CLASS( NColorPropControl, PropertyControl );
+IMPLEMENT_DYNAMIC_CLASS( NUbyteComboPropControl, PropertyControl );
 
 //-----------------------------------------------------------------
 //!	\brief	Event Operator Selection Changed
@@ -390,6 +441,8 @@ void wxPropertiesCtrl::OnOperatorSelectionChanged(wxCommandEvent& event)
 void wxPropertiesCtrl::Update(NOperator* _pop)
 {
   m_psizer->Clear( true );
+
+  Freeze();
 
   int maxWidth = 0;
   if( _pop && _pop->m_pcvarsBloc )
@@ -427,4 +480,6 @@ void wxPropertiesCtrl::Update(NOperator* _pop)
   }
 
   m_psizer->Layout();
+
+  Thaw();
 }
