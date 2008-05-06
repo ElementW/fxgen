@@ -386,41 +386,41 @@ class NUbytePropControl : public NumericPropControl<ubyte, 0>
 {
   DECLARE_DYNAMIC_CLASS( NUbytePropControl );
 };
-template<typename ContainedType, int Variant> ubyte NumericPropControl<ubyte, 0>::m_minValue = 0;
-template<typename ContainedType, int Variant> ubyte NumericPropControl<ubyte, 0>::m_maxValue = 255;
-template<typename ContainedType, int Variant> ubyte NumericPropControl<ubyte, 0>::m_valueScale = 1;
+template<> ubyte NumericPropControl<ubyte, 0>::m_minValue = 0;
+template<> ubyte NumericPropControl<ubyte, 0>::m_maxValue = 255;
+template<> ubyte NumericPropControl<ubyte, 0>::m_valueScale = 1;
 
 class NUwordPropControl : public NumericPropControl<uword, 0>
 {
   DECLARE_DYNAMIC_CLASS( NUwordPropControl );
 };
-template<typename ContainedType, int Variant> uword NumericPropControl<uword, 0>::m_minValue = 0;
-template<typename ContainedType, int Variant> uword NumericPropControl<uword, 0>::m_maxValue = 65535;
-template<typename ContainedType, int Variant> uword NumericPropControl<uword, 0>::m_valueScale = 1;
+template<> uword NumericPropControl<uword, 0>::m_minValue = 0;
+template<> uword NumericPropControl<uword, 0>::m_maxValue = 65535;
+template<> uword NumericPropControl<uword, 0>::m_valueScale = 1;
 
 class NUdwordPropControl : public NumericPropControl<udword, 0>
 {
   DECLARE_DYNAMIC_CLASS( NUdwordPropControl );
 };
-template<typename ContainedType, int Variant> udword NumericPropControl<udword, 0>::m_minValue = 0;
-template<typename ContainedType, int Variant> udword NumericPropControl<udword, 0>::m_maxValue = 4294967295;
-template<typename ContainedType, int Variant> udword NumericPropControl<udword, 0>::m_valueScale = 1;
+template<> udword NumericPropControl<udword, 0>::m_minValue = 0;
+template<> udword NumericPropControl<udword, 0>::m_maxValue = 4294967295;
+template<> udword NumericPropControl<udword, 0>::m_valueScale = 1;
 
 class NFloatPropControl : public NumericPropControl<float, 0>
 {
   DECLARE_DYNAMIC_CLASS( NFloatPropControl );
 };
-template<typename ContainedType, int Variant> float NumericPropControl<float, 0>::m_minValue = -FLT_MAX;
-template<typename ContainedType, int Variant> float NumericPropControl<float, 0>::m_maxValue = FLT_MAX;
-template<typename ContainedType, int Variant> float NumericPropControl<float, 0>::m_valueScale = 0.001f;
+template<> float NumericPropControl<float, 0>::m_minValue = -FLT_MAX;
+template<> float NumericPropControl<float, 0>::m_maxValue = FLT_MAX;
+template<> float NumericPropControl<float, 0>::m_valueScale = 0.001f;
 
 class NCFloatPropControl : public NumericPropControl<float, 1>
 {
   DECLARE_DYNAMIC_CLASS( NCFloatPropControl );
 };
-template<typename ContainedType, int Variant> float NumericPropControl<float, 1>::m_minValue = 0.0f;
-template<typename ContainedType, int Variant> float NumericPropControl<float, 1>::m_maxValue = 1.0f;
-template<typename ContainedType, int Variant> float NumericPropControl<float, 1>::m_valueScale = 0.001f;
+template<> float NumericPropControl<float, 1>::m_minValue = 0.0f;
+template<> float NumericPropControl<float, 1>::m_maxValue = 1.0f;
+template<> float NumericPropControl<float, 1>::m_valueScale = 0.001f;
 
 IMPLEMENT_ABSTRACT_CLASS( PropertyControl, wxPanel );
 IMPLEMENT_DYNAMIC_CLASS( NUbytePropControl, PropertyControl );
