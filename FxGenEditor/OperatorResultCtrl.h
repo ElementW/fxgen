@@ -51,6 +51,7 @@ name, attribList, palette) {};*/
     // erase part of the control
     virtual void EraseBackground(wxDC& dc, const wxRect& rect);
 
+    wxGLContext *m_pContext;
 };
 
 

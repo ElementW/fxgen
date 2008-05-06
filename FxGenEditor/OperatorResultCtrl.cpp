@@ -45,6 +45,7 @@ wxOperatorResultCtrl::wxOperatorResultCtrl(wxWindow *parent, wxWindowID id,
 {
   parent->Connect(wsID_FXGEN_OPSHOW_CHANGED, wxEVT_FXGEN_OPERATORSCTRL, wxCommandEventHandler( wxOperatorResultCtrl::OnFxGenOpShowChanged ),0,this);
 
+  m_pContext = new wxGLContext( this );
 }
 
 void wxOperatorResultCtrl::EraseBackground(wxDC& dc, const wxRect& rect)
@@ -67,10 +68,11 @@ void wxOperatorResultCtrl::OnFxGenOpShowChanged( wxCommandEvent& event )
 
 void wxOperatorResultCtrl::render( wxPaintEvent& evt )
 {
+    wxPaintDC(this); // only to be used in paint events. use wxClientDC to paint outside the paint event
+
     if(!IsShown()) return;
 
-    wxGLCanvas::SetCurrent();
-    wxPaintDC(this); // only to be used in paint events. use wxClientDC to paint outside the paint event
+    wxGLCanvas::SetCurrent( *m_pContext );
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
