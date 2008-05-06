@@ -7,6 +7,7 @@
 #define   wsID_FXGEN_PAGE_CHANGED     wxID_HIGHEST + 3
 
 #define   wsID_FXGEN_OPSEL_CHANGED    wxID_HIGHEST + 10
+#define   wsID_FXGEN_OPSHOW_CHANGED   wxID_HIGHEST + 11
 
 //Events Types
 BEGIN_DECLARE_EVENT_TYPES()

@@ -18,6 +18,7 @@
 
 //#include "..\Src\FxGenLib\Core.h"
 #include "..\Src\FxGenLib\EngineOp.h"
+#include "float.h"
 
 const wxChar wxPropertiesCtrlNameStr[] = wxT("PropertiesCtrl");
 
@@ -126,7 +127,7 @@ public:
     {
       wxSize textExtent = dc.GetTextExtent(m_text);
       dc.SetFont(wxFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
-      
+
       // Shadow
       dc.SetTextForeground(wxColor(m_textColor.Red()/2, m_textColor.Green()/2, m_textColor.Blue()/2));
       dc.DrawText( m_text, (w-textExtent.GetWidth())/2, (h-textExtent.GetHeight())/2 );
@@ -236,8 +237,8 @@ public:
 
     m_pColorPicker = new wxColourPickerCtrl( this, wxID_ANY );
     m_pSizer->Add( m_pColorPicker, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND );
-    
-    m_pSpinners[0] = new DragSpinner( this ); 
+
+    m_pSpinners[0] = new DragSpinner( this );
     m_pSpinners[1] = new DragSpinner( this );
     m_pSpinners[2] = new DragSpinner( this );
     m_pSpinners[3] = new DragSpinner( this );
@@ -261,10 +262,10 @@ public:
     ubyte red = color.Red();
     ubyte green = color.Green();
     ubyte blue = color.Blue();
-    
+
     udword dwColor;
     m_pop->m_pcvarsBloc->GetValue( m_dwIndex, 0.0f, dwColor );
-    
+
     dwColor &= 0xFF000000;
     dwColor |= red | (green << 8) | (blue << 16);
 
@@ -297,7 +298,7 @@ public:
         dwComponent = 255;
       else
         dwComponent += delta;
-      
+
       dwColor &= ~(0xFF<<(index*8));
       dwColor |= dwComponent << (index*8);
 
@@ -315,7 +316,7 @@ public:
     ubyte blue = ((dwColor >> 16) & 0xFF);
     ubyte alpha = ((dwColor >> 24) & 0xFF);
     // Different color values is because colors are not equally intense
-    m_pSpinners[0]->SetText( wxString() << red, wxColor(192, 0, 0) ); 
+    m_pSpinners[0]->SetText( wxString() << red, wxColor(192, 0, 0) );
     m_pSpinners[1]->SetText( wxString() << green, wxColor(0, 128, 0) );
     m_pSpinners[2]->SetText( wxString() << blue, wxColor(0, 0, 255) );
     m_pSpinners[3]->SetText( wxString() << alpha, wxColor(128, 128, 128) );
@@ -361,7 +362,7 @@ public:
     ubyte bValue;
     m_pop->m_pcvarsBloc->GetValue(m_dwIndex, 0.0f, bValue);
     m_pComboBox->SetSelection(bValue);
-    
+
     m_pSizer->Layout();
 
     Connect(wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler(NUbyteComboPropControl::OnComboBox));
@@ -385,41 +386,41 @@ class NUbytePropControl : public NumericPropControl<ubyte, 0>
 {
   DECLARE_DYNAMIC_CLASS( NUbytePropControl );
 };
-ubyte NumericPropControl<ubyte, 0>::m_minValue = 0;
-ubyte NumericPropControl<ubyte, 0>::m_maxValue = 255;
-ubyte NumericPropControl<ubyte, 0>::m_valueScale = 1;
+template<typename ContainedType, int Variant> ubyte NumericPropControl<ubyte, 0>::m_minValue = 0;
+template<typename ContainedType, int Variant> ubyte NumericPropControl<ubyte, 0>::m_maxValue = 255;
+template<typename ContainedType, int Variant> ubyte NumericPropControl<ubyte, 0>::m_valueScale = 1;
 
 class NUwordPropControl : public NumericPropControl<uword, 0>
 {
   DECLARE_DYNAMIC_CLASS( NUwordPropControl );
 };
-uword NumericPropControl<uword, 0>::m_minValue = 0;
-uword NumericPropControl<uword, 0>::m_maxValue = 65535;
-uword NumericPropControl<uword, 0>::m_valueScale = 1;
+template<typename ContainedType, int Variant> uword NumericPropControl<uword, 0>::m_minValue = 0;
+template<typename ContainedType, int Variant> uword NumericPropControl<uword, 0>::m_maxValue = 65535;
+template<typename ContainedType, int Variant> uword NumericPropControl<uword, 0>::m_valueScale = 1;
 
 class NUdwordPropControl : public NumericPropControl<udword, 0>
 {
   DECLARE_DYNAMIC_CLASS( NUdwordPropControl );
 };
-udword NumericPropControl<udword, 0>::m_minValue = 0;
-udword NumericPropControl<udword, 0>::m_maxValue = 4294967295;
-udword NumericPropControl<udword, 0>::m_valueScale = 1;
+template<typename ContainedType, int Variant> udword NumericPropControl<udword, 0>::m_minValue = 0;
+template<typename ContainedType, int Variant> udword NumericPropControl<udword, 0>::m_maxValue = 4294967295;
+template<typename ContainedType, int Variant> udword NumericPropControl<udword, 0>::m_valueScale = 1;
 
 class NFloatPropControl : public NumericPropControl<float, 0>
 {
   DECLARE_DYNAMIC_CLASS( NFloatPropControl );
 };
-float NumericPropControl<float, 0>::m_minValue = -FLT_MAX;
-float NumericPropControl<float, 0>::m_maxValue = FLT_MAX;
-float NumericPropControl<float, 0>::m_valueScale = 0.001f;
+template<typename ContainedType, int Variant> float NumericPropControl<float, 0>::m_minValue = -FLT_MAX;
+template<typename ContainedType, int Variant> float NumericPropControl<float, 0>::m_maxValue = FLT_MAX;
+template<typename ContainedType, int Variant> float NumericPropControl<float, 0>::m_valueScale = 0.001f;
 
 class NCFloatPropControl : public NumericPropControl<float, 1>
 {
   DECLARE_DYNAMIC_CLASS( NCFloatPropControl );
 };
-float NumericPropControl<float, 1>::m_minValue = 0.0f;
-float NumericPropControl<float, 1>::m_maxValue = 1.0f;
-float NumericPropControl<float, 1>::m_valueScale = 0.001f;
+template<typename ContainedType, int Variant> float NumericPropControl<float, 1>::m_minValue = 0.0f;
+template<typename ContainedType, int Variant> float NumericPropControl<float, 1>::m_maxValue = 1.0f;
+template<typename ContainedType, int Variant> float NumericPropControl<float, 1>::m_valueScale = 0.001f;
 
 IMPLEMENT_ABSTRACT_CLASS( PropertyControl, wxPanel );
 IMPLEMENT_DYNAMIC_CLASS( NUbytePropControl, PropertyControl );
@@ -452,7 +453,7 @@ void wxPropertiesCtrl::Update(NOperator* _pop)
     for( unsigned int i=0; i<_pop->m_pcvarsBloc->Count(); ++i )
     {
       wxBoxSizer* pRowSizer = new wxBoxSizer( wxHORIZONTAL );
-      wxStaticText* pText = new wxStaticText( this, wxID_ANY, wxString::FromAscii( _pop->m_pcvarsBloc->GetBlocDesc()[i].pszName ) + ":", wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+      wxStaticText* pText = new wxStaticText( this, wxID_ANY, wxString::FromAscii( _pop->m_pcvarsBloc->GetBlocDesc()[i].pszName ) /*+ ":"*/, wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
       if(pText->GetSize().GetWidth() > maxWidth)
         maxWidth = pText->GetSize().GetWidth();
       pRowSizer->Add( pText, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT | wxLEFT, 4 );
@@ -464,7 +465,7 @@ void wxPropertiesCtrl::Update(NOperator* _pop)
         pControl->Create( this, _pop, i );
         pControlWindow = pControl;
       } else {
-        pControlWindow = new wxStaticText( this, 0, wxT( "No control found for type '" ) + wxString::FromAscii( _pop->m_pcvarsBloc->GetBlocDesc()[i].pszCLASSGUI ) + "'" );
+        pControlWindow = new wxStaticText( this, 0, wxT( "No control found for type '" ) + wxString::FromAscii( _pop->m_pcvarsBloc->GetBlocDesc()[i].pszCLASSGUI ) /*+ "'"*/ );
       }
       pRowSizer->Add( pControlWindow, 1, wxEXPAND );
       m_psizer->Add( pRowSizer, 0 );

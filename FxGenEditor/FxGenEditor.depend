@@ -40,7 +40,7 @@
 	"wx/msw/gccpriv.h"
 	<AvailabilityMacros.h>
 
-1186411250 c:\wxwidgets-2.8.7\lib\gcc_dll\mswud\wx\setup.h
+1209913189 c:\wxwidgets-2.8.7\lib\gcc_dll\mswud\wx\setup.h
 
 1187335694 c:\wxwidgets-2.8.7\include\wx\chkconf.h
 	"wx/palmos/chkconf.h"
@@ -2005,4 +2005,194 @@
 	"wx/dcmemory.h"
 	"wx/dcclient.h"
 	"wx/window.h"
+
+1210072420 source:c:\datas\projects\fxgen\fxgeneditor\operatorresultctrl.cpp
+	"wx/wx.h"
+	"EventsList.h"
+	"wx_pch.h"
+	"EventsList.h"
+	"OperatorResultCtrl.h"
+
+1209413769 c:\datas\projects\fxgen\fxgeneditor\eventslist.h
+
+1209913085 c:\datas\projects\fxgen\fxgeneditor\wx_pch.h
+	<wx/wxprec.h>
+	<wx/dcbuffer.h>
+	<wx/wx.h>
+
+1210024540 c:\datas\projects\fxgen\fxgeneditor\operatorresultctrl.h
+	<wx/wx.h>
+	<wx/control.h>
+	<wx/glcanvas.h>
+	<wx/palette.h>
+
+1210073071 source:c:\datas\projects\fxgen\fxgeneditor\propertiesctrl.cpp
+	"wx/wx.h"
+	"wx/dcbuffer.h"
+	"wx/clrpicker.h"
+	"wx/tokenzr.h"
+	"EventsList.h"
+	"wx_pch.h"
+	"EventsList.h"
+	"PropertiesCtrl.h"
+	"..\Src\FxGenLib\EngineOp.h"
+	"float.h"
+
+1210072420 c:\datas\projects\fxgen\fxgeneditor\propertiesctrl.h
+	<wx/wx.h>
+	<wx/control.h>
+
+1206045268 source:c:\datas\projects\fxgen\fxgeneditor\resource.rc
+	"wx/msw/wx.rc"
+
+1207504228 source:c:\datas\projects\fxgen\fxgeneditor\fxgeneditorapp.cpp
+	"wx_pch.h"
+	"FxGenEditorApp.h"
+	"FxGenEditorMain.h"
+
+1206045268 c:\datas\projects\fxgen\fxgeneditor\fxgeneditorapp.h
+	<wx/app.h>
+
+1206045268 c:\datas\projects\fxgen\fxgeneditor\fxgeneditormain.h
+	<wx/wx.h>
+	"wx/aui/aui.h"
+	<wx/treectrl.h>
+	"FxGenEditorApp.h"
+	"GUIFrame.h"
+
+1206045268 c:\datas\projects\fxgen\fxgeneditor\guiframe.h
+	<wx/string.h>
+	<wx/bitmap.h>
+	<wx/image.h>
+	<wx/menu.h>
+	<wx/gdicmn.h>
+	<wx/font.h>
+	<wx/colour.h>
+	<wx/settings.h>
+	<wx/toolbar.h>
+	<wx/statusbr.h>
+	<wx/frame.h>
+
+1209913085 source:c:\datas\projects\fxgen\fxgeneditor\wx_pch.h
+	<wx/wxprec.h>
+	<wx/dcbuffer.h>
+	<wx/wx.h>
+
+1210023567 source:c:\datas\projects\fxgen\fxgeneditor\fxgeneditormain.cpp
+	"wx_pch.h"
+	"FxGenEditorMain.h"
+	"EventsList.h"
+	"ProjectTreeCtrl.h"
+	"OperatorsCtrl.h"
+	"OperatorResultCtrl.h"
+	"PropertiesCtrl.h"
+	"..\Src\FxGenLib\Core.h"
+	"..\Src\FxGenLib\EngineOp.h"
+
+1209156960 c:\datas\projects\fxgen\fxgeneditor\projecttreectrl.h
+	<wx/wx.h>
+	<wx/treectrl.h>
+	"..\Src\FxGenLib\Core.h"
+	"..\Src\FxGenLib\EngineOp.h"
+
+1207504224 c:\datas\projects\fxgen\src\fxgenlib\core.h
+	"gcccompat/gcccompat.h"
+	"Maths.h"
+	"Stream.h"
+	"Archive.h"
+	"Bitmap.h"
+	"Controllers.h"
+
+1203959646 c:\datas\projects\fxgen\src\gcccompat\gcccompat.h
+	<sys/types.h>
+	<string.h>
+	<stdio.h>
+	<math.h>
+	<unistd.h>
+	<stdarg.h>
+	<windows.h>
+	<windowsx.h>
+	<commdlg.h>
+	<commctrl.h>
+	<richedit.h>
+
+1204280872 c:\datas\projects\fxgen\src\fxgenlib\maths.h
+
+1204281198 c:\datas\projects\fxgen\src\fxgenlib\stream.h
+	"Core.h"
+
+1204280588 c:\datas\projects\fxgen\src\fxgenlib\archive.h
+	"Core.h"
+
+1207504224 c:\datas\projects\fxgen\src\fxgenlib\bitmap.h
+	"Core.h"
+
+1207504224 c:\datas\projects\fxgen\src\fxgenlib\controllers.h
+	"Core.h"
+
+1207504224 c:\datas\projects\fxgen\src\fxgenlib\engineop.h
+	"Core.h"
+
+1209413014 c:\datas\projects\fxgen\fxgeneditor\operatorsctrl.h
+	<wx/wx.h>
+	<wx/control.h>
+	"..\Src\FxGenLib\Core.h"
+	"..\Src\FxGenLib\EngineOp.h"
+
+1209156960 source:c:\datas\projects\fxgen\fxgeneditor\guiframe.cpp
+	"wx/wxprec.h"
+	<wx/wx.h>
+	"GUIFrame.h"
+
+1210072420 source:c:\datas\projects\fxgen\fxgeneditor\projecttreectrl.cpp
+	"wx/wx.h"
+	"EventsList.h"
+	"wx_pch.h"
+	"EventsList.h"
+	"ProjectTreeCtrl.h"
+
+1210072754 source:c:\datas\projects\fxgen\fxgeneditor\operatorsctrl.cpp
+	"wx/wx.h"
+	"wx/dcbuffer.h"
+	"EventsList.h"
+	"wx_pch.h"
+	"EventsList.h"
+	"OperatorsCtrl.h"
+
+1186411292 c:\wxwidgets-2.8.7\include\wx\glcanvas.h
+	"wx/defs.h"
+	"wx/msw/glcanvas.h"
+	"wx/x11/glcanvas.h"
+	"wx/gtk/glcanvas.h"
+	"wx/gtk1/glcanvas.h"
+	"wx/x11/glcanvas.h"
+	"wx/mac/glcanvas.h"
+	"wx/cocoa/glcanvas.h"
+	"wx/app.h"
+
+1186411252 c:\wxwidgets-2.8.7\include\wx\msw\glcanvas.h
+	"wx/palette.h"
+	"wx/scrolwin.h"
+	"wx/msw/wrapwin.h"
+	<GL/gl.h>
+
+1186411294 c:\wxwidgets-2.8.7\include\wx\clrpicker.h
+	"wx/defs.h"
+	"wx/pickerbase.h"
+	"wx/gtk/clrpicker.h"
+	"wx/generic/clrpickerg.h"
+
+1195462532 c:\wxwidgets-2.8.7\include\wx\pickerbase.h
+	"wx/control.h"
+	"wx/sizer.h"
+	"wx/containr.h"
+
+1186411286 c:\wxwidgets-2.8.7\include\wx\generic\clrpickerg.h
+	"wx/button.h"
+	"wx/cmndata.h"
+
+1186411292 c:\wxwidgets-2.8.7\include\wx\tokenzr.h
+	"wx/object.h"
+	"wx/string.h"
+	"wx/arrstr.h"
 

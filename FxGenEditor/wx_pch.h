@@ -10,6 +10,8 @@
 #ifndef WX_PCH_H_INCLUDED
 #define WX_PCH_H_INCLUDED
 
+
+
 // basic wxWidgets headers
 #include <wx/wxprec.h>
 #include <wx/dcbuffer.h>
@@ -21,6 +23,10 @@
 #ifndef WX_PRECOMP
     #include <wx/wx.h>
 #endif
+
+//#if !wxUSE_GLCANVAS
+//    #error "OpenGL required: set wxUSE_GLCANVAS to 1 and rebuild the library"
+//#endif
 
 #ifdef WX_PRECOMP
 //  #include "..\Src\FxGenLib\Core.h"
