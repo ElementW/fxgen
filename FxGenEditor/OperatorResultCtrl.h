@@ -3,58 +3,55 @@
 
 #include <wx/wx.h>
 #include <wx/control.h>
+#include <wx/glcanvas.h>
+#include <wx/palette.h>
 
-//extern WXDLLEXPORT_DATA(const wxChar) wxOperatorResultCtrlNameStr[];
+
 extern const wxChar wxOperatorResultCtrlNameStr[];
 
-class wxOperatorResultCtrl : public wxControl
+class wxOperatorResultCtrl : public wxGLCanvas
 {
-    DECLARE_DYNAMIC_CLASS(wxOperatorResultCtrl)
+    //DECLARE_DYNAMIC_CLASS(wxOperatorResultCtrl)
 
 public:
-    wxOperatorResultCtrl() {}
+    //wxOperatorResultCtrl() {}
 
     wxOperatorResultCtrl(wxWindow *parent, wxWindowID id = wxID_ANY,
                const wxPoint& pos = wxDefaultPosition,
                const wxSize& size = wxDefaultSize,
                long style = 0,
-               const wxValidator &validator = wxDefaultValidator,
-               const wxString& name = wxOperatorResultCtrlNameStr);
+               const wxString& name = wxOperatorResultCtrlNameStr,
+               int* attribList = 0,
+                const wxPalette& palette = wxNullPalette);
+
+// Constructeur
+/*GL_Window(wxWindow* parent, wxWindowID id, const wxPoint& pos,
+const wxSize& size, long style=0,
+const wxString& name="GLCanvas", int* attribList = 0,
+const wxPalette& palette = wxNullPalette)
+: wxGLCanvas(parent, id, pos, size, style,
+name, attribList, palette) {};*/
+
+
+  //Methods
+	int getWidth();
+	int getHeight();
+
+	//void prepare3DViewport(int topleft_x, int topleft_y, int bottomrigth_x, int bottomrigth_y);
+	void prepare2DViewport(int topleft_x, int topleft_y, int bottomrigth_x, int bottomrigth_y);
+
+  //Events
+  DECLARE_EVENT_TABLE()
+  void render(wxPaintEvent& event);
+  void resized(wxSizeEvent& evt);
 
   //FxGen Events
-    DECLARE_EVENT_TABLE()
+  virtual void OnFxGenOpShowChanged( wxCommandEvent& event );
+
+    // erase part of the control
+    virtual void EraseBackground(wxDC& dc, const wxRect& rect);
+
 };
-
-
-/*
-class QProjectsTreeWidget : public QTreeWidget
-{
-    Q_OBJECT
-
-public:
-    QProjectsTreeWidget(QWidget *parent = 0);
-
-//Send Signals
-signals:
-	void FxGenProjectSelPageChanged(NOperatorsPage* _ppage);
-
-//Received signals
-public slots:
-	void FxGenProjectLoaded();
-
-protected:
-	//Methods
-	void DisplayFxGenProject(NTreeNode* _prootNode);
-	void _AddItemsFromTreeNodes(NTreeNode* _pparentNode, QTreeWidgetItem* _pparentItem);
-	NOperatorsPage* GetSelectedPage();
-
-	virtual void selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected );
-
-
-	//Datas
-	NTreeNode* m_prootNode;	//!< Root Node Ptr
-};
-*/
 
 
 #endif // OPERATORRESULTCTRL_H_INCLUDED

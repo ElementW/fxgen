@@ -75,6 +75,7 @@ public:
   void OnMiddleUp(wxMouseEvent& event);
 	void OnLeftUp(wxMouseEvent& event);
 	void OnLeftDown(wxMouseEvent& event);
+	void OnLeftDClick(wxMouseEvent& event);
 
   //FxGen Events
   virtual void OnFxGenPageChanged( wxCommandEvent& event );
@@ -100,14 +101,14 @@ protected:
   void SetCursorPos(sdword _dwX, sdword _dwY);
 
 	// Datas
-	float		m_fPosX, m_fPosY, m_fStartPosXPan, m_fStartPosYPan;
+	float	m_fPosX, m_fPosY, m_fStartPosXPan, m_fStartPosYPan;
 	bool		m_bPanning, m_bMovingBloc, m_bResizingBloc, m_bSelectingRect;
 	wxPoint	m_ptStartPan, m_ptStartBloc;
-	float		m_fScaleX, m_fScaleY;
+	float	m_fScaleX, m_fScaleY;
 	sdword	m_nStartBlocPosX, m_nStartBlocPosY, m_nStartBlocWidth;	//Moving-Resizing blocs
 	udword	m_dwSeedValue;
 	wxPoint	m_ptStartRect, m_ptEndRect;
-  wxFont m_fontOperator;
+  wxFont  m_fontOperator;
 
 	//Datas Operators
 	NOperatorsPage*			m_popsPage;						//!< Page used for editing

@@ -22,8 +22,10 @@
 					<Add directory="C:\wxWidgets-2.8.7\lib\gcc_dll\mswud" />
 				</ResourceCompiler>
 				<Linker>
-					<Add library="libwxmsw28ud.a" />
 					<Add library="..\W32Bin\libFxGenLib_D.a" />
+					<Add library="libopengl32.a" />
+					<Add library="..\..\..\..\wxWidgets-2.8.7\lib\gcc_dll\libwxmsw28ud_gl.a" />
+					<Add library="..\..\..\..\wxWidgets-2.8.7\lib\gcc_dll\libwxmsw28ud.a" />
 					<Add directory="C:\wxWidgets-2.8.7\lib\gcc_dll" />
 				</Linker>
 			</Target>

@@ -67,9 +67,14 @@ FxGenEditorFrame::FxGenEditorFrame(wxFrame *frame) : GUIFrame(frame)
   // notify wxAUI which frame to use
   m_mgr.SetManagedWindow(this);
 
+int attributelist[ 5 ] = { WX_GL_RGBA         ,
+	                           WX_GL_BUFFER_SIZE  ,
+	                           32        ,
+	                           WX_GL_DOUBLEBUFFER                  ,
+	                           0                  };
   // create several text controls
   wxProjectTreeCtrl*    pprojectCtrl = new wxProjectTreeCtrl(this, -1, wxDefaultPosition, wxSize(200,150));
-  wxOperatorResultCtrl* presultCtrl = new wxOperatorResultCtrl(this, -1, wxDefaultPosition, wxSize(200,150), wxNO_BORDER);
+  wxOperatorResultCtrl* presultCtrl = new wxOperatorResultCtrl(this, -1, wxDefaultPosition, wxSize(200,150),0,wxOperatorResultCtrlNameStr, attributelist);
   wxOperatorsCtrl*      poperatorCtrl = new wxOperatorsCtrl(this, -1, wxDefaultPosition, wxSize(200,150), wxNO_BORDER);
   wxPropertiesCtrl*     ppropertiesCtrl = new wxPropertiesCtrl(this, -1, wxDefaultPosition, wxSize(200,150), wxNO_BORDER);
 
