@@ -152,8 +152,9 @@ public:
   virtual void Create( wxWindow* _parent, NOperator* _pop, udword _index ) = 0;
 };
 
-template<typename ContainedType, int Variant = 0> class NumericPropControl : public PropertyControl
+class NumericPropControl : public PropertyControl
 {
+  DECLARE_ABSTRACT_CLASS( NumericPropControl );
 public:
   void Create( wxWindow* _pParent, NOperator* _pop, udword _dwIndex )
   {
@@ -170,43 +171,29 @@ public:
     m_pSizer->Add( m_pText, 1, wxALIGN_CENTER_VERTICAL | wxEXPAND );
     m_pSizer->Add( new DragSpinner(this), 0, wxALIGN_CENTER_VERTICAL );
 
-    ContainedType value;
-    m_pop->m_pcvarsBloc->GetValue( m_dwIndex, 0.0f, value );
-    m_pText->SetValue( wxString() << value );
+    UpdateControls();
 
     m_pSizer->Layout();
 
-    m_pText->Connect( wxEVT_COMMAND_TEXT_ENTER, (wxObjectEventFunction)&NumericPropControl<ContainedType, Variant>::OnText, 0, this );
-
-    Connect(wxEVT_SCROLL_CHANGED, (wxObjectEventFunction)&NumericPropControl<ContainedType, Variant>::OnScroll);
+    Connect( wxEVT_COMMAND_TEXT_ENTER, wxTextEventHandler(NumericPropControl::OnText) );
+    Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler(NumericPropControl::OnScroll) );
   }
 
   void OnScroll(wxScrollEvent& _event)
   {
-    ContainedType value = 0;
-    m_pop->m_pcvarsBloc->GetValue( m_dwIndex, 0.0f, value );
-    if(value+_event.GetPosition()*m_valueScale < m_minValue)
-      value = m_minValue;
-    else if(value+_event.GetPosition()*m_valueScale > m_maxValue)
-      value = m_maxValue;
-    else
-      value += _event.GetPosition()*m_valueScale;
-    m_pop->m_pcvarsBloc->SetValue( m_dwIndex, 0.0f, value );
-    m_pText->SetValue( wxString() << value );
+    OnScroll( _event.GetPosition() );
+    UpdateControls();
   }
 
   void OnText( wxCommandEvent& _event )
   {
-    double doublevalue;
-    m_pText->GetValue().ToDouble( &doublevalue );
-    if(doublevalue < m_minValue)
-      doublevalue = m_minValue;
-    else if(doublevalue > m_maxValue)
-      doublevalue = m_maxValue;
-    ContainedType value = (ContainedType)doublevalue;
-    m_pop->m_pcvarsBloc->SetValue( m_dwIndex, 0.0f, value );
-    m_pText->SetValue( wxString() << value );
+    OnText( m_pText->GetValue() );
+    UpdateControls();
   }
+
+  virtual void OnText( const wxString& text ) = 0;
+  virtual void OnScroll( int delta ) = 0;
+  virtual void UpdateControls() = 0;
 
 protected:
   udword m_dwIndex;
@@ -214,10 +201,6 @@ protected:
 
   wxTextCtrl* m_pText;
   wxSizer* m_pSizer;
-
-  static ContainedType m_minValue;
-  static ContainedType m_maxValue;
-  static ContainedType m_valueScale;
 };
 
 class NColorPropControl : public PropertyControl
@@ -382,54 +365,192 @@ protected:
   wxSizer* m_pSizer;
 };
 
-class NUbytePropControl : public NumericPropControl<ubyte, 0>
+class NUbytePropControl : public NumericPropControl
 {
   DECLARE_DYNAMIC_CLASS( NUbytePropControl );
-};
-template<> ubyte NumericPropControl<ubyte, 0>::m_minValue = 0;
-template<> ubyte NumericPropControl<ubyte, 0>::m_maxValue = 255;
-template<> ubyte NumericPropControl<ubyte, 0>::m_valueScale = 1;
+public:
+  virtual void OnText( const wxString& text )
+  {
+    long longValue;
+    text.ToLong( &longValue );
+    ubyte value;
+    if( longValue < 0 )
+      value = 0;
+    else if( longValue > 0xFF )
+      value = 0xFF;
+    else
+      value = longValue;
+    m_pop->m_pcvarsBloc->SetValue( m_dwIndex, 0.0f, value );
+  }
 
-class NUwordPropControl : public NumericPropControl<uword, 0>
+  virtual void OnScroll( int delta )
+  {
+    ubyte value;
+    m_pop->m_pcvarsBloc->GetValue( m_dwIndex, 0.0f, value );
+    if( delta < 0 && value < -delta )
+      value = 0;
+    else if( delta > 0 && value > 0xFF-delta )
+      value = 0xFF;
+    else
+      value += delta;
+    m_pop->m_pcvarsBloc->SetValue( m_dwIndex, 0.0f, value );
+  }
+
+  virtual void UpdateControls()
+  {
+    ubyte value;
+    m_pop->m_pcvarsBloc->GetValue( m_dwIndex, 0.0f, value );
+    m_pText->SetValue( wxString() << (udword)value );
+  }
+};
+
+class NUwordPropControl : public NumericPropControl
 {
   DECLARE_DYNAMIC_CLASS( NUwordPropControl );
-};
-template<> uword NumericPropControl<uword, 0>::m_minValue = 0;
-template<> uword NumericPropControl<uword, 0>::m_maxValue = 65535;
-template<> uword NumericPropControl<uword, 0>::m_valueScale = 1;
+public:
+  virtual void OnText( const wxString& text )
+  {
+    long longValue;
+    text.ToLong( &longValue );
+    uword value;
+    if( longValue < 0 )
+      value = 0;
+    else if( longValue > 0xFFFF )
+      value = 0xFFFF;
+    else
+      value = longValue;
+    m_pop->m_pcvarsBloc->SetValue( m_dwIndex, 0.0f, value );
+  }
 
-class NUdwordPropControl : public NumericPropControl<udword, 0>
+  virtual void OnScroll( int delta )
+  {
+    uword value;
+    m_pop->m_pcvarsBloc->GetValue( m_dwIndex, 0.0f, value );
+    if( delta < 0 && value < -delta )
+      value = 0;
+    else if( delta > 0 && value > 0xFFFF-delta )
+      value = 0xFFFF;
+    else
+      value += delta;
+    m_pop->m_pcvarsBloc->SetValue( m_dwIndex, 0.0f, value );
+  }
+
+  virtual void UpdateControls()
+  {
+    uword value;
+    m_pop->m_pcvarsBloc->GetValue( m_dwIndex, 0.0f, value );
+    m_pText->SetValue( wxString() << (udword)value );
+  }
+};
+
+class NUdwordPropControl : public NumericPropControl
 {
   DECLARE_DYNAMIC_CLASS( NUdwordPropControl );
-};
-template<> udword NumericPropControl<udword, 0>::m_minValue = 0;
-template<> udword NumericPropControl<udword, 0>::m_maxValue = 4294967295;
-template<> udword NumericPropControl<udword, 0>::m_valueScale = 1;
+public:
+  virtual void OnText( const wxString& text )
+  {
+    unsigned long longValue;
+    text.ToULong( &longValue );
+    udword value = longValue;
+    m_pop->m_pcvarsBloc->SetValue( m_dwIndex, 0.0f, value );
+  }
 
-class NFloatPropControl : public NumericPropControl<float, 0>
+  virtual void OnScroll( int delta )
+  {
+    udword value;
+    m_pop->m_pcvarsBloc->GetValue( m_dwIndex, 0.0f, value );
+    if( delta < 0 && value < -delta )
+      value = 0;
+    else if( delta > 0 && value > 0xFFFFFFFF-delta )
+      value = 0xFFFFFFFF;
+    else
+      value += delta;
+    m_pop->m_pcvarsBloc->SetValue( m_dwIndex, 0.0f, value );
+  }
+
+  virtual void UpdateControls()
+  {
+    udword value;
+    m_pop->m_pcvarsBloc->GetValue( m_dwIndex, 0.0f, value );
+    m_pText->SetValue( wxString() << value );
+  }
+};
+
+class NFloatPropControl : public NumericPropControl
 {
   DECLARE_DYNAMIC_CLASS( NFloatPropControl );
-};
-template<> float NumericPropControl<float, 0>::m_minValue = -FLT_MAX;
-template<> float NumericPropControl<float, 0>::m_maxValue = FLT_MAX;
-template<> float NumericPropControl<float, 0>::m_valueScale = 0.001f;
+public:
+  virtual void OnText( const wxString& text )
+  {
+    double doubleValue;
+    text.ToDouble( &doubleValue );
+    float value = doubleValue;
+    m_pop->m_pcvarsBloc->SetValue( m_dwIndex, 0.0f, value );
+  }
 
-class NCFloatPropControl : public NumericPropControl<float, 1>
+  virtual void OnScroll( int delta )
+  {
+    float value;
+    m_pop->m_pcvarsBloc->GetValue( m_dwIndex, 0.0f, value );
+    value += delta*0.001f;
+    m_pop->m_pcvarsBloc->SetValue( m_dwIndex, 0.0f, value );
+  }
+
+  virtual void UpdateControls()
+  {
+    float value;
+    m_pop->m_pcvarsBloc->GetValue( m_dwIndex, 0.0f, value );
+    m_pText->SetValue( wxString() << value );
+  }
+};
+
+class NCFloatPropControl : public NumericPropControl
 {
   DECLARE_DYNAMIC_CLASS( NCFloatPropControl );
+public:
+  virtual void OnText( const wxString& text )
+  {
+    double doubleValue;
+    text.ToDouble( &doubleValue );
+    float value;
+    if( doubleValue < 0.0f )
+      value = 0.0f;
+    else if( doubleValue > 1.0f )
+      value = 1.0f;
+    else
+      value = doubleValue;
+    m_pop->m_pcvarsBloc->SetValue( m_dwIndex, 0.0f, value );
+  }
+
+  virtual void OnScroll( int delta )
+  {
+    float value;
+    m_pop->m_pcvarsBloc->GetValue( m_dwIndex, 0.0f, value );
+    value += delta*0.001f;
+    if( value < 0.0f )
+      value = 0.0f;
+    else if( value > 1.0f )
+      value = 1.0f;
+    m_pop->m_pcvarsBloc->SetValue( m_dwIndex, 0.0f, value );
+  }
+
+  virtual void UpdateControls()
+  {
+    float value;
+    m_pop->m_pcvarsBloc->GetValue( m_dwIndex, 0.0f, value );
+    m_pText->SetValue( wxString() << value );
+  }
 };
-template<> float NumericPropControl<float, 1>::m_minValue = 0.0f;
-template<> float NumericPropControl<float, 1>::m_maxValue = 1.0f;
-template<> float NumericPropControl<float, 1>::m_valueScale = 0.001f;
 
 IMPLEMENT_ABSTRACT_CLASS( PropertyControl, wxPanel );
-IMPLEMENT_DYNAMIC_CLASS( NUbytePropControl, PropertyControl );
-IMPLEMENT_DYNAMIC_CLASS( NUwordPropControl, PropertyControl );
-IMPLEMENT_DYNAMIC_CLASS( NUdwordPropControl, PropertyControl );
-IMPLEMENT_DYNAMIC_CLASS( NFloatPropControl, PropertyControl );
-IMPLEMENT_DYNAMIC_CLASS( NCFloatPropControl, PropertyControl );
-IMPLEMENT_DYNAMIC_CLASS( NColorPropControl, PropertyControl );
-IMPLEMENT_DYNAMIC_CLASS( NUbyteComboPropControl, PropertyControl );
+IMPLEMENT_ABSTRACT_CLASS( NumericPropControl, PropertyControl );
+IMPLEMENT_DYNAMIC_CLASS( NUbytePropControl, NumericPropControl );
+IMPLEMENT_DYNAMIC_CLASS( NUwordPropControl, NumericPropControl );
+IMPLEMENT_DYNAMIC_CLASS( NUdwordPropControl, NumericPropControl );
+IMPLEMENT_DYNAMIC_CLASS( NFloatPropControl, NumericPropControl );
+IMPLEMENT_DYNAMIC_CLASS( NCFloatPropControl, NumericPropControl );
+IMPLEMENT_DYNAMIC_CLASS( NColorPropControl, NumericPropControl );
+IMPLEMENT_DYNAMIC_CLASS( NUbyteComboPropControl, NumericPropControl );
 
 //-----------------------------------------------------------------
 //!	\brief	Event Operator Selection Changed
