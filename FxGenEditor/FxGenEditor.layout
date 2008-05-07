@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="EventsList.h" open="1" top="0" tabpos="8">
+	<File name="EventsList.h" open="1" top="0" tabpos="7">
 		<Cursor position="611" topLine="0" />
 	</File>
 	<File name="FxGenEditorApp.cpp" open="0" top="0" tabpos="7">
@@ -11,7 +11,7 @@
 		<Cursor position="454" topLine="0" />
 	</File>
 	<File name="FxGenEditorMain.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="2862" topLine="67" />
+		<Cursor position="1563" topLine="51" />
 	</File>
 	<File name="FxGenEditorMain.h" open="0" top="0" tabpos="2">
 		<Cursor position="514" topLine="0" />
@@ -25,8 +25,8 @@
 	<File name="OperatorResultCtrl.cpp" open="0" top="0" tabpos="12">
 		<Cursor position="344" topLine="0" />
 	</File>
-	<File name="OperatorResultCtrl.h" open="0" top="0" tabpos="13">
-		<Cursor position="218" topLine="3" />
+	<File name="OperatorResultCtrl.h" open="1" top="1" tabpos="9">
+		<Cursor position="153" topLine="0" />
 	</File>
 	<File name="OperatorsCtrl.cpp" open="1" top="0" tabpos="1">
 		<Cursor position="12241" topLine="423" />
@@ -40,11 +40,11 @@
 	<File name="ProjectTreeCtrl.h" open="1" top="0" tabpos="6">
 		<Cursor position="698" topLine="4" />
 	</File>
-	<File name="PropertiesCtrl.cpp" open="0" top="0" tabpos="15">
-		<Cursor position="185" topLine="0" />
+	<File name="PropertiesCtrl.cpp" open="1" top="0" tabpos="8">
+		<Cursor position="12011" topLine="378" />
 	</File>
-	<File name="PropertiesCtrl.h" open="0" top="0" tabpos="14">
-		<Cursor position="573" topLine="0" />
+	<File name="PropertiesCtrl.h" open="1" top="0" tabpos="10">
+		<Cursor position="401" topLine="0" />
 	</File>
 	<File name="WxWizFrame.fbp" open="0" top="0" tabpos="0">
 		<Cursor position="539" topLine="162" />
