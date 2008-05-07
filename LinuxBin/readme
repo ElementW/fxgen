@@ -1,4 +1,0 @@
-This is a 64-bit Linux build of FxGen.
-
-to run the test program without the need to install the library, set 
-LD_LIBRARY_PATH=.

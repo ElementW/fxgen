@@ -2,7 +2,10 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FxGenLib", "..\Src\FxGenLib\FxGenLib.vcproj", "{D39F9951-FC48-4410-93AC-CEAF6934BF3F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "editor-gtk", "..\Src\editorgtk\VS\editor-gtk.vcproj", "{76A478E7-3617-4427-83E0-5DF44E19EE6D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FxGenEditor", "..\FxGenEditor\FxGenEditor.vcproj", "{E37638B7-5F61-49EA-8D51-23A8C20C9F2A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F} = {D39F9951-FC48-4410-93AC-CEAF6934BF3F}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,10 +17,10 @@ Global
 		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Debug|Win32.Build.0 = Debug|Win32
 		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Release|Win32.ActiveCfg = Release|Win32
 		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Release|Win32.Build.0 = Release|Win32
-		{76A478E7-3617-4427-83E0-5DF44E19EE6D}.Debug|Win32.ActiveCfg = Debug|Win32
-		{76A478E7-3617-4427-83E0-5DF44E19EE6D}.Debug|Win32.Build.0 = Debug|Win32
-		{76A478E7-3617-4427-83E0-5DF44E19EE6D}.Release|Win32.ActiveCfg = Release|Win32
-		{76A478E7-3617-4427-83E0-5DF44E19EE6D}.Release|Win32.Build.0 = Release|Win32
+		{E37638B7-5F61-49EA-8D51-23A8C20C9F2A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E37638B7-5F61-49EA-8D51-23A8C20C9F2A}.Debug|Win32.Build.0 = Debug|Win32
+		{E37638B7-5F61-49EA-8D51-23A8C20C9F2A}.Release|Win32.ActiveCfg = Release|Win32
+		{E37638B7-5F61-49EA-8D51-23A8C20C9F2A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

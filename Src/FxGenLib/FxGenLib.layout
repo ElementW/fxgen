@@ -67,4 +67,7 @@
 	<File name="RenderOps.h" open="0" top="0" tabpos="3">
 		<Cursor position="5019" topLine="131" />
 	</File>
+	<File name="Stream.h" open="0" top="0" tabpos="0">
+		<Cursor position="1184" topLine="90" />
+	</File>
 </CodeBlocks_layout_file>

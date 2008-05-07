@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1208953970 source:d:\temp\cle\fxgen\fxgeneditor\wx_pch.h
+1210075777 source:d:\temp\cle\fxgen\fxgeneditor\wx_pch.h
 	<wx/wxprec.h>
 	<wx/dcbuffer.h>
 	<wx/wx.h>
@@ -40,7 +40,7 @@
 	"wx/msw/gccpriv.h"
 	<AvailabilityMacros.h>
 
-1209913189 c:\wxwidgets-2.8.7\lib\gcc_dll\mswud\wx\setup.h
+1186411250 c:\wxwidgets-2.8.7\lib\gcc_dll\mswud\wx\setup.h
 
 1187335694 c:\wxwidgets-2.8.7\include\wx\chkconf.h
 	"wx/palmos/chkconf.h"
@@ -1801,7 +1801,7 @@
 	"..\Src\FxGenLib\Core.h"
 	"..\Src\FxGenLib\EngineOp.h"
 
-1208953970 d:\temp\cle\fxgen\fxgeneditor\wx_pch.h
+1210075777 d:\temp\cle\fxgen\fxgeneditor\wx_pch.h
 	<wx/wxprec.h>
 	<wx/dcbuffer.h>
 	<wx/wx.h>
@@ -1955,9 +1955,10 @@
 	<commctrl.h>
 	<richedit.h>
 
-1209045376 d:\temp\cle\fxgen\fxgeneditor\eventslist.h
+1210075777 d:\temp\cle\fxgen\fxgeneditor\eventslist.h
 
-1209044906 source:d:\temp\cle\fxgen\fxgeneditor\projecttreectrl.cpp
+1210055662 source:d:\temp\cle\fxgen\fxgeneditor\projecttreectrl.cpp
+	"wx/wx.h"
 	"EventsList.h"
 	"wx_pch.h"
 	"EventsList.h"
@@ -1969,7 +1970,8 @@
 	"..\Src\FxGenLib\Core.h"
 	"..\Src\FxGenLib\EngineOp.h"
 
-1208857653 source:d:\temp\cle\fxgen\fxgeneditor\operatorresultctrl.cpp
+1210055662 source:d:\temp\cle\fxgen\fxgeneditor\operatorresultctrl.cpp
+	"wx/wx.h"
 	"EventsList.h"
 	"wx_pch.h"
 	"EventsList.h"
@@ -1979,13 +1981,15 @@
 	<wx/wx.h>
 	<wx/control.h>
 
-1209046158 source:d:\temp\cle\fxgen\fxgeneditor\operatorsctrl.cpp
+1210055662 source:d:\temp\cle\fxgen\fxgeneditor\operatorsctrl.cpp
+	"wx/wx.h"
+	"wx/dcbuffer.h"
 	"EventsList.h"
 	"wx_pch.h"
 	"EventsList.h"
 	"OperatorsCtrl.h"
 
-1209046332 d:\temp\cle\fxgen\fxgeneditor\operatorsctrl.h
+1210075777 d:\temp\cle\fxgen\fxgeneditor\operatorsctrl.h
 	<wx/wx.h>
 	<wx/control.h>
 	"..\Src\FxGenLib\Core.h"
@@ -1997,7 +2001,7 @@
 	"EventsList.h"
 	"PropertiesCtrl.h"
 
-1208857653 d:\temp\cle\fxgen\fxgeneditor\propertiesctrl.h
+1210055662 d:\temp\cle\fxgen\fxgeneditor\propertiesctrl.h
 	<wx/wx.h>
 	<wx/control.h>
 

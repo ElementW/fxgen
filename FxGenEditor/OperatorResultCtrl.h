@@ -4,7 +4,7 @@
 #include <wx/wx.h>
 #include <wx/control.h>
 #include <wx/glcanvas.h>
-#include <wx/palette.h>
+//#include <wx/palette.h>
 
 
 extern const wxChar wxOperatorResultCtrlNameStr[];

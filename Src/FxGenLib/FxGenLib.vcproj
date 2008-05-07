@@ -43,8 +43,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\Externals\vgvm;..\..\Externals\cairo;..\..\Externals\vgvm"
-				PreprocessorDefinitions="THREADS_ENABLED"
+				AdditionalIncludeDirectories=""
+				PreprocessorDefinitions="THREADS_ENABLED;FXGEN_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -62,12 +62,13 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
+				CommandLine="copy $(OutDir)\$(ProjectName)_D.dll ..\..\W32Bin\$(ProjectName)_D.dll"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cairo.lib cairomm-1.0d.lib libnoise.lib gdi32.lib user32.lib comdlg32.lib comctl32.lib"
+				AdditionalDependencies="gdi32.lib user32.lib comdlg32.lib comctl32.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_D.dll"
-				AdditionalLibraryDirectories="..\..\Externals\cairo;..\..\Externals\vgvm;"
+				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -148,7 +149,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="cairo.lib cairomm-1.0.lib user32.lib"
 				OutputFile="..\..\W32Bin\$(ProjectName).dll"
-				AdditionalLibraryDirectories="..\..\Externals\cairo;..\..\Externals\vgvm;"
+				AdditionalLibraryDirectories=""
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 			/>
