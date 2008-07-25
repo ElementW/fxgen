@@ -116,6 +116,8 @@ public:
 //Methods
 	static NObject*		CreateByID(ID _CLASSID);    // ###JN### will be removed
 	static NObject*		CreateByName(const char* _pszClassName);
+	static NRTClass*	GetRTClassByName(const char* _pszClassName);
+	static NRTClass*	GetRTClassByID(ID _CLASSID);// ###JN### will be removed
 
 	static ID					MakeClassID(const char* _pszClassName); // ###JN### will be removed
 	static NRTClass*  GetFirstClassBySuperClass(const char* _pszSuperClassName);
@@ -242,12 +244,12 @@ struct NVarsBlocDesc
 //-----------------------------------------------------------------
 struct NMapVarsBlocDesc
 {
-	ubyte			byVersion;			//!< Bloc Version
-	eVarType	eType;					//!< Type of variables (eubyte, euword ...)
-	const char*			pszMapping;			//!< ie (">2>3") => transfert this old variable bloc version
-														//!								to new variable bloc index 2 and 3
-	const char*			pszExpression;	//!< value conversion (* or +)
-														//!  ie ("*2.0") to multiply by 2.0
+	ubyte					byVersion;			//!< Bloc Version
+	eVarType			eType;					//!< Type of variables (eubyte, euword ...)
+	const char*		pszMapping;			//!< ie (">2>3") => transfert this old variable bloc version
+																//!								to new variable bloc index 2 and 3
+	const char*		pszExpression;	//!< value conversion (* or +)
+																//!  ie ("*2.0") to multiply by 2.0
 };
 
 

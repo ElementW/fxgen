@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
+			OutputDirectory="..\..\W32Bin"
 			IntermediateDirectory="Debug"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -44,7 +44,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=""
-				PreprocessorDefinitions="THREADS_ENABLED;FXGEN_EXPORTS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_USRDLL;FXGEN_EXPORTS;BUILDING_VGVM_DLL;_CRT_SECURE_NO_DEPRECATE "
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -62,11 +62,9 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
-				CommandLine="copy $(OutDir)\$(ProjectName)_D.dll ..\..\W32Bin\$(ProjectName)_D.dll"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gdi32.lib user32.lib comdlg32.lib comctl32.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_D.dll"
 				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
@@ -125,7 +123,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="..\..\Externals\vgvm;..\..\Externals\cairo;..\..\Externals\vgvm"
-				PreprocessorDefinitions="THREADS_ENABLED;FXGEN_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;FXGEN_EXPORTS;BUILDING_VGVM_DLL;_CRT_SECURE_NO_DEPRECATE "
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				EnableEnhancedInstructionSet="2"
@@ -148,8 +146,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="cairo.lib cairomm-1.0.lib user32.lib"
-				OutputFile="..\..\W32Bin\$(ProjectName).dll"
-				AdditionalLibraryDirectories=""
+				OutputFile="$(OutDir)\$(ProjectName).dll"
+				AdditionalLibraryDirectories="..\..\Externals\cairo;..\..\Externals\vgvm;"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 			/>
@@ -173,7 +171,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine=""
+				CommandLine="copy $(TargetDir)$(TargetFileName) ..\..\W32Bin\$(TargetFileName)"
 			/>
 		</Configuration>
 		<Configuration
@@ -205,7 +203,7 @@
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="..\..\Externals\vgvm;..\..\Externals\cairo;..\..\Externals\vgvm"
-				PreprocessorDefinitions="THREADS_ENABLED"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_MODE_EDITION"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -272,7 +270,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="..\..\Externals\vgvm;..\..\Externals\cairo;..\..\Externals\vgvm"
-				PreprocessorDefinitions="THREADS_ENABLED"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;FXGEN_EXPORTS;BUILDING_VGVM_DLL"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -387,6 +385,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\rectangulararray.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Stream.cpp"
 				>
 			</File>
@@ -434,10 +436,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\fftn.h"
-				>
-			</File>
-			<File
 				RelativePath=".\FilterOps.cpp"
 				>
 			</File>
@@ -462,10 +460,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath="..\gcccompat\gcccompat.h"
-			>
-		</File>
 		<File
 			RelativePath=".\pch.cpp"
 			>

@@ -47,8 +47,8 @@ static NMapVarsBlocDesc mapblocdescBlurOp[] =
 
 static NVarsBlocDesc blocdescBlurOp[] =
 {
-	VAR(efloat,		true, "Width",		"0.01",		"NCFloatProp")	//0
-	VAR(efloat,		true, "Height",		"0.01",		"NCFloatProp")	//1
+	VAR(efloat,		true, "Width",		"0.01",		"NFloatProp")	//0
+	VAR(efloat,		true, "Height",		"0.01",		"NFloatProp")	//1
 	VAR(eubyte,		true, "Amplify",	"16",		"NUbyteProp")	//2
 	VAR(eubyte,		false, "Type",	"0,[Box,Gaussian]",	"NUbyteComboProp")	//3
 };
@@ -103,15 +103,15 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 
 	if (bw == 0 && bh == 0)
 	{
-		memcpy(pDst->GetPixels(), pSrc->GetPixels(), w*h*sizeof(RGBA));
+		memcpy(pDst->GetPixels(), pSrc->GetPixels(), w*h*sizeof(NRGBA));
 		return 0;
 	}
 
 	// Allocate a temporary buffer if needed
-	RGBA* pPxInter = null;
+	NRGBA* pPxInter = null;
 	if (byPasses > 0 || (bw > 0 && bh > 0))
 	{
-		pPxInter = (RGBA*)NMemAlloc(w*h*sizeof(RGBA));
+		pPxInter = (NRGBA*)NMemAlloc(w*h*sizeof(NRGBA));
 	}
 
 	/////////////////////////////////////////////////////////
@@ -124,7 +124,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
             for(sdword y=0;y<h;y++)
             {
               // Make sure to use source, intermediate and destination in a pattern to avoid unnecessary copies
-              RGBA* pPxSrc;
+              NRGBA* pPxSrc;
               if (i == 0)
               {
                 pPxSrc = pSrc->GetPixels() + (y*w);
@@ -139,8 +139,8 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
                   pPxSrc = pDst->GetPixels() + (y*w);
                 }
               }
-              RGBA* pAccu		= pPxSrc;
-              RGBA* pPxDst;
+              NRGBA* pAccu		= pPxSrc;
+              NRGBA* pPxDst;
               if (bh == 0)
               {
                 if (i % 2 == byPasses % 2)
@@ -153,7 +153,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 
               // Accumulation precalc
               sdword x = 0;
-              RGBAI sum(0,0,0,0);
+              NRGBAI sum(0,0,0,0);
               while (x<bw)
               {
                 sum.r+=pAccu->r;
@@ -175,7 +175,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
                 sdword b = sdword(sum.b*wamp);
                 sdword a = sdword(sum.a*wamp);
 
-                RGBA& px = pPxDst[(x+bw/2)%w];
+                NRGBA& px = pPxDst[(x+bw/2)%w];
                 px.r= (ubyte) ((r<255)?r:255);
                 px.g= (ubyte) ((g<255)?g:255);
                 px.b= (ubyte) ((b<255)?b:255);
@@ -187,7 +187,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 				sum.a-=pPxSrc->a;
                 pPxSrc++;
 
-                RGBA ac = pAccu[(x+bw)%w];
+                NRGBA ac = pAccu[(x+bw)%w];
                 sum.r+=ac.r;
                 sum.g+=ac.g;
                 sum.b+=ac.b;
@@ -207,7 +207,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
             for(sdword x=0;x<w;x++)
             {
               // Make sure to use source, intermediate and destination in a pattern to avoid unnecessary copies
-              RGBA* pPxSrc;
+              NRGBA* pPxSrc;
               if (bw == 0)
               {
                 if (i == 0)
@@ -222,8 +222,8 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
               } else {
                 pPxSrc = pPxInter + x;
               }
-              RGBA* pAccu		= pPxSrc;
-              RGBA* pPxDst;
+              NRGBA* pAccu		= pPxSrc;
+              NRGBA* pPxDst;
               if (bw == 0)
               {
                 if (i % 2 == byPasses % 2)
@@ -236,7 +236,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 
               // Accumulation Precalc
               sdword y = 0;
-              RGBAI sum(0,0,0,0);
+              NRGBAI sum(0,0,0,0);
               while (y<bh)
               {
                 sum.r+=pAccu->r;
@@ -258,7 +258,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
                 sdword b = sdword(sum.b*hamp);
                 sdword a = sdword(sum.a*hamp);
 
-                RGBA& px = pPxDst[((y+bh/2)%h)*w];
+                NRGBA& px = pPxDst[((y+bh/2)%h)*w];
                 px.r= (ubyte) ((r<255)?r:255);
                 px.g= (ubyte) ((g<255)?g:255);
                 px.b= (ubyte) ((b<255)?b:255);
@@ -270,7 +270,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 				sum.a-=pPxSrc->a;
                 pPxSrc+=w;
 
-                RGBA ac = pAccu[((y+bh)%h)*w];
+                NRGBA ac = pAccu[((y+bh)%h)*w];
                 sum.r+=ac.r;
                 sum.g+=ac.g;
                 sum.b+=ac.b;
@@ -346,7 +346,7 @@ udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 
 	//Get Variables Values
 //	ubyte byMode=1;
-	RGBA ColorBase, ColorPer;
+	NRGBA ColorBase, ColorPer;
 	ubyte byBrihtness, byContrast, bySaturation, byAlpha;
 	//m_pcvarsBloc->GetValue(0, _ftime, byMode);
 	m_pcvarsBloc->GetValue(0, _ftime, (udword&)ColorBase);
@@ -369,8 +369,8 @@ udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	ubyte maxalpha = (byAlpha <=127) ? ubyte(byAlpha * 2.f + byAlpha / 127.f) : 255;
 	float alphamult = (maxalpha - minalpha) / 255.f;
 
-	RGBA* pPxSrc = pSrc->GetPixels();
-	RGBA* pPxDst = pDst->GetPixels();
+	NRGBA* pPxSrc = pSrc->GetPixels();
+	NRGBA* pPxDst = pDst->GetPixels();
 
 	///////////////////////////////////////////////
 	// RGB Process + Brithness + Contrast
@@ -511,7 +511,7 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 	/////////////////////////////////////////
 	//Get Variables Values
-	RGBA Ambiant, Diffuse, Specular;
+	NRGBA Ambiant, Diffuse, Specular;
 	ubyte byPosX, byPosY, byPosZ;
 	ubyte bySpecPower, byBumpPower;
 	m_pcvarsBloc->GetValue(0, _ftime, (udword&)Ambiant);
@@ -542,9 +542,9 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 	/////////////////////////////////////////
 	// DIRECTIONAL LIGHT TYPE
-	RGBA* pPxNorm = pNorm->GetPixels();
-	RGBA* pPxSrc	= pSrc->GetPixels();
-	RGBA* pPxDst	= pDst->GetPixels();
+	NRGBA* pPxNorm = pNorm->GetPixels();
+	NRGBA* pPxSrc	= pSrc->GetPixels();
+	NRGBA* pPxDst	= pDst->GetPixels();
 
 	for (sdword y=0; y<h; y++)
 	{
@@ -654,8 +654,8 @@ udword NNormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 
 	//////////////////////////////////////////
 	// Creation des normales
-	RGBA* pcurSour = pSrc->GetPixels();
-	RGBA* pcurNorm = pDst->GetPixels();
+	NRGBA* pcurSour = pSrc->GetPixels();
+	NRGBA* pcurNorm = pDst->GetPixels();
 
 	for (udword y=0; y<h; y++)
 	{
@@ -740,7 +740,7 @@ FIMPLEMENT_CLASS(NAbnormalsOp, NOperator);
 static NVarsBlocDesc blocdescAbnormalsOp[] =
 {
 	VAR(eubyte,	false, "Rotation",	"", "")	//0
-	VAR(efloat,	true, "w",	"0.0", "NCFloatProp")	//1 "1.0" is full angle
+	VAR(efloat,	true, "w",	"0.0", "NFloatProp")	//1 "1.0" is full angle
 	VAR(efloat,	true, "x",	"0.0", "NFloatProp")	//2
 	VAR(efloat,	true, "y",	"0.0", "NFloatProp")	//3
 	VAR(efloat,	true, "z",	"1.0", "NFloatProp")	//4
@@ -792,9 +792,9 @@ udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 
 	//////////////////////////////////////////
 	// Process
-	RGBAArray pcurSrc(pSrc->GetPixels(), width);
-	RGBAArray pcurDst(pDst->GetPixels(), width);
-	RGBAArray pcurQuat;
+	NRGBAArray pcurSrc(pSrc->GetPixels(), width);
+	NRGBAArray pcurDst(pDst->GetPixels(), width);
+	NRGBAArray pcurQuat;
 
 	if(m_byInputs==2)
 	{
@@ -804,7 +804,7 @@ udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 		if(pQuat->GetWidth() < width || pQuat->GetHeight() < height)
 			return (udword)-1; // insufficient size
 
-		pcurQuat = RGBAArray(pQuat->GetPixels(), width);
+		pcurQuat = NRGBAArray(pQuat->GetPixels(), width);
 	}
 
 
@@ -820,7 +820,7 @@ udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 			{
 				if(comp == 0) // normals
 				{
-					const RGBA& curQuat = pcurQuat(x,y);
+					const NRGBA& curQuat = pcurQuat(x,y);
 					quat offset(curQuat.r-127.5f,curQuat.g-127.5f,curQuat.b-127.5f,0);
 					v *= (1 - sensitivity);
 					v += offset * (sensitivity / 127.5f);
@@ -912,8 +912,8 @@ udword NSlopeMagnitudeOp::Process(float _ftime, NOperator** _pOpsInts, float _fD
 
 	//////////////////////////////////////////
 	// Creation des normales
-	RGBA* pcurSour = pSrc->GetPixels();
-	RGBA* pcurNorm = pDst->GetPixels();
+	NRGBA* pcurSour = pSrc->GetPixels();
+	NRGBA* pcurNorm = pDst->GetPixels();
 
 	for (udword y=0; y<h; y++)
 	{
@@ -1017,8 +1017,8 @@ udword NInvertOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	udword h = pSrc->GetHeight();
 	pDst->SetSize(w,h);
 
-	RGBA* pPxSrc = pSrc->GetPixels();
-	RGBA* pPxDst = pDst->GetPixels();
+	NRGBA* pPxSrc = pSrc->GetPixels();
+	NRGBA* pPxDst = pDst->GetPixels();
 
 	//Temporary buffeur to Texture
 	for (udword y=0; y<h; y++)
@@ -1099,8 +1099,8 @@ udword NThresholdOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	udword h = pSrc->GetHeight();
 	pDst->SetSize(w,h);
 
-	RGBA* pPxSrc = pSrc->GetPixels();
-	RGBA* pPxDst = pDst->GetPixels();
+	NRGBA* pPxSrc = pSrc->GetPixels();
+	NRGBA* pPxDst = pDst->GetPixels();
 
 	//Get Variables Values
 	ubyte byThreshold;
@@ -1205,8 +1205,8 @@ udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	udword h = pSrc->GetHeight();
 	pDst->SetSize(w,h);
 
-	RGBA*	pPxSrc = pSrc->GetPixels();
-	RGBA*	pPxDst = pDst->GetPixels();
+	NRGBA*	pPxSrc = pSrc->GetPixels();
+	NRGBA*	pPxDst = pDst->GetPixels();
 
 	//Process
 	for (udword y=0; y<h; y++)
@@ -1269,9 +1269,9 @@ udword NSegmentOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 		return (udword)-1;
 	pDst->SetSize(w,h);
 
-	RGBA* pPxSrc1 = pSrc1->GetPixels();
-	RGBA* pPxSrc2 = pSrc2->GetPixels();
-	RGBA* pPxDst = pDst->GetPixels();
+	NRGBA* pPxSrc1 = pSrc1->GetPixels();
+	NRGBA* pPxSrc2 = pSrc2->GetPixels();
+	NRGBA* pPxDst = pDst->GetPixels();
 
 	//Get Variables Values
 	ubyte byThreshold;
@@ -1300,7 +1300,7 @@ udword NSegmentOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 				pStack[stackPtr++] = Coord(x, y);
 			}
 
-			RGBA color = pPxSrc2[index];
+			NRGBA color = pPxSrc2[index];
 
 			while (stackPtr>0)
 			{
@@ -1382,13 +1382,13 @@ udword NDilateOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	ubyte byIterations;
 	m_pcvarsBloc->GetValue(0, _ftime, byIterations);
 
-	RGBA* pPxInter = (RGBA*)NMemAlloc(w*h*sizeof(RGBA));
+	NRGBA* pPxInter = (NRGBA*)NMemAlloc(w*h*sizeof(NRGBA));
 
 	for (sdword i=0; i<byIterations+1; ++i)
 	{
 		udword index = 0;
-		RGBA* pPxSrc;
-		RGBA* pPxDst;
+		NRGBA* pPxSrc;
+		NRGBA* pPxDst;
 
 		if (i == 0)
 		{
@@ -1476,9 +1476,9 @@ udword NAlphaMaskOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	ubyte colormask;
 	m_pcvarsBloc->GetValue(0, _ftime, colormask);
 
-	RGBA* pPxSrc = pSrc->GetPixels();
-	RGBA* pPxDst = pDst->GetPixels();
-	RGBA* pPxAlpha = null;
+	NRGBA* pPxSrc = pSrc->GetPixels();
+	NRGBA* pPxDst = pDst->GetPixels();
+	NRGBA* pPxAlpha = null;
 
 	if(m_byInputs == 2)
 	{

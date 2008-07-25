@@ -23,13 +23,13 @@
 #include "Core.h"
 
 //-----------------------------------------------------------------
-//!	\struct	RGBA
+//!	\struct	NRGBA
 //!	\brief	8Bits composants
 //-----------------------------------------------------------------
-struct RGBA
+struct NRGBA
 {
-	RGBA() {}
-	RGBA(ubyte R, ubyte G, ubyte B, ubyte A): r(R), g(G), b(B), a(A) {}
+	NRGBA() {}
+	NRGBA(ubyte R, ubyte G, ubyte B, ubyte A): r(R), g(G), b(B), a(A) {}
 	union
 	{
 		struct { ubyte r, g, b, a;	};
@@ -43,9 +43,9 @@ struct RGBA
 		return (r + g + b) / 3.f;
 	}
 
-	RGBA operator*(float c) const
+	NRGBA operator*(float c) const
 	{
-		RGBA retval(*this);
+		NRGBA retval(*this);
 		retval.a = ubyte(retval.a * c);
 		return retval;
 	}
@@ -56,9 +56,9 @@ struct RGBA
 	}
 
 	//! Non-commutative +: argument is put on top existing color based on alpha
-	RGBA operator+(const RGBA& v) const
+	NRGBA operator+(const NRGBA& v) const
 	{
-		RGBA retval;
+		NRGBA retval;
 		float alpha = v.a / 255.f;
 		float beta = 1- alpha; //opt
 		retval.a = ubyte(v.a     +     a * beta);
@@ -69,7 +69,7 @@ struct RGBA
 	}
 
 	//! Non-commutative +: argument is put on top existing color based on alpha
-	void operator+=(const RGBA& v)
+	void operator+=(const NRGBA& v)
 	{
 		float alpha = v.a / 255.f;
 		float beta = 1- alpha; //opt
@@ -82,13 +82,13 @@ struct RGBA
 
 
 //-----------------------------------------------------------------
-//!	\struct	RGBAI
+//!	\struct	NRGBAI
 //!	\brief	32Bits composants
 //-----------------------------------------------------------------
-struct RGBAI
+struct NRGBAI
 {
-	RGBAI(){}
-	RGBAI(sdword R, sdword G, sdword B, sdword A): r(R), g(G), b(B), a(A) {}
+	NRGBAI(){}
+	NRGBAI(sdword R, sdword G, sdword B, sdword A): r(R), g(G), b(B), a(A) {}
 	sdword r,g,b,a;
 };
 
@@ -111,13 +111,13 @@ public:
 	//Members Access
 	udword				GetWidth()			{ return m_dwWidth;			}
 	udword				GetHeight()			{ return m_dwHeight;		}
-	RGBA*					GetPixels()			{ return m_pbyPixels;		}
+	NRGBA*					GetPixels()			{ return m_pbyPixels;		}
 
 //	virtual void					saveBMP(char *filename);
 
 protected:
 	//Datas
-	RGBA*		m_pbyPixels;
+	NRGBA*		m_pbyPixels;
 	udword	m_dwWidth, m_dwHeight;
 };
 

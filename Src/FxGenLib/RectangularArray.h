@@ -24,9 +24,9 @@
 
 //! Simple wrapper for pixel arrays, which allows safe operation as an option.
 //! It can be a bit slower than pointer arithmetics.
-//! RectangularArray r(RGBA*, width);
-//! RGBA col = r(x,y);
-//! \param bilc Means the T stores linear combination weight (such as RGBA in alpha channel)
+//! RectangularArray r(NRGBA*, width);
+//! NRGBA col = r(x,y);
+//! \param bilc Means the T stores linear combination weight (such as NRGBA in alpha channel)
 
 template < typename T, bool bilc = true > struct RectangularArray
 {
@@ -161,7 +161,7 @@ private:
 	bool need_delete;
 };
 
-typedef RectangularArray<RGBA> RGBAArray;
+typedef RectangularArray<NRGBA> NRGBAArray;
 
 template <typename T> T mod(T num)
 {
