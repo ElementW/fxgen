@@ -4,7 +4,7 @@
 //! \brief	Serializer for datas loading and saving
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
-//!	\date		12-02-2007
+//!	\date		23-07-2008
 //!
 //!	\brief	This file applies the GNU LESSER GENERAL PUBLIC LICENSE
 //!					Version 2.1 , read file COPYING.
@@ -36,7 +36,7 @@ NArchive::NArchive(NStream *_stream)
 {
   m_pBufferedStream = null;
   m_pStream = _stream;
-  m_pGuidsArray = null;
+  m_pRTClassesArray = null;
   Clear();
 }
 
@@ -48,8 +48,8 @@ NArchive::~NArchive()
   if (m_pBufferedStream != null)
     delete m_pBufferedStream;
 
-  if (m_pGuidsArray != null)
-    NMemFree(m_pGuidsArray);
+  if (m_pRTClassesArray != null)
+    NMemFree(m_pRTClassesArray);
 }
 
 //-----------------------------------------------------------------
@@ -57,12 +57,12 @@ NArchive::~NArchive()
 //-----------------------------------------------------------------
 void NArchive::Clear()
 {
-  if (m_pGuidsArray != null)
-    NMemFree(m_pGuidsArray);
+  if (m_pRTClassesArray != null)
+    NMemFree(m_pRTClassesArray);
 
-  m_wGuidsSize		= NSF_GUIDSARRAYSIZE;
-  m_wGuidsCount		= 0;
-  m_pGuidsArray		= (ID*)NMemAlloc(sizeof(ID) * m_wGuidsSize);
+  m_wRTClassesSize		= NSF_RTCLASSESARRAYSIZE;
+  m_wRTClassCount			= 0;
+  m_pRTClassesArray		= (NRTClass**)NMemAlloc(sizeof(NRTClass*) * m_wRTClassesSize);
 
   m_carrayMappedObjs.Clear();
   m_carrayMappedObjs.AddItem(null);	//at idx 0, null object reference
@@ -104,13 +104,29 @@ bool NArchive::FinalizeSave()
 	NSFHeader						h;
 	h.NSFId							= NSF_HEADERID;
 	h.Version						= NSF_VERSION;
-	h.GUIDCount					= m_wGuidsCount;
+	h.RTClassesCount			= m_wRTClassCount;
 	h.MappedObjsCount		= (uword)m_carrayMappedObjs.Count();
-	h.MappedObjsOffset	= sizeof(NSFHeader)+ (m_wGuidsCount * sizeof(ID)) + dwUserDatasEndPos;
-	m_pStream->PutData(&h, sizeof(NSFHeader));
+	//h.RTClassesOffset Updated later...
+	//h.MappedObjsOffset	Updated later...
 
-	//Save GUIDs Table
-	m_pStream->PutData(m_pGuidsArray, sizeof(ID)*m_wGuidsCount);
+	m_pStream->PutData(&h, sizeof(NSFHeader));	//Just for seeking
+
+	//Write RTClasses Module + class Names
+	for (j=0; j<(udword)m_wRTClassCount; j++)
+	{
+		*m_pStream<<m_pRTClassesArray[j]->m_pRTClassModule->m_pszModuleName;
+		*m_pStream<<m_pRTClassesArray[j]->m_pszClassName;
+	}
+
+	//Update Header
+	udword dwEndOfRTClasses = m_pStream->Tell();
+	udword dwRTClassesNameSize = dwEndOfRTClasses - sizeof(NSFHeader);
+	h.DatasOffset				= sizeof(NSFHeader) + dwRTClassesNameSize;
+	h.MappedObjsOffset	= sizeof(NSFHeader) + dwRTClassesNameSize + dwUserDatasEndPos;
+
+	m_pStream->Seek(0);
+	m_pStream->PutData(&h, sizeof(NSFHeader));
+	m_pStream->Seek(dwEndOfRTClasses);
 
 	//Save Datas block
 	m_pStream->PutData(m_pBufferedStream->GetBuffer(), m_pBufferedStream->Tell());
@@ -130,54 +146,79 @@ bool NArchive::Read()
 {
 	if (m_pStream==null)				return false;
 
+	udword i;
+
 	//Read Header
 	NSFHeader		h;
-        m_pStream->GetData(&h, sizeof(NSFHeader));
+	m_pStream->GetData(&h, sizeof(NSFHeader));
 
 	//Check if it's a NSF file
 	if (h.NSFId!=NSF_HEADERID)
 	{
-#ifdef _DEBUG
 		ERR("Not an NSF File",0);
-#endif
 		return false;
 	}
 
 	//Check version
-	if (h.Version!=NSF_VERSION)
+	if (h.Version!=NSF_VERSION && h.Version!=0x1000)
 	{
-#ifdef _DEBUG
 		ERR("NSF Bad Version",0);
-#endif
 		return false;
 	}
 
-	//Read GUIDs Table
-	m_wGuidsCount = h.GUIDCount;
+	//Alloc Class's Names Table
+	m_wRTClassCount = h.RTClassesCount;
 
-	if (m_wGuidsCount>=m_wGuidsSize)
+	if (m_wRTClassCount>=m_wRTClassesSize)
 	{
-		m_wGuidsSize=m_wGuidsCount+NSF_GUIDSGROWSIZE;
-		m_pGuidsArray = (ID*)NMemRealloc(m_pGuidsArray, sizeof(ID) * (m_wGuidsSize));
+		m_wRTClassesSize=m_wRTClassCount+NSF_RTCLASSESGROWSIZE;
+		m_pRTClassesArray = (NRTClass**)NMemRealloc(m_pRTClassesArray, sizeof(NRTClass*) * (m_wRTClassesSize));
 	}
 
-        m_pStream->GetData(m_pGuidsArray, sizeof(ID)*h.GUIDCount);
+
+	//For old Version 1.0.0.0 Classes are saved by ID	###TOREMOVE### after alpha version
+	if (h.Version==0x1000)
+	{
+		m_pStream->Seek(sizeof(h) - sizeof(h.DatasOffset));
+
+		for (i=0; i<m_wRTClassCount; i++)
+		{
+			ID id;
+			m_pStream->GetData(&id, sizeof(ID));
+			m_pRTClassesArray[i] = NRTClass::GetRTClassByID(id);
+		}
+
+	} else {
+
+		//Read Class's Names Table and make RTClass Table
+		char szModuleName[256];
+		char szClassName[256];
+		for (i=0; i<m_wRTClassCount; i++)
+		{
+			*m_pStream>>szModuleName;
+			//###TODO### control if module is loaded...
+			*m_pStream>>szClassName;
+			m_pRTClassesArray[i] = NRTClass::GetRTClassByName(szClassName);
+		}
+
+	}
 
 	// Save current file pos then jump to Mapped Objects ...
-	udword dwSavedPos = m_pStream->Tell();
+	if (h.Version==0x1000)
+		h.DatasOffset = m_pStream->Tell();
+
 	m_pStream->Seek(h.MappedObjsOffset);
 
 	//Read Mapped Objects Table
-	udword i;
 	m_carrayMappedObjs.SetSize(h.MappedObjsCount);
-	for (i=1; i<h.MappedObjsCount; i++)	//from 1 because idx0 = null object reference
+	for (i=1; i<h.MappedObjsCount; i++)	//from 1 because indice 0 = null object reference
 	{
 		NObject* pobj = GetClass();
 		m_carrayMappedObjs.AddItem(pobj);
 	}
 
 	//Restore old file pos
-	m_pStream->Seek(dwSavedPos);
+	m_pStream->Seek(h.DatasOffset);
 
 	//Then Datas ...
 
@@ -186,37 +227,37 @@ bool NArchive::Read()
 
 
 //-----------------------------------------------------------------
-//!	\brief	Add GUID into array
-//!	\param	_guidClass	GUID to add
-//!	\return	idx of unique GUID in array
+//!	\brief	Add Unique RTCLass* into array
+//!	\param	_pRTClass	RTClass Ptr to add
+//!	\return	idx of unique RTClass in array
 //-----------------------------------------------------------------
-uword NArchive::AddUniqueGUID(ID _guidClass)
+uword NArchive::AddUniqueRTClass(NRTClass* _pRTClass)
 {
-	for (uword i=0; i<m_wGuidsCount; i++)
+	for (uword i=0; i<m_wRTClassCount; i++)
 	{
-		if (m_pGuidsArray[i]==_guidClass)		return i;
+		if (m_pRTClassesArray[i]==_pRTClass)		return i;
 	}
 
-	if (m_wGuidsCount+1>=m_wGuidsSize)
+	if (m_wRTClassCount+1>=m_wRTClassesSize)
 	{
-		m_wGuidsSize+=NSF_GUIDSGROWSIZE;
-		m_pGuidsArray = (ID*)NMemRealloc(m_pGuidsArray, sizeof(ID) * (m_wGuidsSize));
+		m_wRTClassesSize+=NSF_RTCLASSESGROWSIZE;
+		m_pRTClassesArray = (NRTClass**)NMemRealloc(m_pRTClassesArray, sizeof(NRTClass*) * (m_wRTClassesSize));
 	}
 
-	m_pGuidsArray[m_wGuidsCount++] = _guidClass;
+	m_pRTClassesArray[m_wRTClassCount++] = _pRTClass;
 
-	return m_wGuidsCount-1;
+	return m_wRTClassCount-1;
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Return a GUID from an idx
+//!	\brief	Return a RTClass from an idx
 //!	\param	_idx indice
-//!	\return	GUID
+//!	\return	RTClass*
 //-----------------------------------------------------------------
-ID NArchive::GetGUIDFromIdx(uword _idx)
+NRTClass* NArchive::GetRTClassFromIdx(uword _idx)
 {
-	if (_idx>=m_wGuidsCount)		return null;
-	return m_pGuidsArray[_idx];
+	if (_idx>=m_wRTClassCount)		return null;
+	return m_pRTClassesArray[_idx];
 }
 
 //-----------------------------------------------------------------
@@ -224,7 +265,6 @@ ID NArchive::GetGUIDFromIdx(uword _idx)
 //!	\param	_buf			buffer to add
 //!	\param	_length		len of datas
 //-----------------------------------------------------------------
-
 bool NArchive::PutData(void* _buf, udword _length)
 {
   return (m_pBufferedStream != null ? m_pBufferedStream : m_pStream)->PutData(_buf, _length);
@@ -278,7 +318,7 @@ void NArchive::PutClass(NObject* _c)
 void NArchive::PutObj(NObject* _c)
 {
 	//Get Class ID idx
-	uword id = AddUniqueGUID(_c->GetRTClass()->CLASSID);
+	uword id = AddUniqueRTClass( _c->GetRTClass() );
 
 	//Write Tag + ID idx
 	*this << (ubyte)NSF_CLASS_TAG;
@@ -304,19 +344,25 @@ NObject* NArchive::GetClass()
 	//////////////////////////////////////////
 	if (tag==NSF_CLASS_TAG)
 	{
-		//Get Class ID from idx
+		//Get Runtime Class from idx
 		*this >> idx;
-		ID CLASSID = GetGUIDFromIdx(idx);
-#ifdef _DEBUG
-		if (!CLASSID)							ERR("Class's ID not registered",0);
-#endif
-		//Create Run-Time Class
-		pobj = NRTClass::CreateByID(CLASSID);
-#ifdef _DEBUG
-		if (!pobj)								ERR("Can't create RTClass",0);
-#endif
+		NRTClass* prtc = GetRTClassFromIdx(idx);
+		if (!prtc)
+		{
+			ERR("RTClass not found",0);
+			return null;
+		}
+
+		//Create Class
+		pobj = prtc->m_pCreateCB();
+		if (!pobj)
+		{
+			ERR("Can't create Object from RTClass",0);
+			return null;
+		}
+
 		//Serialize class
-		if (pobj)	pobj->Load(this);
+		pobj->Load(this);
 
 	//////////////////////////////////////////
 	} else if (tag==NSF_MAPPEDCLASS_TAG) {
@@ -325,15 +371,16 @@ NObject* NArchive::GetClass()
 		*this >> idx;
 		pobj = m_carrayMappedObjs[idx];
 
-#ifdef _DEBUG
-		if (idx!=0 && !pobj)				ERR("Mapped object not found!", 0);
-#endif
+		if (idx!=0 && !pobj)
+		{
+			ERR("Mapped object not found!", 0);
+		}
+
 	//////////////////////////////////////////
 	} else {
 
-#ifdef _DEBUG
 		ERR("Unsupported Tag",0);
-#endif
+
 	}
 
 	return pobj;
@@ -358,7 +405,6 @@ uword NArchive::AddUniqueMappedObjs(NObject* _pobj)
 //!	\brief	Put a mapped object into array
 //!	\param	_c mapped object to put
 //-----------------------------------------------------------------
-
 void	NArchive::PutMappedObj(NObject* _c)
 {
 	//Write Tag
@@ -380,14 +426,16 @@ NObject* NArchive::GetMappedObj()
 	{
 		uword idx;	*this >> idx;	//Get Object Idx	(rk. idx=0 obj=null)
 		NObject* pobj = m_carrayMappedObjs[idx];
-#ifdef _DEBUG
-		if (idx!=0 && !pobj)				ERR("Mapped object not found!", 0);
-#endif
+
+		if (idx!=0 && !pobj)
+		{
+			ERR("Mapped object not found!", 0);
+		}
+
 		return pobj;
 	}
 
-#ifdef _DEBUG
 	ERR("Unsupported Tag",0);
-#endif
+
 	return null;
 }

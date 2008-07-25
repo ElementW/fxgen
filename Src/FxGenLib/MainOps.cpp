@@ -69,7 +69,7 @@ udword NStoreOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	pDst->SetSize(w,h);
 
 	//Copy Source to This
-	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
+	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(NRGBA));
 
 	return 0;
 }
@@ -133,7 +133,7 @@ udword NStoreResultOp::Process(float _ftime, NOperator** _pOpsInts, float _fDeta
 	pDst->SetSize(w,h);
 
 	//Copy Source to This
-	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
+	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(NRGBA));
 
 	return 0;
 }
@@ -206,7 +206,7 @@ udword NLoadOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 		pDst->SetSize(w,h);
 
 		//Copy Source to This
-		memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
+		memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(NRGBA));
 	}
 
 	return 0;

@@ -39,7 +39,7 @@ NBitmap::NBitmap() : NObject()
 	m_dwWidth=m_dwHeight=0;
 	m_pbyPixels=null;
 	//m_dwWidth=m_dwHeight= 256;
-	//m_pbyPixels = (RGBA*)NMemAlloc(m_dwWidth*m_dwHeight*sizeof(RGBA));
+	//m_pbyPixels = (NRGBA*)NMemAlloc(m_dwWidth*m_dwHeight*sizeof(NRGBA));
 }
 
 //-----------------------------------------------------------------
@@ -62,10 +62,10 @@ void NBitmap::SetSize(udword _w, udword _h)
 		//Bitmap resize
 		if (m_pbyPixels)
 		{
-			RGBA* pbyNewPixels = (RGBA*)NMemAlloc(_w*_h*sizeof(RGBA));
+			NRGBA* pbyNewPixels = (NRGBA*)NMemAlloc(_w*_h*sizeof(NRGBA));
 
-			RGBA* pPxSrc	= m_pbyPixels;
-			RGBA* pPxDst	= pbyNewPixels;
+			NRGBA* pPxSrc	= m_pbyPixels;
+			NRGBA* pPxDst	= pbyNewPixels;
 
 			for (udword y=0; y<_h; y++)
 			{
@@ -83,7 +83,7 @@ void NBitmap::SetSize(udword _w, udword _h)
 
 		//Bitmap creation
 		} else {
-			m_pbyPixels = (RGBA*)NMemAlloc(_w*_h*sizeof(RGBA));
+			m_pbyPixels = (NRGBA*)NMemAlloc(_w*_h*sizeof(NRGBA));
 		}
 
 		m_dwWidth	=_w;	m_dwHeight=_h;
@@ -98,7 +98,7 @@ void NBitmap::SetSize(udword _w, udword _h)
 ////-----------------------------------------------------------------
 //void NBitmap::saveBMP(char *filename)
 //{
-//	RGBA* pdata = m_pbyPixels;
+//	NRGBA* pdata = m_pbyPixels;
 //
 //	noise::utils::Image *image = new noise::utils::Image( m_dwWidth, m_dwHeight );
 //

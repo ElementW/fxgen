@@ -51,7 +51,7 @@ udword NNopOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	//Copy Source to This
-	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
+	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(NRGBA));
 
 	return 0;
 }
@@ -79,10 +79,10 @@ static NMapVarsBlocDesc mapblocdescRectOp[] =
 static NVarsBlocDesc blocdescRectOp[] =
 {
 	VAR(eudword,	true, "Color",	"-1",		"NColorProp")	//0
-	VAR(efloat,		true, "x1",			"0.0",	"NCFloatProp")	//1
-	VAR(efloat,		true, "y1",			"0.0",	"NCFloatProp")	//2
-	VAR(efloat,		true, "x2",			"0.5",	"NCFloatProp")	//3
-	VAR(efloat,		true, "y2",			"0.5",	"NCFloatProp")	//4
+	VAR(efloat,		true, "x1",			"0.0",	"NFloatProp")	//1
+	VAR(efloat,		true, "y1",			"0.0",	"NFloatProp")	//2
+	VAR(efloat,		true, "x2",			"0.5",	"NFloatProp")	//3
+	VAR(efloat,		true, "y2",			"0.5",	"NFloatProp")	//4
 };
 
 NRectOp::NRectOp()
@@ -109,7 +109,7 @@ udword NRectOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	pDst->SetSize(w,h);
 
 	//Get Variables Values
-	RGBA col;
+	NRGBA col;
 	float fx1,fy1,fx2,fy2;
 	m_pcvarsBloc->GetValue(0, _ftime, (udword&)col);
 	m_pcvarsBloc->GetValue(1, _ftime, fx1);
@@ -125,12 +125,12 @@ udword NRectOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	y2 = min(h, fy2 * h);
 
 	//Copy Source to this bitmap
-	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
+	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(NRGBA));
 
 	//Process operator
 	for (udword y=y1; y<y2; y++)
 	{
-		RGBA* pPixelsD = pDst->GetPixels() + (y*w) + x1;
+		NRGBA* pPixelsD = pDst->GetPixels() + (y*w) + x1;
 		for (udword x=x1; x<x2; x++)
 		{
 			float alpha = col.a / 255.f;
@@ -184,7 +184,7 @@ udword NPixelsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	pDst->SetSize(w,h);
 
 	//Get Variables Values
-	RGBA col;
+	NRGBA col;
 	ubyte byCount;
 	uword wSeed;
 	m_pcvarsBloc->GetValue(0, _ftime, (udword&)col);
@@ -192,13 +192,13 @@ udword NPixelsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	m_pcvarsBloc->GetValue(2, _ftime, byCount);
 
 	//Copy Source to This
-	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
+	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(NRGBA));
 
 	//Process operator
 	SetSeedValue(wSeed);
 
 	udword dwCount = 2<<(byCount>>4);
-	RGBA* pPxDst = pDst->GetPixels();
+	NRGBA* pPxDst = pDst->GetPixels();
 	while (--dwCount)
 	{
 		udword x=myRandom() % w;
@@ -247,10 +247,10 @@ udword NAddOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 
 
 	//Copy Source 1 to This
-	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(RGBA));
+	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(NRGBA));
 
 	//Get Variables Values
-	RGBA colPercent;
+	NRGBA colPercent;
 	ubyte byMode;
 	m_pcvarsBloc->GetValue(0, _ftime, byMode);
 	m_pcvarsBloc->GetValue(1, _ftime, (udword&)colPercent);
@@ -268,8 +268,8 @@ udword NAddOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 		NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
 		if (pSrc==null)		break;
 
-		RGBA* pPxSrc = pSrc->GetPixels();
-		RGBA* pPxDst = pDst->GetPixels();
+		NRGBA* pPxSrc = pSrc->GetPixels();
+		NRGBA* pPxDst = pDst->GetPixels();
 
 		udword w2 = pSrc->GetWidth();
 		udword h2 = pSrc->GetHeight();
@@ -534,7 +534,7 @@ udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	pDst->SetSize(w,h);
 
 	//Get Variables Values
-	RGBA col;
+	NRGBA col;
 	float fCenterX, fCenterY, fRayX, fRayY, fAlpha, fGamma;
 	m_pcvarsBloc->GetValue(0, _ftime, (udword&)col);
 	m_pcvarsBloc->GetValue(1, _ftime, fCenterX);
@@ -557,8 +557,8 @@ udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	float	f1_RadiusX = 1.0f/(float)dwRadiusX;
 	float	f1_RadiusY = 1.0f/(float)dwRadiusY;
 
-	RGBA* pPxSrc = pSrc->GetPixels();
-	RGBA* pPxDst = pDst->GetPixels();
+	NRGBA* pPxSrc = pSrc->GetPixels();
+	NRGBA* pPxDst = pDst->GetPixels();
 
 	//Process
 	for (sdword y=0; y<h; y++)
@@ -648,7 +648,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	udword h = pSrc->GetHeight();
 	pDst->SetSize(w,h);
 
-	RGBAArray normals, dest(pDst->GetPixels(), w, h);
+	NRGBAArray normals, dest(pDst->GetPixels(), w, h);
 
 	if(m_byInputs==2)
 	{
@@ -658,14 +658,14 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 		if(pNorm->GetWidth() < w || pNorm->GetHeight() < h)
 			return (udword)-1; // insufficient size
 
-		normals = RGBAArray(pNorm->GetPixels(), w, h);
+		normals = NRGBAArray(pNorm->GetPixels(), w, h);
 	}
 
 	//Copy Source to This
-	memcpy(pDst->GetPixels(), pSrc->GetPixels(), pDst->GetWidth() * pDst->GetHeight() * sizeof(RGBA));
+	memcpy(pDst->GetPixels(), pSrc->GetPixels(), pDst->GetWidth() * pDst->GetHeight() * sizeof(NRGBA));
 
 	//Get Variables Values
-	RGBA color;
+	NRGBA color;
 	ubyte byVariation, byLength, byMode, byHQ;
 	uword wSeed, wCount;
 	m_pcvarsBloc->GetValue(0, _ftime, (udword&)color);
@@ -693,7 +693,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 		if(normals.width && byMode == 2)
 		{
-			RGBA &N = normals(x,y);
+			NRGBA &N = normals(x,y);
 			vec3 normal(N.r - 127.f, N.g - 127.f, 0.f);
 			count = (sdword)(count * normal.norm() * normal.norm() / 8) /* adjusted value */;
 			count = min(count, byLength * _fDetailFactor);
@@ -712,7 +712,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 			if(normals.width)
 			{
-				RGBA &N = normals(x,y);
+				NRGBA &N = normals(x,y);
 				vec3 normal(127.f - N.r, N.g-127.f, 0/*n.b*/); // x flip
 				a = normal.azimuth() + .5f * nv_pi; // rotate 90 degrees ccw
 				// alpha-based placement decision
@@ -778,10 +778,10 @@ udword NLerpOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	pDst->SetSize(w,h);
 
 	//Process
-	RGBA* pPxSrc1 = pSrc1->GetPixels();
-	RGBA* pPxSrc2 = pSrc2->GetPixels();
-	RGBA* pPxBlend = pBlend->GetPixels();
-	RGBA* pPxDst = pDst->GetPixels();
+	NRGBA* pPxSrc1 = pSrc1->GetPixels();
+	NRGBA* pPxSrc2 = pSrc2->GetPixels();
+	NRGBA* pPxBlend = pBlend->GetPixels();
+	NRGBA* pPxDst = pDst->GetPixels();
 
 
 	for (udword y=0; y<h; y++)

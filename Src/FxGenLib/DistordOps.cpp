@@ -45,9 +45,9 @@ static NVarsBlocDesc blocdescRotoZoomOp[] =
 {
 	VAR(eubyte,	false, "Set Width",		"0,[0 (Default),1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
 	VAR(eubyte,	false, "Set Height",	"0,[0 (Default),1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//1
-	VAR(efloat,		true, "CenterX",	"0.5",		"NCFloatProp")	//2
-	VAR(efloat,		true, "CenterY",	"0.5",		"NCFloatProp")	//3
-	VAR(efloat,		true, "Rotate",		"0.0",		"NCFloatProp")	//4
+	VAR(efloat,		true, "CenterX",	"0.5",		"NFloatProp")	//2
+	VAR(efloat,		true, "CenterY",	"0.5",		"NFloatProp")	//3
+	VAR(efloat,		true, "Rotate",		"0.0",		"NFloatProp")	//4
 	VAR(efloat,		true, "ZoomX",		"1.0",		"NFloatProp")	//5
 	VAR(efloat,		true, "ZoomY",		"1.0",		"NFloatProp")	//6
 	VAR(eubyte,		true, "Wrap",			"1,[0 (Off), 1 (On)]",	"NUbyteComboProp")	//7
@@ -121,8 +121,8 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 	fZoomY=pow(.5f,fZoomY-1);
 
 	//Process RotoZoom
-	RGBA* pPxlSrc = pSrc->GetPixels();
-	RGBA* pPxlDst = pDst->GetPixels();
+	NRGBA* pPxlSrc = pSrc->GetPixels();
+	NRGBA* pPxlDst = pDst->GetPixels();
 
 	float fCoefX = /*((float)tw / (float)w) * */fZoomX;
 	float fCoefY = /*((float)th / (float)h) * */fZoomY;
@@ -136,7 +136,7 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 	float	ys = s * -th2;
 	float	yc = c * -th2;
 
-	RGBAI Color;
+	NRGBAI Color;
 
 	for (udword y=0; y<h; y++)
 	{
@@ -158,7 +158,7 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 
 			//Texel1
 			float WeightFactors = (1.0f-uf) * (1.0f-vf);
-			RGBA* ptexel = pPxlSrc + ((vt%th)*tw) + (ut%tw);
+			NRGBA* ptexel = pPxlSrc + ((vt%th)*tw) + (ut%tw);
 
 			Color.r = (sdword)(ptexel->r	* WeightFactors);
 			Color.g = (sdword)(ptexel->g	* WeightFactors);
@@ -262,11 +262,11 @@ udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 
 	/////////////////////////////////////////
 	//Process operator
-	RGBA* pPxNorm = pNorm->GetPixels();
-	RGBA* pPxSrc	= pSrc->GetPixels();
-	RGBA* pPxDst	= pDst->GetPixels();
+	NRGBA* pPxNorm = pNorm->GetPixels();
+	NRGBA* pPxSrc	= pSrc->GetPixels();
+	NRGBA* pPxDst	= pDst->GetPixels();
 
-	RGBA Color;
+	NRGBA Color;
 
 	for (udword y=0; y<h; y++)
 	{
@@ -297,7 +297,7 @@ udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 
 			//Texel1
 			float WeightFactors = (1.0f-uf) * (1.0f-vf);
-			RGBA* ptexel = pPxSrc + ((vt%h)*w) + (ut%w);
+			NRGBA* ptexel = pPxSrc + ((vt%h)*w) + (ut%w);
 
 			Color.r = (ubyte)(ptexel->r	* WeightFactors);
 			Color.g = (ubyte)(ptexel->g	* WeightFactors);
@@ -399,11 +399,11 @@ udword NVortexOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 
 	float radians = byTwist * 100.0f * nv_to_rad;
 
-	RGBA* pPxSrc = pSrc->GetPixels();
-	RGBA* baseSrc = pPxSrc;
-	RGBA* pPxDst = pDst->GetPixels();
+	NRGBA* pPxSrc = pSrc->GetPixels();
+	NRGBA* baseSrc = pPxSrc;
+	NRGBA* pPxDst = pDst->GetPixels();
 
-//	RGBA* src;
+//	NRGBA* src;
 	//Process
 	for (sdword y=0; y<h; y++)
 	{
@@ -461,10 +461,10 @@ udword NVortexOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 
 				int wrapx = (ix+1)%w;
 				int wrapy = (iy+1)%h;
-				RGBA* texelUL = baseSrc + ix + iy*w;
-				RGBA* texelUR = baseSrc + wrapx + iy*w;
-				RGBA* texelLL = baseSrc + ix + wrapy*w;
-				RGBA* texelLR = baseSrc + wrapx + wrapy*w;
+				NRGBA* texelUL = baseSrc + ix + iy*w;
+				NRGBA* texelUR = baseSrc + wrapx + iy*w;
+				NRGBA* texelLL = baseSrc + ix + wrapy*w;
+				NRGBA* texelLR = baseSrc + wrapx + wrapy*w;
 
 				pPxDst->r = (int)(ul * texelUL->r + ll * texelLL->r + ur * texelUR->r + lr * texelLR->r);
 				pPxDst->g = (int)(ul * texelUL->g + ll * texelLL->g + ur * texelUR->g + lr * texelLR->g);
@@ -520,9 +520,9 @@ udword NLookupOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 
 	/////////////////////////////////////////
 	//Process operator
-	RGBA* pPxTexCoords = pTexCoords->GetPixels();
-	RGBA* pPxSrc = pSrc->GetPixels();
-	RGBA* pPxDst = pDst->GetPixels();
+	NRGBA* pPxTexCoords = pTexCoords->GetPixels();
+	NRGBA* pPxSrc = pSrc->GetPixels();
+	NRGBA* pPxDst = pDst->GetPixels();
 
 	for (udword y=0; y < h; y++)
 	{

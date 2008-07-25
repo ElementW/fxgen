@@ -75,7 +75,7 @@ udword NFlatOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	w=(udword) ((float)w*_fDetailFactor);
 	h=(udword) ((float)h*_fDetailFactor);
 
-	RGBA col;
+	NRGBA col;
 	m_pcvarsBloc->GetValue(2, _ftime, (udword&)col);
 
 	//Bitmap instance
@@ -83,7 +83,7 @@ udword NFlatOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 
 	NBitmap* pDst = (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
-	RGBA* pPxDst = pDst->GetPixels();
+	NRGBA* pPxDst = pDst->GetPixels();
 
 	//Process operator
 	for (udword y=0; y<w; y++)
@@ -135,7 +135,7 @@ udword NCloudOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	if (m_byInputs!=0)		return (udword)-1;
 
 	//Get Variables Values
-	RGBA color0, color1;
+	NRGBA color0, color1;
 	uword wSeed;
 	ubyte byAmp;
 	m_pcvarsBloc->GetValue(2, _ftime, (udword&)color0);
@@ -159,7 +159,7 @@ udword NCloudOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 	NBitmap* pDst	= (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
-	RGBA* pPxDst	= pDst->GetPixels();
+	NRGBA* pPxDst	= pDst->GetPixels();
 
 	//Create temporary buffer
 	m_pbyPxTps	= (sdword*)NMemAlloc(w*h*sizeof(sdword)*2);
@@ -441,7 +441,7 @@ udword NGradientOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 	w=(sdword) ((float)w*_fDetailFactor);
 	h=(sdword) ((float)h*_fDetailFactor);
 
-	RGBA colA, colB, colC, colD;
+	NRGBA colA, colB, colC, colD;
 	m_pcvarsBloc->GetValue(2, _ftime, (udword&)colA);
 	m_pcvarsBloc->GetValue(3, _ftime, (udword&)colB);
 	m_pcvarsBloc->GetValue(4, _ftime, (udword&)colC);
@@ -451,12 +451,12 @@ udword NGradientOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 	NBitmap* pDst = (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
-	RGBA* pPxDst = pDst->GetPixels();
+	NRGBA* pPxDst = pDst->GetPixels();
 
 	//Init
 	//A B
 	//C D
-	RGBAI col;
+	NRGBAI col;
 	float finv_WH = 1.0f / (float)(w*h);
 
 	//Process operator
@@ -547,7 +547,7 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 
 	ubyte byRegularity, byDensity, chessboard, pattern;
 	uword wSeed;
-	RGBA col;
+	NRGBA col;
 	m_pcvarsBloc->GetValue(2, _ftime, byRegularity);
 	m_pcvarsBloc->GetValue(3, _ftime, byDensity);
 	m_pcvarsBloc->GetValue(4, _ftime, (udword&)col);
@@ -563,8 +563,8 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 	NBitmap* pDst = (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
-	RGBA* pPxDst = pDst->GetPixels();
-	RGBAArray arrDst(pPxDst,w,h);
+	NRGBA* pPxDst = pDst->GetPixels();
+	NRGBAArray arrDst(pPxDst,w,h);
 
 	//Init
 	const float regularity = byRegularity / 255.0f;
@@ -704,7 +704,7 @@ udword NNoiseOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	w=(udword) ((float)w*_fDetailFactor);
 	h=(udword) ((float)h*_fDetailFactor);
 
-	RGBA col;
+	NRGBA col;
 	m_pcvarsBloc->GetValue(2, _ftime, (udword&)col);
 
 	uword wSeed;
@@ -716,7 +716,7 @@ udword NNoiseOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 	NBitmap* pDst = (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
-	RGBA* pPxDst = pDst->GetPixels();
+	NRGBA* pPxDst = pDst->GetPixels();
 
 	//Process operator
 	for (udword y=0; y<w; y++)
@@ -826,7 +826,7 @@ udword NVectorOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 
 	NBitmap* pDst = (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
-	RGBA* pPxDst = pDst->GetPixels();
+	NRGBA* pPxDst = pDst->GetPixels();
 
 	memset( pPxDst, 0, w*h*4 );
 
@@ -841,7 +841,7 @@ udword NVectorOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	{
 		for (udword x=0; x<w; x++)
 		{
-			RGBA color = *pPxDst;
+			NRGBA color = *pPxDst;
 			pPxDst->r = color.b;
 			pPxDst->g = color.g;
 			pPxDst->b = color.r;

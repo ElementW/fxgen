@@ -936,13 +936,6 @@ NRTClassModule::NRTClassModule(const char* _pszModuleName)
   m_pLastRTClassModule=this;
 }
 
-//-----------------------------------------------------------------
-//!	\brief  Register a new runtimeclass module
-//!	\param	_pmodule  the new RTClassModule
-//-----------------------------------------------------------------
-/*void NRTClassModule::RegisterRTClassModule(NRTClassModule* _pmodule)
-{
-}*/
 
 //-----------------------------------------------------------------
 //
@@ -985,21 +978,9 @@ NRTClass::NRTClass(RTCLASS_HANDLER*	_pcreateCB, const char* _pszClassName, const
 //-----------------------------------------------------------------
 NObject* NRTClass::CreateByID(ID _CLASSID)
 {
-  NRTClassModule* pmod = NRTClassModule::m_pFirstRTClassModule;
-  while (pmod)
-  {
-    NRTClass* pcurRTC = pmod->m_pFirstRTClass;
-    while (pcurRTC!=null)
-    {
-      if (pcurRTC->CLASSID == _CLASSID)
-        return pcurRTC->m_pCreateCB();
-
-      pcurRTC = pcurRTC->m_pNextRTC;
-    }
-
-    pmod=pmod->m_pNextRTClassModule;
-  }
-
+	NRTClass*	prt = NRTClass::GetRTClassByID(_CLASSID);
+	if (prt)
+		return prt->m_pCreateCB();
 
 	return null;
 }
@@ -1012,6 +993,20 @@ NObject* NRTClass::CreateByID(ID _CLASSID)
 //-----------------------------------------------------------------
 NObject* NRTClass::CreateByName(const char* _pszClassName)
 {
+	NRTClass*	prt = NRTClass::GetRTClassByName(_pszClassName);
+	if (prt)
+		return prt->m_pCreateCB();
+
+	return null;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Return RTClass* from class Name
+//!	\param	_pszClassName	Class name
+//!	\return	NRTClass*
+//-----------------------------------------------------------------
+NRTClass*	NRTClass::GetRTClassByName(const char* _pszClassName)
+{
   NRTClassModule* pmod = NRTClassModule::m_pFirstRTClassModule;
   while (pmod)
   {
@@ -1020,7 +1015,7 @@ NObject* NRTClass::CreateByName(const char* _pszClassName)
     while (pcurRTC!=null)
     {
       if (strcmp(pcurRTC->m_pszClassName, _pszClassName) == 0)
-        return pcurRTC->m_pCreateCB();
+        return pcurRTC;
 
       pcurRTC = pcurRTC->m_pNextRTC;
     }
@@ -1030,6 +1025,32 @@ NObject* NRTClass::CreateByName(const char* _pszClassName)
 
 	return null;
 }
+
+//-----------------------------------------------------------------
+//!	\brief	Return RTClass* from class ID
+//!	\param	_CLASSID	Class ID
+//!	\return	NRTClass*
+//-----------------------------------------------------------------
+NRTClass*	NRTClass::GetRTClassByID(ID _CLASSID)
+{
+  NRTClassModule* pmod = NRTClassModule::m_pFirstRTClassModule;
+  while (pmod)
+  {
+    NRTClass* pcurRTC = pmod->m_pFirstRTClass;
+    while (pcurRTC!=null)
+    {
+      if (pcurRTC->CLASSID == _CLASSID)
+        return pcurRTC;
+
+      pcurRTC = pcurRTC->m_pNextRTC;
+    }
+
+    pmod=pmod->m_pNextRTClassModule;
+  }
+
+	return null;
+}
+
 
 //-----------------------------------------------------------------
 //!	\brief	Create a class ID from class Name
@@ -1069,6 +1090,7 @@ NRTClass* NRTClass::GetFirstClassBySuperClass(const char* _pszSuperClassName)
 	return null;
 }
 
+
 //-----------------------------------------------------------------
 //!	\brief	Return Next RTClass from a super class name
 //-----------------------------------------------------------------
@@ -1088,6 +1110,8 @@ NRTClass* NRTClass::GetNextClassBySuperClass(const char* _pszSuperClassName, NRT
     }
 
     pmod=pmod->m_pNextRTClassModule;
+		if (pmod)
+			_prtclass = pmod->m_pFirstRTClass;
   }
 
 	return null;

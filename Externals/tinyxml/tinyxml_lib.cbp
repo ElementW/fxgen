@@ -7,32 +7,11 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Release|Win32">
-				<Option output="../../W32Bin/libtinyxml_lib" prefix_auto="1" extension_auto="1" />
+				<Option output="..\..\lib\libtinyxml_lib" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
-			</Target>
-			<Target title="Release|Linux">
-				<Option output="../../LinuxBin/libtinyxml_lib" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
-				<Option type="2" />
-				<Option compiler="gcc" />
-				<Option createDefFile="1" />
-			</Target>
-			<Target title="Release|Linux32">
-				<Option output="../../LinuxBin32/libtinyxml_lib" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
-				<Option object_output=".objs32" />
-				<Option type="2" />
-				<Option compiler="gcc" />
-				<Option createDefFile="1" />
-				<Compiler>
-					<Add option="-m32" />
-				</Compiler>
-				<Linker>
-					<Add option="-m32" />
-				</Linker>
 			</Target>
 		</Build>
 		<Unit filename="tinystr.cpp" />
@@ -45,11 +24,6 @@
 			<code_completion />
 			<envvars />
 			<debugger />
-			<AutoVersioning>
-				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
-				<Settings autoincrement="1" date_declarations="1" do_auto_increment="0" ask_to_increment="0" language="C++" svn="0" svn_directory="" header_path="version.h" />
-				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
-			</AutoVersioning>
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
