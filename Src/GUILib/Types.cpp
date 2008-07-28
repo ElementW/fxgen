@@ -278,7 +278,7 @@ void NString::InsertAt(udword _idx, const char* _str)
 void NString::RemoveAt(udword _idx, udword _count)
 {
 	udword len1 = Length();
-	if (mBuffer && _count<len1)
+	if (mBuffer && _idx<len1)
 	{
 		memcpy(mBuffer+_idx, mBuffer+_idx+_count, len1-_count);
 		mBuffer[len1-_count]=0;

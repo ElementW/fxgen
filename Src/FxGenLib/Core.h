@@ -45,6 +45,7 @@
 	class NVarsBloc;
 	class NObjectArray;
 	class NObjectGarbage;
+	class NErrors;
 
 //-----------------------------------------------------------------
 // Types
@@ -68,7 +69,7 @@
 	typedef signed __int64		sqword;	// Signed 64 bit value
 	typedef unsigned __int64	uqword; // Unsigned 64 bit value
 #endif
-	typedef udword						ID;			// Identifier
+	typedef udword						ID;			// Identifier	// ###JN### will be removed
 
 	//Runtime class
 	typedef	NObject* (__cdecl RTCLASS_HANDLER)(void);	//Callback for class creation
@@ -129,8 +130,8 @@ public:
 	const char*				m_pszSuperClassName;	//!< Super class's name
 
 	NRTClass*		m_pNextRTC;						//!< Next Run-Time class belong to one module
-	ID					CLASSID;							//!< Class ID (Generate from name)
-	ID					SUPERCLASSID;					//!< Super class ID (Generate from name)
+	ID					CLASSID;							//!< Class ID (Generate from name)// ###JN### will be removed
+	ID					SUPERCLASSID;					//!< Super class ID (Generate from name)// ###JN### will be removed
 	NRTClassModule* m_pRTClassModule;   //!< Run-Time class Module for this Class
 };
 
@@ -153,22 +154,20 @@ public:
 #endif
 #endif
 
-#ifdef _DEBUG
-void FXGEN_API gDebugLog(const char* fmt, ... );
-#define TRACE	gDebugLog
-#else
-#define TRACE
-#endif
-
-
 //-----------------------------------------------------------------
 // Macros
 //-----------------------------------------------------------------
 
+#ifdef _DEBUG
+	#define TRACE	gDebugLog
+	void FXGEN_API gDebugLog(const char* fmt, ... );
+#else
+	#define TRACE
+#endif
+
 //Error ###TODO### Error management
-#define ERR(msg, errcode)		{ \
-				TRACE("File: %s\n\rLine: %ld\n\r Msg:%s\n\rCode:%d", __FILE__, (udword)__LINE__, msg, errcode ); \
-			}
+				//TRACE("Code:%d Msg:%s\n", errcode, msg);
+#define ERR		gGetErrors()->AddError
 
 //Runtime class
 #define FDECLARE_CLASS() \
@@ -183,6 +182,27 @@ void FXGEN_API gDebugLog(const char* fmt, ... );
 //Variables
 #define		VAR(type,	bCanBeAnimate, pszName,	pszDefValue, pszCLASSGUI) { type,	bCanBeAnimate, pszName,	pszDefValue, pszCLASSGUI },
 #define		MAP(version, type, pszMapping,	pszExpression )	{ version,	type, pszMapping,	pszExpression },
+
+
+//-----------------------------------------------------------------
+//!	\class	NErrors Core.h
+//!	\brief	Errors manager
+//-----------------------------------------------------------------
+class FXGEN_API NErrors
+{
+public:
+	NErrors();
+	~NErrors();
+
+	void	AddError(udword _code, const char* _fmt, ... );
+	char* GetErrors();	//!< Errors are clear after this call
+
+protected:
+	udword m_dwStringSize;
+	udword m_dwStringPos;
+	char* m_pszErrors;
+};
+extern FXGEN_API NErrors* gGetErrors();
 
 
 //-----------------------------------------------------------------
@@ -535,19 +555,6 @@ int					NFileTell(NFILEHANDLE *handle);
 */
 
 //-----------------------------------------------------------------
-//	Misc classes
-//-----------------------------------------------------------------
-
-//###JN### To remove from here
-
-struct GradientElem
-{
-	//NColor color;
-	float		color[4];
-	float height;
-};
-
-//-----------------------------------------------------------------
 //	Includes
 //-----------------------------------------------------------------
 	#include "Maths.h"
@@ -555,7 +562,6 @@ struct GradientElem
 	#include "Archive.h"
 	#include "Bitmap.h"
 	#include "Controllers.h"
-
 
 //-----------------------------------------------------------------
 //! \brief Mutex-like class for safe thread operation
