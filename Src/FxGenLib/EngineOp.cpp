@@ -4,7 +4,6 @@
 //! \brief	Operators Engine
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
-//!				Sebastian Olter (qduaty@gmail.com)
 //!	\date		20-09-2007
 //!
 //!	\brief	This file applies the GNU LESSER GENERAL PUBLIC LICENSE
@@ -182,7 +181,8 @@ bool NOperatorsPage::Load(NArchive* _l)
 	NObject::Load(_l);
 
 	//Load Operators array
-	m_arrayOps.Load(_l);
+	if (!m_arrayOps.Load(_l))
+		return false;
 
 	//Links
 	ComputeLinks();
@@ -967,9 +967,7 @@ bool NEngineOp::LoadProject(const char* _pszFullFileName)
 	ar>>dwFlag;
 
 	//Load Groups and Pages
-	m_pRootGroup->Load(&ar);
-
-	return true;
+	return m_pRootGroup->Load(&ar);
 }
 
 //-----------------------------------------------------------------

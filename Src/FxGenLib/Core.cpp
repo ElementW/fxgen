@@ -48,11 +48,11 @@ double my_atof(const char* s)
 //-----------------------------------------------------------------
 //                   Variables
 //-----------------------------------------------------------------
-//NRTClassModule* _pLocalRTClassModule = NRTClassModule::RegisterModule("FxGenCore");
 const char* GetModuleName()  { return "FxGenCore"; }
 
 NRTClassModule* NRTClassModule::m_pFirstRTClassModule=null;
 NRTClassModule* NRTClassModule::m_pLastRTClassModule=null;
+
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -773,7 +773,13 @@ bool NObjectArray::Load(NArchive* _l)
 
 	//Load Objects
 	for (udword i=0; i<dwCount; i++)
-		AddItem( _l->GetClass() );
+	{
+		NObject* pobj = _l->GetClass();
+		if (pobj==null)
+			return false;
+
+		AddItem( pobj );
+	}
 
 	return true;
 }
@@ -1181,10 +1187,12 @@ bool NTreeNode::Save(NArchive* s)
 //-----------------------------------------------------------------
 bool NTreeNode::Load(NArchive* _l)
 {
-	NObject::Load(_l);
+	if (!NObject::Load(_l))
+		return false;
 
 	//Load objects
-	m_carrayObjects.Load(_l);
+	if (!m_carrayObjects.Load(_l))
+		return false;
 
 	//Load hierarchie
 	udword dwCount;
@@ -1193,7 +1201,8 @@ bool NTreeNode::Load(NArchive* _l)
 	while (dwCount--)
 	{
 		NTreeNode* pcurnode = new NTreeNode;
-		pcurnode->Load(_l);
+		if (!pcurnode->Load(_l))
+			return false;
 
 		AddSon(pcurnode);
 	}
@@ -1526,20 +1535,83 @@ void NObjectGarbage::RemoveEntry(NObject** _ppobj)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
+//									NErrors class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+
+NErrors* g_perrors = null;
+extern NErrors* gGetErrors()
+{
+	if (g_perrors==null)
+		g_perrors = new NErrors();
+	return g_perrors;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Constructor
+//-----------------------------------------------------------------
+NErrors::NErrors()
+{
+	m_dwStringSize=m_dwStringPos=0;
+	m_pszErrors=null;
+}
+NErrors::~NErrors()
+{
+	if (m_pszErrors)	NMemFree(m_pszErrors);
+}
+
+void NErrors::AddError(udword _code, const char* _fmt, ... )
+{
+	if (m_dwStringPos==0 && m_pszErrors!=null)
+		ZeroMemory(m_pszErrors, m_dwStringSize);
+
+	char buf[256];
+	wvsprintf(buf, _fmt, (char *)(&_fmt+1));
+	udword len = strlen(buf);
+
+	if ((m_dwStringPos+len) >= m_dwStringSize)
+	{
+		m_dwStringSize=m_dwStringPos+len+4096;
+		m_pszErrors = (char*)NMemRealloc(m_pszErrors, m_dwStringSize);
+	}
+
+	udword ret = sprintf(m_pszErrors+m_dwStringPos, "<%d> %s", _code, buf);
+	if (ret!=-1)		m_dwStringPos+=ret;
+}
+
+char* NErrors::GetErrors()
+{
+	m_dwStringPos = 0;
+	return m_pszErrors;
+}
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
 //								Globals Fonctions
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 
-
 //-----------------------------------------------------------------
 //!	\brief	Write text into visual C++ debug output window
 //!	\param	_fmt	format
 //-----------------------------------------------------------------
+#ifdef _WIN32
 void gDebugLog(const char* _fmt, ... )
 {
-  //###TOFIX###
+	char buf[256];
+	wvsprintf(buf, _fmt, (char *)(&_fmt+1));
+	OutputDebugString(buf);
 }
+#else
+void gDebugLog(const char* _fmt, ... )
+{
+}
+#endif
+
 
 
 //-----------------------------------------------------------------
@@ -1616,4 +1688,4 @@ NMutexLock::~NMutexLock()
 {
 	release();
 }
-//-----------------------------------------------------------------
+

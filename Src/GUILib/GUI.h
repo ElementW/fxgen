@@ -42,12 +42,6 @@
 
 #include <GL/gl.h>	//Header File For The OpenGL Library
 
-#ifdef _DEBUG
-#define TRACE	gDebugLog
-void GUI_API gDebugLog(const char* fmt, ... );
-#else
-#define TRACE
-#endif
 
 //-----------------------------------------------------------------
 // Class Prototypes
@@ -286,6 +280,7 @@ public:
 	virtual	void	OnMouseWheel(udword flags, sword zDelta, NPoint point)			{}
 	virtual	void	OnCommand(udword id)			{}
 	virtual	void	OnKeyUp(udword dwchar)		{}
+	virtual	void	OnKeyDown(udword dwchar)		{}
 	virtual	void	OnKillFocus(NWnd* pNewWnd)		{}
 	virtual	void	OnTimer(udword _dwTimerID)		{}
 	virtual	void	OnMouseLeave() {}
@@ -410,31 +405,3 @@ protected:
 	NString	mTransfilter;							//File filter (ex. "TLM Files (*.tlm)|*.tlm|All Files (*.*)|*.*||")
 };
 
-
-//-----------------------------------------------------------------
-//!	\class	NColorDialog
-//!	\brief	ColorDialog Class Definition
-//-----------------------------------------------------------------
-/*
-class GUI_API NColorDialog
-{
-public:
-	//Constructor/Destructor
-					NColorDialog();
-	virtual	~NColorDialog();
-
-	//Initialization
-	virtual bool Create(const char* name, NWnd* parent, const NColor& _color);
-
-	//Operations
-	virtual udword DoModal();		//Displays the dialog box and allows the user to make a selection
-																		//If the user clicks the OK button of the dialog box, the return value is nonzero
-	NColor	GetColor()								{ return m_Color;}
-	void		SetColor(NColor& _color);
-
-protected:
-	//Datas
-	NColor	m_Color;	//!< Current Color
-
-};
-*/

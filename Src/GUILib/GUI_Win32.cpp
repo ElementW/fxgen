@@ -298,6 +298,7 @@ LRESULT CALLBACK NW32Application::StaticWndProc(HWND hwnd, UINT msg, WPARAM wpar
 	NW32Application* _this = (NW32Application*)::GetWindowLong (hwnd, GWL_USERDATA);
 	NWnd* pwnd;
 	NPoint pt;
+	udword dwKey;
 
 	//Check W32 Messages
 	if (_this)
@@ -449,13 +450,14 @@ LRESULT CALLBACK NW32Application::StaticWndProc(HWND hwnd, UINT msg, WPARAM wpar
 				break;
 
 			//Keyboard Messages
-			/*case WM_KEYDOWN:
+			case WM_KEYDOWN:
+				dwKey = _this->W32KeyCodeToFxGen(wparam);
 				pwnd = _this->GetFocus();
-				if (pwnd)	pwnd->OnKeyDown(wparam);
-				break;*/
+				if (pwnd)	pwnd->OnKeyDown(dwKey);
+				break;
 
 			case WM_KEYUP:
-				udword dwKey = _this->W32KeyCodeToFxGen(wparam);
+				dwKey = _this->W32KeyCodeToFxGen(wparam);
 				pwnd = _this->GetFocus();
 				if (pwnd)	pwnd->OnKeyUp(dwKey);
 				break;
@@ -645,22 +647,3 @@ udword NW32FileDialog::DoModal()
 }
 
 
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-//
-//					Functions
-//
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-
-
-//-----------------------------------------------------------------
-//!	\brief	Write text into visual C++ debug output window
-//!	\param	_fmt	format
-//-----------------------------------------------------------------
-void gDebugLog(const char* _fmt, ... )
-{
-	char buf[256];
-	wvsprintf(buf, _fmt, (char *)(&_fmt+1));
-	OutputDebugString(buf);
-}

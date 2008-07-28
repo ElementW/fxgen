@@ -155,14 +155,14 @@ bool NArchive::Read()
 	//Check if it's a NSF file
 	if (h.NSFId!=NSF_HEADERID)
 	{
-		ERR("Not an NSF File",0);
+		ERR(0, "Not an NSF File\n");
 		return false;
 	}
 
 	//Check version
 	if (h.Version!=NSF_VERSION && h.Version!=0x1000)
 	{
-		ERR("NSF Bad Version",0);
+		ERR(0, "NSF Bad Version\n");
 		return false;
 	}
 
@@ -199,6 +199,11 @@ bool NArchive::Read()
 			//###TODO### control if module is loaded...
 			*m_pStream>>szClassName;
 			m_pRTClassesArray[i] = NRTClass::GetRTClassByName(szClassName);
+			if (m_pRTClassesArray[i]==null)
+			{
+				ERR(0, "RTClass Mod<%s> Name<%s> not found\n", szModuleName, szClassName);
+				return false;
+			}
 		}
 
 	}
@@ -214,6 +219,12 @@ bool NArchive::Read()
 	for (i=1; i<h.MappedObjsCount; i++)	//from 1 because indice 0 = null object reference
 	{
 		NObject* pobj = GetClass();
+		if (pobj==null)
+		{
+			ERR(0, "Mapped Obj not found\n");
+			return false;
+		}
+
 		m_carrayMappedObjs.AddItem(pobj);
 	}
 
@@ -349,7 +360,7 @@ NObject* NArchive::GetClass()
 		NRTClass* prtc = GetRTClassFromIdx(idx);
 		if (!prtc)
 		{
-			ERR("RTClass not found",0);
+			ERR(0, "RTClass not found\n");
 			return null;
 		}
 
@@ -357,12 +368,13 @@ NObject* NArchive::GetClass()
 		pobj = prtc->m_pCreateCB();
 		if (!pobj)
 		{
-			ERR("Can't create Object from RTClass",0);
+			ERR(0, "Can't create Object from RTClass\n");
 			return null;
 		}
 
 		//Serialize class
-		pobj->Load(this);
+		if (!pobj->Load(this))
+			return null;
 
 	//////////////////////////////////////////
 	} else if (tag==NSF_MAPPEDCLASS_TAG) {
@@ -373,13 +385,13 @@ NObject* NArchive::GetClass()
 
 		if (idx!=0 && !pobj)
 		{
-			ERR("Mapped object not found!", 0);
+			ERR(0, "Mapped object not found!\n");
 		}
 
 	//////////////////////////////////////////
 	} else {
 
-		ERR("Unsupported Tag",0);
+		ERR(0, "Unsupported Tag\n");
 
 	}
 
@@ -429,13 +441,13 @@ NObject* NArchive::GetMappedObj()
 
 		if (idx!=0 && !pobj)
 		{
-			ERR("Mapped object not found!", 0);
+			ERR(0, "Mapped object not found!\n");
 		}
 
 		return pobj;
 	}
 
-	ERR("Unsupported Tag",0);
+	ERR(0, "Unsupported Tag\n");
 
 	return null;
 }

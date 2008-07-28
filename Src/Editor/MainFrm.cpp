@@ -237,39 +237,43 @@ void NMainFrm::LoadProject(NString str)
 
 	if (!str.Length())
 		str = projectname;
+
 	if(!str.Length())
 	{
 		OnOpenProject();
 		return;
 	}
 
-		m_popMarkedShow = null;
-		m_bExecuteLocked = true;
+	m_popMarkedShow = null;
+	m_bExecuteLocked = true;
 
-		NEngineOp::GetEngine()->Clear();
+	NEngineOp::GetEngine()->Clear();
 
-		m_pprojectwnd->DisplayOperatorsProject(NEngineOp::GetEngine());
-		m_pprojectwnd->SelectFirstPage();
+	m_pprojectwnd->DisplayOperatorsProject(NEngineOp::GetEngine());
+	m_pprojectwnd->SelectFirstPage();
 
-		if (NEngineOp::GetEngine()->LoadProject(str.Buffer()))
-		{
-			projectname = str;
-			NString strTitle(CAPTION);
-			strTitle+=str.Buffer();
-			SetText(strTitle.Buffer());
+	if (NEngineOp::GetEngine()->LoadProject(str.Buffer()))
+	{
+		projectname = str;
+		NString strTitle(CAPTION);
+		strTitle+=str.Buffer();
+		SetText(strTitle.Buffer());
 
-			//###TEST###
-			//NEngineOp::GetEngine()->ProcessOperators(0.0, staticProcess);
+		//###TEST###
+		//NEngineOp::GetEngine()->ProcessOperators(0.0, staticProcess);
 
-		} else {
-			OnNewProject(); // some invalid file names can leave Editor in undefined state so ensure full cleanup here
-		}
+	} else {
+		//Error Message
+		GetApp()->MessageBox(gGetErrors()->GetErrors());
+		//Clean up
+		OnNewProject();
+	}
 
-		//Display Projects's Pages
-		m_pprojectwnd->DisplayOperatorsProject(NEngineOp::GetEngine());
-		m_pprojectwnd->SelectFirstPage();
+	//Display Projects's Pages
+	m_pprojectwnd->DisplayOperatorsProject(NEngineOp::GetEngine());
+	m_pprojectwnd->SelectFirstPage();
 
-		m_bExecuteLocked = false;
+	m_bExecuteLocked = false;
 }
 
 //-----------------------------------------------------------------
@@ -281,7 +285,9 @@ void NMainFrm::OnOpenProject()
 	NFileDialog dlg;
 	dlg.Create("Opening Project...", this);
 	if (dlg.DoModal())
+	{
 		LoadProject(dlg.GetPathName());
+	}
 }
 
 void NMainFrm::SaveProject(NString path)

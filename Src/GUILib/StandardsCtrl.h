@@ -201,7 +201,7 @@ protected:
 	virtual void	OnLeftButtonDown(udword _flags, NPoint _pos);
 	virtual	void	OnLeftButtonDblClk(udword _flags, NPoint _point);
 	virtual	void	OnKillFocus(NWnd* _pNewWnd);
-	virtual	void	OnKeyUp(udword _dwchar);
+	virtual	void	OnKeyDown(udword _dwchar);
 	//Datas
 	udword m_dwLinesCount;
 	udword m_dwCurX, m_dwCurY;

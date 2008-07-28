@@ -626,10 +626,12 @@ void NEditCtrl::OnKillFocus(NWnd* _pNewWnd)
 {
 
 }
+
+
 //-----------------------------------------------------------------
 //!	\brief
 //-----------------------------------------------------------------
-void NEditCtrl::OnKeyUp(udword _dwchar)
+void NEditCtrl::OnKeyDown(udword _dwchar)
 {
 	if (_dwchar>=NK_SPACE && _dwchar<=NK_z)
 	{

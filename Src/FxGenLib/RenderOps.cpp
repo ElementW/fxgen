@@ -23,8 +23,6 @@
 //-----------------------------------------------------------------
 #include "pch.h"
 #include "RenderOps.h"
-//#include "vgvm/vgvm.h"
-//#include "vgvm/contexts/cairo.h"
 #include "RectangularArray.h"
 
 //-----------------------------------------------------------------

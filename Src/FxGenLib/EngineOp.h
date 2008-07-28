@@ -17,18 +17,14 @@
 #ifndef ENGINEOP_H
 #define ENGINEOP_H
 
-
 //-----------------------------------------------------------------
 //                   Includes
 //-----------------------------------------------------------------
-//#include "noise/src/noise.h"
-//#include "noiseutils.h"
-
 #include "Core.h"
 
-#ifdef GetUserName
+/*#ifdef GetUserName
 #undef GetUserName
-#endif
+#endif*/
 
 //-----------------------------------------------------------------
 //                   Macros
