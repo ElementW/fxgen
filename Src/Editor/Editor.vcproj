@@ -42,8 +42,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\FxGenLib;..\GUILib;..\..\Externals\tinyxml;..\..\Externals\SDL\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;USING_VGVM_DLL"
+				AdditionalIncludeDirectories="..\FxGenLib;..\GUILib;..\..\Externals\tinyxml"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="winmm.lib comctl32.lib opengl32.lib"
+				AdditionalDependencies="opengl32.lib"
 				OutputFile="$(OutDir)/Editor_D.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\Externals\tinyxml;..\..\Externals\cairo;..\..\Externals\vgvm"
@@ -126,8 +126,8 @@
 				Optimization="2"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="..\FxGenLib;..\GUILib;..\..\Externals\cairo;..\..\Externals\vgvm;..\..\Externals\tinyxml"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;USING_VGVM_DLL;_CRT_SECURE_NO_DEPRECATE"
+				AdditionalIncludeDirectories="..\FxGenLib;..\GUILib;..\..\Externals\tinyxml"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				EnableEnhancedInstructionSet="2"
@@ -149,7 +149,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="winmm.lib comctl32.lib opengl32.lib Msimg32.lib gdi32.lib user32.lib comdlg32.lib cairo.lib cairomm-1.0.lib"
+				AdditionalDependencies="opengl32.lib"
 				OutputFile="$(OutDir)/Editor.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\Externals\tinyxml;..\..\Externals\cairo;..\..\Externals\vgvm"
