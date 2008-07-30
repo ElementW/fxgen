@@ -163,8 +163,10 @@ bool NMainFrm::Create(char* name, const NRect& rect)
 	return true;
 }
 
-
-bool AnnoyUserProjectMayBeLost()
+//-----------------------------------------------------------------
+//!	\brief	###TOFIX###
+//-----------------------------------------------------------------
+bool NMainFrm::AnnoyUserProjectMayBeLost()
 {
 	static int firsttime = 2;
 

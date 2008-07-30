@@ -35,12 +35,6 @@ Purpose:
 Details: White noise of high quality. Texture can be filtered into a color.
 Inputs: no
 
-Name: Vector
-Purpose:
-Details: can render vector graphics. The Editor is also equipped with a
-converter that can import SVG data to the vector operator.
-Inputs: no
-
 -------------------
 Combine Operators
 -------------------

@@ -58,6 +58,8 @@ protected:
 
 	void OnKeyDown(udword dwchar);
 
+	bool AnnoyUserProjectMayBeLost();
+
 	// Messages Notify
 	void OnFile(NObject* _psender);
 	void OnOption(NObject* _psender);
@@ -78,4 +80,4 @@ protected:
 
 };
 
-bool AnnoyUserProjectMayBeLost();
+
