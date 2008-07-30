@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\FxGenLib;..\..\Externals\SDL\include;..\..\Externals\FreeType\include"
+				AdditionalIncludeDirectories="..\FxGenLib;..\..\Externals\FreeType\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_USRDLL;GUI_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -66,7 +66,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib Msimg32.lib gdi32.lib user32.lib comdlg32.lib opengl32.lib libfreetype.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_D.dll"
-				AdditionalLibraryDirectories="..\..\Externals\FreeType\Lib;..\..\Externals\SDL\lib"
+				AdditionalLibraryDirectories="..\..\Externals\FreeType\Lib;"
 				GenerateDebugInformation="true"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -122,7 +122,7 @@
 				Optimization="2"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="..\FxGenLib"
+				AdditionalIncludeDirectories="..\FxGenLib;..\..\Externals\FreeType\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;GUI_EXPORTS;_CRT_SECURE_NO_DEPRECATE"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
@@ -145,8 +145,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="comctl32.lib Msimg32.lib gdi32.lib user32.lib comdlg32.lib"
+				AdditionalDependencies="comctl32.lib Msimg32.lib gdi32.lib user32.lib comdlg32.lib opengl32.lib libfreetype.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
+				AdditionalLibraryDirectories="..\..\Externals\FreeType\Lib;"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 			/>
