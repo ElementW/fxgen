@@ -1,4 +1,4 @@
-Next Version
+TODO
 -------------
 .Editor
 	.add a merge project command menu
@@ -12,9 +12,10 @@ Next Version
 		.Native format is little Endian
 		.Create a class NFileStream for BigEndian with conversion on load and write (Little->Big endian)
 	.Review animation controllers
+	.Multi-Threading
 	
 .GUI
-	.Review Properties Sliding..	
+	.Review Properties Sliding.
 		.Add variables limits into properties items (see UFloat)
 		.Add slider control
 	.TreeNodeCtrl
@@ -26,13 +27,15 @@ Version 0.6 alpha (Release: CrossPlatForm GUI !)
 ----------------------------------
 
 .Editor
-	.Errors stack MessageBox.
+	.Rewrited for new GUI.
+	.Operators global view display (if any operators out of screen).
 
 .FxGenLib
-	.Runtime class creation now by modules added (.dll, .so ..)
+	.Runtime class creation by modules added (futures plugins .dll, .so ..)
 	.Modified FxGen Serialization
 		.Classes saved by name and not by GUID as before
 		.Support for older fxgen format added.
+		.Errors reporting.
 	.Added Stacked Errors tracer
 	
 .GUI	
