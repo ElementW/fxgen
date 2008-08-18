@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug|Win32" />
-	<File name="Archive.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="1187" topLine="0" />
+	<File name="Archive.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="2257" topLine="56" />
 	</File>
 	<File name="Archive.h" open="0" top="0" tabpos="0">
 		<Cursor position="933" topLine="0" />
@@ -11,10 +11,10 @@
 		<Cursor position="1225" topLine="0" />
 	</File>
 	<File name="Bitmap.h" open="0" top="0" tabpos="12">
-		<Cursor position="2899" topLine="64" />
+		<Cursor position="2899" topLine="0" />
 	</File>
 	<File name="CombineOps.cpp" open="0" top="0" tabpos="4">
-		<Cursor position="21874" topLine="709" />
+		<Cursor position="3881" topLine="97" />
 	</File>
 	<File name="CombineOps.h" open="0" top="0" tabpos="13">
 		<Cursor position="5297" topLine="132" />
@@ -25,11 +25,11 @@
 	<File name="Controllers.h" open="0" top="0" tabpos="11">
 		<Cursor position="1611" topLine="6" />
 	</File>
-	<File name="Core.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="32266" topLine="1061" />
+	<File name="Core.cpp" open="0" top="0" tabpos="5">
+		<Cursor position="46605" topLine="1659" />
 	</File>
-	<File name="Core.h" open="0" top="0" tabpos="2">
-		<Cursor position="15496" topLine="407" />
+	<File name="Core.h" open="1" top="0" tabpos="4">
+		<Cursor position="1036" topLine="0" />
 	</File>
 	<File name="DistordOps.cpp" open="0" top="0" tabpos="9">
 		<Cursor position="14685" topLine="449" />
@@ -38,7 +38,7 @@
 		<Cursor position="4737" topLine="110" />
 	</File>
 	<File name="EngineOp.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="4146" topLine="140" />
+		<Cursor position="11361" topLine="391" />
 	</File>
 	<File name="EngineOp.h" open="0" top="0" tabpos="6">
 		<Cursor position="4427" topLine="122" />
@@ -50,13 +50,13 @@
 		<Cursor position="8584" topLine="229" />
 	</File>
 	<File name="MainOps.cpp" open="0" top="0" tabpos="7">
-		<Cursor position="4921" topLine="182" />
+		<Cursor position="1672" topLine="38" />
 	</File>
 	<File name="MainOps.h" open="0" top="0" tabpos="16">
 		<Cursor position="3784" topLine="76" />
 	</File>
-	<File name="Maths.h" open="0" top="0" tabpos="0">
-		<Cursor position="735" topLine="0" />
+	<File name="Maths.h" open="0" top="0" tabpos="2">
+		<Cursor position="14433" topLine="33" />
 	</File>
 	<File name="RectangularArray.h" open="0" top="0" tabpos="0">
 		<Cursor position="755" topLine="0" />

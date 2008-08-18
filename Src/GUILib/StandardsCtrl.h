@@ -14,7 +14,8 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef STANDARDSCTRL_H
+#define STANDARDSCTRL_H
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -207,3 +208,5 @@ protected:
 	udword m_dwCurX, m_dwCurY;
 	udword m_dwStartSel, m_dwEndSel;
 };
+
+#endif  //STANDARDSCTRL_H

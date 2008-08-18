@@ -17,11 +17,6 @@
 #ifndef CORE_H
 #define CORE_H
 
-
-#ifdef __GNUC__
-#include "gcccompat/gcccompat.h"
-#endif
-
 //-----------------------------------------------------------------
 //                   Macros
 //-----------------------------------------------------------------
@@ -51,7 +46,7 @@
 // Types
 //-----------------------------------------------------------------
 
-	#define null				0
+  #define null				0
 
 	//type definitions
 	typedef unsigned char			ubyte;	// Unsigned 8 bit value
@@ -144,14 +139,12 @@ public:
 #define		MAX_PATHLEN					256
 #define		OBJARRAY_GROWSIZE		16
 
-#ifndef __GNUC__
 #ifndef max
 #define max(a,b)            (((a) > (b)) ? (a) : (b))
 #endif
 
 #ifndef min
 #define min(a,b)            (((a) < (b)) ? (a) : (b))
-#endif
 #endif
 
 //-----------------------------------------------------------------
@@ -537,11 +530,12 @@ protected:
 //-----------------------------------------------------------------
 //	Memory System
 //-----------------------------------------------------------------
-#define NMemFree(_ptr)					free(_ptr)					//!< Free memory
-#define NMemAlloc(_len)					calloc(_len, 1)			//!< Allocate memory
-#define NMemRealloc(_ptr, _len)	realloc(_ptr, _len)	//!< Reallocate memory
+#define NMemFree(_ptr)					    free(_ptr)					//!< Free memory
+#define NMemAlloc(_len)					    calloc(_len, 1)			//!< Allocate memory
+#define NMemRealloc(_ptr, _len)	    realloc(_ptr, _len)	//!< Reallocate memory
+#define NMemFill(_ptr, _val, _len)  memset(_ptr, _val, _len)
 //NMemCopy
-//NMemFill
+
 
 //-----------------------------------------------------------------
 //	File System
@@ -570,7 +564,7 @@ int					NFileTell(NFILEHANDLE *handle);
 //-----------------------------------------------------------------
 
 //###JN### To remove from here
-
+/*
 class NMutexLock
 {
 	protected:
@@ -584,5 +578,6 @@ class NMutexLock
 	void release();
 	~NMutexLock();
 };
+*/
 
 #endif //CORE_H

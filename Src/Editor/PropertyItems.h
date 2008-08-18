@@ -14,7 +14,9 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef PROPERTYITEMS_H
+#define PROPERTYITEMS_H
+
 
 //-----------------------------------------------------------------
 //									Includes
@@ -237,3 +239,5 @@ public:
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 };
+
+#endif //PROPERTYITEMS_H

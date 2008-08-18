@@ -15,6 +15,9 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef TGAWRITER_H
+#define TGAWRITER_H
 
 void WriteTGA(NBitmap* _bmp, NString _path = "", NString _suffix = "");
+
+#endif //TGAWRITER_H

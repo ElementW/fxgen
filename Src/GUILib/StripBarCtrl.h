@@ -14,7 +14,8 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef STRIPBARCTRL_H
+#define STRIPBARCTRL_H
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -86,3 +87,4 @@ protected:
 	virtual	void	OnKeyDown(udword dwchar);
 };
 
+#endif //STRIPBARCTRL_H

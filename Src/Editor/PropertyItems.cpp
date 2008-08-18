@@ -418,7 +418,7 @@ bool NFileBrowserProp::BeginEdit(NRect& rcItem)
 	if (1==dlg.DoModal())
 	{
 		NString str = dlg.GetPathName(0);
-		strcpy_s(m_pvarValue->szVal, sizeof(m_pvarValue->szVal), str.Buffer());
+		strcpy(m_pvarValue->szVal, str.Buffer());
 	}
 
 	return true;	//End of Edition
@@ -572,7 +572,7 @@ bool NStringProp::EndEdit(bool bSaveChanged)
 	if (bSaveChanged)
 	{
 		NString str = ((NEditCtrl*)m_pwNGraphicstrl)->GetText();
-		strcpy_s(m_pvarValue->szVal, sizeof(m_pvarValue->szVal), str.Buffer());
+		strcpy(m_pvarValue->szVal, str.Buffer());
 	}
 
 	//Destroy control

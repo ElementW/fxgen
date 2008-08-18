@@ -14,7 +14,8 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef GUI_H
+#define GUI_H
 
 //-----------------------------------------------------------------
 //                   Macros
@@ -28,6 +29,7 @@
 #else // STATIC_BUILD
 #define FXGEN_API
 #endif // STATIC_BUILD
+
 
 #ifndef _MAX_PATH
 #define _MAX_PATH 32768
@@ -235,9 +237,9 @@ public:
 
 	//Windows Creation
 	virtual	bool Create(NWNDCREATE& c);
- 
+
 	//Methods
-	NRect	GetClientRect();	//!< 
+	NRect	GetClientRect();	//!<
 	NRect	GetWindowRect();	//!< Get Rect relative to parent
 	void	ScreenToClient(NPoint& _pt);
 	void	ClientToScreen(NPoint& _pt);
@@ -405,3 +407,4 @@ protected:
 	NString	mTransfilter;							//File filter (ex. "TLM Files (*.tlm)|*.tlm|All Files (*.*)|*.*||")
 };
 
+#endif //GUI_H

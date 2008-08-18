@@ -479,7 +479,7 @@ extern FXGEN_API float ffast_cos(const float x);
 
 // At the assembly level the recommended workaround for the second FIST bug is the same for the first;
 // inserting the FRNDINT instruction immediately preceding the FIST instruction.
-__forceinline void FloatToInt(int *int_pointer, float f)
+/*__forceinline void FloatToInt(int *int_pointer, float f)
 {
 #ifdef __GNUC__
 	*int_pointer = int(f + .5);
@@ -489,7 +489,7 @@ __forceinline void FloatToInt(int *int_pointer, float f)
   __asm  FRNDINT
   __asm  fistp dword ptr [edx];
 #endif
-}
+}*/
 
 extern FXGEN_API void SetSeedValue(unsigned int dwSeedValue);
 extern FXGEN_API unsigned int  myRandom(int=0);
