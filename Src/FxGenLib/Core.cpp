@@ -198,7 +198,7 @@ void NVarsBloc::Init(udword _dwVarsCount, NVarsBlocDesc* _pvarsBlocDesc, NObject
 			case eudword:	pval->dwVal=(udword)atof(pdesc->pszDefValue);	break;
 			case efloat:	pval->fVal=(float)my_atof(pdesc->pszDefValue);		break;
 			case erefobj:	pval->pcRefObj=null;	break;
-			case estring:	strcpy_s(pval->szVal, sizeof(pval->szVal), pdesc->pszDefValue);			break;
+			case estring:	strcpy(pval->szVal, pdesc->pszDefValue);			break;
 			default:	assert(0);																				break;
 		}
 
@@ -327,7 +327,7 @@ void NVarsBloc::SetValue(udword _idx, float _fTime, NObject* _val)
 
 void NVarsBloc::SetValue(udword _idx, float _fTime, const char*	_val)
 {
-	strcpy_s(m_paVarsValues[_idx].szVal, sizeof(m_paVarsValues[_idx].szVal), _val);
+	strcpy(m_paVarsValues[_idx].szVal, _val);
 }
 
 //-----------------------------------------------------------------
@@ -475,7 +475,7 @@ void NVarsBloc::MapValueTo(const char* _val, udword _idx)
 	NVarsBlocDesc* pdesc = m_pcvarsblocDesc + _idx;
 
 	assert(pdesc->eType==estring);
-	strcpy_s(pval->szVal, sizeof(pval->szVal), _val);
+	strcpy(pval->szVal, _val);
 }
 
 
@@ -1564,10 +1564,11 @@ NErrors::~NErrors()
 void NErrors::AddError(udword _code, const char* _fmt, ... )
 {
 	if (m_dwStringPos==0 && m_pszErrors!=null)
-		ZeroMemory(m_pszErrors, m_dwStringSize);
+		NMemFill(m_pszErrors, 0, m_dwStringSize);
 
 	char buf[256];
-	wvsprintf(buf, _fmt, (char *)(&_fmt+1));
+	//wvsprintf(buf, _fmt, (char *)(&_fmt+1));
+	vsprintf(buf, _fmt, (char *)(&_fmt+1));
 	udword len = strlen(buf);
 
 	if ((m_dwStringPos+len) >= m_dwStringSize)
@@ -1599,11 +1600,11 @@ char* NErrors::GetErrors()
 //!	\brief	Write text into visual C++ debug output window
 //!	\param	_fmt	format
 //-----------------------------------------------------------------
-#ifdef _WIN32
+#ifndef __GNUC__
 void gDebugLog(const char* _fmt, ... )
 {
 	char buf[256];
-	wvsprintf(buf, _fmt, (char *)(&_fmt+1));
+	vsprintf(buf, _fmt, (char *)(&_fmt+1));
 	OutputDebugString(buf);
 }
 #else
@@ -1646,7 +1647,7 @@ NRTClassModule* NRTClassModule::RegisterModule(const char* _pszModuleName)
 /// NMutexLock methods
 ///\author Sebastian Olter (qduaty@gmail.com)
 //-----------------------------------------------------------------
-void NMutexLock::lock()
+/*void NMutexLock::lock()
 {
 #ifdef __GNUC__ // there are no such __PRETTY_FUNCTION__'s anywhere else so don't remove this line
 	if(_debug) printf("%d %s\n", this, __PRETTY_FUNCTION__);
@@ -1689,3 +1690,4 @@ NMutexLock::~NMutexLock()
 	release();
 }
 
+*/

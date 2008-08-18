@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="FxGen workspace">
-		<Project filename="..\Src\GUILib\GUILib.cbp" />
-		<Project filename="..\Src\Editor\Editor.cbp">
+		<Project filename="..\Src\Editor\Editor.cbp" active="1">
 			<Depends filename="..\Src\FxGenLib\FxGenLib.cbp" />
 			<Depends filename="..\Src\GUILib\GUILib.cbp" />
 		</Project>
-		<Project filename="..\Src\FxGenLib\FxGenLib.cbp">
-			<Depends filename="..\Externals\vgvm\vgvm.cbp" />
-		</Project>
-		<Project filename="..\Externals\vgvm\vgvm.cbp" />
-		<Project filename="..\Externals\tinyxml\tinyxml_lib.cbp" />
-		<Project filename="..\Examples\BMP Extractor\test.cbp" />
-		<Project filename="..\Examples\expeditor\expeditor\expeditor.cbp" active="1" />
-		<Project filename="..\Examples\Test files\various-tests\various-tests.cbp" />
+		<Project filename="..\Src\FxGenLib\FxGenLib.cbp" />
+		<Project filename="..\Src\GUILib\GUILib.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

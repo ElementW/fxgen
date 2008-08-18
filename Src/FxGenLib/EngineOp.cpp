@@ -21,9 +21,6 @@
 #include "pch.h"
 #include "EngineOp.h"
 
-#ifdef __GNUC__
-#include "gcccompat/gcccompat.h"
-#endif
 
 //-----------------------------------------------------------------
 //                   Variables

@@ -252,7 +252,7 @@ NString& NString::Format(const char* str, ...)
 	char buf[256];
 	va_list args;
 	va_start(args, str);
-	_vsnprintf_s(buf, sizeof(buf), sizeof(buf), str, args);
+	vsnprintf(buf, sizeof(buf), str, args);
 	va_end(args);
 
 	//set formated string
@@ -294,26 +294,26 @@ void NString::RemoveAt(udword _idx, udword _count)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 
-void NColor::ToHLS(float &_h, float &_l, float &_s) 
+void NColor::ToHLS(float &_h, float &_l, float &_s)
 {
 
   float minval = min(mR*255.0f, min(mG*255.0f, mB*255.0f));
   float maxval = max(mR*255.0f, max(mG*255.0f, mB*255.0f));
   float mdiff  = float(maxval) - float(minval);
   float msum   = float(maxval) + float(minval);
- 
+
   _l = msum / 510.0f;
 
-  if (maxval == minval) 
+  if (maxval == minval)
   {
     _s = 0.0f;
     _h = 0.0f;
-  }   
-  else 
-  { 
-    float rnorm = (maxval - mR*255.0f ) / mdiff;      
+  }
+  else
+  {
+    float rnorm = (maxval - mR*255.0f ) / mdiff;
     float gnorm = (maxval - mG*255.0f ) / mdiff;
-    float bnorm = (maxval - mB*255.0f ) / mdiff;   
+    float bnorm = (maxval - mB*255.0f ) / mdiff;
 
     _s = (_l <= 0.5f) ? (mdiff / msum) : (mdiff / (510.0f - msum));
 
@@ -325,7 +325,7 @@ void NColor::ToHLS(float &_h, float &_l, float &_s)
 
 }
 
-void NColor::SetFromHLS(float _h, float _l, float _s) 
+void NColor::SetFromHLS(float _h, float _l, float _s)
 {
 	//mA=1.0f;
   if (_s == 0.0)
@@ -335,11 +335,11 @@ void NColor::SetFromHLS(float _h, float _l, float _s)
   else
   {
     float rm1, rm2;
-       
-    if (_l <= 0.5f) rm2 = _l + _l * _s;  
+
+    if (_l <= 0.5f) rm2 = _l + _l * _s;
     else            rm2 = _l + _s - _l * _s;
-    rm1 = 2.0f * _l - rm2;   
-    mR = ToRGB1(rm1, rm2, _h + 120.0f);   
+    rm1 = 2.0f * _l - rm2;
+    mR = ToRGB1(rm1, rm2, _h + 120.0f);
     mG = ToRGB1(rm1, rm2, _h);
     mB = ToRGB1(rm1, rm2, _h - 120.0f);
   }
@@ -350,11 +350,11 @@ float NColor::ToRGB1(float rm1, float rm2, float rh)
 {
   if      (rh > 360.0f) rh -= 360.0f;
   else if (rh <   0.0f) rh += 360.0f;
- 
-  if      (rh <  60.0f) rm1 = rm1 + (rm2 - rm1) * rh / 60.0f;   
+
+  if      (rh <  60.0f) rm1 = rm1 + (rm2 - rm1) * rh / 60.0f;
   else if (rh < 180.0f) rm1 = rm2;
-  else if (rh < 240.0f) rm1 = rm1 + (rm2 - rm1) * (240.0f - rh) / 60.0f;      
-                   
+  else if (rh < 240.0f) rm1 = rm1 + (rm2 - rm1) * (240.0f - rh) / 60.0f;
+
   return rm1;
 }
 

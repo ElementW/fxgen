@@ -14,7 +14,8 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef GUIW32_H
+#define GUIW32_H
 
 //-----------------------------------------------------------------
 //                   Macros
@@ -66,7 +67,7 @@ public:
 	virtual void				Update()	{}	//!< It is called by the framework in Run Loop
 
 	virtual void AskExit();	//!< Called in order to exit application
-	
+
 	virtual	void GetCursorPos(NPoint& _pos);
 	virtual	void SetCursorPos(const NPoint& _pos);
 	virtual	udword MessageBox(char* _pszText, udword _dwStyle=NMB_OK);
@@ -75,7 +76,7 @@ protected:
 	//Methods
 	static LRESULT CALLBACK StaticWndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	udword W32KeyCodeToFxGen(udword _w32keycode);
-	
+
 	//Datas
 	HDC m_hDC;
 	HWND m_hW32Wnd;
@@ -104,3 +105,5 @@ protected:
 	//W32 Datas
 	//CHOOSECOLOR		m_Cc;			//W32 Color Dialog Struct
 	//NColor			m_acrCustClr[16]; // array of custom colors
+
+#endif //GUIW32_H

@@ -14,7 +14,9 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef VIEWPORTWND_H
+#define VIEWPORTWND_H
+
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -85,3 +87,5 @@ protected:
 
 	NObject*		m_pcurObject;		//!< Objet in visualisation
 };
+
+#endif //VIEWPORTWND_H

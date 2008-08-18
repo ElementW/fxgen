@@ -14,7 +14,9 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef PROPERTIESWND_H
+#define PROPERTIESWND_H
+
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -50,3 +52,5 @@ protected:
 	//Datas
 	NOperator* m_pcurOp;	//!< current viewed operator
 };
+
+#endif //PROPERTIESWND_H

@@ -14,7 +14,8 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef EVENTSLIST_H
+#define EVENTSLIST_H
 
 //Operator window
 #define EVT_OPSELECTED			1		// param1=NOperator*			param2=
@@ -26,3 +27,5 @@
 
 //Project
 #define EVT_PAGESELECTED		6		// param1=NOperatorsPage*	param2=
+
+#endif //EVENTSLIST_H

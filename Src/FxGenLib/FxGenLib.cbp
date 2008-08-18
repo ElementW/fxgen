@@ -6,6 +6,7 @@
 		<Option pch_mode="2" />
 		<Option default_target="Release|Win32" />
 		<Option compiler="gcc" />
+		<Option virtualFolders="Core\;Engine\;Std ops\;Media Types\;" />
 		<Build>
 			<Target title="Debug|Win32">
 				<Option platforms="Windows;" />
@@ -31,13 +32,7 @@
 				<Linker>
 					<Add option="-pg -lgmon" />
 					<Add library="user32" />
-					<Add library="..\..\lib\libvgvmd.a" />
-					<Add library="..\..\..\..\..\..\GTK\lib\libcairomm-1.0.dll.a" />
-					<Add library="..\..\..\..\..\..\GTK\lib\libcairo.dll.a" />
 				</Linker>
-				<ExtraCommands>
-					<Add after="copy $(TargetDir)FxGenLib_D.dll ..\..\W32Bin\FxGenLib_D.dll" />
-				</ExtraCommands>
 			</Target>
 			<Target title="Release|Win32">
 				<Option platforms="Windows;" />
@@ -63,13 +58,7 @@
 				<Linker>
 					<Add option="-s" />
 					<Add library="user32" />
-					<Add library="..\..\lib\libvgvm.a" />
-					<Add library="..\..\..\..\..\..\GTK\lib\libcairomm-1.0.dll.a" />
-					<Add library="..\..\..\..\..\..\GTK\lib\libcairo.dll.a" />
 				</Linker>
-				<ExtraCommands>
-					<Add after="copy $(TargetDir) ..\..\W32Bin\" />
-				</ExtraCommands>
 			</Target>
 			<Target title="Tiny Release|Win32">
 				<Option platforms="Windows;" />
@@ -133,7 +122,6 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="..\..\..\..\..\home\wojownik\Desktop\Desktop\FXGen\lib\libvgvm.a" />
 				</Linker>
 			</Target>
 			<Target title="Debug">
@@ -157,6 +145,7 @@
 					<Add option="-DFXGEN_EXPORTS" />
 				</Compiler>
 				<Linker>
+					<Add option="-pg -lgmon" />
 					<Add option="-pg" />
 				</Linker>
 			</Target>
@@ -166,34 +155,83 @@
 			<Add directory="..\..\Externals\vgvm" />
 			<Add directory="..\..\Externals" />
 		</Compiler>
-		<Unit filename="Archive.cpp" />
-		<Unit filename="Archive.h" />
-		<Unit filename="Bitmap.cpp" />
-		<Unit filename="Bitmap.h" />
-		<Unit filename="CombineOps.cpp" />
-		<Unit filename="CombineOps.h" />
-		<Unit filename="Controllers.cpp" />
-		<Unit filename="Controllers.h" />
-		<Unit filename="Core.cpp" />
-		<Unit filename="Core.h" />
-		<Unit filename="DistordOps.cpp" />
-		<Unit filename="DistordOps.h" />
-		<Unit filename="EngineOp.cpp" />
-		<Unit filename="EngineOp.h" />
-		<Unit filename="FilterOps.cpp" />
-		<Unit filename="FilterOps.h" />
-		<Unit filename="MainOps.cpp" />
-		<Unit filename="MainOps.h" />
-		<Unit filename="Maths.cpp" />
-		<Unit filename="Maths.h" />
-		<Unit filename="RectangularArray.h" />
-		<Unit filename="RenderOps.cpp" />
-		<Unit filename="RenderOps.h" />
-		<Unit filename="Stream.cpp" />
-		<Unit filename="Stream.h" />
+		<Unit filename="Archive.cpp">
+			<Option virtualFolder="Core\" />
+		</Unit>
+		<Unit filename="Archive.h">
+			<Option virtualFolder="Core\" />
+		</Unit>
+		<Unit filename="Bitmap.cpp">
+			<Option virtualFolder="Media Types\" />
+		</Unit>
+		<Unit filename="Bitmap.h">
+			<Option virtualFolder="Media Types\" />
+		</Unit>
+		<Unit filename="CombineOps.cpp">
+			<Option virtualFolder="Std ops\" />
+		</Unit>
+		<Unit filename="CombineOps.h">
+			<Option virtualFolder="Std ops\" />
+		</Unit>
+		<Unit filename="Controllers.cpp">
+			<Option virtualFolder="Engine\" />
+		</Unit>
+		<Unit filename="Controllers.h">
+			<Option virtualFolder="Engine\" />
+		</Unit>
+		<Unit filename="Core.cpp">
+			<Option virtualFolder="Core\" />
+		</Unit>
+		<Unit filename="Core.h">
+			<Option virtualFolder="Core\" />
+		</Unit>
+		<Unit filename="DistordOps.cpp">
+			<Option virtualFolder="Std ops\" />
+		</Unit>
+		<Unit filename="DistordOps.h">
+			<Option virtualFolder="Std ops\" />
+		</Unit>
+		<Unit filename="EngineOp.cpp">
+			<Option virtualFolder="Engine\" />
+		</Unit>
+		<Unit filename="EngineOp.h">
+			<Option virtualFolder="Engine\" />
+		</Unit>
+		<Unit filename="FilterOps.cpp">
+			<Option virtualFolder="Std ops\" />
+		</Unit>
+		<Unit filename="FilterOps.h">
+			<Option virtualFolder="Std ops\" />
+		</Unit>
+		<Unit filename="MainOps.cpp">
+			<Option virtualFolder="Std ops\" />
+		</Unit>
+		<Unit filename="MainOps.h">
+			<Option virtualFolder="Std ops\" />
+		</Unit>
+		<Unit filename="Maths.cpp">
+			<Option virtualFolder="Core\" />
+		</Unit>
+		<Unit filename="Maths.h">
+			<Option virtualFolder="Core\" />
+		</Unit>
+		<Unit filename="RectangularArray.h">
+			<Option virtualFolder="Core\" />
+		</Unit>
+		<Unit filename="RenderOps.cpp">
+			<Option virtualFolder="Std ops\" />
+		</Unit>
+		<Unit filename="RenderOps.h">
+			<Option virtualFolder="Std ops\" />
+		</Unit>
+		<Unit filename="Stream.cpp">
+			<Option virtualFolder="Core\" />
+		</Unit>
+		<Unit filename="Stream.h">
+			<Option virtualFolder="Core\" />
+		</Unit>
 		<Unit filename="pch.cpp" />
 		<Unit filename="pch.h" />
-		<Unit filename="..\gcccompat\gcccompat.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

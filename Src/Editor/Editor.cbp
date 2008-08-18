@@ -6,6 +6,7 @@
 		<Option makefile="makefile" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
+		<Option virtualFolders="Controls\;" />
 		<Build>
 			<Target title="Debug|Win32">
 				<Option output="..\..\W32Bin\Editor_D" prefix_auto="1" extension_auto="1" />
@@ -36,9 +37,6 @@
 					<Add library="gdi32" />
 					<Add library="libGUILib_D.a" />
 					<Add library="libFxGenLib_D.a" />
-					<Add library="..\..\lib\libtinyxml_lib.a" />
-					<Add library="..\..\lib\libvgvmd.a" />
-					<Add library="..\..\..\..\..\..\GTK\lib\libcairo.dll.a" />
 				</Linker>
 			</Target>
 			<Target title="Release|Win32">
@@ -73,8 +71,6 @@
 					<Add library="libGUILib.a" />
 					<Add library="libFxGenLib.a" />
 					<Add library="..\..\lib\libtinyxml_lib.a" />
-					<Add library="..\..\lib\libvgvm.a" />
-					<Add library="..\..\..\..\..\..\GTK\lib\libcairo.dll.a" />
 				</Linker>
 			</Target>
 			<Target title="Tiny Release|Win32">
@@ -104,14 +100,11 @@
 					<Add library="..\FxGenLib\Tiny Release_Win32\libFxGenLib.a" />
 					<Add library="..\GUILib\Tiny Release_Win32\libGUILib.a" />
 					<Add library="..\..\lib\libtinyxml_lib.a" />
-					<Add library="..\..\lib\libvgvm.a" />
 					<Add library="winmm" />
 					<Add library="comctl32" />
 					<Add library="opengl32" />
 					<Add library="user32" />
 					<Add library="gdi32" />
-					<Add library="..\..\..\..\..\..\GTK\lib\libcairo.dll.a" />
-					<Add library="..\..\..\..\..\..\GTK\lib\libcairomm-1.0.dll.a" />
 					<Add library="comdlg32" />
 					<Add library="msimg32" />
 				</Linker>
@@ -126,12 +119,12 @@
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-O2" />
+					<Add option="-W" />
+					<Add option="-g" />
 					<Add option="-DWIN32" />
 					<Add option="-DNDEBUG" />
 					<Add option="-D_WINDOWS" />
-					<Add option="-W" />
-					<Add option="-g" />
-					<Add option="-O2" />
 					<Add directory="..\FxGenLib" />
 					<Add directory="..\GUILib" />
 				</Compiler>
@@ -157,46 +150,55 @@
 		<Linker>
 			<Add directory="..\..\W32Bin" />
 		</Linker>
-		<Unit filename="..\..\Operators.txt" />
-		<Unit filename="..\..\Primitives.txt" />
 		<Unit filename="Editor.cpp" />
 		<Unit filename="Editor.h" />
-		<Unit filename="Editor.rc">
-			<Option compilerVar="WINDRES" />
-		</Unit>
-		<Unit filename="EnterNameDlg.cpp" />
-		<Unit filename="EnterNameDlg.h" />
 		<Unit filename="EventsList.h" />
 		<Unit filename="MainFrm.cpp" />
 		<Unit filename="MainFrm.h" />
-		<Unit filename="MenuCtrl.cpp" />
-		<Unit filename="MenuCtrl.h" />
-		<Unit filename="OperatorsCtrl.cpp" />
-		<Unit filename="OperatorsCtrl.h" />
+		<Unit filename="OperatorsCtrl.cpp">
+			<Option virtualFolder="Controls\" />
+		</Unit>
+		<Unit filename="OperatorsCtrl.h">
+			<Option virtualFolder="Controls\" />
+		</Unit>
 		<Unit filename="OperatorsWnd.cpp" />
 		<Unit filename="OperatorsWnd.h" />
+		<Unit filename="ProgressPieCtrl.cpp">
+			<Option virtualFolder="Controls\" />
+		</Unit>
+		<Unit filename="ProgressPieCtrl.h">
+			<Option virtualFolder="Controls\" />
+		</Unit>
 		<Unit filename="ProjectWnd.cpp" />
 		<Unit filename="ProjectWnd.h" />
-		<Unit filename="PropertiesCtrl.cpp" />
-		<Unit filename="PropertiesCtrl.h" />
+		<Unit filename="PropertiesCtrl.cpp">
+			<Option virtualFolder="Controls\" />
+		</Unit>
+		<Unit filename="PropertiesCtrl.h">
+			<Option virtualFolder="Controls\" />
+		</Unit>
 		<Unit filename="PropertiesWnd.cpp" />
 		<Unit filename="PropertiesWnd.h" />
 		<Unit filename="PropertyItems.cpp" />
 		<Unit filename="PropertyItems.h" />
-		<Unit filename="Renderer.cpp" />
-		<Unit filename="Renderer.h" />
 		<Unit filename="TGAWriter.cpp" />
 		<Unit filename="TGAWriter.h" />
-		<Unit filename="TreeNodeCtrl.cpp" />
-		<Unit filename="TreeNodeCtrl.h" />
-		<Unit filename="VectorPropertyItems.cpp" />
-		<Unit filename="ViewportsCtrl.cpp" />
-		<Unit filename="ViewportsCtrl.h" />
+		<Unit filename="TreeNodeCtrl.cpp">
+			<Option virtualFolder="Controls\" />
+		</Unit>
+		<Unit filename="TreeNodeCtrl.h">
+			<Option virtualFolder="Controls\" />
+		</Unit>
+		<Unit filename="ViewportsCtrl.cpp">
+			<Option virtualFolder="Controls\" />
+		</Unit>
+		<Unit filename="ViewportsCtrl.h">
+			<Option virtualFolder="Controls\" />
+		</Unit>
 		<Unit filename="ViewportsWnd.cpp" />
 		<Unit filename="ViewportsWnd.h" />
 		<Unit filename="pch.cpp" />
 		<Unit filename="pch.h" />
-		<Unit filename="resource.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

@@ -14,7 +14,8 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef PROJECTWND_H
+#define PROJECTWND_H
 
 //-----------------------------------------------------------------
 //			Includes
@@ -64,3 +65,5 @@ protected:
 	NEngineOp*	m_popsProject;
 	NMenuCtrl		m_wndMenu;
 };
+
+#endif //PROJECTWND_H
