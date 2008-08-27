@@ -459,12 +459,23 @@ void NUseStoredOpsProp::DrawItem(NGraphics* pdc, NRect& rcItem)
 bool NUseStoredOpsProp::BeginEdit(NRect& rcItem)
 {
 	NRect rc = rcItem;
+
 	rc.left = rc.right;
 
-	//Creation du menu
+	//Menu Creation
+	if (m_wndMenu.GetItemsCount()==0)
+	{
+		m_wndMenu.Create("", m_pParent);
+		m_wndMenu.OnItemClick=FDelegate(this, (TDelegate)&NUseStoredOpsProp::OnMenuClick);
+	}	else {
+		m_wndMenu.DeleteAllItems();
+	}
+
+	//Insert Menu Items
 	NTreeNode* pnode = NEngineOp::GetEngine()->GetRootGroup();
 	BuildMenu(pnode);
 
+	//Display  menu
 	NPoint pt(rcItem.left, rcItem.bottom);
 	m_pParent->ClientToScreen(pt);
 	m_wndMenu.TrackPopupMenu(pt, null);
@@ -491,15 +502,6 @@ void NUseStoredOpsProp::OnMenuClick(NObject* _psender)
 
 void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 {
-
-	if (m_wndMenu.GetItemsCount()==0)
-	{
-		m_wndMenu.Create("", m_pParent);
-		m_wndMenu.OnItemClick=FDelegate(this, (TDelegate)&NUseStoredOpsProp::OnMenuClick);
-	}	else {
-		m_wndMenu.DeleteAllItems();
-	}
-
 	//Parse Alls Pages to add 'NStoreOp'
 	NObjectArray& arrayObjs = _pnode->GetObjsArray();
 	udword dwCount = arrayObjs.Count();

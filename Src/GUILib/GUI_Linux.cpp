@@ -535,7 +535,8 @@ udword NW32Application::MessageBox(char* _pszText, udword _dwStyle)
 udword NW32Application::W32KeyCodeToFxGen(udword _w32keycode)
 {
 	udword fxgenKey = m_keymap[_w32keycode];
-	TRACE("Key %d => %d\n", _w32keycode, fxgenKey);
+	//TRACE("_w32keycode %d\n", _w32keycode);
+	//if (_w32keycode==VK_DELETE)	fxgenKey=VK_DELETE;
 	return fxgenKey;
 }
 

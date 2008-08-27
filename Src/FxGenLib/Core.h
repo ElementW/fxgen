@@ -67,7 +67,7 @@
 	typedef udword						ID;			// Identifier	// ###JN### will be removed
 
 	//Runtime class
-	typedef	NObject* (__cdecl RTCLASS_HANDLER)(void);	//Callback for class creation
+	typedef	NObject* (RTCLASS_HANDLER)(void);	//Callback for class creation
 
 
 //-----------------------------------------------------------------
@@ -341,7 +341,7 @@ protected:
 //	  0		if elem1 identical to elem2
 //	> 0		if elem1 greater than elem2
 
-typedef int( __cdecl *CompareFnc) (const void *_elem1, const void *_elem2);
+typedef int(*CompareFnc) (const void *_elem1, const void *_elem2);
 
 
 class FXGEN_API NObjectArray

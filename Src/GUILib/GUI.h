@@ -27,7 +27,7 @@
 	#define GUI_API __declspec(dllimport)
 #endif
 #else // STATIC_BUILD
-#define FXGEN_API
+#define GUI_API
 #endif // STATIC_BUILD
 
 

@@ -47,7 +47,7 @@ NSplitWnd::NSplitWnd() : NWnd()
 NSplitWnd::~NSplitWnd()
 {
 	//Free Panes Infos Dynamics structs
-	for (sdword i=mPaneList.Count()-1; i>=0; i--) 
+	for (sdword i=mPaneList.Count()-1; i>=0; i--)
 	{
 		if (mPaneList[i]->pstripBar)
 			delete mPaneList[i]->pstripBar;
@@ -183,7 +183,7 @@ void NSplitWnd::OnPaint()
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Split the frame in 2 Columns	 
+//!	\brief	Split the frame in 2 Columns
 //!	\param	paneid					pane identifier
 //!	\param	dwPosInPercent	pos is the location where the split occurs in percent
 //!	\return return the new right pane identifier
@@ -224,7 +224,7 @@ udword	NSplitWnd::SplitColumn(udword paneid, sdword dwPosInPercent)
 
 
 //-----------------------------------------------------------------
-//!	\brief	Split the frame in 2 Rows	 
+//!	\brief	Split the frame in 2 Rows
 //!	\param	paneid					pane identifier
 //!	\param	dwPosInPercent	pos is the location where the split occurs in percent
 //!	\return return the new right pane identifier
@@ -761,10 +761,6 @@ bool	NSplitWnd::MoveSplit(NSPLITBOX* splitbox, NPoint &deltas)
 	s.top	=(udword)((float)s.top		/ mFactorY);
 	s.bottom=(udword)((float)s.bottom	/ mFactorY);
 
-	//Start Window Repositionning
-	HDWP hDWP = ::BeginDeferWindowPos((udword)splitbox->move.Count() );
-	if (hDWP == null)			return false;
-
 	//Windows Repositionning
 	i = 0;
 	pane = (NPANEINFO*)splitbox->move[i++];
@@ -792,9 +788,6 @@ bool	NSplitWnd::MoveSplit(NSPLITBOX* splitbox, NPoint &deltas)
 		pane = (NPANEINFO*)splitbox->move[i++];
 		side = splitbox->move[i++];
 	}
-
-	//End Defer Window Pos
-	::EndDeferWindowPos(hDWP);
 
 	return false;
 }

@@ -14,7 +14,7 @@
 		<Cursor position="2899" topLine="0" />
 	</File>
 	<File name="CombineOps.cpp" open="0" top="0" tabpos="4">
-		<Cursor position="3881" topLine="97" />
+		<Cursor position="1361" topLine="21" />
 	</File>
 	<File name="CombineOps.h" open="0" top="0" tabpos="13">
 		<Cursor position="5297" topLine="132" />
@@ -28,8 +28,8 @@
 	<File name="Core.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="46605" topLine="1659" />
 	</File>
-	<File name="Core.h" open="1" top="0" tabpos="4">
-		<Cursor position="1036" topLine="0" />
+	<File name="Core.h" open="1" top="0" tabpos="1">
+		<Cursor position="2631" topLine="64" />
 	</File>
 	<File name="DistordOps.cpp" open="0" top="0" tabpos="9">
 		<Cursor position="14685" topLine="449" />
@@ -41,7 +41,7 @@
 		<Cursor position="11361" topLine="391" />
 	</File>
 	<File name="EngineOp.h" open="0" top="0" tabpos="6">
-		<Cursor position="4427" topLine="122" />
+		<Cursor position="2302" topLine="49" />
 	</File>
 	<File name="FilterOps.cpp" open="0" top="0" tabpos="10">
 		<Cursor position="40437" topLine="1401" />
