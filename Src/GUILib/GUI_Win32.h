@@ -70,6 +70,8 @@ public:
 
 	virtual	void GetCursorPos(NPoint& _pos);
 	virtual	void SetCursorPos(const NPoint& _pos);
+	virtual void CaptureMouse();
+	virtual void ReleaseMouse();
 	virtual	udword MessageBox(char* _pszText, udword _dwStyle=NMB_OK);
 
 protected:
