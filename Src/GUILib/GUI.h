@@ -150,6 +150,8 @@ public:
 
 	virtual	void GetCursorPos(NPoint& _pos) {}; //Override
 	virtual	void SetCursorPos(const NPoint& _pos) {}; //Override
+        virtual void CaptureMouse() {}; //Override
+        virtual void ReleaseMouse() {}; //Override
 	virtual	udword MessageBox(char* _pszText, udword _dwStyle=NMB_OK) { return 0; }
 
 	//GUI

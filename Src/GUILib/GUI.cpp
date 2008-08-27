@@ -300,6 +300,7 @@ NWnd* NbaseApplication::GetFocus()
 void NbaseApplication::SetCapture(NWnd* _pwnd)
 {
 	m_pCapturedWnd = _pwnd;
+	CaptureMouse();
 }
 
 //-----------------------------------------------------------------
@@ -307,6 +308,7 @@ void NbaseApplication::SetCapture(NWnd* _pwnd)
 //-----------------------------------------------------------------
 void NbaseApplication::ReleaseCapture()
 {
+	ReleaseMouse();
 	m_pCapturedWnd=null;
 }
 
