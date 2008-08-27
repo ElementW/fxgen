@@ -14,7 +14,6 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -175,7 +174,7 @@ void NButtonCtrl::OnPaint()
 
 			dc.DrawText(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
 		} else {
-			dc.GradientVRect(rc, RGBA(120, 120, 120,255), RGBA(220, 220, 220,255)); 
+			dc.GradientVRect(rc, RGBA(120, 120, 120,255), RGBA(220, 220, 220,255));
 
 			if (m_bMouseOver)			dc.Draw3dRect(rc, RGBA(205,194,14,255), RGBA(205,194,14,255));
 			else									dc.Draw3dRect(rc, RGBA(0,0,0,255), RGBA(255,255,255,255));
@@ -214,7 +213,7 @@ void NButtonCtrl::OnLeftButtonUp(udword flags, NPoint point)
 {
 	if (m_bClicked)
 		OnClick(this);
-		
+
 	m_bClicked = false;
 	Update();
 }
@@ -328,7 +327,7 @@ void NColorPickerCtrl::TrackPopup(NPoint _ptScreen, const NColor& _clr)
 	SetWindowRect(rc);
 
 	SetFocus();
-	
+
 	ShowWindow(true);
 
 	//Graphic update
@@ -399,7 +398,7 @@ void NColorPickerCtrl::OnPaint()
 	cstr.Format("S: %f", m_fS); rcText.top+=10;
 	gfx.DrawText(cstr.Buffer() , rcText, NDT_SINGLELINE, RGBA(0,0,0,255) );
 
-	
+
 	rcText.top+=20;
 	cstr.Format("R: %d", m_clr.GetR() );
 	gfx.DrawText(cstr.Buffer() , rcText, NDT_SINGLELINE, RGBA(0,0,0,255) );
@@ -503,7 +502,7 @@ void NColorPickerCtrl::UpdateColorFromMousePt(NPoint& _pt)
 		m_clr.SetFromHLS(m_fHue, m_fL, m_fS);
 		RedrawWindow();
 		OnColorClick(this);
-	}	
+	}
 
 }
 

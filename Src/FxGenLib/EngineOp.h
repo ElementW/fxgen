@@ -62,7 +62,7 @@ class NObject;
 //-----------------------------------------------------------------
 //                   TypesDef
 //-----------------------------------------------------------------
-typedef	void (__cdecl FXGEN_OPSPROCESSCB)(udword _dwCurrentOp, udword _dwTotalOps);
+typedef	void (FXGEN_OPSPROCESSCB)(udword _dwCurrentOp, udword _dwTotalOps);
 
 //-----------------------------------------------------------------
 //!	\class		NOperator

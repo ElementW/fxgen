@@ -23,6 +23,17 @@ TODO
 	.ProgressPieCtrl
 	
 
+Version 0.7 alpha (Release: Now on Linux !)
+----------------------------------
+.Main
+	.Code cleanup
+.GUILib
+	.Fixed Menu destruction crash
+	
+###INWORK###	
+	.Linux Application starter version (using GTK)
+
+
 Version 0.6 alpha (Release: CrossPlatForm GUI !)
 ----------------------------------
 

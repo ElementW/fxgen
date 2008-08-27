@@ -116,7 +116,7 @@ void NbaseApplication::InitGLState()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LEQUAL);		
+	//glDepthFunc(GL_LEQUAL);
 	//Font rasterizer
 	if (m_pfont==null)
 		m_pfont = new NGUIFont();
@@ -343,7 +343,7 @@ NGraphics::NGraphics(NWnd* pwnd)
 	glViewport(rc.left, h - (rc.top+rc.Height()), rc.Width() , rc.Height()); // Reset The Current Viewport
 
 	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity ();			
+	glLoadIdentity ();
 
 	mat4 matProj;
 	ortho2D(matProj, 0, rc.Width(), rc.Height(), 0);
@@ -355,7 +355,7 @@ NGraphics::NGraphics(NWnd* pwnd)
 
 //	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);				// Background
 //	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+
 
 }
 
@@ -372,7 +372,7 @@ NGraphics::~NGraphics()
 void NGraphics::FillSolidRect(NRect& rc, NColor clr)
 {
 	NRect rcW = m_pwnd->GetWindowRect();
-	
+
 	NRect rc2 = rc;
 	//rc2.Move(rcW.left, rcW.top);
 
@@ -530,7 +530,7 @@ void NGraphics::DrawLine(sdword _x1, sdword _y1, sdword _x2, sdword _y2, NColor 
 sdword NGraphics::DrawText(const char* _pszString, NRect& _rc, udword _nFormat, NColor _clr)
 {
 	sdword dwposX=0, dwposY=0;
-	
+
 	if (_nFormat&NDT_HCENTER)
 	{
 		sdword h = GetApp()->GetFont()->m_h-1;
@@ -586,11 +586,12 @@ NWnd::NWnd()
 //-----------------------------------------------------------------
 NWnd::~NWnd()
 {
-	//###TODO### remove from children list...
+	//Remove this windows from parent's children array...
 	if (m_pParentWnd)
 	{
 		udword idx = m_pParentWnd->m_arrayChildren.Find(this);
-		m_pParentWnd->m_arrayChildren.RemoveItem(idx);
+		if (idx!=-1)
+			m_pParentWnd->m_arrayChildren.RemoveItem(idx);
 	}
 }
 

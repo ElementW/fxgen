@@ -14,7 +14,6 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -59,6 +58,7 @@ NMenuCtrl::NMenuCtrl()
 //-----------------------------------------------------------------
 NMenuCtrl::~NMenuCtrl()
 {
+	DeleteAllItems();
 }
 
 //-----------------------------------------------------------------
@@ -243,7 +243,7 @@ void NMenuCtrl::OnMouseMove(udword flags, NPoint point )
 		if (m_dwItemHighLightedIdx!=-1)
 		{
 			NMEItemDesc* pitem = &m_carrayItems[m_dwItemHighLightedIdx];
-			
+
 
 			//Open Popup Menu
 			if (pitem->ppopUpMenu)
@@ -376,7 +376,7 @@ NMenuCtrl* NMenuCtrl::CreatePopupMenu(const char* _pszName, udword _idx)
 	if (_idx<m_carrayItems.Count())
 	{
 		m_carrayItems[_idx].ppopUpMenu = ppopup;
-		m_carrayItems[_idx].ppopUpMenu->Create("", m_pParentWnd);
+		m_carrayItems[_idx].ppopUpMenu->Create("", this);
 		m_carrayItems[_idx].strName = _pszName;
 
 	//Append
@@ -392,7 +392,7 @@ NMenuCtrl* NMenuCtrl::CreatePopupMenu(const char* _pszName, udword _idx)
 		st.ppopUpMenu	= ppopup;
 		m_carrayItems.AddItem(st);
 
-		st.ppopUpMenu->Create("", m_pParentWnd);
+		st.ppopUpMenu->Create("", this);
 	}
 
 	return ppopup;
@@ -442,6 +442,14 @@ void NMenuCtrl::TrackPopupMenu(NPoint _ptScreen, NMenuCtrl* _pParentMenu/*=null*
 //-----------------------------------------------------------------
 void NMenuCtrl::DeleteAllItems()
 {
+	udword dwCount = m_carrayItems.Count();
+	for (udword i=0; i<dwCount; i++)
+	{
+		NMEItemDesc* pitem = &m_carrayItems[i];
+		if (pitem->ppopUpMenu)
+			delete pitem->ppopUpMenu;
+	}
+
 	m_carrayItems.Clear();
 }
 
@@ -542,7 +550,7 @@ void NMenuCtrl::OnKillFocus(NWnd* pNewWnd)
 	{
 		if (m_pcurParentMenu)
 			m_pcurParentMenu->ShowMenu(false, NULL);
-		else 
+		else
 			ShowMenu(false, NULL);
 	}
 }
