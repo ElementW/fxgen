@@ -139,8 +139,8 @@ public:
 
 protected:
 	// Internal methods
-	bool GetHueAtPoint(NPoint& _pt, float& _fHue);
-	bool GetLSAtPoint(NPoint& _pt, float& _fL, float& _fS);
+	void GetHueAtPoint(NPoint& _pt, float& _fHue);
+	void GetLSAtPoint(NPoint& _pt, float& _fL, float& _fS);
 	void UpdateColorFromMousePt(NPoint& _pt);
 
 	// Datas
@@ -148,7 +148,8 @@ protected:
 	bool		m_bEntered;
 	NRect		m_rcHue, m_rcLS;
 	float		m_fHue, m_fL, m_fS;
-	bool		m_bPicked;
+	bool		m_bPickedLS;
+	bool		m_bPickedHue;
 
 protected:
 	//Messages Dispatching
