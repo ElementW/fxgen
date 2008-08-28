@@ -273,7 +273,8 @@ NColorPickerCtrl::NColorPickerCtrl()
 	m_fHue=0.0f;
 	m_fL=0.0f;
 	m_fS=0.0f;
-	m_bPicked=false;
+	m_bPickedLS=false;
+	m_bPickedHue=false;
 }
 
 //-----------------------------------------------------------------
@@ -436,21 +437,29 @@ void NColorPickerCtrl::OnPaint()
 
 void NColorPickerCtrl::OnMouseMove(udword flags, NPoint pos )
 {
-	if (m_bPicked)
-	{
-		UpdateColorFromMousePt(pos);
-	}
+	UpdateColorFromMousePt(pos);
 }
 
 void NColorPickerCtrl::OnLeftButtonUp(udword flags, NPoint pos)
 {
-	m_bPicked=false;
+	m_bPickedHue=false;
+	m_bPickedLS=false;
+	ReleaseCapture();
 }
 
 void NColorPickerCtrl::OnLeftButtonDown(udword flags, NPoint pos)
 {
-	m_bPicked=true;
-	UpdateColorFromMousePt(pos);
+	if( m_rcHue.Contain(pos) )
+	{
+		m_bPickedHue=true;
+		SetCapture();
+		UpdateColorFromMousePt(pos);
+	} else if( m_rcLS.Contain(pos) )
+	{
+		m_bPickedLS=true;
+		SetCapture();
+		UpdateColorFromMousePt(pos);
+	}
 }
 
 void NColorPickerCtrl::OnLeftButtonDblClk(udword flags, NPoint point)
@@ -463,42 +472,35 @@ void NColorPickerCtrl::OnKillFocus(NWnd* pNewWnd)
 	ShowWindow(false);
 }
 
-bool NColorPickerCtrl::GetHueAtPoint(NPoint& _pt, float& _fHue)
+void NColorPickerCtrl::GetHueAtPoint(NPoint& _pt, float& _fHue)
 {
-	if (m_rcHue.Contain(_pt))
-	{
-		_fHue =(float)(_pt.x - m_rcHue.left)*360.0f/(float)m_rcHue.Width();
-		return true;
-	}
-
-	return false;
+	_fHue =(float)(_pt.x - m_rcHue.left)*360.0f/(float)m_rcHue.Width();
+	if(_fHue<0) _fHue = 0;
+	if(_fHue>360) _fHue = 360;
 }
 
-bool NColorPickerCtrl::GetLSAtPoint(NPoint& _pt, float& _fL, float& _fS)
+void NColorPickerCtrl::GetLSAtPoint(NPoint& _pt, float& _fL, float& _fS)
 {
-	if (m_rcLS.Contain(_pt))
-	{
-		_fL = (float)(_pt.y - m_rcLS.top) / m_rcLS.Height();
-		_fS = (float)(_pt.x - m_rcLS.left) / m_rcLS.Width();
-		return true;
-	}
-
-	return false;
+	_fL = (float)(_pt.y - m_rcLS.top) / m_rcLS.Height();
+	_fS = (float)(_pt.x - m_rcLS.left) / m_rcLS.Width();
+	if(_fL<0) _fL = 0;
+	if(_fL>1) _fL = 1;
+	if(_fS<0) _fS = 0;
+	if(_fS>1) _fS = 1;
 }
 
 void NColorPickerCtrl::UpdateColorFromMousePt(NPoint& _pt)
 {
 	//Hue Changed
-	if (GetHueAtPoint(_pt, m_fHue))
+	if (m_bPickedHue)
 	{
+		GetHueAtPoint(_pt, m_fHue);
 		m_clr.SetFromHLS(m_fHue, m_fL, m_fS);
 		RedrawWindow();
 		OnColorClick(this);
-	}
-
-	//LS changed
-	if (GetLSAtPoint(_pt, m_fL, m_fS))
+	} else if (m_bPickedLS) //LS changed
 	{
+		GetLSAtPoint(_pt, m_fL, m_fS);
 		m_clr.SetFromHLS(m_fHue, m_fL, m_fS);
 		RedrawWindow();
 		OnColorClick(this);
