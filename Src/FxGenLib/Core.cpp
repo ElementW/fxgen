@@ -1079,19 +1079,19 @@ ID NRTClass::MakeClassID(const char* _pszClassName)
 //-----------------------------------------------------------------
 NRTClass* NRTClass::GetFirstClassBySuperClass(const char* _pszSuperClassName)
 {
-  NRTClassModule* pmod = NRTClassModule::m_pFirstRTClassModule;
-  while (pmod)
-  {
-    NRTClass* pcurRTC = pmod->m_pFirstRTClass;
-    while (pcurRTC!=null)
-    {
-      if (strcmp(pcurRTC->m_pszSuperClassName, _pszSuperClassName) == 0)
-        return pcurRTC;
-      pcurRTC = pcurRTC->m_pNextRTC;
-    }
+	NRTClassModule* pmod = NRTClassModule::m_pFirstRTClassModule;
+	while (pmod)
+	{
+		NRTClass* pcurRTC = pmod->m_pFirstRTClass;
+		while (pcurRTC!=null)
+		{
+			if (strcmp(pcurRTC->m_pszSuperClassName, _pszSuperClassName) == 0)
+				return pcurRTC;
+			pcurRTC = pcurRTC->m_pNextRTC;
+		}
 
-    pmod=pmod->m_pNextRTClassModule;
-  }
+		pmod=pmod->m_pNextRTClassModule;
+	}
 
 	return null;
 }
@@ -1102,23 +1102,28 @@ NRTClass* NRTClass::GetFirstClassBySuperClass(const char* _pszSuperClassName)
 //-----------------------------------------------------------------
 NRTClass* NRTClass::GetNextClassBySuperClass(const char* _pszSuperClassName, NRTClass* _prtclass)
 {
-  NRTClassModule* pmod = _prtclass->m_pRTClassModule;
-  while (pmod)
-  {
-    _prtclass = _prtclass->m_pNextRTC;
+	NRTClassModule* pmod = _prtclass->m_pRTClassModule;
+	bool bFirst = false;
+	while (pmod)
+	{
+		if(!bFirst)
+			_prtclass = _prtclass->m_pNextRTC;
 
-    while (_prtclass!=null)
-    {
-      if (strcmp(_prtclass->m_pszSuperClassName, _pszSuperClassName) == 0)
-        return _prtclass;
+		while (_prtclass!=null)
+		{
+			if (strcmp(_prtclass->m_pszSuperClassName, _pszSuperClassName) == 0)
+				return _prtclass;
 
-      _prtclass = _prtclass->m_pNextRTC;
-    }
+			_prtclass = _prtclass->m_pNextRTC;
+		}
 
-    pmod=pmod->m_pNextRTClassModule;
+		pmod=pmod->m_pNextRTClassModule;
 		if (pmod)
+		{
 			_prtclass = pmod->m_pFirstRTClass;
-  }
+			bFirst = true;
+		}
+	}
 
 	return null;
 }
