@@ -296,33 +296,34 @@ void NString::RemoveAt(udword _idx, udword _count)
 
 void NColor::ToHLS(float &_h, float &_l, float &_s)
 {
+	float r = mR*255.0f;
+	float g = mG*255.0f;
+	float b = mB*255.0f;
+	float minval = min(r, min(g, b));
+	float maxval = max(r, max(g, b));
+	float mdiff  = float(maxval) - float(minval);
+	float msum   = float(maxval) + float(minval);
 
-  float minval = min(mR*255.0f, min(mG*255.0f, mB*255.0f));
-  float maxval = max(mR*255.0f, max(mG*255.0f, mB*255.0f));
-  float mdiff  = float(maxval) - float(minval);
-  float msum   = float(maxval) + float(minval);
+	_l = msum / 510.0f;
 
-  _l = msum / 510.0f;
+	if (maxval == minval)
+	{
+		_s = 0.0f;
+		_h = 0.0f;
+	}
+	else
+	{
+		float rnorm = (maxval - r ) / mdiff;
+		float gnorm = (maxval - g ) / mdiff;
+		float bnorm = (maxval - b ) / mdiff;
 
-  if (maxval == minval)
-  {
-    _s = 0.0f;
-    _h = 0.0f;
-  }
-  else
-  {
-    float rnorm = (maxval - mR*255.0f ) / mdiff;
-    float gnorm = (maxval - mG*255.0f ) / mdiff;
-    float bnorm = (maxval - mB*255.0f ) / mdiff;
+		_s = (_l <= 0.5f) ? (mdiff / msum) : (mdiff / (510.0f - msum));
 
-    _s = (_l <= 0.5f) ? (mdiff / msum) : (mdiff / (510.0f - msum));
-
-    if (mR*255.0f == maxval) _h = 60.0f * (6.0f + bnorm - gnorm);
-    if (mG*255.0f == maxval) _h = 60.0f * (2.0f + rnorm - bnorm);
-    if (mB*255.0f == maxval) _h = 60.0f * (4.0f + gnorm - rnorm);
-    if (_h > 360.0f)	_h = _h - 360.0f;
-  }
-
+		if (r == maxval) _h = 60.0f * (6.0f + bnorm - gnorm);
+		if (g == maxval) _h = 60.0f * (2.0f + rnorm - bnorm);
+		if (b == maxval) _h = 60.0f * (4.0f + gnorm - rnorm);
+		if (_h > 360.0f)	 _h = _h - 360.0f;
+	}
 }
 
 void NColor::SetFromHLS(float _h, float _l, float _s)
