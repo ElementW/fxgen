@@ -417,6 +417,13 @@ void NMenuCtrl::TrackPopupMenu(NPoint _ptScreen, NMenuCtrl* _pParentMenu/*=null*
 	//if (m_pParentWnd)
 	//	m_pParentWnd->ClientToScreen(_ptScreen);
 
+	// Clipping
+	NRect rcApp = GetApp()->GetMainWnd()->GetWindowRect();
+	if(_ptScreen.x + rc.Width() > rcApp.right)
+		_ptScreen.x -= _ptScreen.x + rc.Width() - rcApp.right;
+	if(_ptScreen.y + rc.Height() > rcApp.bottom)
+		_ptScreen.y -= _ptScreen.y + rc.Height() - rcApp.bottom;
+
 	if (m_pParentWnd)
 		m_pParentWnd->ScreenToClient(_ptScreen);
 
