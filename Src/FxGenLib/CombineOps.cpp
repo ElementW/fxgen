@@ -118,11 +118,11 @@ udword NRectOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	m_pcvarsBloc->GetValue(4, _ftime, fy2);
 
 	//Init
-	udword x1, x2, y1, y2;
-	x1 = max(0, fx1 * w);
-	x2 = min(w, fx2 * w);
-	y1 = max(0, fy1 * h);
-	y2 = min(h, fy2 * h);
+	uword x1, x2, y1, y2;
+	x1 = max(0, min(w, min(fx1, fx2) * w));
+	x2 = max(0, min(w, max(fx1, fx2) * w));
+	y1 = max(0, min(h, min(fy1, fy2) * h));
+	y2 = max(0, min(h, max(fy1, fy2) * h));
 
 	//Copy Source to this bitmap
 	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(NRGBA));
