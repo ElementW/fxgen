@@ -611,6 +611,13 @@ static NMapVarsBlocDesc mapblocdescCrackOp[] =
 	MAP(1, eubyte,		"2",		""						)	//V1 => 2-Variation
 	MAP(1, eubyte,		"3",		""						)	//V1 => 3-Length
 	MAP(1, euword,		"4",		""						)	//V1 => 4-Seed
+	MAP(2, eudword,		"0",		""						)	//V2 => 0-Color
+	MAP(2, euword,		"1",		""						)	//V2 => 1-Count
+	MAP(2, eubyte,		"2",		""						)	//V2 => 2-Variation
+	MAP(2, eubyte,		"3",		""						)	//V2 => 3-Length
+	MAP(2, euword,		"4",		""						)	//V2 => 4-Seed
+	MAP(2, eubyte,		"5",		""						)	//V2 => 5-Length decision
+	MAP(2, eubyte,		"6",		""						)	//V2 => 6-High quality
 };
 
 static NVarsBlocDesc blocdescCrackOp[] =
@@ -622,13 +629,14 @@ static NVarsBlocDesc blocdescCrackOp[] =
 	VAR(euword,		true, "Seed",				"5412",	"NUwordProp") //4
 	VAR(eubyte,		true, "Length decision", "0,[Random,Constant,Normal based]",	"NUbyteComboProp") //5
 	VAR(eubyte,		true, "High quality", "0,[Off,Alpha,Subpixel]",	"NUbyteComboProp") //6
+	VAR(eubyte,		true, "Normal", "0,[Continuous,Constant]",	"NUbyteComboProp") //7
 };
 
 NCrackOp::NCrackOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(7, blocdescCrackOp, 2);
-	m_pcvarsBloc->SetMapVarBlocDesc(5, mapblocdescCrackOp);
+	m_pcvarsBloc = AddVarsBloc(8, blocdescCrackOp, 3);
+	m_pcvarsBloc->SetMapVarBlocDesc(12, mapblocdescCrackOp);
 
 }
 
@@ -666,7 +674,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 
 	//Get Variables Values
 	NRGBA color;
-	ubyte byVariation, byLength, byMode, byHQ;
+	ubyte byVariation, byLength, byMode, byHQ, byNormalMode;
 	uword wSeed, wCount;
 	m_pcvarsBloc->GetValue(0, _ftime, (udword&)color);
 	m_pcvarsBloc->GetValue(1, _ftime, wCount);
@@ -675,6 +683,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	m_pcvarsBloc->GetValue(4, _ftime, wSeed);
 	m_pcvarsBloc->GetValue(5, _ftime, byMode);
 	m_pcvarsBloc->GetValue(6, _ftime, byHQ);
+	m_pcvarsBloc->GetValue(7, _ftime, byNormalMode);
 
 	SetSeedValue(wSeed);
 
@@ -702,6 +711,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 		if(byMode == 0)
 			count = (sdword)(count * myfRandom() * 2); // E=1
 
+		bool first = true;
 		// draw a line
 		while( --count >= 0 )
 		{
@@ -710,8 +720,10 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 			x = x + cos(a);
 			y = y + sin(a);
 
-			if(normals.width)
+			if(normals.width && (first || byNormalMode == 0))
 			{
+				first = false;
+
 				NRGBA &N = normals(x,y);
 				vec3 normal(127.f - N.r, N.g-127.f, 0/*n.b*/); // x flip
 				a = normal.azimuth() + .5f * nv_pi; // rotate 90 degrees ccw
