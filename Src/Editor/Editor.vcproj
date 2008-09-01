@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\FxGenLib;..\GUILib;..\..\Externals\tinyxml"
+				AdditionalIncludeDirectories="..\FxGenLib;..\GUILib;..\..\Externals\tinyxml;&quot;..\..\Externals\SFML-1.3\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -64,10 +64,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib"
+				AdditionalDependencies="opengl32.lib sfml-main-d.lib sfml-system-s-d.lib sfml-window-s-d.lib"
 				OutputFile="$(OutDir)/Editor_D.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\Externals\tinyxml"
+				AdditionalLibraryDirectories="..\..\Externals\tinyxml;&quot;..\..\Externals\SFML-1.3\lib\vc2008&quot;"
+				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/Editor.pdb"
 				SubSystem="2"
@@ -375,15 +376,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Main.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MainFrm.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\MainFrm.h"
-				>
-			</File>
-			<File
-				RelativePath=".\resource.h"
 				>
 			</File>
 		</Filter>
@@ -637,6 +638,18 @@
 						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
+			</File>
+		</Filter>
+		<Filter
+			Name="FileChooserDialog"
+			>
+			<File
+				RelativePath=".\FileChooserDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\FileChooserDialog.h"
+				>
 			</File>
 		</Filter>
 		<File

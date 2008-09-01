@@ -104,35 +104,29 @@ void NStripBarCtrl::OnSize()
 }
 
 
-void NStripBarCtrl::OnLeftButtonDown(udword flags, NPoint _point)
+void NStripBarCtrl::OnLButtonDown(NPoint _point)
 {
-	//TRACE("OnLeftButtonDown\n");
+	//TRACE("OnLButtonDown\n");
 }
 
-void NStripBarCtrl::OnLeftButtonUp(udword flags, NPoint point)
-{
-}
-
-
-void NStripBarCtrl::OnLeftButtonDblClk(udword flags, NPoint point)
+void NStripBarCtrl::OnLButtonUp(NPoint point)
 {
 }
 
-
-void NStripBarCtrl::OnRightButtonDown(udword flags, NPoint point)
+void NStripBarCtrl::OnRButtonDown(NPoint point)
 {
 }
 
-void NStripBarCtrl::OnMouseMove(udword flags, NPoint point )
+void NStripBarCtrl::OnMouseMove(NPoint point )
 {
 }
 
 
-void NStripBarCtrl::OnMButtonDown(udword flags, NPoint pos)
+void NStripBarCtrl::OnMButtonDown(NPoint pos)
 {
 }
 
-void NStripBarCtrl::OnMButtonUp(udword flags, NPoint pos)
+void NStripBarCtrl::OnMButtonUp(NPoint pos)
 {
 }
 

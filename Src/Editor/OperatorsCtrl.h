@@ -91,7 +91,7 @@ protected:
 
 	//Cursor Methods
 	void				DisplayCursor(NGraphics* _pdc);
-	void				SetCursorPos(sdword _dwX, sdword _dwY);
+	void				SetOpCursorPos(sdword _dwX, sdword _dwY);
 
 	// Datas
 	float		m_fPosX, m_fPosY, m_fStartPosXPan, m_fStartPosYPan;
@@ -118,14 +118,16 @@ protected:
 	//Messages Dispatching
 	virtual	void	OnPaint();
 	virtual void	OnSize();
-	virtual void	OnMouseMove(udword flags, NPoint pos );
-	virtual void	OnMButtonDown(udword flags, NPoint pos);
-	virtual void	OnMButtonUp(udword flags, NPoint pos);
-	virtual void	OnLeftButtonUp(udword flags, NPoint pos);
-	virtual void	OnLeftButtonDown(udword flags, NPoint pos);
-	virtual	void	OnLeftButtonDblClk(udword flags, NPoint point);
-	virtual void	OnRightButtonDown(udword flags, NPoint pos);
-	virtual	void	OnMouseWheel(udword flags, sword zDelta, NPoint pos);
+
+	virtual void	OnMouseMove(NPoint pos );
+	virtual void	OnMButtonDown(NPoint pos);
+	virtual void	OnMButtonUp(NPoint pos);
+	virtual void	OnLButtonUp(NPoint pos);
+	virtual void	OnLButtonDown(NPoint pos);
+	virtual	void	OnLButtonDblClk(NPoint point);
+	virtual void	OnRButtonDown(NPoint pos);
+	virtual	void	OnMouseWheel(NPoint pos, sdword zDelta);
+
 	virtual	void	OnKeyUp(udword dwchar);
 
 };

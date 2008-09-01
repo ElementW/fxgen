@@ -797,7 +797,7 @@ bool	NSplitWnd::MoveSplit(NSPLITBOX* splitbox, NPoint &deltas)
 // Name:	OnMouseMove()
 // Desc:	...
 //-----------------------------------------------------------------
-void NSplitWnd::OnMouseMove(udword flags, NPoint pos)
+void NSplitWnd::OnMouseMove(NPoint pos)
 {
 	//Set Cursor Aspect
 	udword side = UpdateCursor(pos);
@@ -849,10 +849,10 @@ void NSplitWnd::OnMouseMove(udword flags, NPoint pos)
 
 
 //-----------------------------------------------------------------
-// Name:	OnLeftButtonDown()
+// Name:	OnLButtonDown()
 // Desc:	...
 //-----------------------------------------------------------------
-void NSplitWnd::OnLeftButtonDown(udword flags, NPoint pos)
+void NSplitWnd::OnLButtonDown(NPoint pos)
 {
 /*
 	POINT  w32pt;
@@ -893,10 +893,10 @@ void NSplitWnd::OnLeftButtonDown(udword flags, NPoint pos)
 }
 
 //-----------------------------------------------------------------
-// Name:	OnLeftButtonUp()
+// Name:	OnLButtonUp()
 // Desc:	...
 //-----------------------------------------------------------------
-void NSplitWnd::OnLeftButtonUp(udword flags, NPoint pos)
+void NSplitWnd::OnLButtonUp(NPoint pos)
 {
 	ReleaseCapture();
 	DestroySplitterBox(mSplitBox);

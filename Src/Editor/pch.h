@@ -40,6 +40,10 @@
 #include <stdio.h>
 #include <time.h>
 
+//SFML API
+#include <SFML/Window.hpp>
+
+//FXGen API
 #include "Core.h"
 
 #include "GUI.h"
@@ -56,22 +60,5 @@
 #include "DistordOps.h"
 #include "RenderOps.h"
 #include "CombineOps.h"
-
-//Win32
-#ifdef WIN32
-  #include "GUI_Win32.h"
-  #define NApplication	NW32Application
-  #define NFileDialog		NW32FileDialog
-  #include "WinMain.h"
-
-//Linux
-#else
-  #include "GUI_Linux.h"
-  #define NApplication	NLinuxApplication
-  #define NFileDialog		NLinuxFileDialog
-
-#endif
-
-
 
 #endif //PCH_H

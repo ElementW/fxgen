@@ -202,14 +202,14 @@ void NButtonCtrl::OnSize()
 }
 
 
-void NButtonCtrl::OnLeftButtonDown(udword flags, NPoint _point)
+void NButtonCtrl::OnLButtonDown(NPoint _point)
 {
-	//TRACE("OnLeftButtonDown\n");
+	//TRACE("OnLButtonDown\n");
 	m_bClicked = true;
 	Update();
 }
 
-void NButtonCtrl::OnLeftButtonUp(udword flags, NPoint point)
+void NButtonCtrl::OnLButtonUp(NPoint point)
 {
 	if (m_bClicked)
 		OnClick(this);
@@ -225,27 +225,21 @@ void NButtonCtrl::OnMouseLeave()
 	Update();
 }
 
-
-void NButtonCtrl::OnLeftButtonDblClk(udword flags, NPoint point)
+void NButtonCtrl::OnRButtonDown(NPoint point)
 {
 }
 
-
-void NButtonCtrl::OnRightButtonDown(udword flags, NPoint point)
-{
-}
-
-void NButtonCtrl::OnMouseMove(udword flags, NPoint point )
+void NButtonCtrl::OnMouseMove(NPoint point )
 {
 	m_bMouseOver = true;
 }
 
 
-void NButtonCtrl::OnMButtonDown(udword flags, NPoint pos)
+void NButtonCtrl::OnMButtonDown(NPoint pos)
 {
 }
 
-void NButtonCtrl::OnMButtonUp(udword flags, NPoint pos)
+void NButtonCtrl::OnMButtonUp(NPoint pos)
 {
 }
 
@@ -312,7 +306,7 @@ void NColorPickerCtrl::TrackPopup(NPoint _ptScreen, const NColor& _clr)
 	m_clr = _clr;
 	m_clr.ToHLS(m_fHue, m_fL, m_fS);
 
-	NRect rcApp = GetApp()->GetMainWnd()->GetWindowRect();
+	NRect rcApp = GetGUISubSystem()->GetMainWnd()->GetWindowRect();
 	if (_ptScreen.x + 160 > rcApp.right)
 	{
 		_ptScreen.x=rcApp.right-160;
@@ -435,19 +429,19 @@ void NColorPickerCtrl::OnPaint()
 
 
 
-void NColorPickerCtrl::OnMouseMove(udword flags, NPoint pos )
+void NColorPickerCtrl::OnMouseMove(NPoint pos )
 {
 	UpdateColorFromMousePt(pos);
 }
 
-void NColorPickerCtrl::OnLeftButtonUp(udword flags, NPoint pos)
+void NColorPickerCtrl::OnLButtonUp(NPoint pos)
 {
 	m_bPickedHue=false;
 	m_bPickedLS=false;
 	ReleaseCapture();
 }
 
-void NColorPickerCtrl::OnLeftButtonDown(udword flags, NPoint pos)
+void NColorPickerCtrl::OnLButtonDown(NPoint pos)
 {
 	if( m_rcHue.Contain(pos) )
 	{
@@ -462,7 +456,7 @@ void NColorPickerCtrl::OnLeftButtonDown(udword flags, NPoint pos)
 	}
 }
 
-void NColorPickerCtrl::OnLeftButtonDblClk(udword flags, NPoint point)
+void NColorPickerCtrl::OnLButtonDblClk(NPoint point)
 {
 }
 
@@ -510,7 +504,7 @@ void NColorPickerCtrl::UpdateColorFromMousePt(NPoint& _pt)
 
 void NColorPickerCtrl::OnKeyUp(udword dwchar)
 {
-	if (dwchar==NK_ESCAPE)
+	if (dwchar==NKey::Escape)
 			ShowWindow(false);
 }
 
@@ -597,7 +591,7 @@ void NEditCtrl::OnPaint()
 	dc.FillSolidRect(rc, RGBA(255,255,255,255));
 	dc.DrawText(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 	//Cursor
-	udword px = m_dwCurX*(GetApp()->GetFont()->m_h-1); //###TOFIX###
+	udword px = m_dwCurX*(GetGUISubSystem()->GetFont()->m_h-1); //###TOFIX###
 	px+=2;
 	dc.DrawLine(px,0,px, rc.Height(), RGBA(255,141,15,255), 1);
 
@@ -605,19 +599,19 @@ void NEditCtrl::OnPaint()
 //-----------------------------------------------------------------
 //!	\brief
 //-----------------------------------------------------------------
-void NEditCtrl::OnLeftButtonUp(udword _flags, NPoint _pos)
+void NEditCtrl::OnLButtonUp(udword _flags, NPoint _pos)
 {
 }
 //-----------------------------------------------------------------
 //!	\brief
 //-----------------------------------------------------------------
-void NEditCtrl::OnLeftButtonDown(udword _flags, NPoint _pos)
+void NEditCtrl::OnLButtonDown(udword _flags, NPoint _pos)
 {
 }
 //-----------------------------------------------------------------
 //!	\brief
 //-----------------------------------------------------------------
-void NEditCtrl::OnLeftButtonDblClk(udword _flags, NPoint _point)
+void NEditCtrl::OnLButtonDblClk(udword _flags, NPoint _point)
 {
 }
 //-----------------------------------------------------------------
@@ -634,25 +628,25 @@ void NEditCtrl::OnKillFocus(NWnd* _pNewWnd)
 //-----------------------------------------------------------------
 void NEditCtrl::OnKeyDown(udword _dwchar)
 {
-	if (_dwchar>=NK_SPACE && _dwchar<=NK_z)
+	if (_dwchar>=NKey::Space && _dwchar<=NKey::Z)
 	{
 		NString str;
 		str.Format("%c", (char)_dwchar);
 		m_cstrText.InsertAt(m_dwCurX, str.Buffer());
 		m_dwCurX++;
-	} else if (_dwchar==NK_DELETE) {
+	} else if (_dwchar==NKey::Delete) {
 		m_cstrText.RemoveAt(m_dwCurX, 1);
 		m_dwCurX--;
-	} else if (_dwchar==NK_BACKSPACE)	{
+	} else if (_dwchar==NKey::Back)	{
 		if (m_dwCurX>0)
 		{
 			m_dwCurX--;
 			m_cstrText.RemoveAt(m_dwCurX, 1);
 		}
-	} else if (_dwchar==NK_LEFT) {
+	} else if (_dwchar==NKey::Left) {
 		if (m_dwCurX>0)
 			m_dwCurX--;
-	} else if (_dwchar==NK_RIGHT)	{
+	} else if (_dwchar==NKey::Right)	{
 		if (m_dwCurX<m_cstrText.Length())
 			m_dwCurX++;
 	}

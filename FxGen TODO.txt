@@ -29,9 +29,10 @@ Version 0.7 alpha (Release: Now on Linux !)
 	.Code cleanup
 .GUILib
 	.Fixed Menu destruction crash
-	
-###INWORK###	
-	.Linux Application starter version (using GTK)
+	.Application Management Removed
+	.Win32 dependencies removed
+.Editor
+	.Use of SFML for main window creation for Windows,Linux and Mac (http://www.sfml-dev.org)
 
 
 Version 0.6 alpha (Release: CrossPlatForm GUI !)
