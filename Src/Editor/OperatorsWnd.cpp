@@ -112,7 +112,7 @@ void NOperatorsWnd::InitCtxMenu()
 //-----------------------------------------------------------------
 //!	\brief	Windows Message Right button down
 //-----------------------------------------------------------------
-void NOperatorsWnd::OnRightButtonDown(udword flags, NPoint pos)
+void NOperatorsWnd::OnRButtonDown(NPoint pos)
 {
 	SetFocus();
 	ClientToScreen(pos);
@@ -138,7 +138,7 @@ void NOperatorsWnd::OnMarkShowOperator(NOperator* pop)
 {
 	NOperatorsCtrl::OnMarkShowOperator(pop);
 
-	NFxGenApp* papp = (NFxGenApp*)GetApp();
+	NFxGenApp* papp = GetApp();
 	NMainFrm* pfrm = (NMainFrm*)papp->GetMainWnd();
 	pfrm->MarkShowOperator(pop);
 
@@ -149,7 +149,7 @@ void NOperatorsWnd::OnMarkShowOperator(NOperator* pop)
 //-----------------------------------------------------------------
 void NOperatorsWnd::OnDeletingOperator(NOperator* pop)
 {
-	NFxGenApp* papp = (NFxGenApp*)GetApp();
+	NFxGenApp* papp = (NFxGenApp*)GetGUISubSystem();
 	NMainFrm* pfrm = (NMainFrm*)papp->GetMainWnd();
 	pfrm->DeletingOperator(pop);
 }
@@ -159,7 +159,7 @@ void NOperatorsWnd::OnDeletingOperator(NOperator* pop)
 //-----------------------------------------------------------------
 void NOperatorsWnd::OnDeletedOperator(NOperator* pop)
 {
-	NFxGenApp* papp = (NFxGenApp*)GetApp();
+	NFxGenApp* papp = (NFxGenApp*)GetGUISubSystem();
 	NMainFrm* pfrm = (NMainFrm*)papp->GetMainWnd();
 	pfrm->DeletedOperator(pop);
 }

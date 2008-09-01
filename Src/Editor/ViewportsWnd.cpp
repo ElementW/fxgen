@@ -21,6 +21,7 @@
 #include "pch.h"
 #include "ViewportsWnd.h"
 #include "TGAWriter.h"
+#include "FileChooserDialog.h"
 
 //-----------------------------------------------------------------
 //                   Defines
@@ -279,7 +280,7 @@ void NViewportsWnd::DisplayTexture(NObject* pobj)
 //-----------------------------------------------------------------
 //!	\brief	Mouse wheel message
 //-----------------------------------------------------------------
-void NViewportsWnd::OnMouseWheel(udword flags, sword zDelta, NPoint point)
+void NViewportsWnd::OnMouseWheel(NPoint pos, sdword zDelta)
 {
 	if (zDelta>0) m_fScale*=2.0f;
 	else					m_fScale/=2.0f;
@@ -292,7 +293,7 @@ void NViewportsWnd::OnMouseWheel(udword flags, sword zDelta, NPoint point)
 //-----------------------------------------------------------------
 //!	\brief	Mouse move message
 //-----------------------------------------------------------------
-void NViewportsWnd::OnMouseMove(udword flags, NPoint pos)
+void NViewportsWnd::OnMouseMove(NPoint pos)
 {
 	if (m_eDragMode == PANNING)
 	{
@@ -314,7 +315,7 @@ void NViewportsWnd::OnMouseMove(udword flags, NPoint pos)
 //-----------------------------------------------------------------
 //!	\brief	Mouse Middle button message
 //-----------------------------------------------------------------
-void NViewportsWnd::OnMButtonDown(udword flags, NPoint pos)
+void NViewportsWnd::OnMButtonDown(NPoint pos)
 {
 	SetFocus();
 	if (m_eDragMode == NONE)
@@ -328,7 +329,7 @@ void NViewportsWnd::OnMButtonDown(udword flags, NPoint pos)
 //-----------------------------------------------------------------
 //!	\brief	Mouse Middle button message
 //-----------------------------------------------------------------
-void NViewportsWnd::OnMButtonUp(udword flags, NPoint pos)
+void NViewportsWnd::OnMButtonUp(NPoint pos)
 {
 	SetFocus();
 	if (m_eDragMode == PANNING)
@@ -341,7 +342,7 @@ void NViewportsWnd::OnMButtonUp(udword flags, NPoint pos)
 //-----------------------------------------------------------------
 //!	\brief	Mouse Left button message
 //-----------------------------------------------------------------
-void NViewportsWnd::OnLeftButtonDown(udword flags, NPoint pos)
+void NViewportsWnd::OnLButtonDown(NPoint pos)
 {
 	SetFocus();
 	if (!m_bOrtho && m_eDragMode == NONE)
@@ -355,7 +356,7 @@ void NViewportsWnd::OnLeftButtonDown(udword flags, NPoint pos)
 //-----------------------------------------------------------------
 //!	\brief	Mouse Left button message
 //-----------------------------------------------------------------
-void NViewportsWnd::OnLeftButtonUp(udword flags, NPoint pos)
+void NViewportsWnd::OnLButtonUp(NPoint pos)
 {
 	SetFocus();
 	if (m_eDragMode == ROTATING)
@@ -368,7 +369,7 @@ void NViewportsWnd::OnLeftButtonUp(udword flags, NPoint pos)
 //-----------------------------------------------------------------
 //!	\brief	Mouse Right button message
 //-----------------------------------------------------------------
-void NViewportsWnd::OnRightButtonDown(udword flags, NPoint pos)
+void NViewportsWnd::OnRButtonDown(NPoint pos)
 {
 	SetFocus();
 
@@ -512,7 +513,7 @@ void NViewportsWnd::OnMenuItemClick(NObject* _psender)
 			if (m_pcurObject != null && strcmp(m_pcurObject->GetRTClass()->m_pszClassName, "NBitmap") == 0)
 			{
 				//Save File Dialog
-				NFileDialog dlg;
+				NFileChooserDialog dlg;
 				dlg.Create("Export TGA...", this, false);
 				if (dlg.DoModal())
 				{

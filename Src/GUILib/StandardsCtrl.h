@@ -100,13 +100,12 @@ protected:
 	//Messages Dispatching
 	virtual	void	OnPaint();
 	virtual void	OnSize();
-	virtual void	OnMouseMove(udword flags, NPoint pos );
-	virtual void	OnMButtonDown(udword flags, NPoint pos);
-	virtual void	OnMButtonUp(udword flags, NPoint pos);
-	virtual void	OnLeftButtonUp(udword flags, NPoint pos);
-	virtual void	OnLeftButtonDown(udword flags, NPoint pos);
-	virtual	void	OnLeftButtonDblClk(udword flags, NPoint point);
-	virtual void	OnRightButtonDown(udword flags, NPoint pos);
+	virtual void	OnMouseMove(NPoint pos );
+	virtual void	OnMButtonDown(NPoint pos);
+	virtual void	OnMButtonUp(NPoint pos);
+	virtual void	OnLButtonUp(NPoint pos);
+	virtual void	OnLButtonDown(NPoint pos);
+	virtual void	OnRButtonDown(NPoint pos);
 	virtual	void	OnKeyDown(udword dwchar);
 	virtual	void	OnMouseLeave();
 
@@ -154,10 +153,10 @@ protected:
 protected:
 	//Messages Dispatching
 	virtual	void	OnPaint();
-	virtual void	OnMouseMove(udword flags, NPoint pos );
-	virtual void	OnLeftButtonUp(udword flags, NPoint pos);
-	virtual void	OnLeftButtonDown(udword flags, NPoint pos);
-	virtual	void	OnLeftButtonDblClk(udword flags, NPoint point);
+	virtual void	OnMouseMove(NPoint pos );
+	virtual void	OnLButtonUp(NPoint pos);
+	virtual void	OnLButtonDown(NPoint pos);
+	virtual	void	OnLButtonDblClk(NPoint point);
 	virtual	void	OnKillFocus(NWnd* pNewWnd);
 	virtual	void	OnKeyUp(udword _dwchar);
 };
@@ -199,9 +198,9 @@ public:
 protected:
 	//Messages Dispatching
 	virtual	void	OnPaint();
-	virtual void	OnLeftButtonUp(udword _flags, NPoint _pos);
-	virtual void	OnLeftButtonDown(udword _flags, NPoint _pos);
-	virtual	void	OnLeftButtonDblClk(udword _flags, NPoint _point);
+	virtual void	OnLButtonUp(udword _flags, NPoint _pos);
+	virtual void	OnLButtonDown(udword _flags, NPoint _pos);
+	virtual	void	OnLButtonDblClk(udword _flags, NPoint _point);
 	virtual	void	OnKillFocus(NWnd* _pNewWnd);
 	virtual	void	OnKeyDown(udword _dwchar);
 	//Datas

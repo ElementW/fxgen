@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-//! \file		WinMain.h
+//! \file		Main.h
 //! \brief	Main entry for application
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
-//!	\date		12-02-2007
+//!	\date		31-08-2008
 //!
 //!	\brief	This file applies the GNU LESSER GENERAL PUBLIC LICENSE
 //!					Version 2.1 , read file COPYING.
@@ -18,25 +18,20 @@
 //-----------------------------------------------------------------
 // Includes
 //-----------------------------------------------------------------
+#include "pch.h"
+//#include <iostream>
+
 #include "Core.h"
 #include "GUI.h"
+#include "Editor.h"
 
 //-----------------------------------------------------------------
 //!\func	Export WinMain to force linkage to this module
 //-----------------------------------------------------------------
-int WINAPI	WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
+int main()
 {
-	// Get Application
-	NW32Application* pApp = (NW32Application*)GetApp();
-
-	// One and only file can be loaded at startup and may be enquoted
-/*	if(lpCmdLine[0] == '"')
-		lpCmdLine++;
-	char *tp = strchr(lpCmdLine, '"');
-	if(tp != NULL)
-		*tp = '\0';
-	pApp->lpCmdLine = lpCmdLine;*/
-
+	// Application
+	NFxGenApp* pApp = new NFxGenApp();
 
 	// Perform specific initializations
 	if (!pApp->Init())		pApp->Exit();
@@ -47,5 +42,7 @@ int WINAPI	WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 	// Exit Application
 	pApp->Exit();
 
-	return 0;
+	delete pApp;
+
+	return EXIT_SUCCESS;
 }

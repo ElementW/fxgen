@@ -30,17 +30,17 @@
 //-----------------------------------------------------------------
 // Variables
 //-----------------------------------------------------------------
-NbaseApplication*			g_pApp;
+NGUISubSystem*			g_pGUI;
 
 //-----------------------------------------------------------------
 // Functions
 //-----------------------------------------------------------------
-NbaseApplication*			GetApp()		{ return g_pApp;}
+NGUISubSystem*			GetGUISubSystem()		{ return g_pGUI;}
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
-//					NbaseApplication class implementation
+//					NGUISubSystem class implementation
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -48,9 +48,9 @@ NbaseApplication*			GetApp()		{ return g_pApp;}
 //-----------------------------------------------------------------
 // Constructor
 //-----------------------------------------------------------------
-NbaseApplication::NbaseApplication()
+NGUISubSystem::NGUISubSystem()
 {
-	g_pApp				= this;
+	g_pGUI				= this;
 
 	m_pMainWnd		= null;
 	m_pFocusedWnd	= null;
@@ -58,34 +58,34 @@ NbaseApplication::NbaseApplication()
 	m_pfont				= null;
 	m_pOldWndUnderMouse = null;
 	m_bMustDrawWindows = false;
+	m_ptCursor.x=m_ptCursor.y=0;
+	NMemFill(m_keyDown, 0, sizeof(m_keyDown));
 }
 
 //-----------------------------------------------------------------
 // Destructor
 //-----------------------------------------------------------------
-NbaseApplication::~NbaseApplication()
+NGUISubSystem::~NGUISubSystem()
 {
 	if (m_pMainWnd)	delete (m_pMainWnd);
 
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Main loop
+//!	\brief	Init GUI
+//!	\return	true if success
 //-----------------------------------------------------------------
-void NbaseApplication::Run()
+bool NGUISubSystem::Init()
 {
-	if ( m_pMainWnd == NULL ) {
-		//Haaa ! No main window ! Exit !!!
-		Exit();
-	}
-
+	InitGLState();
+	return true;
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Exit application
+//!	\brief	Shutdown GUI
 //!	\return	true if success
 //-----------------------------------------------------------------
-bool NbaseApplication::Exit()
+bool NGUISubSystem::ShutDown()
 {
 	if (m_pfont)
 	{
@@ -97,18 +97,24 @@ bool NbaseApplication::Exit()
 	return true;
 }
 
-//-----------------------------------------------------------------
-//!	\brief	Ask exit
-//-----------------------------------------------------------------
-/*void NbaseApplication::AskExit()
+void NGUISubSystem::Update()
 {
-	PostQuitMessage(0);
-}*/
+	if (m_bMustDrawWindows)
+	{
+		_RedrawWindowChild(null);
+		_RedrawWindowPopup(null);
+
+		glFlush();
+		m_bMustDrawWindows=false;
+	}
+
+}
+
 
 //-----------------------------------------------------------------
 //!	\brief	Init OpenGL State
 //-----------------------------------------------------------------
-void NbaseApplication::InitGLState()
+void NGUISubSystem::InitGLState()
 {
 	//OpenGL
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -130,7 +136,7 @@ void NbaseApplication::InitGLState()
 //-----------------------------------------------------------------
 //!	\brief	Process Msgs
 //-----------------------------------------------------------------
-void NbaseApplication::ProcessMsgs_OnSize(udword _w, udword _h)
+void NGUISubSystem::ProcessMsgs_OnSize(udword _w, udword _h)
 {
 	NRect rc(0,0,_w,_h);
 
@@ -153,10 +159,110 @@ void NbaseApplication::ProcessMsgs_OnSize(udword _w, udword _h)
 
 }
 
+void NGUISubSystem::ProcessMsgs_MouseButtonDown(NPoint _ptScreen, udword _dwButtons)
+{
+	NWnd* pwnd=null;
+	if (m_pCapturedWnd)		pwnd=m_pCapturedWnd;
+	else									pwnd = GetWndUnderMouse(_ptScreen.x, _ptScreen.y);
+
+	if (pwnd)
+	{
+		pwnd->ScreenToClient(_ptScreen);
+
+		if (_dwButtons==NM_LBUTTON)			pwnd->OnLButtonDown(_ptScreen);
+		else if (_dwButtons==NM_MBUTTON)	pwnd->OnMButtonDown(_ptScreen);
+		else if (_dwButtons==NM_RBUTTON)	pwnd->OnRButtonDown(_ptScreen);
+	}
+	
+}
+
+void NGUISubSystem::ProcessMsgs_MouseButtonUp(NPoint _ptScreen, udword _dwButtons)
+{
+	NWnd* pwnd=null;
+	if (m_pCapturedWnd)		pwnd=m_pCapturedWnd;
+	else									pwnd = GetWndUnderMouse(_ptScreen.x, _ptScreen.y);
+
+	if (pwnd)
+	{
+		pwnd->ScreenToClient(_ptScreen);
+
+		if (_dwButtons==NM_LBUTTON)			pwnd->OnLButtonUp(_ptScreen);
+		else if (_dwButtons==NM_MBUTTON)	pwnd->OnMButtonUp(_ptScreen);
+		else if (_dwButtons==NM_RBUTTON)	pwnd->OnRButtonUp(_ptScreen);
+	}
+
+}
+
+void NGUISubSystem::ProcessMsgs_MouseButtonDblClick(NPoint _ptScreen, udword _dwButtons)
+{
+	NWnd* pwnd=null;
+	if (m_pCapturedWnd)		pwnd=m_pCapturedWnd;
+	else									pwnd = GetWndUnderMouse(_ptScreen.x, _ptScreen.y);
+
+	if (pwnd)
+	{
+		pwnd->ScreenToClient(_ptScreen);
+
+		if (_dwButtons==NM_LBUTTON)			pwnd->OnLButtonDblClk(_ptScreen);
+		//else if (_dwButtons==NM_MBUTTON)	pwnd->OnMButtonUp(_ptScreen);
+		//else if (_dwButtons==NR_RBUTTON)	pwnd->OnRButtonUp(_ptScreen);
+	}
+
+}
+
+void NGUISubSystem::ProcessMsgs_MouseWheel(NPoint _ptScreen, sdword _dwDelta)
+{
+	NWnd* pwnd=null;
+	if (m_pCapturedWnd)	pwnd = m_pCapturedWnd;
+	else								pwnd = GetWndUnderMouse(_ptScreen.x, _ptScreen.y);
+
+	if (pwnd)
+	{
+		pwnd->ScreenToClient(_ptScreen);
+		pwnd->OnMouseWheel(_ptScreen, _dwDelta);
+	}
+
+}
+
+
+void NGUISubSystem::ProcessMsgs_MouseMove(NPoint _ptScreen)
+{
+	m_ptCursor = _ptScreen;
+
+	NWnd* pwnd=null;
+	if (m_pCapturedWnd)		pwnd = m_pCapturedWnd;
+	else									pwnd = GetWndUnderMouse(_ptScreen.x, _ptScreen.y);
+	if (pwnd)
+	{
+		pwnd->ScreenToClient(_ptScreen);
+		pwnd->OnMouseMove(_ptScreen);
+	}
+	if (m_pOldWndUnderMouse && pwnd!=m_pOldWndUnderMouse)
+		m_pOldWndUnderMouse->OnMouseLeave();
+
+	m_pOldWndUnderMouse = pwnd;
+}
+
+void NGUISubSystem::ProcessMsgs_KeyDown(NKey::Code _key)
+{
+	m_keyDown[_key]	= true;
+	NWnd* pwnd=GetFocus();
+	if (pwnd)	pwnd->OnKeyDown(_key);
+}
+
+void NGUISubSystem::ProcessMsgs_KeyUp(NKey::Code _key)
+{
+	m_keyDown[_key]	= false;
+	NWnd* pwnd=GetFocus();
+	if (pwnd)	pwnd->OnKeyUp(_key);
+}
+
+
+
 //-----------------------------------------------------------------
 //!	\brief	Return window under mouse cursor
 //-----------------------------------------------------------------
-NWnd* NbaseApplication::GetWndUnderMouse(sdword _x, sdword _y)
+NWnd* NGUISubSystem::GetWndUnderMouse(sdword _x, sdword _y)
 {
 	NWnd* pwnd = _GetPopupWndUnderMouse(_x, _y, m_pMainWnd);
 	if (pwnd==null)
@@ -165,7 +271,7 @@ NWnd* NbaseApplication::GetWndUnderMouse(sdword _x, sdword _y)
 	return pwnd;
 }
 
-NWnd* NbaseApplication::_GetWndUnderMouse(sdword _x, sdword _y, NWnd* _pwndParent)
+NWnd* NGUISubSystem::_GetWndUnderMouse(sdword _x, sdword _y, NWnd* _pwndParent)
 {
 	NWnd* pwndFind=null;
 	NPoint pt(_x, _y);
@@ -190,7 +296,7 @@ NWnd* NbaseApplication::_GetWndUnderMouse(sdword _x, sdword _y, NWnd* _pwndParen
 }
 
 
-NWnd* NbaseApplication::_GetPopupWndUnderMouse(sdword _x, sdword _y, NWnd* _pwndParent)
+NWnd* NGUISubSystem::_GetPopupWndUnderMouse(sdword _x, sdword _y, NWnd* _pwndParent)
 {
 	NWnd* pwndFind=null;
 	NPoint pt(_x, _y);
@@ -218,12 +324,12 @@ NWnd* NbaseApplication::_GetPopupWndUnderMouse(sdword _x, sdword _y, NWnd* _pwnd
 //-----------------------------------------------------------------
 //!	\brief	Refresh Window Display with children
 //-----------------------------------------------------------------
-void NbaseApplication::RedrawWindow(NWnd* _pwndFrom)
+void NGUISubSystem::RedrawWindow(NWnd* _pwndFrom)
 {
 	m_bMustDrawWindows = true;
 }
 
-void NbaseApplication::_RedrawWindowChild(NWnd* _pwndFrom)
+void NGUISubSystem::_RedrawWindowChild(NWnd* _pwndFrom)
 {
 
 	NWnd* pWnd = _pwndFrom;
@@ -247,7 +353,7 @@ void NbaseApplication::_RedrawWindowChild(NWnd* _pwndFrom)
 
 }
 
-void NbaseApplication::_RedrawWindowPopup(NWnd* _pwndFrom)
+void NGUISubSystem::_RedrawWindowPopup(NWnd* _pwndFrom)
 {
 
 	NWnd* pWnd = _pwndFrom;
@@ -277,7 +383,7 @@ void NbaseApplication::_RedrawWindowPopup(NWnd* _pwndFrom)
 //-----------------------------------------------------------------
 //!	\brief	Change focused Window
 //-----------------------------------------------------------------
-void NbaseApplication::SetFocus(NWnd* _pwnd)
+void NGUISubSystem::SetFocus(NWnd* _pwnd)
 {
 	//Events kill focus
 	if (m_pFocusedWnd)
@@ -289,7 +395,7 @@ void NbaseApplication::SetFocus(NWnd* _pwnd)
 //-----------------------------------------------------------------
 //!	\brief	Return focused Window
 //-----------------------------------------------------------------
-NWnd* NbaseApplication::GetFocus()
+NWnd* NGUISubSystem::GetFocus()
 {
 	return m_pFocusedWnd;
 }
@@ -297,18 +403,18 @@ NWnd* NbaseApplication::GetFocus()
 //-----------------------------------------------------------------
 //!	\brief	Change captured Window
 //-----------------------------------------------------------------
-void NbaseApplication::SetCapture(NWnd* _pwnd)
+void NGUISubSystem::SetCapture(NWnd* _pwnd)
 {
 	m_pCapturedWnd = _pwnd;
-	CaptureMouse();
+	//CaptureMouse();
 }
 
 //-----------------------------------------------------------------
 //!	\brief	Release captured Window
 //-----------------------------------------------------------------
-void NbaseApplication::ReleaseCapture()
+void NGUISubSystem::ReleaseCapture()
 {
-	ReleaseMouse();
+	//ReleaseMouse();
 	m_pCapturedWnd=null;
 }
 
@@ -332,9 +438,9 @@ NGraphics::NGraphics(NWnd* pwnd)
 
 	//udword h = SDL_GetVideoSurface()->h;*
 	udword h=0; //###TOFIX###
-	if (GetApp()->GetMainWnd())
+	if (GetGUISubSystem()->GetMainWnd())
 	{
-		NRect rcM = GetApp()->GetMainWnd()->GetClientRect();
+		NRect rcM = GetGUISubSystem()->GetMainWnd()->GetClientRect();
 		h=rcM.Height();
 	}
 
@@ -535,13 +641,13 @@ sdword NGraphics::DrawText(const char* _pszString, NRect& _rc, udword _nFormat, 
 
 	if (_nFormat&NDT_HCENTER)
 	{
-		sdword h = GetApp()->GetFont()->m_h-1;
+		sdword h = GetGUISubSystem()->GetFont()->m_h-1;
 		sdword l = strlen(_pszString);
 		dwposX=(_rc.Width()/2) - ((l*h)/2);
 	}
 	if (_nFormat&NDT_VCENTER)
 	{
-		sdword h = GetApp()->GetFont()->m_h;
+		sdword h = GetGUISubSystem()->GetFont()->m_h;
 		dwposY=(_rc.Height()/2) - (h/2);
 	}
 
@@ -550,7 +656,7 @@ sdword NGraphics::DrawText(const char* _pszString, NRect& _rc, udword _nFormat, 
 	glLoadIdentity();
 	glRotatef(180,1,0,0);
 	glTranslatef(dwposX,-9-dwposY,0);
-	GetApp()->GetFont()->print(_rc.left,_rc.top, _pszString);
+	GetGUISubSystem()->GetFont()->print(_rc.left,_rc.top, _pszString);
 	glPopMatrix();
 
 	return 0;
@@ -681,23 +787,23 @@ void NWnd::ClientToScreen(NPoint& _pt)
 
 void NWnd::SetFocus()
 {
-	GetApp()->SetFocus(this);
+	GetGUISubSystem()->SetFocus(this);
 }
 
 NWnd* NWnd::GetFocus()
 {
-	return GetApp()->GetFocus();
+	return GetGUISubSystem()->GetFocus();
 }
 
 
 void NWnd::SetCapture()
 {
-	GetApp()->SetCapture(this);
+	GetGUISubSystem()->SetCapture(this);
 }
 
 void NWnd::ReleaseCapture()
 {
-	GetApp()->ReleaseCapture();
+	GetGUISubSystem()->ReleaseCapture();
 }
 
 void NWnd::SetText(char* _pszText)
@@ -713,7 +819,7 @@ NString NWnd::GetText()
 
 void NWnd::RedrawWindow()
 {
-	GetApp()->RedrawWindow(this);
+	GetGUISubSystem()->RedrawWindow(this);
 }
 
 void NWnd::ShowWindow(bool _bVisible)
@@ -721,7 +827,7 @@ void NWnd::ShowWindow(bool _bVisible)
 	if ((m_dwStyle&NWS_VISIBLE)!=_bVisible)
 	{
 		_bVisible?m_dwStyle|=NWS_VISIBLE:m_dwStyle&=~NWS_VISIBLE;
-		GetApp()->RedrawWindow(null);
+		GetGUISubSystem()->RedrawWindow(null);
 	}
 }
 
@@ -785,7 +891,7 @@ void NFrmWnd::OnSize()
 {
 	NRect rc = GetClientRect();
 
-	//GetApp()->ProcessMsgs_OnSize(r.Width(), r.Height());
+	//GetGUISubSystem()->ProcessMsgs_OnSize(r.Width(), r.Height());
 
 	//Resize workspace
 	if (mWorkspace)		mWorkspace->SetWindowRect(rc);
@@ -822,62 +928,3 @@ bool NWControl::Create(NWNDCREATE &c)
 
 	return NWnd::Create(c);
 }
-
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-//
-//					File Dialog Class Implementation
-//
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-
-
-//-----------------------------------------------------------------
-// Name:	GetFileNumber()
-// Desc:	...
-//-----------------------------------------------------------------
-udword NbaseFileDialog::GetFileNumber()
-{
-	udword	ret = 1, i = 0;
-
-	while (i < _MAX_PATH)		{
-		while (mFileName[i])		i++;
-
-		if (!mFileName[i+1])		return ret == 1 ? ret : ret - 1;
-		else						ret++;
-
-		i++;
-	}
-
-	return ret;
-}
-
-
-//-----------------------------------------------------------------
-// Name:	GetPathName()
-// Desc:	...
-//-----------------------------------------------------------------
-NString NbaseFileDialog::GetPathName(udword Index) const
-{
-	//Get File Path
-	NString path = mFileName;
-
-	//If User Select only one file
-	if (mFileName[path.Length()+1]==0 || mFileName[path.Length()+2]==0)	return path;
-
-	//Get FileName
-	udword i=0, lpos=0;
-
-	//If More than 1 file selected
-	while (mFileName[i] | mFileName[i+1] ) {
-		if (mFileName[i] == 0)	{
-			if (lpos==Index)									return path+"\\"+(mFileName+i+1);
-			lpos++;
-		}
-		i++;
-	}
-
-	//Return an Empty String if no pathname found at the given index
-	return NString("");
-}
-

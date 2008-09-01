@@ -20,7 +20,6 @@
 //-----------------------------------------------------------------
 #include "pch.h"
 #include "ProjectWnd.h"
-#include "resource.h"
 
 //-----------------------------------------------------------------
 //			Defines
@@ -91,7 +90,7 @@ void NProjectWnd::DisplayOperatorsProject(NEngineOp* _popsProject)
 //-----------------------------------------------------------------
 //!	\brief	control right button down message
 //-----------------------------------------------------------------
-void NProjectWnd::OnRightButtonDown(udword flags, NPoint pos)
+void NProjectWnd::OnRButtonDown(NPoint pos)
 {
 	ClientToScreen(pos);
 	m_wndMenu.TrackPopupMenu(pos);

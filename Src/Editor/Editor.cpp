@@ -4,7 +4,7 @@
 //! \brief	FxGen Editor application
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
-//!	\date		12-02-2007
+//!	\date		01-09-2008
 //!
 //!	\brief	This file applies the GNU GENERAL PUBLIC LICENSE
 //!					Version 2, read file COPYING.
@@ -27,6 +27,9 @@
 const char* GetModuleName()  { return "Editor"; }
 NEventsMgr*	g_pceventsMgr;
 NFxGenApp		theNApp;
+NGUISubSystem theGUI;
+
+NFxGenApp*		GetApp()	{ return &theNApp; }
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -45,12 +48,13 @@ NFxGenApp::NFxGenApp()
 	g_pceventsMgr = new NEventsMgr;
 	m_fOldTime = 0;
 
-	NRGBA rgba;
+	//###TEST###
+/*	NRGBA rgba;
 	rgba.r=255;
 
 	udword col = RGBA(0,0,0,255);
 	NColor col2 = NColor(0,0,0,255);
-	NColor col3 = NColor(col);
+	NColor col3 = NColor(col);*/
 
 	//###TEST### NTreeNode class
 /*	NTreeNode* proot	= new NTreeNode;
@@ -123,17 +127,157 @@ NFxGenApp::~NFxGenApp()
 //-----------------------------------------------------------------
 bool NFxGenApp::Init()
 {
-	NApplication::Init();
+	// Create main window
+	m_appWnd.Create(sf::VideoMode(WIDTH, HEIGHT), CAPTION);
+
+	// GUI SubSystem
+	NGUISubSystem* pgui = GetGUISubSystem();
+	pgui->Init();
 
 	//Create Main Frame Window
 	NMainFrm* frame = new NMainFrm();
-	m_pMainWnd = frame;
+	pgui->SetMainWnd(frame);
 
 	frame->Create(CAPTION, NRect(0,0,WIDTH,HEIGHT));	//###TOFIX### not reel client size (see wnd caption...)
-	//frame->OnSize();
-//	if(lpCmdLine.Length())		frame->LoadProject(lpCmdLine);
 
 	return true;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Run application
+//!	\return	True if success
+//-----------------------------------------------------------------
+void NFxGenApp::Run()
+{
+	NGUISubSystem* pgui = GetGUISubSystem();
+	NPoint pt;
+
+	// Create a clock for measuring the time elapsed
+  sf::Clock clock;
+	bool bExist = false;
+
+  // Start game loop
+  while (m_appWnd.IsOpened() && !bExist)
+  {
+		Sleep(1);
+
+    // Process events
+    sf::Event Event;
+    while (m_appWnd.GetEvent(Event))
+    {
+      // Close window
+      if (Event.Type == sf::Event::Closed)
+				bExist=true;
+
+			//Mouse Move
+			if (Event.Type == sf::Event::MouseMoved)
+			{
+				pt.x=m_appWnd.GetInput().GetMouseX();
+				pt.y=m_appWnd.GetInput().GetMouseY();
+				pgui->ProcessMsgs_MouseMove(pt);
+			}
+
+			//Mouse Wheel
+			if (Event.Type == sf::Event::MouseWheelMoved)
+			{
+				pt.x=m_appWnd.GetInput().GetMouseX();
+				pt.y=m_appWnd.GetInput().GetMouseY();
+				pgui->ProcessMsgs_MouseWheel(pt, Event.MouseWheel.Delta);
+			}
+
+
+			//Mouse Button Down
+			if (Event.Type == sf::Event::MouseButtonPressed)
+			{
+				udword dwBut = 0;
+				switch (Event.MouseButton.Button)
+				{
+					case sf::Mouse::Left:			dwBut = NM_LBUTTON; break;
+					case sf::Mouse::Middle:		dwBut = NM_MBUTTON; break;
+					case sf::Mouse::Right:		dwBut = NM_RBUTTON; break;
+				}
+
+				pt.x=m_appWnd.GetInput().GetMouseX();
+				pt.y=m_appWnd.GetInput().GetMouseY();
+
+				float Time = clock.GetElapsedTime() * 1000.0f;
+				if (Time<250.0f)	//ms ###TODO## Get system Pref
+				{
+					pgui->ProcessMsgs_MouseButtonDblClick(pt, dwBut);
+
+				} else {
+
+					clock.Reset();
+					pgui->ProcessMsgs_MouseButtonDown(pt, dwBut);
+				}
+
+			}
+
+			//Mouse Button Up
+			if (Event.Type == sf::Event::MouseButtonReleased)
+			{
+				udword dwBut = 0;
+				switch (Event.MouseButton.Button)
+				{
+					case sf::Mouse::Left:		dwBut = NM_LBUTTON; break;
+					case sf::Mouse::Middle:	dwBut = NM_MBUTTON; break;
+					case sf::Mouse::Right:	dwBut = NM_RBUTTON; break;
+				}
+				pt.x=m_appWnd.GetInput().GetMouseX();
+				pt.y=m_appWnd.GetInput().GetMouseY();
+				pgui->ProcessMsgs_MouseButtonUp(pt, dwBut);
+			}
+
+      // Key Down
+			if ((Event.Type == sf::Event::KeyPressed) )
+			{
+				NKey::Code key = (NKey::Code)Event.Key.Code;	//KeyCode are identical
+				pgui->ProcessMsgs_KeyDown(key);
+			}
+
+			// Key Up
+			if ((Event.Type == sf::Event::KeyReleased) )
+			{
+				NKey::Code key = (NKey::Code)Event.Key.Code;	//KeyCode are identical
+				pgui->ProcessMsgs_KeyUp(key);
+			}
+
+      // Resize
+      if (Event.Type == sf::Event::Resized)
+				pgui->ProcessMsgs_OnSize(Event.Size.Width, Event.Size.Height);
+
+    }
+
+		//Double Click TimeOut
+		/*if (bDblClickStarted)
+		{
+			float Time = clock.GetElapsedTime() * 1000.0f;
+			if (Time>150.0f)	//50ms
+			{
+				pgui->ProcessMsgs_MouseButtonDown(ptDblClick, dwDblClickButton);
+
+				bDblClickStarted = false;
+
+				if (bMouseReleased)
+				{
+					pgui->ProcessMsgs_MouseButtonUp(ptDblClick, dwDblClickButton);
+				}
+			}
+
+		}*/
+
+
+		//Update Windows drawing
+		pgui->Update();
+
+		//Update Application
+		Update();
+
+    // Finally, display the rendered frame on screen
+    m_appWnd.Display();
+  }
+	
+
 }
 
 //-----------------------------------------------------------------
@@ -142,16 +286,10 @@ bool NFxGenApp::Init()
 //-----------------------------------------------------------------
 bool NFxGenApp::Exit()
 {
+	GetGUISubSystem()->ShutDown();
+	m_appWnd.Close();
 
-	return NApplication::Exit();
-}
-
-//-----------------------------------------------------------------
-//!	\brief	IDLE
-//-----------------------------------------------------------------
-void NFxGenApp::Idle()
-{
-	NApplication::Idle();
+	return true;
 }
 
 //-----------------------------------------------------------------
@@ -159,7 +297,7 @@ void NFxGenApp::Idle()
 //-----------------------------------------------------------------
 void NFxGenApp::Update()
 {
-	NMainFrm* pfrm = (NMainFrm*)m_pMainWnd;
+	NMainFrm* pfrm = (NMainFrm*)GetGUISubSystem()->GetMainWnd();
 
 	//Time 60 Images/Seconds
 	float ftime = (float)GetTickCount() * 60.0f / 1000.0f;
@@ -173,3 +311,27 @@ void NFxGenApp::Update()
 	}
 
 }
+
+//-----------------------------------------------------------------
+//!	\brief	MessageBox
+//-----------------------------------------------------------------
+#ifdef WIN32
+udword NFxGenApp::MessageBox(char* _pszText, udword _dwStyle)
+{
+	udword dwW32Style = 0;
+	if (_dwStyle&NMB_OK)			dwW32Style|=MB_OK;
+	if (_dwStyle&NMB_YESNO)		dwW32Style|=MB_YESNO;
+	udword dwW32Ret = ::MessageBox(NULL, _pszText, "FxGen", dwW32Style);
+	if (dwW32Ret==IDOK)		return NIDOK;
+	if (dwW32Ret==IDYES)	return NIDYES;
+	if (dwW32Ret==IDNO)		return NIDNO;
+
+	return 0;
+}
+#else	//###TODO### Linux, Mac...
+udword NFxGenApp::MessageBox(const char* _szTest, udword _dwFlag)
+{
+
+	return 0;
+}
+#endif

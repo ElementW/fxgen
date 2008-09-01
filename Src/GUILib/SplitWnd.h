@@ -119,9 +119,9 @@ protected:
 	//Win32 Messages Dispatching
 	virtual	void	OnPaint();
 	virtual void	OnSize();
-	virtual void	OnMouseMove(udword flags, NPoint pos);
-	virtual void	OnLeftButtonUp(udword flags, NPoint pos);
-	virtual void	OnLeftButtonDown(udword flags, NPoint pos);
+	virtual void	OnMouseMove(NPoint pos);
+	virtual void	OnLButtonUp(NPoint pos);
+	virtual void	OnLButtonDown(NPoint pos);
 
 	//Datas
 	udword							mCurPaneId;

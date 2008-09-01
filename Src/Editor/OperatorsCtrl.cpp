@@ -211,7 +211,7 @@ void NOperatorsCtrl::DisplayCursor(NGraphics* _pdc)
 	if (m_bMovingBloc && m_popMarkedSelected)
 	{
 		NPoint point;
-		GetApp()->GetCursorPos(point);
+		GetGUISubSystem()->GetCursorPos(point);
 		ScreenToClient(point);
 
 		NPoint ptOffset = point - m_ptStartBloc;
@@ -319,7 +319,7 @@ void NOperatorsCtrl::DisplayOperatorsMap(NGraphics* _pdc)
 }
 
 
-void NOperatorsCtrl::SetCursorPos(sdword _dwX, sdword _dwY)
+void NOperatorsCtrl::SetOpCursorPos(sdword _dwX, sdword _dwY)
 {
 	m_dwCursorX=_dwX;
 	m_dwCursorY=_dwY;
@@ -334,7 +334,7 @@ void NOperatorsCtrl::OnSize()
 }
 
 
-void NOperatorsCtrl::OnLeftButtonDown(udword flags, NPoint point)
+void NOperatorsCtrl::OnLButtonDown(NPoint point)
 {
 	SetFocus();
 
@@ -342,7 +342,7 @@ void NOperatorsCtrl::OnLeftButtonDown(udword flags, NPoint point)
 	bool bResizeZone;
 	NOperator* pstBloc = GetOperatorAt(point, bResizeZone);
 
-	if (!(flags&NK_RCTRL))
+	if (!(GetGUISubSystem()->IsKeyDown(NKey::RControl)))
 	{
 		if (!IsOperatorSelected(pstBloc) )
 			SelectOperator(null);	//Clear Selection
@@ -379,14 +379,14 @@ void NOperatorsCtrl::OnLeftButtonDown(udword flags, NPoint point)
 		//Move cursor
 		sdword x = (sdword) (((float)point.x/m_fScaleX)-m_fPosX) / GB_GRIDUNIT;
 		sdword y = (sdword) (((float)point.y/m_fScaleY)-m_fPosY) / GB_GRIDUNIT;
-		SetCursorPos(x,y);
+		SetOpCursorPos(x,y);
 	}
 
 	Update();
 
 }
 
-void NOperatorsCtrl::OnLeftButtonUp(udword flags, NPoint point)
+void NOperatorsCtrl::OnLButtonUp(NPoint point)
 {
 	//Stop operators moving
 	if (m_bAskedForMove)
@@ -448,12 +448,12 @@ void NOperatorsCtrl::OnLeftButtonUp(udword flags, NPoint point)
 
 }
 
-void NOperatorsCtrl::OnRightButtonDown(udword flags, NPoint point)
+void NOperatorsCtrl::OnRButtonDown(NPoint point)
 {
 	SetFocus();
 }
 
-void NOperatorsCtrl::OnLeftButtonDblClk(udword flags, NPoint point)
+void NOperatorsCtrl::OnLButtonDblClk(NPoint point)
 {
 	SetFocus();
 
@@ -468,7 +468,7 @@ void NOperatorsCtrl::OnLeftButtonDblClk(udword flags, NPoint point)
 }
 
 
-void NOperatorsCtrl::OnMouseMove(udword flags, NPoint point )
+void NOperatorsCtrl::OnMouseMove(NPoint point )
 {
 	//Cursor Aspect
 	UpdateCursor(point);
@@ -523,7 +523,7 @@ void NOperatorsCtrl::OnMouseMove(udword flags, NPoint point )
 	}
 }
 
-void NOperatorsCtrl::OnMouseWheel(udword flags, sword zDelta, NPoint pos)
+void NOperatorsCtrl::OnMouseWheel(NPoint pos, sdword zDelta)
 {
 	//ScreenToClient(pos);
 
@@ -553,7 +553,7 @@ void NOperatorsCtrl::OnMouseWheel(udword flags, sword zDelta, NPoint pos)
 }
 
 
-void NOperatorsCtrl::OnMButtonDown(udword flags, NPoint pos)
+void NOperatorsCtrl::OnMButtonDown(NPoint pos)
 {
 	SetFocus();
 	SetCapture();
@@ -564,7 +564,7 @@ void NOperatorsCtrl::OnMButtonDown(udword flags, NPoint pos)
 	m_fStartPosYPan= m_fPosY;
 }
 
-void NOperatorsCtrl::OnMButtonUp(udword flags, NPoint pos)
+void NOperatorsCtrl::OnMButtonUp(NPoint pos)
 {
 	ReleaseCapture();
 	m_bPanning = false;
@@ -573,23 +573,23 @@ void NOperatorsCtrl::OnMButtonUp(udword flags, NPoint pos)
 void NOperatorsCtrl::OnKeyUp(udword dwchar)
 {
 	//Delete selected operators
-	if (dwchar==NK_DELETE)
+	if (dwchar==NKey::Delete)
 	{
 		DeleteOperatorsSelected();
 		Update();
 
 	//Mark operator as "show"
-	}	else if (dwchar==NK_s)	{
+	}	else if (dwchar==NKey::S)	{
 
 		OnMarkShowOperator(m_popMarkedSelected);
 		Update();
 
 	//Copy selected operators to clipboard
-	} else if (dwchar==NK_c) {
+	} else if (dwchar==NKey::C) {
 
 		CopyOperatorsSelectedToClipboard();
 
-	} else if (dwchar==NK_v) {
+	} else if (dwchar==NKey::V) {
 
 		PasteOperatorsFromClipboard();
 	}

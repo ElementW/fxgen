@@ -196,9 +196,9 @@ void NTreeNodeCtrl::OnSize()
 }
 
 
-void NTreeNodeCtrl::OnLeftButtonDown(udword flags, NPoint _point)
+void NTreeNodeCtrl::OnLButtonDown(NPoint _point)
 {
-	//TRACE("OnLeftButtonDown\n");
+	//TRACE("OnLButtonDown\n");
 
 	SetFocus();
 
@@ -221,7 +221,7 @@ void NTreeNodeCtrl::OnLeftButtonDown(udword flags, NPoint _point)
 
 }
 
-void NTreeNodeCtrl::OnLeftButtonUp(udword flags, NPoint point)
+void NTreeNodeCtrl::OnLButtonUp(NPoint point)
 {
 	/*
 	if (m_bAddValue)
@@ -235,7 +235,7 @@ void NTreeNodeCtrl::OnLeftButtonUp(udword flags, NPoint point)
 }
 
 
-void NTreeNodeCtrl::OnLeftButtonDblClk(udword flags, NPoint point)
+void NTreeNodeCtrl::OnLButtonDblClk(NPoint point)
 {
 	/*
 	//Row selection
@@ -255,29 +255,29 @@ void NTreeNodeCtrl::OnLeftButtonDblClk(udword flags, NPoint point)
 }
 
 
-void NTreeNodeCtrl::OnRightButtonDown(udword flags, NPoint point)
+void NTreeNodeCtrl::OnRButtonDown(NPoint point)
 {
 	SetFocus();
 }
 
-void NTreeNodeCtrl::OnMouseMove(udword flags, NPoint point )
+void NTreeNodeCtrl::OnMouseMove(NPoint point )
 {
 }
 
 
-void NTreeNodeCtrl::OnMButtonDown(udword flags, NPoint pos)
+void NTreeNodeCtrl::OnMButtonDown(NPoint pos)
 {
 	SetFocus();
 }
 
-void NTreeNodeCtrl::OnMButtonUp(udword flags, NPoint pos)
+void NTreeNodeCtrl::OnMButtonUp(NPoint pos)
 {
 }
 
 
 void NTreeNodeCtrl::OnKeyDown(udword dwchar)
 {
-	//GetApp()->GetMainWnd()->OnKeyDown(dwchar);
+	//GetGUISubSystem()->GetMainWnd()->OnKeyDown(dwchar);
 }
 
 void NTreeNodeCtrl::Clear()

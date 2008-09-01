@@ -127,13 +127,12 @@ protected:
 	//Win32 Messages Dispatching
 	virtual	void	OnPaint();
 	virtual void	OnSize();
-	virtual void	OnMouseMove(udword flags, NPoint pos );
-	virtual void	OnMButtonDown(udword flags, NPoint pos);
-	virtual void	OnMButtonUp(udword flags, NPoint pos);
-	virtual void	OnLeftButtonUp(udword flags, NPoint pos);
-	virtual void	OnLeftButtonDown(udword flags, NPoint pos);
-	virtual	void	OnLeftButtonDblClk(udword flags, NPoint point);
-	virtual void	OnRightButtonDown(udword flags, NPoint pos);
+	virtual void	OnMouseMove(NPoint pos );
+	virtual void	OnMButtonDown(NPoint pos);
+	virtual void	OnMButtonUp(NPoint pos);
+	virtual void	OnLButtonUp(NPoint pos);
+	virtual void	OnLButtonDown(NPoint pos);
+	virtual void	OnRButtonDown(NPoint pos);
 	virtual	void	OnKeyUp(udword dwchar);
 	virtual	void	OnKillFocus(NWnd* pNewWnd);
 	//virtual	void	OnTimer(udword _dwTimerID);

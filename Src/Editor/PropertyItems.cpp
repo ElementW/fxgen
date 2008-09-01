@@ -412,7 +412,7 @@ void NFileBrowserProp::DrawItem(NGraphics* pdc, NRect& rcItem)
 bool NFileBrowserProp::BeginEdit(NRect& rcItem)
 {
 	assert(m_pParent!=null);
-
+/*
 	NFileDialog dlg;
 	dlg.Create("Choose a File to Load", m_pParent);
 	if (1==dlg.DoModal())
@@ -420,7 +420,7 @@ bool NFileBrowserProp::BeginEdit(NRect& rcItem)
 		NString str = dlg.GetPathName(0);
 		strcpy(m_pvarValue->szVal, str.Buffer());
 	}
-
+*/
 	return true;	//End of Edition
 }
 

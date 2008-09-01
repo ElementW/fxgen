@@ -55,7 +55,7 @@ protected:
 	void OnTreeSelChange(NObject* _psender);
 
 	//Messages Dispatching
-	virtual void OnRightButtonDown(udword flags, NPoint pos);
+	virtual void OnRButtonDown(NPoint pos);
 	void OnMenuClick(NObject* _psender);
 
 	//Methods

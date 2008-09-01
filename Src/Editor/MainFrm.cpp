@@ -25,7 +25,7 @@
 #include "PropertiesWnd.h"
 #include "ViewportsWnd.h"
 #include "ProjectWnd.h"
-
+#include "FileChooserDialog.h"
 
 //-----------------------------------------------------------------
 //                   Defines
@@ -183,7 +183,6 @@ bool NMainFrm::AnnoyUserProjectMayBeLost()
 	if (dwCount != 0)
 	{
 		udword dwRet = GetApp()->MessageBox("You will lose your current project! Do you want to continue ?", NMB_YESNO);
-
 		if (dwRet == NIDNO)		return false;
 	}
 	return true;
@@ -266,7 +265,7 @@ void NMainFrm::LoadProject(NString str)
 
 	} else {
 		//Error Message
-		GetApp()->MessageBox(gGetErrors()->GetErrors());
+		GetApp()->MessageBox(gGetErrors()->GetErrors(), MB_OK);
 		//Clean up
 		OnNewProject();
 	}
@@ -284,7 +283,7 @@ void NMainFrm::LoadProject(NString str)
 void NMainFrm::OnOpenProject()
 {
 	//Open File Dialog
-	NFileDialog dlg;
+	NFileChooserDialog dlg;
 	dlg.Create("Opening Project...", this);
 	if (dlg.DoModal())
 	{
@@ -325,7 +324,7 @@ void NMainFrm::SaveProject(NString path)
 void NMainFrm::OnSaveProjectAs()
 {
 	//Save File Dialog
-	NFileDialog dlg;
+	NFileChooserDialog dlg;
 	dlg.Create("Saving Project...", this, false);
 	if (dlg.DoModal())
 		SaveProject(dlg.GetPathName());
@@ -451,7 +450,7 @@ void NMainFrm::OnFileMenuClick(NObject* _psender)
 		//case MENU_RELOADPROJECT:	LoadProject();				break;
 		case MENU_SAVEPROJECTAS:	OnSaveProjectAs();		break;
 		case MENU_SAVEPROJECT:		SaveProject();				break;
-		case MENU_EXIT:						GetApp()->AskExit();	break;
+//		case MENU_EXIT:						GetGUISubSystem()->AskExit();	break;
 	};
 
 }

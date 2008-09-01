@@ -55,7 +55,7 @@ protected:
 	EVT_DECLARE_HANDLER(OnRendering);
 
 	//Messages Dispatching
-	virtual void OnRightButtonDown(udword flags, NPoint pos);
+	virtual void OnRButtonDown(NPoint pos);
 
 	//Datas
 	NMenuCtrl	m_wndMenu;
