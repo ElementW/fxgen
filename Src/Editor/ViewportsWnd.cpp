@@ -45,7 +45,7 @@
 //-----------------------------------------------------------------
 NViewportsWnd::NViewportsWnd(void)
 {
-	m_pcurObject	= null;
+	m_pcurOp	= null;
 	m_dwTextureID = 0;
 	m_dwTexWidth=m_dwTexHeight=0;
 	m_fScale			= 1.0f;
@@ -94,9 +94,9 @@ bool NViewportsWnd::Create(const char* name, const NRect& rect, NWnd* parent)
 EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnOPDeleting)
 {
 	NOperator* pop = (NOperator*)dwParam1;
-	if (pop->m_pObj==m_pcurObject)
+	if (pop==m_pcurOp)
 	{
-		m_pcurObject=null;
+		m_pcurOp=null;
 	}
 
 	return 0;
@@ -110,9 +110,9 @@ EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnRender)
 	NOperator* pop = (NOperator*)dwParam1;
 	if (pop==null || pop->m_pObj==null || (pop!=null && pop->m_bError))
 	{
-		m_pcurObject = null;
+		m_pcurOp = null;
 	} else {
-		m_pcurObject = pop->m_pObj;
+		m_pcurOp = pop;
 	}
 
 	RedrawWindow();
@@ -386,25 +386,21 @@ void NViewportsWnd::OnPaint()
 	NGraphics dc(this);
 	dc.FillSolidRect(rc, RGBA(115,115,115,255));
 
-	NOperator* pop = (NOperator*)m_pcurObject;
-
 	////////////////////////////////////////
 	//No operator valid
-	if (m_pcurObject==null)
+	if (m_pcurOp==null || m_pcurOp->m_pObj==null || m_pcurOp->m_bError)
 	{
 		//Texte
 		//dc.FillSolidRect(rc, RGBA(255,115,115,115));
-		if (pop==null)
+		if (m_pcurOp==null)
 			dc.DrawText("Select an operator by double clicking on it", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(200,255,200,255) );
-		else if (pop && pop->m_bError)
+		else
 			dc.DrawText("Invalid links !", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(200,255,200,255) );
 
 	////////////////////////////////////////
 	//Display operator
 	} else {
-
-		if (strcmp(m_pcurObject->GetRTClass()->m_pszClassName, "NBitmap") == 0)
-			DisplayTexture(m_pcurObject);
+          DisplayTexture(m_pcurOp->m_pObj);
 	}
 	
 
@@ -510,7 +506,7 @@ void NViewportsWnd::OnMenuItemClick(NObject* _psender)
 
 		case ID_EXPORT:
 		{
-			if (m_pcurObject != null && strcmp(m_pcurObject->GetRTClass()->m_pszClassName, "NBitmap") == 0)
+			if (m_pcurOp != null && !m_pcurOp->m_bError)
 			{
 				//Save File Dialog
 				NFileChooserDialog dlg;
@@ -518,7 +514,7 @@ void NViewportsWnd::OnMenuItemClick(NObject* _psender)
 				if (dlg.DoModal())
 				{
 					NString str = dlg.GetPathName();
-					WriteTGA((NBitmap*)m_pcurObject, str);
+					WriteTGA((NBitmap*)m_pcurOp->m_pObj, str);
 				}
 			}
 			break;
