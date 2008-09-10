@@ -636,7 +636,7 @@ void NEditCtrl::OnLButtonDblClk(udword _flags, NPoint _point)
 //-----------------------------------------------------------------
 void NEditCtrl::OnKillFocus(NWnd* _pNewWnd)
 {
-
+	OnEscape(this);
 }
 
 //-----------------------------------------------------------------
@@ -711,4 +711,3 @@ void NEditCtrl::OnKeyDown(udword _dwchar)
 	}
 	RedrawWindow();
 }
-
