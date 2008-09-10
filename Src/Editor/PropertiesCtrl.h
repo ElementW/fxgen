@@ -65,6 +65,7 @@ public:
 	void	DisplayObjectProperties(NObject* pobj);		//!< Display Object Properties
 
 	void 	SaveRowEditing();
+	void 	EndRowEditing(bool bSaveChanged=true);
 
 	// Messages Notify
 	virtual void OnPropertiesChanged()	{};
@@ -86,7 +87,6 @@ protected:
 	bool			ExpandRow(udword _dwRowIdx);
 	void 			ClickRow(udword dwRowIdx, NPoint& pt);
 	void 			StartRowEditing(udword dwRowIdx);
-	void 			EndRowEditing(bool bSaveChanged=true);
 	bool			IsAnimButtonUnderPoint(NPoint& pt);
 	void			AddRemoveAnimControlToRow(udword _dwRowIdx);
 	udword		GetRowIdxFromGroupIdx(udword _groupIdx);

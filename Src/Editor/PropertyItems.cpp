@@ -70,12 +70,46 @@ void NUbyteProp::DrawItem(NGraphics* pdc, NRect& rcItem)
 
 bool NUbyteProp::BeginEdit(NRect& rcItem)
 {
- return false;
+	if (m_pwNGraphicstrl)	delete m_pwNGraphicstrl;
+
+	NRect rcCB(rcItem);
+
+	NEditCtrl* pwNGraphicsB = new NEditCtrl;
+	pwNGraphicsB->Create("", rcCB, m_pParent);
+	m_pwNGraphicstrl = pwNGraphicsB;
+
+	NString text;
+	text.Format("%u", (udword)m_pvarValue->byVal);
+	pwNGraphicsB->SetText(text.Buffer());
+	pwNGraphicsB->SelectAll();
+	pwNGraphicsB->SetFocus();
+
+	pwNGraphicsB->OnEnter = FDelegate(this, (TDelegate)&NUbyteProp::OnEnter);
+	pwNGraphicsB->OnEscape = FDelegate(this, (TDelegate)&NUbyteProp::OnEscape);
+
+	return false;
 }
 
 bool NUbyteProp::EndEdit(bool bSaveChanged)
 {
-	return false;
+	if (m_pwNGraphicstrl==null)		return false;
+
+	//Save changed
+	if (bSaveChanged)
+	{
+		NString str = ((NEditCtrl*)m_pwNGraphicstrl)->GetText();
+		sdword dwVal = atoi(str.Buffer());
+		if (dwVal>255)		dwVal = 255;
+		if (dwVal<0)		dwVal = 0;
+		m_pvarValue->byVal = (ubyte)dwVal;
+		//strcpy(m_pvarValue->szVal, str.Buffer());*/
+	}
+
+	//Destroy control
+	delete m_pwNGraphicstrl;
+	m_pwNGraphicstrl=null;
+
+	return bSaveChanged;
 }
 
 bool NUbyteProp::AddValue(sdword dwDelta)
@@ -85,6 +119,16 @@ bool NUbyteProp::AddValue(sdword dwDelta)
 	if (dwVal<0)			dwVal = 0;
 	m_pvarValue->byVal = (ubyte)dwVal;
 	return true;
+}
+
+void NUbyteProp::OnEnter(NEditCtrl* pEdit)
+{
+	((NPropertiesCtrl*)m_pParent)->EndRowEditing();
+}
+
+void NUbyteProp::OnEscape(NEditCtrl* pEdit)
+{
+	((NPropertiesCtrl*)m_pParent)->EndRowEditing(false);
 }
 
 
@@ -105,12 +149,46 @@ void NUwordProp::DrawItem(NGraphics* pdc, NRect& rcItem)
 
 bool NUwordProp::BeginEdit(NRect& rcItem)
 {
+	if (m_pwNGraphicstrl)	delete m_pwNGraphicstrl;
+
+	NRect rcCB(rcItem);
+
+	NEditCtrl* pwNGraphicsB = new NEditCtrl;
+	pwNGraphicsB->Create("", rcCB, m_pParent);
+	m_pwNGraphicstrl = pwNGraphicsB;
+
+	NString text;
+	text.Format("%u", (udword)m_pvarValue->wVal);
+	pwNGraphicsB->SetText(text.Buffer());
+	pwNGraphicsB->SelectAll();
+	pwNGraphicsB->SetFocus();
+
+	pwNGraphicsB->OnEnter = FDelegate(this, (TDelegate)&NUwordProp::OnEnter);
+	pwNGraphicsB->OnEscape = FDelegate(this, (TDelegate)&NUwordProp::OnEscape);
+
 	return false;
 }
 
 bool NUwordProp::EndEdit(bool bSaveChanged)
 {
-	return false;
+	if (m_pwNGraphicstrl==null)		return false;
+
+	//Save changed
+	if (bSaveChanged)
+	{
+		NString str = ((NEditCtrl*)m_pwNGraphicstrl)->GetText();
+		sdword dwVal = atoi(str.Buffer());
+		if (dwVal>65535)	dwVal = 65535;
+		if (dwVal<0)		dwVal = 0;
+		m_pvarValue->wVal = (uword)dwVal;
+		//strcpy(m_pvarValue->szVal, str.Buffer());*/
+	}
+
+	//Destroy control
+	delete m_pwNGraphicstrl;
+	m_pwNGraphicstrl=null;
+
+	return bSaveChanged;
 }
 
 bool NUwordProp::AddValue(sdword dwDelta)
@@ -120,6 +198,16 @@ bool NUwordProp::AddValue(sdword dwDelta)
 	if (dwVal<0)			dwVal = 0;
 	m_pvarValue->wVal = (uword)dwVal;
 	return true;
+}
+
+void NUwordProp::OnEnter(NEditCtrl* pEdit)
+{
+	((NPropertiesCtrl*)m_pParent)->EndRowEditing();
+}
+
+void NUwordProp::OnEscape(NEditCtrl* pEdit)
+{
+	((NPropertiesCtrl*)m_pParent)->EndRowEditing(false);
 }
 
 
@@ -140,12 +228,43 @@ void NFloatProp::DrawItem(NGraphics* pdc, NRect& rcItem)
 
 bool NFloatProp::BeginEdit(NRect& rcItem)
 {
+	if (m_pwNGraphicstrl)	delete m_pwNGraphicstrl;
+
+	NRect rcCB(rcItem);
+
+	NEditCtrl* pwNGraphicsB = new NEditCtrl;
+	pwNGraphicsB->Create("", rcCB, m_pParent);
+	m_pwNGraphicstrl = pwNGraphicsB;
+
+	NString text;
+	text.Format("%f", m_pvarValue->fVal);
+	pwNGraphicsB->SetText(text.Buffer());
+	pwNGraphicsB->SelectAll();
+	pwNGraphicsB->SetFocus();
+
+	pwNGraphicsB->OnEnter = FDelegate(this, (TDelegate)&NFloatProp::OnEnter);
+	pwNGraphicsB->OnEscape = FDelegate(this, (TDelegate)&NFloatProp::OnEscape);
+
 	return false;
 }
 
 bool NFloatProp::EndEdit(bool bSaveChanged)
 {
-	return false;
+	if (m_pwNGraphicstrl==null)		return false;
+
+	//Save changed
+	if (bSaveChanged)
+	{
+		NString str = ((NEditCtrl*)m_pwNGraphicstrl)->GetText();
+		m_pvarValue->fVal = atof(str.Buffer());
+		//strcpy(m_pvarValue->szVal, str.Buffer());*/
+	}
+
+	//Destroy control
+	delete m_pwNGraphicstrl;
+	m_pwNGraphicstrl=null;
+
+	return bSaveChanged;
 }
 
 bool NFloatProp::AddValue(sdword dwDelta)
@@ -157,6 +276,15 @@ bool NFloatProp::AddValue(sdword dwDelta)
 	return true;
 }
 
+void NFloatProp::OnEnter(NEditCtrl* pEdit)
+{
+	((NPropertiesCtrl*)m_pParent)->EndRowEditing();
+}
+
+void NFloatProp::OnEscape(NEditCtrl* pEdit)
+{
+	((NPropertiesCtrl*)m_pParent)->EndRowEditing(false);
+}
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -192,6 +320,16 @@ bool NUFloatProp::AddValue(sdword dwDelta)
 	if(m_pvarValue->fVal < 0)
 		m_pvarValue->fVal = 0;
 	return true;
+}
+
+void NUFloatProp::OnEnter(NEditCtrl* pEdit)
+{
+	((NPropertiesCtrl*)m_pParent)->EndRowEditing();
+}
+
+void NUFloatProp::OnEscape(NEditCtrl* pEdit)
+{
+	((NPropertiesCtrl*)m_pParent)->EndRowEditing(false);
 }
 
 
@@ -557,11 +695,14 @@ bool NStringProp::BeginEdit(NRect& rcItem)
 	NRect rcCB(rcItem);
 
 	NEditCtrl* pwNGraphicsB = new NEditCtrl;
-	pwNGraphicsB->Create("", rcCB, m_pParent,false);
+	pwNGraphicsB->Create("", rcCB, m_pParent);
 	m_pwNGraphicstrl = pwNGraphicsB;
 
 	pwNGraphicsB->SetText(m_pvarValue->szVal);
 	pwNGraphicsB->SetFocus();
+
+	pwNGraphicsB->OnEnter = FDelegate(this, (TDelegate)&NStringProp::OnEnter);
+	pwNGraphicsB->OnEscape = FDelegate(this, (TDelegate)&NStringProp::OnEscape);
 
 	return false;
 }
@@ -582,4 +723,14 @@ bool NStringProp::EndEdit(bool bSaveChanged)
 	m_pwNGraphicstrl=null;
 
 	return bSaveChanged;
+}
+
+void NStringProp::OnEnter(NEditCtrl* pEdit)
+{
+	((NPropertiesCtrl*)m_pParent)->EndRowEditing();
+}
+
+void NStringProp::OnEscape(NEditCtrl* pEdit)
+{
+	((NPropertiesCtrl*)m_pParent)->EndRowEditing(false);
 }

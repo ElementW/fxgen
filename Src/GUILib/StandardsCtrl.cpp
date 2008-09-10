@@ -522,9 +522,7 @@ void NColorPickerCtrl::OnKeyUp(udword dwchar)
 //-----------------------------------------------------------------
 NEditCtrl::NEditCtrl() : NWControl()
 {
-	m_dwCurX=m_dwCurY=0;
-	m_dwLinesCount=1;
-	m_dwStartSel=m_dwEndSel=0;
+	m_dwCursorPos=m_dwSelectionTail=0;
 }
 
 //-----------------------------------------------------------------
@@ -538,7 +536,7 @@ NEditCtrl::~NEditCtrl()
 //-----------------------------------------------------------------
 //!	\brief	Control creation
 //-----------------------------------------------------------------
-bool NEditCtrl::Create(const char* _pszname, const NRect& _rect, NWnd* _parent, bool _bMultiLine)
+bool NEditCtrl::Create(const char* _pszname, const NRect& _rect, NWnd* _parent)
 {
 	//Call Base class
 	NWNDCREATE			wc;
@@ -555,23 +553,22 @@ bool NEditCtrl::Create(const char* _pszname, const NRect& _rect, NWnd* _parent, 
 //-----------------------------------------------------------------
 //!	\brief
 //-----------------------------------------------------------------
-NString	 NEditCtrl::GetLine(udword _line)
-{
-	return "";
-}
-
-//-----------------------------------------------------------------
-//!	\brief
-//-----------------------------------------------------------------
 void NEditCtrl::SetSel(udword _startchar, udword _endchar)
 {
+	m_dwCursorPos = _endchar;
+	m_dwSelectionTail = _startchar;
+	if(m_dwCursorPos>m_cstrText.Length())
+		m_dwCursorPos = m_cstrText.Length();
+	if(m_dwSelectionTail>m_cstrText.Length())
+		m_dwSelectionTail = m_cstrText.Length();
 }
 
 //-----------------------------------------------------------------
 //!	\brief
 //-----------------------------------------------------------------
-void NEditCtrl::SelectLine(udword _line)
+void NEditCtrl::SelectAll()
 {
+	m_dwSelectionTail = 0; m_dwCursorPos = m_cstrText.Length();
 }
 
 //-----------------------------------------------------------------
@@ -579,7 +576,21 @@ void NEditCtrl::SelectLine(udword _line)
 //-----------------------------------------------------------------
 void NEditCtrl::ReplaceSel(const char* _pszText)
 {
+	if (m_dwSelectionTail != m_dwCursorPos)
+	{
+		udword start = 0, end = 0;
+		GetSel(start, end);
+		m_cstrText.RemoveAt(start, end-start);
+		m_dwCursorPos = start;
+		m_dwSelectionTail = start;
+		if(_pszText != null)
+		{
+			m_cstrText.InsertAt(m_dwCursorPos, _pszText);
+			m_dwSelectionTail += strlen(_pszText);
+		}
+	}
 }
+
 //-----------------------------------------------------------------
 //!	\brief
 //-----------------------------------------------------------------
@@ -591,9 +602,15 @@ void NEditCtrl::OnPaint()
 	dc.FillSolidRect(rc, RGBA(255,255,255,255));
 	dc.DrawText(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 	//Cursor
-	udword px = m_dwCurX*(GetGUISubSystem()->GetFont()->m_h-1); //###TOFIX###
-	px+=2;
-	dc.DrawLine(px,0,px, rc.Height(), RGBA(255,141,15,255), 1);
+	if( m_dwSelectionTail == m_dwCursorPos )
+	{
+		udword px = m_dwCursorPos*(GetGUISubSystem()->GetFont()->m_h-1);
+		dc.DrawLine(px,0,px, rc.Height(), RGBA(255,141,15,255), 1);
+	} else {
+		udword pxs = min(m_dwCursorPos, m_dwSelectionTail)*(GetGUISubSystem()->GetFont()->m_h-1);
+		udword pxe = max(m_dwCursorPos, m_dwSelectionTail)*(GetGUISubSystem()->GetFont()->m_h-1);
+		dc.FillSolidRect(NRect(pxs, 0, pxe, rc.Height()), RGBA(255,141,15,128));
+	}
 
 }
 //-----------------------------------------------------------------
@@ -622,33 +639,75 @@ void NEditCtrl::OnKillFocus(NWnd* _pNewWnd)
 
 }
 
+//-----------------------------------------------------------------
+//!	\brief
+//-----------------------------------------------------------------
+void NEditCtrl::OnText(udword _unicode)
+{
+	if( _unicode >= 32 && _unicode < 128 )
+	{
+		NString str;
+		str.Format("%c", (char)_unicode);
+		if (m_dwSelectionTail != m_dwCursorPos)
+		{
+			ReplaceSel(str.Buffer());
+			m_dwCursorPos++;
+			m_dwSelectionTail = m_dwCursorPos;
+		} else {
+			m_cstrText.InsertAt(m_dwCursorPos, str.Buffer());
+			m_dwCursorPos++;
+			m_dwSelectionTail++;
+		}
+	}
+}
 
 //-----------------------------------------------------------------
 //!	\brief
 //-----------------------------------------------------------------
 void NEditCtrl::OnKeyDown(udword _dwchar)
 {
-	if (_dwchar>=NKey::Space && _dwchar<=NKey::Z)
-	{
-		NString str;
-		str.Format("%c", (char)_dwchar);
-		m_cstrText.InsertAt(m_dwCurX, str.Buffer());
-		m_dwCurX++;
-	} else if (_dwchar==NKey::Delete) {
-		m_cstrText.RemoveAt(m_dwCurX, 1);
-		m_dwCurX--;
-	} else if (_dwchar==NKey::Back)	{
-		if (m_dwCurX>0)
+	if (_dwchar==NKey::Delete) {
+		if(m_dwSelectionTail == m_dwCursorPos)
 		{
-			m_dwCurX--;
-			m_cstrText.RemoveAt(m_dwCurX, 1);
+			if (m_dwCursorPos<m_cstrText.Length())
+				m_cstrText.RemoveAt(m_dwCursorPos, 1);
+		} else {
+			ReplaceSel("");
+		}
+	} else if (_dwchar==NKey::Back)	{
+		if(m_dwSelectionTail == m_dwCursorPos)
+		{
+			if (m_dwCursorPos>0)
+			{
+				m_dwCursorPos--;
+				m_dwSelectionTail--;
+				m_cstrText.RemoveAt(m_dwCursorPos, 1);
+			}
+		} else {
+			ReplaceSel("");
 		}
 	} else if (_dwchar==NKey::Left) {
-		if (m_dwCurX>0)
-			m_dwCurX--;
+		if (m_dwCursorPos>0)
+			m_dwCursorPos--;
+		if (!GetGUISubSystem()->IsKeyDown(NKey::LShift) && !GetGUISubSystem()->IsKeyDown(NKey::RShift))
+			m_dwSelectionTail = m_dwCursorPos;
 	} else if (_dwchar==NKey::Right)	{
-		if (m_dwCurX<m_cstrText.Length())
-			m_dwCurX++;
+		if (m_dwCursorPos<m_cstrText.Length())
+			m_dwCursorPos++;
+		if (!GetGUISubSystem()->IsKeyDown(NKey::LShift) && !GetGUISubSystem()->IsKeyDown(NKey::RShift))
+			m_dwSelectionTail = m_dwCursorPos;
+	} else if (_dwchar==NKey::Home) {
+		m_dwCursorPos = 0;
+		if (!GetGUISubSystem()->IsKeyDown(NKey::LShift) && !GetGUISubSystem()->IsKeyDown(NKey::RShift))
+			m_dwSelectionTail = m_dwCursorPos;
+	} else if (_dwchar==NKey::End)	{
+		m_dwCursorPos = m_cstrText.Length();
+		if (!GetGUISubSystem()->IsKeyDown(NKey::LShift) && !GetGUISubSystem()->IsKeyDown(NKey::RShift))
+			m_dwSelectionTail = m_dwCursorPos;
+	} else if (_dwchar==NKey::Return)	{
+		OnEnter(this);
+	} else if (_dwchar==NKey::Escape)	{
+		OnEscape(this);
 	}
 	RedrawWindow();
 }
