@@ -84,7 +84,7 @@ protected:
 	bool				m_bFiltering;
 	bool				m_bOrtho;
 
-	NObject*		m_pcurObject;		//!< Objet in visualisation
+	NOperator*		m_pcurOp;		//!< Op in visualisation
 };
 
 #endif //VIEWPORTWND_H
