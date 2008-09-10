@@ -286,6 +286,9 @@ public:
 	void ProcessMsgs_KeyDown(NKey::Code key);
 	void ProcessMsgs_KeyUp(NKey::Code key);
 
+	void ProcessMsgs_Text(udword _unicode);
+
+	void NotifyWindowDeletion(NWnd* _pWnd);
 protected:
 
 	NWnd* GetWndUnderMouse(sdword _x, sdword _y);
@@ -409,6 +412,7 @@ public:
 	virtual	void	OnKillFocus(NWnd* pNewWnd)	{}
 	virtual	void	OnTimer(udword _dwTimerID)	{}
 	virtual	void	OnMouseLeave() {}
+	virtual	void	OnText(udword _unicode)		{}
 
 protected:
 	//Datas

@@ -174,26 +174,17 @@ public:
 	virtual		~NEditCtrl();
 
 	//Windows Creation
-	virtual	bool Create(const char* _pszname, const NRect& _rect, NWnd* _parent, bool _bMultiLine);
-
-	//General
-	//void			SetText(const char* text);
-	//NString		GetText();
-
-	//Caret
-	void	GetCaretPos(udword& _cx, udword& _cy)		{ _cx=m_dwCurX; _cy=m_dwCurY; }
-
-	//Line operations
-	udword		GetLineCount()	{ return m_dwLinesCount; }
-	NString		GetLine(udword _line);
-	//udword		GetLineIdx(udword _line);
+	virtual	bool Create(const char* _pszname, const NRect& _rect, NWnd* _parent);
 
 	//Selection operations
 	void			SetSel(udword _startchar, udword _endchar);
-	void			GetSel(udword& _startchar, udword& _endChar) { _startchar=m_dwStartSel; _endChar=m_dwEndSel; }
-	void			SelectLine(udword _line);
+	void			GetSel(udword& _startchar, udword& _endChar) { _startchar=min(m_dwCursorPos, m_dwSelectionTail); _endChar=max(m_dwCursorPos, m_dwSelectionTail); }
+	void			SelectAll();
 	void			ReplaceSel(const char* _pszText);
-	//void			HideSelection(bool _hide);
+
+	//Notification Messages
+	FDelegate		OnEnter;
+	FDelegate		OnEscape;
 
 protected:
 	//Messages Dispatching
@@ -203,10 +194,9 @@ protected:
 	virtual	void	OnLButtonDblClk(udword _flags, NPoint _point);
 	virtual	void	OnKillFocus(NWnd* _pNewWnd);
 	virtual	void	OnKeyDown(udword _dwchar);
+	virtual	void	OnText(udword _unicode);
 	//Datas
-	udword m_dwLinesCount;
-	udword m_dwCurX, m_dwCurY;
-	udword m_dwStartSel, m_dwEndSel;
+	udword m_dwCursorPos, m_dwSelectionTail;
 };
 
 #endif  //STANDARDSCTRL_H

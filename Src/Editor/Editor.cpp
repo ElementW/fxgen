@@ -228,7 +228,13 @@ void NFxGenApp::Run()
 				pgui->ProcessMsgs_MouseButtonUp(pt, dwBut);
 			}
 
-      // Key Down
+			// Text entry
+			if ((Event.Type == sf::Event::TextEntered) )
+			{
+				pgui->ProcessMsgs_Text(Event.Text.Unicode);
+			}
+			
+			// Key Down
 			if ((Event.Type == sf::Event::KeyPressed) )
 			{
 				NKey::Code key = (NKey::Code)Event.Key.Code;	//KeyCode are identical

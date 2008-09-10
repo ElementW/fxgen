@@ -243,6 +243,12 @@ void NGUISubSystem::ProcessMsgs_MouseMove(NPoint _ptScreen)
 	m_pOldWndUnderMouse = pwnd;
 }
 
+void NGUISubSystem::ProcessMsgs_Text(udword _unicode)
+{
+	NWnd* pwnd=GetFocus();
+	if (pwnd)	pwnd->OnText(_unicode);
+}
+
 void NGUISubSystem::ProcessMsgs_KeyDown(NKey::Code _key)
 {
 	m_keyDown[_key]	= true;
@@ -257,7 +263,14 @@ void NGUISubSystem::ProcessMsgs_KeyUp(NKey::Code _key)
 	if (pwnd)	pwnd->OnKeyUp(_key);
 }
 
+void NGUISubSystem::NotifyWindowDeletion(NWnd* _pWnd)
+{
+	if (m_pFocusedWnd==_pWnd)
+		m_pFocusedWnd = null;
 
+	if (m_pOldWndUnderMouse==_pWnd)
+		m_pOldWndUnderMouse = null;
+}
 
 //-----------------------------------------------------------------
 //!	\brief	Return window under mouse cursor
@@ -694,6 +707,8 @@ NWnd::NWnd()
 //-----------------------------------------------------------------
 NWnd::~NWnd()
 {
+	GetGUISubSystem()->NotifyWindowDeletion(this);
+
 	//Remove this windows from parent's children array...
 	if (m_pParentWnd)
 	{
