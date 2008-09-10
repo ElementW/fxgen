@@ -268,7 +268,7 @@ void NString::InsertAt(udword _idx, const char* _str)
 		udword len1 = Length();
 		udword len2 = (udword)strlen(_str);
 		mBuffer = (char*)realloc(mBuffer, len1 + len2 + 1);
-		memcpy(mBuffer+_idx+len2, mBuffer+_idx, len1-_idx);	//Move right part
+		memmove(mBuffer+_idx+len2, mBuffer+_idx, len1-_idx);	//Move right part
 		memcpy(mBuffer+_idx, _str, len2);
 		mBuffer[len1+len2]=0;
 	}
@@ -280,7 +280,7 @@ void NString::RemoveAt(udword _idx, udword _count)
 	udword len1 = Length();
 	if (mBuffer && _idx<len1)
 	{
-		memcpy(mBuffer+_idx, mBuffer+_idx+_count, len1-_count);
+		memmove(mBuffer+_idx, mBuffer+_idx+_count, len1-(_idx+_count));
 		mBuffer[len1-_count]=0;
 	}
 
