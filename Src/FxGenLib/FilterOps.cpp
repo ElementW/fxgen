@@ -472,12 +472,12 @@ static NVarsBlocDesc blocdescLightOp[] =
 	VAR(eudword,	true, "Diffuse",		"8421504",	"NColorProp")	//1
 	VAR(eudword,	true, "Specular",		"-1",				"NColorProp")	//2
 
-	VAR(eubyte,		true, "PosX",				"255",			"NUbyteProp")	//3
-	VAR(eubyte,		true, "PosY",				"255",			"NUbyteProp")	//4
-	VAR(eubyte,		true, "PosZ",				"127",			"NUbyteProp")	//5
+	VAR(eubyte,		true, "PosX",				"0",			"NUbyteProp")	//3
+	VAR(eubyte,		true, "PosY",				"0",			"NUbyteProp")	//4
+	VAR(eubyte,		true, "PosZ",				"255",			"NUbyteProp")	//5
 
 	VAR(eubyte,		true, "Specular power",		"0",			"NUbyteProp")	//6
-	VAR(eubyte,		true, "Bump power",				"0",			"NUbyteProp")	//7
+	VAR(eubyte,		true, "Bump power",				"32",			"NUbyteProp")	//7
 };
 
 
@@ -617,14 +617,20 @@ FIMPLEMENT_CLASS(NNormalsOp, NOperator);
 static NVarsBlocDesc blocdescNormalsOp[] =
 {
 	VAR(eudword,	true, "Amplify",	"64", "NUbyteProp")	//0
+	VAR(eubyte,	false, "Filter",	"0,[3x3 Sobel,2x2 Simple]", "NUbyteComboProp")	//6
+};
+
+static NMapVarsBlocDesc mapblocdescNormalsOp[] =
+{
+	MAP(1,	eudword,		"0",		""	)	//V0 => 0-Amplify
 };
 
 
 NNormalsOp::NNormalsOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(1, blocdescNormalsOp, 1);
-
+	m_pcvarsBloc = AddVarsBloc(2, blocdescNormalsOp, 2);
+	m_pcvarsBloc->SetMapVarBlocDesc(1, mapblocdescNormalsOp);
 }
 
 udword NNormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
@@ -647,8 +653,9 @@ udword NNormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 
 	/////////////////////////////////////////
 	//Get Variables Values
-	ubyte byAmp;
+	ubyte byAmp, byFilter;
 	m_pcvarsBloc->GetValue(0, _ftime, byAmp);
+	m_pcvarsBloc->GetValue(1, _ftime, byFilter);
 
 	float fAmp = (float)byAmp*_fDetailFactor / 64.0f; //[0<->4]
 
@@ -657,70 +664,104 @@ udword NNormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 	NRGBA* pcurSour = pSrc->GetPixels();
 	NRGBA* pcurNorm = pDst->GetPixels();
 
-	for (udword y=0; y<h; y++)
+	if(byFilter==0) // 3x3 Sobel
 	{
-		for (udword x=0; x<w; x++)
+		for (udword y=0; y<h; y++)
 		{
-			size_t xp = (x-1) % w;
-			size_t xn = (x+1) % w;
-			size_t yp = ((y-1) % h)*w;
-			size_t yn = ((y+1) % h)*w;
-			size_t yc = y * w;
-			//Y Sobel filter
-			float fPix = (float)pcurSour[xp+yn].r;
-			float dY  = fPix * -1.0f;
+			for (udword x=0; x<w; x++)
+			{
+				size_t xp = (x-1) % w;
+				size_t xn = (x+1) % w;
+				size_t yp = ((y-1) % h)*w;
+				size_t yn = ((y+1) % h)*w;
+				size_t yc = y * w;
+				//Y Sobel filter
+				float fPix = (float)pcurSour[xp+yn].r;
+				float dY  = fPix * -1.0f;
 
-			fPix = (float)pcurSour[x+yn].r;
-			dY+= fPix * -2.0f;
+				fPix = (float)pcurSour[x+yn].r;
+				dY+= fPix * -2.0f;
 
-			fPix = (float)pcurSour[xn+yn].r;
-			dY+= fPix * -1.0f;
+				fPix = (float)pcurSour[xn+yn].r;
+				dY+= fPix * -1.0f;
 
-			fPix = (float)pcurSour[xp+yp].r;
-			dY+= fPix * 1.0f;
+				fPix = (float)pcurSour[xp+yp].r;
+				dY+= fPix * 1.0f;
 
-			fPix = (float)pcurSour[x+yp].r;
-			dY+= fPix * 2.0f;
+				fPix = (float)pcurSour[x+yp].r;
+				dY+= fPix * 2.0f;
 
-			fPix = (float)pcurSour[xn+yp].r;
-			dY+= fPix * 1.0f;
+				fPix = (float)pcurSour[xn+yp].r;
+				dY+= fPix * 1.0f;
 
-			//X Sobel filter
-			fPix = (float)pcurSour[xp+yp].r;
-			float dX  = fPix * -1.0f;
+				//X Sobel filter
+				fPix = (float)pcurSour[xp+yp].r;
+				float dX  = fPix * -1.0f;
 
-			fPix = (float)pcurSour[xp+yc].r;
-			dX+= fPix * -2.0f;
+				fPix = (float)pcurSour[xp+yc].r;
+				dX+= fPix * -2.0f;
 
-			fPix = (float)pcurSour[xp+yn].r;
-			dX+= fPix * -1.0f;
+				fPix = (float)pcurSour[xp+yn].r;
+				dX+= fPix * -1.0f;
 
-			fPix = (float)pcurSour[xn+yp].r;
-			dX+= fPix * 1.0f;
+				fPix = (float)pcurSour[xn+yp].r;
+				dX+= fPix * 1.0f;
 
-			fPix = (float)pcurSour[xn+yc].r;
-			dX+= fPix * 2.0f;
+				fPix = (float)pcurSour[xn+yc].r;
+				dX+= fPix * 2.0f;
 
-			fPix = (float)pcurSour[xn+yn].r;
-			dX+= fPix * 1.0f;
+				fPix = (float)pcurSour[xn+yn].r;
+				dX+= fPix * 1.0f;
 
 
-			// Compute the cross product of the two vectors
-			vec3 norm;
-			norm.x = -dX*fAmp/ 255.0f;
-			norm.y = -dY*fAmp/ 255.0f;
-			norm.z = 1.0f;
+				// Compute the cross product of the two vectors
+				vec3 norm;
+				norm.x = -dX*fAmp/ 255.0f;
+				norm.y = -dY*fAmp/ 255.0f;
+				norm.z = 1.0f;
 
-			// Normalize
-			norm.normalize();
+				// Normalize
+				norm.normalize();
 
-			// Store
-			pcurNorm->x = (ubyte) ((norm.x+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
-			pcurNorm->y = (ubyte) ((norm.y+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
-			pcurNorm->z = (ubyte) ((norm.z+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
-			pcurNorm->a = pcurSour[x+y*w].a;
+				// Store
+				pcurNorm->x = (ubyte) ((norm.x+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
+				pcurNorm->y = (ubyte) ((norm.y+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
+				pcurNorm->z = (ubyte) ((norm.z+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
+				pcurNorm->a = pcurSour[x+y*w].a;
 
-			pcurNorm++;
+				pcurNorm++;
+			}
+		}
+	} else if (byFilter==1) // 2x2 Simple
+	{
+		for (udword y=0; y<h; y++)
+		{
+			for (udword x=0; x<w; x++)
+			{
+				size_t xn = (x+1) % w;
+				size_t yp = ((y-1) % h)*w;
+				size_t yc = y * w;
+
+				float dX = pcurSour[xn+yc].r-pcurSour[x+yc].r;
+				float dY = pcurSour[x+yp].r-pcurSour[x+yc].r;
+
+				// Compute the cross product of the two vectors
+				vec3 norm;
+				norm.x = -dX*fAmp/ 255.0f;
+				norm.y = -dY*fAmp/ 255.0f;
+				norm.z = 1.0f;
+
+				// Normalize
+				norm.normalize();
+
+				// Store
+				pcurNorm->x = (ubyte) ((norm.x+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
+				pcurNorm->y = (ubyte) ((norm.y+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
+				pcurNorm->z = (ubyte) ((norm.z+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
+				pcurNorm->a = pcurSour[x+y*w].a;
+
+				pcurNorm++;
+			}
 		}
 	}
 
