@@ -25,13 +25,16 @@
 #include "GUI.h"
 #include "Editor.h"
 
+NFxGenApp* pApp=null;
+NFxGenApp*		GetApp()	{ return pApp; }
+
 //-----------------------------------------------------------------
 //!\func	Export WinMain to force linkage to this module
 //-----------------------------------------------------------------
 int main()
 {
 	// Application
-	NFxGenApp* pApp = new NFxGenApp();
+	pApp = NNEW( NFxGenApp );
 
 	// Perform specific initializations
 	if (!pApp->Init())		pApp->Exit();
@@ -42,7 +45,7 @@ int main()
 	// Exit Application
 	pApp->Exit();
 
-	delete pApp;
+	NDELETE(pApp, NFxGenApp);
 
 	return EXIT_SUCCESS;
 }

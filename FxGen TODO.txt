@@ -27,6 +27,8 @@ Version 0.7 alpha (Release: Now on Linux !)
 ----------------------------------
 .Main
 	.Code cleanup
+.FxGenLib
+	.Added memory manager (detect memory leaks in debug)
 .GUILib
 	.Fixed Menu destruction crash
 	.Application Management Removed

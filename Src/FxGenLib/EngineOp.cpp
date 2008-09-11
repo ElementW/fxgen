@@ -231,7 +231,7 @@ udword NOperatorsPage::DeleteOp(NOperator* _pop)
 	if (idx!=(udword)-1)
 	{
 		m_arrayOps.RemoveItem(idx);
-		delete _pop;
+		NDELETE(_pop, NOperator);
 	}
 
 	//Recomputing links
@@ -510,7 +510,7 @@ void NOperatorsPage::InvalidateAllOps()
 //-----------------------------------------------------------------
 NEngineOp::NEngineOp()
 {
-	m_pRootGroup		= new NTreeNode;
+	m_pRootGroup		= NNEW(NTreeNode);
 	m_pRootGroup->SetName("Root");
 
 	m_nCurContext		= 0;
@@ -527,6 +527,11 @@ NEngineOp::NEngineOp()
 //-----------------------------------------------------------------
 NEngineOp::~NEngineOp()
 {
+	m_bitmapsAlloc.Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+
+	gpengineOp=null;
+	if (m_pRootGroup)
+		NDELETE(m_pRootGroup, NTreeNode);
 }
 
 //-----------------------------------------------------------------
@@ -534,8 +539,9 @@ NEngineOp::~NEngineOp()
 //-----------------------------------------------------------------
 NEngineOp*	NEngineOp::GetEngine()
 {
+
 	if (gpengineOp==null)
-		gpengineOp = new NEngineOp;
+		gpengineOp = NNEW(NEngineOp);
 
 	return gpengineOp;
 }
@@ -548,8 +554,8 @@ void NEngineOp::Clear()
 {
 	m_bitmapsAlloc.Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
 
-	if (m_pRootGroup)		delete m_pRootGroup;
-	m_pRootGroup = new NTreeNode;
+	if (m_pRootGroup)		NDELETE(m_pRootGroup, NTreeNode);
+	m_pRootGroup = NNEW(NTreeNode);
 	m_pRootGroup->SetName("Root");
 }
 
@@ -925,7 +931,7 @@ void NEngineOp::GetBitmap(NObject** _ppobj, ubyte _byObjType)
 void NEngineOp::SetChannelValue(ubyte _byChannel, NVarValue& _value)
 {
 	if (_byChannel<MAX_CHANNELS)
-		memcpy(&m_achannels[_byChannel], &_value, sizeof(NVarValue));
+		NMemCopy(&m_achannels[_byChannel], &_value, sizeof(NVarValue));
 }
 
 //-----------------------------------------------------------------
@@ -937,7 +943,7 @@ void NEngineOp::SetChannelValue(ubyte _byChannel, NVarValue& _value)
 void NEngineOp::GetChannelValue(ubyte _byChannel, NVarValue& _outValue)
 {
 	if (_byChannel<MAX_CHANNELS)
-		memcpy(&_outValue, &m_achannels[_byChannel], sizeof(NVarValue));
+		NMemCopy(&_outValue, &m_achannels[_byChannel], sizeof(NVarValue));
 }
 
 

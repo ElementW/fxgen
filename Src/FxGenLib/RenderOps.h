@@ -151,35 +151,5 @@ public:
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
 };
 
-//-----------------------------------------------------------------
-//!	\class		NVectorOp
-//!	\brief		Render vector graphics
-//-----------------------------------------------------------------
-/*class FXGEN_API NVectorOp : public NOperator
-{
-public:
-	FDECLARE_CLASS();
-
-	NVectorOp();
-	~NVectorOp();
-
-	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
-	virtual const char*		GetName()			{ return "Vector"; }		//!< Operator's Name
-	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
-
-	void			SetVectorData(ubyte* _data, udword _length);
-
-	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
-
-private:
-	//Serialization
-	virtual	bool Save(NArchive* _s);	//!< Save object
-	virtual	bool Load(NArchive* _l);	//!< Load object
-
-	vgvm::cairo::CairoContext*	m_pContext;
-	vgvm::Program*			m_pProgram;
-};*/
 
 #endif //RENDEROPS_H

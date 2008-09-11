@@ -50,9 +50,11 @@ NSplitWnd::~NSplitWnd()
 	for (sdword i=mPaneList.Count()-1; i>=0; i--)
 	{
 		if (mPaneList[i]->pstripBar)
-			delete mPaneList[i]->pstripBar;
+			NDELETE(mPaneList[i]->pstripBar, NStripBarCtrl);
+		if (mPaneList[i]->wnd)
+			NDELETE(mPaneList[i]->wnd, NWnd);
 
-		delete mPaneList[i];
+		NDELETE(mPaneList[i], NPANEINFO);
 	}
 }
 
@@ -68,13 +70,13 @@ bool NSplitWnd::Create(char* name, NRect& rect, NWnd* parent)
 	NWnd::Create(wc);
 
 	//Create the first pane
-	NPANEINFO* paneinfo = new NPANEINFO;
+	NPANEINFO* paneinfo = NNEW(NPANEINFO);
 	paneinfo->id		= mCurPaneId++;
 	paneinfo->wnd		= null;
 	paneinfo->rect		= GetClientRect();
 	paneinfo->rect.right+=SPLITBORDER_SIZE;
 	paneinfo->rect.bottom+=SPLITBORDER_SIZE;
-	paneinfo->pstripBar = new NStripBarCtrl();
+	paneinfo->pstripBar = NNEW(NStripBarCtrl);
 	paneinfo->pstripBar->Create(name, paneinfo->rect, this);
 	mPaneList.AddItem(paneinfo);
 
@@ -201,7 +203,7 @@ udword	NSplitWnd::SplitColumn(udword paneid, sdword dwPosInPercent)
 	// |	old			|	   new			|
 
 	//Create a new pane (rightpane)
-	NPANEINFO* rightpane		= new NPANEINFO;
+	NPANEINFO* rightpane		= NNEW(NPANEINFO);
 	rightpane->id						= ++mCurPaneId;
 	rightpane->wnd					= null;
 	rightpane->rect.left		= leftpane->rect.left + pos;
@@ -210,7 +212,7 @@ udword	NSplitWnd::SplitColumn(udword paneid, sdword dwPosInPercent)
 	rightpane->rect.bottom	= leftpane->rect.bottom;
 
 	NRect rc(rightpane->rect);
-	rightpane->pstripBar		= new NStripBarCtrl();
+	rightpane->pstripBar		= NNEW(NStripBarCtrl);
 	rightpane->pstripBar->Create("", rc, this);
 
 	//Resize the left pane
@@ -248,7 +250,7 @@ udword	NSplitWnd::SplitRow	(udword paneid, sdword dwPosInPercent)
 	// -------------
 
 	//Create a new pane (bottompane)
-	NPANEINFO* bottompane		= new NPANEINFO;
+	NPANEINFO* bottompane		= NNEW(NPANEINFO);
 	bottompane->id					= ++mCurPaneId;
 	bottompane->wnd					= null;
 	bottompane->rect.left		= toppane->rect.left;
@@ -257,7 +259,7 @@ udword	NSplitWnd::SplitRow	(udword paneid, sdword dwPosInPercent)
 	bottompane->rect.bottom	= toppane->rect.bottom;
 
 	NRect rc(bottompane->rect);
-	bottompane->pstripBar		= new NStripBarCtrl();
+	bottompane->pstripBar		= NNEW(NStripBarCtrl);
 	bottompane->pstripBar->Create("", rc, this);
 
 	//Resize the top pane
@@ -322,7 +324,7 @@ bool	NSplitWnd::DestroyPane(udword id, udword sidetomerge)
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//Remove the pane from list then Destroy paneinfos
 //	mPaneList.Remove(index-1);	####TOFIX####
-	delete(pane);
+	NDELETE(pane, NPANEINFO);
 
 	return false;
 }
@@ -358,7 +360,7 @@ NSPLITBOX*	NSplitWnd::CreateSplitterBox(NPANEINFO* pane, udword side)
 		if (hitlist.Count()) {
 
 			//Create a new split box
-			NSPLITBOX* splitbox = new NSPLITBOX;
+			NSPLITBOX* splitbox = NNEW(NSPLITBOX);
 			splitbox->type = 1;
 			//splitbox->move.Init(4,4);
 
@@ -419,7 +421,7 @@ NSPLITBOX*	NSplitWnd::CreateSplitterBox(NPANEINFO* pane, udword side)
 		if (hitlist.Count()) {
 
 			//Create a new split box
-			NSPLITBOX* splitbox = new NSPLITBOX;
+			NSPLITBOX* splitbox = NNEW(NSPLITBOX);
 			splitbox->type = 0;
 			//splitbox->move.Init(4,4);
 
@@ -467,7 +469,7 @@ void	NSplitWnd::DestroySplitterBox(NSPLITBOX* splitbox)
 	if (splitbox==null)														return;
 
 	//###TO DO### Multi splitter Horizontal + Vertical
-	delete (splitbox);
+	NDELETE(splitbox, NSPLITBOX);
 
 }
 

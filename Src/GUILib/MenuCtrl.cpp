@@ -365,7 +365,7 @@ NMEItemDesc* NMenuCtrl::AddItem(const char* _pszName, udword _id, udword _dwStyl
 //-----------------------------------------------------------------
 NMenuCtrl* NMenuCtrl::CreatePopupMenu(const char* _pszName, udword _idx)
 {
-	NMenuCtrl* ppopup = new NMenuCtrl;
+	NMenuCtrl* ppopup =NNEW(NMenuCtrl);
 
 	if (_idx<m_carrayItems.Count())
 	{
@@ -448,7 +448,7 @@ void NMenuCtrl::DeleteAllItems()
 	{
 		NMEItemDesc* pitem = &m_carrayItems[i];
 		if (pitem->ppopUpMenu)
-			delete pitem->ppopUpMenu;
+			NDELETE(pitem->ppopUpMenu, NMenuCtrl);
 	}
 
 	m_carrayItems.Clear();

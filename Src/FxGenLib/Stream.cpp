@@ -68,7 +68,7 @@ bool NMemoryStream::Open(ubyte *_buffer, udword _bufferSize)
   } else {
     m_bManagedBuffer = true;
     m_dwBufSize	= NSF_BUFSTARTSIZE;
-    m_pbyBuffer	= (ubyte*)NMemAlloc(m_dwBufSize);
+    m_pbyBuffer	= (ubyte*)NNEWARRAY(ubyte, m_dwBufSize);
   }
 
   m_dwBufPos = 0;
@@ -83,7 +83,7 @@ void NMemoryStream::Close()
 {
   if (m_bManagedBuffer && m_pbyBuffer != null)
   {
-    NMemFree(m_pbyBuffer);
+    NDELETEARRAY(m_pbyBuffer);
   }
 
   m_pbyBuffer	      = null;
@@ -107,15 +107,22 @@ bool NMemoryStream::PutData(const void* _buf, udword _length)
 	{
 		if (m_bManagedBuffer)
 		{
-			m_dwBufSize+=NSF_BUFGROWSIZE+_length;
-			m_pbyBuffer=(ubyte*)NMemRealloc(m_pbyBuffer,m_dwBufSize);
+		  udword dwnewSize = NSF_BUFGROWSIZE+_length;
+      ubyte*	pnewBuffer = NNEWARRAY(ubyte, dwnewSize);
+      NMemCopy(pnewBuffer, m_pbyBuffer, m_dwBufSize);
+      NDELETEARRAY(m_pbyBuffer);
+      m_pbyBuffer=pnewBuffer;
+      m_dwBufSize=dwnewSize;
+
+			//m_dwBufSize+=NSF_BUFGROWSIZE+_length;
+			//m_pbyBuffer=(ubyte*)NMemRealloc(m_pbyBuffer,m_dwBufSize);
 		} else {
 			return false;
 		}
 	}
 
 	//Save datas
-	memcpy(m_pbyBuffer+m_dwBufPos, _buf, _length);
+	NMemCopy(m_pbyBuffer+m_dwBufPos, _buf, _length);
 	m_dwBufPos+=_length;
 
 	return true;
@@ -132,7 +139,7 @@ bool NMemoryStream::GetData(void* _buf, udword _length)
   if ((m_dwBufPos+_length)>m_dwBufSize)
     return false;
 
-  memcpy(_buf, m_pbyBuffer+m_dwBufPos, _length);
+  NMemCopy(_buf, m_pbyBuffer+m_dwBufPos, _length);
   m_dwBufPos += _length;
   return true;
 }

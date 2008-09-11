@@ -62,6 +62,7 @@ NViewportsWnd::NViewportsWnd(void)
 //-----------------------------------------------------------------
 NViewportsWnd::~NViewportsWnd(void)
 {
+	EVT_UNREGISTERALL();
 }
 
 //-----------------------------------------------------------------

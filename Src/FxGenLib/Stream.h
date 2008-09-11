@@ -47,7 +47,7 @@ class NObject;
 //!	\class	NStream
 //!	\brief	Base class for loading and saving datas
 //-----------------------------------------------------------------
-class NStream
+class FXGEN_API NStream
 {
 public:
 	virtual bool	PutData(const void* _buf, udword _length) = 0;
@@ -82,7 +82,7 @@ public:
 //!	\class	NFileStream
 //!	\brief	Serializer for loading and saving to file
 //-----------------------------------------------------------------
-class NFileStream : public NStream
+class FXGEN_API NFileStream : public NStream
 {
 public:
   NFileStream();
@@ -107,7 +107,7 @@ protected:
 //!	\class	NMemoryStream
 //!	\brief	Serializer for loading and saving to a memory buffer
 //-----------------------------------------------------------------
-class NMemoryStream : public NStream
+class FXGEN_API NMemoryStream : public NStream
 {
 public:
 	NMemoryStream();

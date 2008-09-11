@@ -42,6 +42,7 @@ NPropertiesWnd::NPropertiesWnd(void)
 //-----------------------------------------------------------------
 NPropertiesWnd::~NPropertiesWnd(void)
 {
+	EVT_UNREGISTERALL();
 }
 
 //-----------------------------------------------------------------

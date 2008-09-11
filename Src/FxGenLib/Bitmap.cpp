@@ -47,7 +47,7 @@ NBitmap::NBitmap() : NObject()
 //-----------------------------------------------------------------
 NBitmap::~NBitmap()
 {
-	if (m_pbyPixels)			NMemFree(m_pbyPixels);
+	if (m_pbyPixels)			NDELETEARRAY(m_pbyPixels);
 }
 
 //-----------------------------------------------------------------
@@ -62,7 +62,7 @@ void NBitmap::SetSize(udword _w, udword _h)
 		//Bitmap resize
 		if (m_pbyPixels)
 		{
-			NRGBA* pbyNewPixels = (NRGBA*)NMemAlloc(_w*_h*sizeof(NRGBA));
+			NRGBA* pbyNewPixels = (NRGBA*)NNEWARRAY(NRGBA, _w*_h);
 
 			NRGBA* pPxSrc	= m_pbyPixels;
 			NRGBA* pPxDst	= pbyNewPixels;
@@ -78,12 +78,12 @@ void NBitmap::SetSize(udword _w, udword _h)
 				}
 			}
 
-			NMemFree(m_pbyPixels);
+			NDELETEARRAY(m_pbyPixels);
 			m_pbyPixels = pbyNewPixels;
 
 		//Bitmap creation
 		} else {
-			m_pbyPixels = (NRGBA*)NMemAlloc(_w*_h*sizeof(NRGBA));
+			m_pbyPixels = (NRGBA*)NNEWARRAY(NRGBA, _w*_h);
 		}
 
 		m_dwWidth	=_w;	m_dwHeight=_h;

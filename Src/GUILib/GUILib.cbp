@@ -5,12 +5,12 @@
 		<Option title="GUILib" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="Controls Wnds/;PlatformW32/;PlatformLinux/;" />
+		<Option virtualFolders="Controls Wnds\;" />
 		<Build>
 			<Target title="Debug|Win32">
-				<Option output="../../W32Bin/GUILib_D" prefix_auto="1" extension_auto="1" />
+				<Option output="..\..\W32Bin\GUILib_D" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Debug" />
-				<Option external_deps="Debug/libFxGenLib_D.a;" />
+				<Option external_deps="Debug\libFxGenLib_D.a;" />
 				<Option type="3" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -26,7 +26,7 @@
 					<Add option="-DGUI_EXPORTS" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="../FxGenLib" />
+					<Add directory="..\FxGenLib" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-pg -lgmon" />
@@ -38,11 +38,11 @@
 					<Add library="libFxGenLib_D.a" />
 					<Add library="libfreetype.a" />
 					<Add library="libopengl32.a" />
-					<Add directory="../../Externals/FreeType/Lib" />
+					<Add directory="..\..\Externals\FreeType\Lib" />
 				</Linker>
 			</Target>
 			<Target title="Release|Win32">
-				<Option output="../../W32Bin/GUILib" prefix_auto="1" extension_auto="1" />
+				<Option output="..\..\W32Bin\GUILib" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Release" />
 				<Option external_deps="libFxGenLib.a;" />
 				<Option type="3" />
@@ -59,7 +59,7 @@
 					<Add option="-DGUI_EXPORTS" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="../FxGenLib" />
+					<Add directory="..\FxGenLib" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-s" />
@@ -73,9 +73,9 @@
 			</Target>
 			<Target title="Debug|Linux32">
 				<Option platforms="Unix;" />
-				<Option output="../../Linux32Bin/GUILib_D" prefix_auto="1" extension_auto="1" />
+				<Option output="..\..\Linux32Bin\GUILib_D" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Debug" />
-				<Option external_deps="Debug/libFxGenLib_D.a;" />
+				<Option external_deps="Debug\libFxGenLib_D.a;" />
 				<Option type="3" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -88,26 +88,26 @@
 					<Add option="-D_DEBUG" />
 					<Add option="-D_USRDLL" />
 					<Add option="-DSTATIC_BUILD" />
-					<Add directory="../../Externals/FreeType/Include" />
+					<Add directory="..\..\Externals\FreeType\Include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="../FxGenLib" />
+					<Add directory="..\FxGenLib" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-pg" />
 					<Add library="libFxGenLib_D.a" />
 					<Add library="libfreetype.a" />
 					<Add library="GL" />
-					<Add directory="../../Externals/FreeType/Lib" />
+					<Add directory="..\..\Externals\FreeType\Lib" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
-			<Add directory="../FxGenLib" />
-			<Add directory="../../Externals/FreeType/Include" />
+			<Add directory="..\FxGenLib" />
+			<Add directory="..\..\Externals\FreeType\Include" />
 		</Compiler>
 		<Linker>
-			<Add directory="../../W32Bin" />
+			<Add directory="..\..\W32Bin" />
 		</Linker>
 		<Unit filename="EventsMgr.cpp" />
 		<Unit filename="EventsMgr.h" />
@@ -115,61 +115,34 @@
 		<Unit filename="Font.h" />
 		<Unit filename="GUI.cpp" />
 		<Unit filename="GUI.h" />
-		<Unit filename="GUI_Linux.cpp">
-			<Option virtualFolder="PlatformLinux/" />
-			<Option target="Debug|Linux32" />
-		</Unit>
-		<Unit filename="GUI_Linux.h">
-			<Option virtualFolder="PlatformLinux/" />
-			<Option target="Debug|Linux32" />
-		</Unit>
-		<Unit filename="GUI_Win32.cpp">
-			<Option virtualFolder="PlatformW32/" />
-			<Option target="Debug|Win32" />
-			<Option target="Release|Win32" />
-		</Unit>
-		<Unit filename="GUI_Win32.h">
-			<Option virtualFolder="PlatformW32/" />
-			<Option target="Debug|Win32" />
-			<Option target="Release|Win32" />
-		</Unit>
 		<Unit filename="Keyboard.h" />
-		<Unit filename="LinuxMain.h">
-			<Option virtualFolder="PlatformLinux/" />
-			<Option target="Debug|Linux32" />
-		</Unit>
 		<Unit filename="MenuCtrl.cpp">
-			<Option virtualFolder="Controls Wnds/" />
+			<Option virtualFolder="Controls Wnds\" />
 		</Unit>
 		<Unit filename="MenuCtrl.h">
-			<Option virtualFolder="Controls Wnds/" />
+			<Option virtualFolder="Controls Wnds\" />
 		</Unit>
 		<Unit filename="SplitWnd.cpp">
-			<Option virtualFolder="Controls Wnds/" />
+			<Option virtualFolder="Controls Wnds\" />
 		</Unit>
 		<Unit filename="SplitWnd.h">
-			<Option virtualFolder="Controls Wnds/" />
+			<Option virtualFolder="Controls Wnds\" />
 		</Unit>
 		<Unit filename="StandardsCtrl.cpp">
-			<Option virtualFolder="Controls Wnds/" />
+			<Option virtualFolder="Controls Wnds\" />
 		</Unit>
 		<Unit filename="StandardsCtrl.h">
-			<Option virtualFolder="Controls Wnds/" />
+			<Option virtualFolder="Controls Wnds\" />
 		</Unit>
 		<Unit filename="StripBarCtrl.cpp">
-			<Option virtualFolder="Controls Wnds/" />
+			<Option virtualFolder="Controls Wnds\" />
 		</Unit>
 		<Unit filename="StripBarCtrl.h">
-			<Option virtualFolder="Controls Wnds/" />
+			<Option virtualFolder="Controls Wnds\" />
 		</Unit>
 		<Unit filename="Templates.h" />
 		<Unit filename="Types.cpp" />
 		<Unit filename="Types.h" />
-		<Unit filename="WinMain.h">
-			<Option virtualFolder="PlatformW32/" />
-			<Option target="Debug|Win32" />
-			<Option target="Release|Win32" />
-		</Unit>
 		<Unit filename="pch.cpp" />
 		<Unit filename="pch.h" />
 		<Extensions>

@@ -384,7 +384,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\rectangulararray.h"
+				RelativePath=".\MemoryMgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MemoryMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RectangularArray.h"
 				>
 			</File>
 			<File

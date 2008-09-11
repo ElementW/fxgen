@@ -6,12 +6,13 @@
 		<Option makefile="makefile" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="Controls/;" />
+		<Option virtualFolders="Controls\;FileChooserDialog\;" />
 		<Build>
 			<Target title="Debug|Win32">
-				<Option output="../../W32Bin/Editor_D" prefix_auto="1" extension_auto="1" />
+				<Option output="..\..\W32Bin\Editor_D" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\..\W32Bin" />
 				<Option object_output="Debug" />
-				<Option external_deps="Debug/libGUILib_D.a;Debug/libFxGenLib_D.a;" />
+				<Option external_deps="Debug\libGUILib_D.a;Debug\libFxGenLib_D.a;" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -21,26 +22,31 @@
 					<Add option="-DWIN32" />
 					<Add option="-D_DEBUG" />
 					<Add option="-D_WINDOWS" />
-					<Add directory="../FxGenLib" />
-					<Add directory="../GUILib" />
+					<Add directory="..\FxGenLib" />
+					<Add directory="..\GUILib" />
+					<Add directory="..\..\Externals\SFML-1.3\include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="../FxGenLib" />
-					<Add directory="../GUILib" />
+					<Add directory="..\FxGenLib" />
+					<Add directory="..\GUILib" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-pg -lgmon" />
+					<Add option="-lsfml-window-s" />
+					<Add option="-lsfml-system-s" />
+					<Add option="-lsfml-main" />
 					<Add library="winmm" />
 					<Add library="comctl32" />
-					<Add library="opengl32" />
 					<Add library="user32" />
 					<Add library="gdi32" />
 					<Add library="libGUILib_D.a" />
 					<Add library="libFxGenLib_D.a" />
+					<Add library="opengl32" />
 				</Linker>
 			</Target>
 			<Target title="Release|Win32">
-				<Option output="../../W32Bin/Editor" prefix_auto="1" extension_auto="1" />
+				<Option output="..\..\W32Bin\Editor" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\..\W32Bin" />
 				<Option object_output="Release" />
 				<Option external_deps="libGUILib.a;libFxGenLib.a;" />
 				<Option type="0" />
@@ -53,13 +59,13 @@
 					<Add option="-DWIN32" />
 					<Add option="-DNDEBUG" />
 					<Add option="-D_WINDOWS" />
-					<Add directory="../FxGenLib" />
-					<Add directory="../GUILib" />
-					<Add directory="../../externals/vgvm/trunk/include" />
+					<Add directory="..\FxGenLib" />
+					<Add directory="..\GUILib" />
+					<Add directory="..\..\Externals\SFML-1.3\include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="../FxGenLib" />
-					<Add directory="../GUILib" />
+					<Add directory="..\FxGenLib" />
+					<Add directory="..\GUILib" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-s" />
@@ -70,14 +76,15 @@
 					<Add library="gdi32" />
 					<Add library="libGUILib.a" />
 					<Add library="libFxGenLib.a" />
-					<Add library="../../lib/libtinyxml_lib.a" />
+					<Add library="..\..\lib\libtinyxml_lib.a" />
 				</Linker>
 			</Target>
 			<Target title="Debug|Linux32">
 				<Option platforms="Unix;" />
-				<Option output="../../Linux32Bin/Editor_D" prefix_auto="1" extension_auto="1" />
+				<Option output="..\..\Linux32Bin\Editor_D" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\..\W32Bin" />
 				<Option object_output="Debug" />
-				<Option external_deps="Debug/libGUILib_D.a;Debug/libFxGenLib_D.a;" />
+				<Option external_deps="Debug\libGUILib_D.a;Debug\libFxGenLib_D.a;" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -86,16 +93,17 @@
 					<Add option="-O0" />
 					<Add option="-D_DEBUG" />
 					<Add option="-DSTATIC_BUILD" />
-					<Add directory="../FxGenLib" />
-					<Add directory="../GUILib" />
+					<Add directory="..\FxGenLib" />
+					<Add directory="..\GUILib" />
+					<Add directory="..\..\Externals\SFML-1.3\include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="../FxGenLib" />
-					<Add directory="../GUILib" />
+					<Add directory="..\FxGenLib" />
+					<Add directory="..\GUILib" />
 				</ResourceCompiler>
 				<Linker>
-					<Add option="-pg" />
 					<Add option="-pg -lgmon" />
+					<Add option="-pg" />
 					<Add library="winmm" />
 					<Add library="comctl32" />
 					<Add library="opengl32" />
@@ -108,38 +116,45 @@
 		</Build>
 		<Compiler>
 			<Add option="-DUSE_QUAKE_KEYS" />
-			<Add directory="../../Externals/tinyxml" />
-			<Add directory="../../Externals/vgvm" />
+			<Add directory="..\..\Externals\tinyxml" />
+			<Add directory="..\..\Externals\vgvm" />
 		</Compiler>
 		<Linker>
-			<Add directory="../../W32Bin" />
+			<Add directory="..\..\W32Bin" />
 		</Linker>
 		<Unit filename="Editor.cpp" />
 		<Unit filename="Editor.h" />
 		<Unit filename="EventsList.h" />
+		<Unit filename="FileChooserDialog.cpp">
+			<Option virtualFolder="FileChooserDialog\" />
+		</Unit>
+		<Unit filename="FileChooserDialog.h">
+			<Option virtualFolder="FileChooserDialog\" />
+		</Unit>
+		<Unit filename="Main.cpp" />
 		<Unit filename="MainFrm.cpp" />
 		<Unit filename="MainFrm.h" />
 		<Unit filename="OperatorsCtrl.cpp">
-			<Option virtualFolder="Controls/" />
+			<Option virtualFolder="Controls\" />
 		</Unit>
 		<Unit filename="OperatorsCtrl.h">
-			<Option virtualFolder="Controls/" />
+			<Option virtualFolder="Controls\" />
 		</Unit>
 		<Unit filename="OperatorsWnd.cpp" />
 		<Unit filename="OperatorsWnd.h" />
 		<Unit filename="ProgressPieCtrl.cpp">
-			<Option virtualFolder="Controls/" />
+			<Option virtualFolder="Controls\" />
 		</Unit>
 		<Unit filename="ProgressPieCtrl.h">
-			<Option virtualFolder="Controls/" />
+			<Option virtualFolder="Controls\" />
 		</Unit>
 		<Unit filename="ProjectWnd.cpp" />
 		<Unit filename="ProjectWnd.h" />
 		<Unit filename="PropertiesCtrl.cpp">
-			<Option virtualFolder="Controls/" />
+			<Option virtualFolder="Controls\" />
 		</Unit>
 		<Unit filename="PropertiesCtrl.h">
-			<Option virtualFolder="Controls/" />
+			<Option virtualFolder="Controls\" />
 		</Unit>
 		<Unit filename="PropertiesWnd.cpp" />
 		<Unit filename="PropertiesWnd.h" />
@@ -148,16 +163,16 @@
 		<Unit filename="TGAWriter.cpp" />
 		<Unit filename="TGAWriter.h" />
 		<Unit filename="TreeNodeCtrl.cpp">
-			<Option virtualFolder="Controls/" />
+			<Option virtualFolder="Controls\" />
 		</Unit>
 		<Unit filename="TreeNodeCtrl.h">
-			<Option virtualFolder="Controls/" />
+			<Option virtualFolder="Controls\" />
 		</Unit>
 		<Unit filename="ViewportsCtrl.cpp">
-			<Option virtualFolder="Controls/" />
+			<Option virtualFolder="Controls\" />
 		</Unit>
 		<Unit filename="ViewportsCtrl.h">
-			<Option virtualFolder="Controls/" />
+			<Option virtualFolder="Controls\" />
 		</Unit>
 		<Unit filename="ViewportsWnd.cpp" />
 		<Unit filename="ViewportsWnd.h" />
