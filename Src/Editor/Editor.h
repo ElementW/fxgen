@@ -26,7 +26,7 @@
 //                   Defines
 //-----------------------------------------------------------------
 #ifdef __GNUC__
-#define CAPTION		"FxGen Editor v0.6 alpha (gcc) - "
+#define CAPTION		"FxGen Editor v0.7 alpha (gcc) - "
 #else
 #define CAPTION		"FxGen Editor v0.7 alpha - "
 #endif

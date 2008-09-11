@@ -362,7 +362,7 @@ void NOperatorsCtrl::OnLButtonDown(NPoint point)
 		m_nStartBlocPosX	= m_popMarkedSelected->m_wPosX;
 		m_nStartBlocPosY	= m_popMarkedSelected->m_wPosY;
 		m_nStartBlocWidth	= m_popMarkedSelected->m_wWidth;
-		
+
 
 	//Start Selection Rect
 	} else {
@@ -870,7 +870,7 @@ void NOperatorsCtrl::ClearClipboard()
 {
 	for (udword i=0; i<m_carrayOpsClipboard.Count(); i++)
 	{
-		delete m_carrayOpsClipboard[i];
+		NDELETE(m_carrayOpsClipboard[i], NOperator);
 	}
 	m_carrayOpsClipboard.Clear();
 }

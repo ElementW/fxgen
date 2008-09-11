@@ -101,7 +101,7 @@ void NOperatorsWnd::InitCtxMenu()
 		popMenu->AddItem(pop->GetName(), prtc->CLASSID, 0);
 
 		//Delete operator
-		delete pop;
+		NDELETE(pop, NOperator);
 
 		//Next RTC
 		prtc = NRTClass::GetNextClassBySuperClass("NOperator", prtc);

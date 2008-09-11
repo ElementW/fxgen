@@ -70,7 +70,7 @@ public:
 									if (mBuffer)	free(mBuffer);
 									udword len = string.Length();
 									mBuffer = (char*)malloc(len+1);
-									memcpy(mBuffer, string.Buffer(), len);
+									NMemCopy(mBuffer, string.Buffer(), len);
 									mBuffer[len] = 0;
 									return *this;
 								}
@@ -79,7 +79,7 @@ public:
 									if (mBuffer)	free(mBuffer);
 									udword len = (udword)strlen(string);
 									mBuffer = (char*)malloc(len+1);
-									memcpy(mBuffer, string, len);
+									NMemCopy(mBuffer, string, len);
 									mBuffer[len] = 0;
 									return *this;
 								}
@@ -89,13 +89,13 @@ public:
 										udword len1 = Length();
 										udword len2 = (udword)strlen(string);
 										mBuffer = (char*)realloc(mBuffer, len1 + len2 + 1);
-										memcpy(mBuffer+len1, string, len2);
+										NMemCopy(mBuffer+len1, string, len2);
 										mBuffer[len1+len2] = 0;
 										return *this;
 									} else {
 										udword len = (udword)strlen(string);
 										mBuffer = (char*)malloc(len+1);
-										memcpy(mBuffer, string, len);
+										NMemCopy(mBuffer, string, len);
 										mBuffer[len] = 0;
 										return *this;
 									}

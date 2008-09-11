@@ -46,6 +46,12 @@ NStripBarCtrl::NStripBarCtrl()
 //-----------------------------------------------------------------
 NStripBarCtrl::~NStripBarCtrl()
 {
+	for (udword i=0; i<m_carrayItems.Count(); i++)
+	{
+		NSBItemDesc* pst = &m_carrayItems[i];
+		NDELETE(pst->pwnd, NWnd);
+	}
+	
 }
 
 //-----------------------------------------------------------------
@@ -142,7 +148,7 @@ NTextCtrl* NStripBarCtrl::InsertItemText(const char* _pszname, udword _dwWidth)
 {
 	//Create a text
 	NRect rc;
-	NTextCtrl* pctrl = new NTextCtrl();
+	NTextCtrl* pctrl = NNEW(NTextCtrl);
 	pctrl->Create(_pszname, rc, this);
 
 	//Insert new control
@@ -166,7 +172,7 @@ NButtonCtrl* NStripBarCtrl::InsertItemButton(const char* _pszname, udword _dwWid
 {
 	//Create a button
 	NRect rc;
-	NButtonCtrl* pctrl = new NButtonCtrl();
+	NButtonCtrl* pctrl = NNEW(NButtonCtrl);
 	pctrl->Create(_pszname, rc, this, NBUT_STYLE_MENU);
 
 	//Insert new control

@@ -46,10 +46,10 @@ NArchive::NArchive(NStream *_stream)
 NArchive::~NArchive()
 {
   if (m_pBufferedStream != null)
-    delete m_pBufferedStream;
+    NDELETE(m_pBufferedStream, NMemoryStream);
 
   if (m_pRTClassesArray != null)
-    NMemFree(m_pRTClassesArray);
+    NDELETEARRAY(m_pRTClassesArray);
 }
 
 //-----------------------------------------------------------------
@@ -58,11 +58,11 @@ NArchive::~NArchive()
 void NArchive::Clear()
 {
   if (m_pRTClassesArray != null)
-    NMemFree(m_pRTClassesArray);
+    NDELETEARRAY(m_pRTClassesArray);
 
   m_wRTClassesSize		= NSF_RTCLASSESARRAYSIZE;
   m_wRTClassCount			= 0;
-  m_pRTClassesArray		= (NRTClass**)NMemAlloc(sizeof(NRTClass*) * m_wRTClassesSize);
+  m_pRTClassesArray		= (NRTClass**)NNEWARRAY(NRTClass*, m_wRTClassesSize);
 
   m_carrayMappedObjs.Clear();
   m_carrayMappedObjs.AddItem(null);	//at idx 0, null object reference
@@ -75,9 +75,9 @@ void NArchive::Clear()
 bool NArchive::PrepareSave()
 {
   if (m_pBufferedStream != null)
-    delete m_pBufferedStream;
+    NDELETE(m_pBufferedStream, NMemoryStream);
 
-  m_pBufferedStream = new NMemoryStream();
+  m_pBufferedStream = NNEW(NMemoryStream);
 
   return true;
 }
@@ -131,7 +131,7 @@ bool NArchive::FinalizeSave()
 	//Save Datas block
 	m_pStream->PutData(m_pBufferedStream->GetBuffer(), m_pBufferedStream->Tell());
 
-	delete m_pBufferedStream;
+	NDELETE(m_pBufferedStream, NMemoryStream);
 	m_pBufferedStream = null;
 
 	return true;
@@ -171,8 +171,14 @@ bool NArchive::Read()
 
 	if (m_wRTClassCount>=m_wRTClassesSize)
 	{
-		m_wRTClassesSize=m_wRTClassCount+NSF_RTCLASSESGROWSIZE;
-		m_pRTClassesArray = (NRTClass**)NMemRealloc(m_pRTClassesArray, sizeof(NRTClass*) * (m_wRTClassesSize));
+	  //Reallocate Array
+	  uword wnewSize = m_wRTClassCount+NSF_RTCLASSESGROWSIZE;
+    NRTClass** pnew = (NRTClass**)NNEWARRAY(NRTClass*, wnewSize);
+    NMemCopy(pnew, m_pRTClassesArray, sizeof(NRTClass*) * m_wRTClassesSize);
+    NDELETEARRAY(m_pRTClassesArray);
+
+    m_pRTClassesArray=pnew;
+		m_wRTClassesSize=wnewSize;
 	}
 
 
@@ -251,8 +257,14 @@ uword NArchive::AddUniqueRTClass(NRTClass* _pRTClass)
 
 	if (m_wRTClassCount+1>=m_wRTClassesSize)
 	{
-		m_wRTClassesSize+=NSF_RTCLASSESGROWSIZE;
-		m_pRTClassesArray = (NRTClass**)NMemRealloc(m_pRTClassesArray, sizeof(NRTClass*) * (m_wRTClassesSize));
+	  uword wnewSize = m_wRTClassesSize+NSF_RTCLASSESGROWSIZE;
+
+    NRTClass** pnew = (NRTClass**)NNEWARRAY(NRTClass*, wnewSize);
+    NMemCopy(pnew, m_pRTClassesArray, sizeof(NRTClass*) * m_wRTClassesSize);
+    NDELETEARRAY(m_pRTClassesArray);
+
+    m_pRTClassesArray=pnew;
+		m_wRTClassesSize=wnewSize;
 	}
 
 	m_pRTClassesArray[m_wRTClassCount++] = _pRTClass;

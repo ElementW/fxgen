@@ -54,10 +54,10 @@
 	typedef unsigned short		uword;	// Unsigned 16 bit value
 	typedef signed short			sword;	// Signed 16 bit value
 #ifndef _WIN32
-	typedef int32_t				sdword;	// Signed 32 bit value
-	typedef u_int32_t			udword;	// Unsigned 32 bit value
-	typedef int64_t		sqword;	// Signed 64 bit value
-	typedef u_int64_t	uqword; // Unsigned 64 bit value
+	typedef int32_t				    sdword;	// Signed 32 bit value
+	typedef u_int32_t			    udword;	// Unsigned 32 bit value
+	typedef int64_t		        sqword;	// Signed 64 bit value
+	typedef u_int64_t	        uqword; // Unsigned 64 bit value
 #else
 	typedef unsigned long			udword;	// Unsigned 32 bit value
 	typedef signed long				sdword;	// Signed 32 bit value
@@ -77,7 +77,7 @@
 class FXGEN_API NRTClassModule
 {
 public:
-  NRTClassModule(const char* _pszModuleName);
+  NRTClassModule();
 
   //Methods
   static NRTClassModule* RegisterModule(const char* _pszModuleName);
@@ -168,7 +168,7 @@ public:
 	virtual NRTClass* GetRTClass()		{ return &m_RTClass; }
 
 #define FIMPLEMENT_CLASS(class_name, superclass_name) \
-	extern NObject* class_name##CB()	{ return new class_name(); }\
+	extern NObject* class_name##CB()	{ return NNEW(class_name); }\
 	NRTClass	class_name::m_RTClass((RTCLASS_HANDLER*)&class_name##CB, #class_name, #superclass_name, GetModuleName() );
 
 
@@ -527,14 +527,6 @@ protected:
 };
 
 
-//-----------------------------------------------------------------
-//	Memory System
-//-----------------------------------------------------------------
-#define NMemFree(_ptr)					    free(_ptr)					//!< Free memory
-#define NMemAlloc(_len)					    calloc(_len, 1)			//!< Allocate memory
-#define NMemRealloc(_ptr, _len)	    realloc(_ptr, _len)	//!< Reallocate memory
-#define NMemFill(_ptr, _val, _len)  memset(_ptr, _val, _len)
-//NMemCopy
 
 
 //-----------------------------------------------------------------
@@ -551,11 +543,13 @@ int					NFileTell(NFILEHANDLE *handle);
 //-----------------------------------------------------------------
 //	Includes
 //-----------------------------------------------------------------
+	#include "MemoryMgr.h"
 	#include "Maths.h"
 	#include "Stream.h"
 	#include "Archive.h"
 	#include "Bitmap.h"
 	#include "Controllers.h"
+
 
 //-----------------------------------------------------------------
 //! \brief Mutex-like class for safe thread operation

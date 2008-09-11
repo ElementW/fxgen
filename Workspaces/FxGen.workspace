@@ -6,6 +6,8 @@
 			<Depends filename="..\Src\GUILib\GUILib.cbp" />
 		</Project>
 		<Project filename="..\Src\FxGenLib\FxGenLib.cbp" />
-		<Project filename="..\Src\GUILib\GUILib.cbp" />
+		<Project filename="..\Src\GUILib\GUILib.cbp">
+			<Depends filename="..\Src\FxGenLib\FxGenLib.cbp" />
+		</Project>
 	</Workspace>
 </CodeBlocks_workspace_file>

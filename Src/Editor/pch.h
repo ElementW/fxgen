@@ -44,6 +44,7 @@
 #include <SFML/Window.hpp>
 
 //FXGen API
+#include "MemoryMgr.h"
 #include "Core.h"
 
 #include "GUI.h"
@@ -60,5 +61,7 @@
 #include "DistordOps.h"
 #include "RenderOps.h"
 #include "CombineOps.h"
+
+
 
 #endif //PCH_H

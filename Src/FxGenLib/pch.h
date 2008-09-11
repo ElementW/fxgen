@@ -1,8 +1,12 @@
+#ifndef PCH_H
+#define PCH_H
+
 #ifndef __GNUC__
 #pragma once
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #include <windows.h>
 #endif
+
 
 // Standart Includes
 #include <stdlib.h>
@@ -13,3 +17,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
+
+#include "MemoryMgr.h"
+
+#endif //PCH_H

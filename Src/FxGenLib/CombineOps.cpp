@@ -51,7 +51,7 @@ udword NNopOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	//Copy Source to This
-	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(NRGBA));
+	NMemCopy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(NRGBA));
 
 	return 0;
 }
@@ -125,7 +125,7 @@ udword NRectOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	y2 = max(0, min(h, max(fy1, fy2) * h));
 
 	//Copy Source to this bitmap
-	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(NRGBA));
+	NMemCopy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(NRGBA));
 
 	//Process operator
 	for (udword y=y1; y<y2; y++)
@@ -192,7 +192,7 @@ udword NPixelsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	m_pcvarsBloc->GetValue(2, _ftime, byCount);
 
 	//Copy Source to This
-	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(NRGBA));
+	NMemCopy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(NRGBA));
 
 	//Process operator
 	SetSeedValue(wSeed);
@@ -247,7 +247,7 @@ udword NAddOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 
 
 	//Copy Source 1 to This
-	memcpy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(NRGBA));
+	NMemCopy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(NRGBA));
 
 	//Get Variables Values
 	NRGBA colPercent;
@@ -670,7 +670,7 @@ udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	}
 
 	//Copy Source to This
-	memcpy(pDst->GetPixels(), pSrc->GetPixels(), pDst->GetWidth() * pDst->GetHeight() * sizeof(NRGBA));
+	NMemCopy(pDst->GetPixels(), pSrc->GetPixels(), pDst->GetWidth() * pDst->GetHeight() * sizeof(NRGBA));
 
 	//Get Variables Values
 	NRGBA color;

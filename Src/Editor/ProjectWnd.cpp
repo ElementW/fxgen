@@ -50,6 +50,7 @@ NProjectWnd::NProjectWnd(void)
 //-----------------------------------------------------------------
 NProjectWnd::~NProjectWnd(void)
 {
+	EVT_UNREGISTERALL();
 }
 
 //-----------------------------------------------------------------
@@ -180,7 +181,7 @@ void NProjectWnd::AddGroup()
 	//if (pnodeGroup==null)		pnodeGroup = m_popsProject->GetRootGroup();
 
 	//Attach a new group to Parent Group
-	NTreeNode* pNewGrpNode = new NTreeNode;
+	NTreeNode* pNewGrpNode = NNEW(NTreeNode);
 	pNewGrpNode->SetName("Group");
 	pnodeGroup->AddSon(pNewGrpNode);
 	DisplayOperatorsProject(m_popsProject);
@@ -200,7 +201,7 @@ void NProjectWnd::AddPage()
 	//Add NOperatorsPage object to this TreeNode
 	NObjectArray& array = pnodeGroup->GetObjsArray();
 
-	NOperatorsPage* ppage = new NOperatorsPage;
+	NOperatorsPage* ppage = NNEW(NOperatorsPage);
 	ppage->SetName("Page");
 	array.AddItem(ppage);
 

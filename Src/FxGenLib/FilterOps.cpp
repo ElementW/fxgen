@@ -103,7 +103,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 
 	if (bw == 0 && bh == 0)
 	{
-		memcpy(pDst->GetPixels(), pSrc->GetPixels(), w*h*sizeof(NRGBA));
+		NMemCopy(pDst->GetPixels(), pSrc->GetPixels(), w*h*sizeof(NRGBA));
 		return 0;
 	}
 
@@ -111,7 +111,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	NRGBA* pPxInter = null;
 	if (byPasses > 0 || (bw > 0 && bh > 0))
 	{
-		pPxInter = (NRGBA*)NMemAlloc(w*h*sizeof(NRGBA));
+		pPxInter = (NRGBA*)NNEWARRAY(NRGBA, w*h);
 	}
 
 	/////////////////////////////////////////////////////////
@@ -282,7 +282,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
           }
         }
 
-	if (pPxInter)		NMemFree(pPxInter);		//###TOFIX###
+	if (pPxInter)		NDELETEARRAY(pPxInter);		//###TOFIX###
 
 	return 0;
 }
@@ -1322,10 +1322,11 @@ udword NSegmentOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 	{
 		uword x;
 		uword y;
-		Coord(uword x, uword y) : x(x), y(y) {}
+		Coord() {};
+		Coord(uword x, uword y) : x(x), y(y) {};
 	};
-	ubyte* pCoverage = (ubyte*)NMemAlloc(w*h);
-	Coord* pStack = (Coord*)NMemAlloc(w*h*sizeof(Coord)*4);
+	ubyte* pCoverage = (ubyte*)NNEWARRAY(ubyte, w*h);
+	Coord* pStack = (Coord*)NNEWARRAY(Coord, w*h*4);
 
 	memset(pCoverage, 0, w*h);
 
@@ -1376,8 +1377,8 @@ udword NSegmentOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 		}
 	}
 
-	NMemFree(pCoverage);
-	NMemFree(pStack);
+	NDELETEARRAY(pCoverage);
+	NDELETEARRAY(pStack);
 
 	return 0;
 }
@@ -1423,7 +1424,7 @@ udword NDilateOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	ubyte byIterations;
 	m_pcvarsBloc->GetValue(0, _ftime, byIterations);
 
-	NRGBA* pPxInter = (NRGBA*)NMemAlloc(w*h*sizeof(NRGBA));
+	NRGBA* pPxInter = (NRGBA*)NNEWARRAY(NRGBA, w*h);
 
 	for (sdword i=0; i<byIterations+1; ++i)
 	{
@@ -1468,7 +1469,7 @@ udword NDilateOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 		}
 	}
 
-	NMemFree(pPxInter);
+	NDELETEARRAY(pPxInter);
 
 
 	return 0;

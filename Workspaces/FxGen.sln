@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C++ Express 2008
+# Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FxGenLib", "..\Src\FxGenLib\FxGenLib.vcproj", "{D39F9951-FC48-4410-93AC-CEAF6934BF3F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GUILib", "..\Src\GUILib\GUILib.vcproj", "{D09B1D9E-17D5-4F94-8308-0D30D4FEB588}"

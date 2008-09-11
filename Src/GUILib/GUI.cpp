@@ -67,8 +67,7 @@ NGUISubSystem::NGUISubSystem()
 //-----------------------------------------------------------------
 NGUISubSystem::~NGUISubSystem()
 {
-	if (m_pMainWnd)	delete (m_pMainWnd);
-
+	//if (m_pMainWnd)	NDELETE(m_pMainWnd, NWnd);
 }
 
 //-----------------------------------------------------------------
@@ -90,7 +89,7 @@ bool NGUISubSystem::ShutDown()
 	if (m_pfont)
 	{
 		m_pfont->clean();
-		delete m_pfont;
+		NDELETE(m_pfont, NGUIFont);
 		m_pfont=null;
 	}
 
@@ -123,12 +122,14 @@ void NGUISubSystem::InitGLState()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glEnable(GL_DEPTH_TEST);
 	//glDepthFunc(GL_LEQUAL);
+
 	//Font rasterizer
 	if (m_pfont==null)
-		m_pfont = new NGUIFont();
-	else
+	{
+		m_pfont = NNEW(NGUIFont);
+	} else {
 		m_pfont->clean();
-
+	}
 	m_pfont->init("fxfont.ttf", 8);
 
 }
@@ -173,7 +174,7 @@ void NGUISubSystem::ProcessMsgs_MouseButtonDown(NPoint _ptScreen, udword _dwButt
 		else if (_dwButtons==NM_MBUTTON)	pwnd->OnMButtonDown(_ptScreen);
 		else if (_dwButtons==NM_RBUTTON)	pwnd->OnRButtonDown(_ptScreen);
 	}
-	
+
 }
 
 void NGUISubSystem::ProcessMsgs_MouseButtonUp(NPoint _ptScreen, udword _dwButtons)
@@ -868,7 +869,7 @@ NFrmWnd::NFrmWnd() : NWnd()
 //-----------------------------------------------------------------
 NFrmWnd::~NFrmWnd()
 {
-	if (mWorkspace)		delete mWorkspace;
+	if (mWorkspace)		NDELETE(mWorkspace, NWnd);
 
 }
 
@@ -888,7 +889,7 @@ bool NFrmWnd::Create(char* name, const NRect& rect)
 
 	//Create workspace
 	NRect r = GetClientRect();
-	NSplitWnd* splitwnd = new NSplitWnd;
+	NSplitWnd* splitwnd = NNEW(NSplitWnd);
 	splitwnd->Create("wks", r, this);
 
 	mWorkspace = splitwnd;
@@ -919,7 +920,7 @@ void NFrmWnd::OnSize()
 //-----------------------------------------------------------------
 void NFrmWnd::ReplaceWorkspace(NWnd* wnd)
 {
-	if (mWorkspace)		delete mWorkspace;
+	if (mWorkspace)		NDELETE(mWorkspace, NWnd);
 	mWorkspace = wnd;
 	OnSize();
 }

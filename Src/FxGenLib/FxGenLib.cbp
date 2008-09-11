@@ -6,12 +6,12 @@
 		<Option pch_mode="2" />
 		<Option default_target="Release|Win32" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="Core/;Engine/;Std ops/;Media Types/;" />
+		<Option virtualFolders="Core\;Engine\;Std ops\;Media Types\;" />
 		<Build>
 			<Target title="Debug|Win32">
 				<Option platforms="Windows;" />
-				<Option output="../../W32Bin/FxGenLib_D" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="../../W32Bin" />
+				<Option output="..\..\W32Bin\FxGenLib_D" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\..\W32Bin" />
 				<Option object_output="Debug" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -36,8 +36,8 @@
 			</Target>
 			<Target title="Release|Win32">
 				<Option platforms="Windows;" />
-				<Option output="../../W32Bin/FxGenLib" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="../../W32Bin" />
+				<Option output="..\..\W32Bin\FxGenLib" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\..\W32Bin" />
 				<Option object_output="Release" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -62,8 +62,8 @@
 			</Target>
 			<Target title="Debug|Linux32">
 				<Option platforms="Unix;" />
-				<Option output="../../Linux32Bin/FxGenLib_D" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="../../W32Bin" />
+				<Option output="..\..\Linux32Bin\FxGenLib_D" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\..\W32Bin" />
 				<Option object_output="Debug" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -87,83 +87,89 @@
 		</Build>
 		<Compiler>
 			<Add option="-DHQNOISE" />
-			<Add directory="../../Externals/vgvm" />
-			<Add directory="../../Externals" />
+			<Add directory="..\..\Externals\vgvm" />
+			<Add directory="..\..\Externals" />
 		</Compiler>
 		<Unit filename="Archive.cpp">
-			<Option virtualFolder="Core/" />
+			<Option virtualFolder="Core\" />
 		</Unit>
 		<Unit filename="Archive.h">
-			<Option virtualFolder="Core/" />
+			<Option virtualFolder="Core\" />
 		</Unit>
 		<Unit filename="Bitmap.cpp">
-			<Option virtualFolder="Media Types/" />
+			<Option virtualFolder="Media Types\" />
 		</Unit>
 		<Unit filename="Bitmap.h">
-			<Option virtualFolder="Media Types/" />
+			<Option virtualFolder="Media Types\" />
 		</Unit>
 		<Unit filename="CombineOps.cpp">
-			<Option virtualFolder="Std ops/" />
+			<Option virtualFolder="Std ops\" />
 		</Unit>
 		<Unit filename="CombineOps.h">
-			<Option virtualFolder="Std ops/" />
+			<Option virtualFolder="Std ops\" />
 		</Unit>
 		<Unit filename="Controllers.cpp">
-			<Option virtualFolder="Engine/" />
+			<Option virtualFolder="Engine\" />
 		</Unit>
 		<Unit filename="Controllers.h">
-			<Option virtualFolder="Engine/" />
+			<Option virtualFolder="Engine\" />
 		</Unit>
 		<Unit filename="Core.cpp">
-			<Option virtualFolder="Core/" />
+			<Option virtualFolder="Core\" />
 		</Unit>
 		<Unit filename="Core.h">
-			<Option virtualFolder="Core/" />
+			<Option virtualFolder="Core\" />
 		</Unit>
 		<Unit filename="DistordOps.cpp">
-			<Option virtualFolder="Std ops/" />
+			<Option virtualFolder="Std ops\" />
 		</Unit>
 		<Unit filename="DistordOps.h">
-			<Option virtualFolder="Std ops/" />
+			<Option virtualFolder="Std ops\" />
 		</Unit>
 		<Unit filename="EngineOp.cpp">
-			<Option virtualFolder="Engine/" />
+			<Option virtualFolder="Engine\" />
 		</Unit>
 		<Unit filename="EngineOp.h">
-			<Option virtualFolder="Engine/" />
+			<Option virtualFolder="Engine\" />
 		</Unit>
 		<Unit filename="FilterOps.cpp">
-			<Option virtualFolder="Std ops/" />
+			<Option virtualFolder="Std ops\" />
 		</Unit>
 		<Unit filename="FilterOps.h">
-			<Option virtualFolder="Std ops/" />
+			<Option virtualFolder="Std ops\" />
 		</Unit>
 		<Unit filename="MainOps.cpp">
-			<Option virtualFolder="Std ops/" />
+			<Option virtualFolder="Std ops\" />
 		</Unit>
 		<Unit filename="MainOps.h">
-			<Option virtualFolder="Std ops/" />
+			<Option virtualFolder="Std ops\" />
 		</Unit>
 		<Unit filename="Maths.cpp">
-			<Option virtualFolder="Core/" />
+			<Option virtualFolder="Core\" />
 		</Unit>
 		<Unit filename="Maths.h">
-			<Option virtualFolder="Core/" />
+			<Option virtualFolder="Core\" />
+		</Unit>
+		<Unit filename="MemoryMgr.cpp">
+			<Option virtualFolder="Core\" />
+		</Unit>
+		<Unit filename="MemoryMgr.h">
+			<Option virtualFolder="Core\" />
 		</Unit>
 		<Unit filename="RectangularArray.h">
-			<Option virtualFolder="Core/" />
+			<Option virtualFolder="Core\" />
 		</Unit>
 		<Unit filename="RenderOps.cpp">
-			<Option virtualFolder="Std ops/" />
+			<Option virtualFolder="Std ops\" />
 		</Unit>
 		<Unit filename="RenderOps.h">
-			<Option virtualFolder="Std ops/" />
+			<Option virtualFolder="Std ops\" />
 		</Unit>
 		<Unit filename="Stream.cpp">
-			<Option virtualFolder="Core/" />
+			<Option virtualFolder="Core\" />
 		</Unit>
 		<Unit filename="Stream.h">
-			<Option virtualFolder="Core/" />
+			<Option virtualFolder="Core\" />
 		</Unit>
 		<Unit filename="pch.cpp" />
 		<Unit filename="pch.h" />

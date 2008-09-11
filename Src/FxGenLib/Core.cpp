@@ -53,7 +53,6 @@ const char* GetModuleName()  { return "FxGenCore"; }
 NRTClassModule* NRTClassModule::m_pFirstRTClassModule=null;
 NRTClassModule* NRTClassModule::m_pLastRTClassModule=null;
 
-
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
@@ -79,7 +78,7 @@ NVarsBloc::NVarsBloc()
 //-----------------------------------------------------------------
 NVarsBloc::~NVarsBloc()
 {
-	if (m_paVarsValues!=null)		NMemFree(m_paVarsValues);
+	if (m_paVarsValues!=null)		NDELETEARRAY(m_paVarsValues);
 }
 
 //-----------------------------------------------------------------
@@ -184,7 +183,7 @@ void NVarsBloc::Init(udword _dwVarsCount, NVarsBlocDesc* _pvarsBlocDesc, NObject
 	m_byVersion				= _byVersion;
 
 	//Create variables for this bloc
-	m_paVarsValues = (NVarValue*)NMemAlloc(_dwVarsCount*sizeof(NVarValue));
+	m_paVarsValues = (NVarValue*)NNEWARRAY(NVarValue, _dwVarsCount);
 
 	//Init default values
 	for (udword i=0; i<m_dwVarsCount; i++)
@@ -422,7 +421,7 @@ void NVarsBloc::DoVarBlocVersion_Mapping(NArchive* _l, ubyte _byVersion)
 					pvalPrev = pval;
 				} else {
 
-					memcpy(pval, pvalPrev, sizeof(NVarValue));
+					NMemCopy(pval, pvalPrev, sizeof(NVarValue));
 
 				}
 
@@ -517,7 +516,7 @@ NObject::~NObject()
 	{
 		NVarsBloc* ptoDel = pcur;
 		pcur = pcur->m_pcnextVarsBloc;
-		delete ptoDel;
+		NDELETE(ptoDel, NVarsBloc);
 	}
 
 }
@@ -589,7 +588,7 @@ NObject* NObject::Duplicate()
 		NVarsBloc* pcurvarblocClone = pobjClone->m_pcfirstVarsBloc;
 		while (pcurvarbloc)
 		{
-			memcpy(pcurvarblocClone->GetValues(), pcurvarbloc->GetValues(), pcurvarbloc->Count() * sizeof(NVarValue));
+			NMemCopy(pcurvarblocClone->GetValues(), pcurvarbloc->GetValues(), pcurvarbloc->Count() * sizeof(NVarValue));
 			pcurvarbloc = m_pcfirstVarsBloc->m_pcnextVarsBloc;
 			pcurvarblocClone = pobjClone->m_pcfirstVarsBloc->m_pcnextVarsBloc;
 		}
@@ -610,7 +609,7 @@ NObject* NObject::Duplicate()
 NVarsBloc* NObject::AddVarsBloc(udword _dwVarCount, NVarsBlocDesc* _pdesc, ubyte _byVersion)
 {
 	//Create bloc
-	NVarsBloc* pvarbloc = new NVarsBloc;
+	NVarsBloc* pvarbloc = NNEW(NVarsBloc);
 	pvarbloc->Init(_dwVarCount, _pdesc, this, _byVersion);
 
 	if (m_pcfirstVarsBloc==null)
@@ -696,7 +695,7 @@ void NObject::RemoveRefToMe(NObject* _pobj)
 		{
 			m_carrayRefMakers.RemoveItem(i);
 			_pobj->RemoveRef(this);
-			_pobj->RemoveVarsRef(this);		//###NEW###
+			_pobj->RemoveVarsRef(this);		//###NNEW###
 			break;
 		}
 	}
@@ -722,8 +721,8 @@ NObjectArray::NObjectArray()
 	m_dwCount			=	0;
 	m_bManagedDel = false;
 
-	m_pBuffer = (NObject**)NMemAlloc(m_dwSize * sizeof(NObject*));
-	memset(m_pBuffer, 0, m_dwSize * sizeof(NObject*));
+	m_pBuffer = (NObject**)NNEWARRAY(NObject*, m_dwSize);
+	NMemFill(m_pBuffer, 0, m_dwSize * sizeof(NObject*));
 }
 
 //-----------------------------------------------------------------
@@ -732,7 +731,7 @@ NObjectArray::NObjectArray()
 NObjectArray::~NObjectArray()
 {
 	Clear();
-	if (m_pBuffer) NMemFree(m_pBuffer);
+	if (m_pBuffer) NDELETEARRAY(m_pBuffer);
 	m_pBuffer=null;
 }
 
@@ -792,7 +791,7 @@ void NObjectArray::Clear()
 {
 	if (m_bManagedDel)
 		for (udword i=0; i<m_dwCount; i++)
-			if (m_pBuffer[i])	delete m_pBuffer[i];
+			if (m_pBuffer[i])	NDELETE(m_pBuffer[i], NObject);
 
 	memset(m_pBuffer, 0, m_dwSize * sizeof(NObject*));
 	m_dwCount=0;
@@ -811,8 +810,9 @@ udword NObjectArray::AddItem(NObject* _item, udword _idx)
 	{
 		if (m_dwCount+1>=m_dwSize)
 		{
-			m_dwSize+=OBJARRAY_GROWSIZE;
-			m_pBuffer = (NObject**)NMemRealloc(m_pBuffer, sizeof(NObject*) * m_dwSize);
+		  SetSize(m_dwSize+OBJARRAY_GROWSIZE);
+			//m_dwSize+=OBJARRAY_GROWSIZE;
+			//m_pBuffer = (NObject**)NMemRealloc(m_pBuffer, sizeof(NObject*) * m_dwSize);
 		}
 
 		m_pBuffer[m_dwCount] = _item;
@@ -822,11 +822,12 @@ udword NObjectArray::AddItem(NObject* _item, udword _idx)
 
 		if (_idx>=m_dwSize)
 		{
-			m_dwSize=_idx+OBJARRAY_GROWSIZE;
-			m_pBuffer = (NObject**)NMemRealloc(m_pBuffer, m_dwSize * sizeof(NObject*));
+		  SetSize(_idx+OBJARRAY_GROWSIZE);
+		  //m_dwSize=_idx+OBJARRAY_GROWSIZE;
+			//m_pBuffer = (NObject**)NMemRealloc(m_pBuffer, m_dwSize * sizeof(NObject*));
 		}
 
-		memcpy(m_pBuffer+_idx+1, m_pBuffer+_idx, (m_dwSize-_idx) * sizeof(NObject*));
+		NMemCopy(m_pBuffer+_idx+1, m_pBuffer+_idx, (m_dwSize-_idx) * sizeof(NObject*));
 
 		m_pBuffer[_idx] = _item;
 
@@ -845,7 +846,7 @@ void NObjectArray::RemoveItem(udword _idx)
 {
 	m_dwCount--;
 //	if (m_bManagedDel)	m_pBuffer[_idx];
-	memcpy(m_pBuffer+_idx, m_pBuffer+_idx+1, (m_dwSize-_idx-1) * sizeof(NObject*));
+	NMemCopy(m_pBuffer+_idx, m_pBuffer+_idx+1, (m_dwSize-_idx-1) * sizeof(NObject*));
 }
 
 //-----------------------------------------------------------------
@@ -857,12 +858,13 @@ void NObjectArray::SetCount(udword _c)
 {
 	if (m_bManagedDel && _c<m_dwCount)
 		for (udword i=_c; i<m_dwCount; i++)
-			if (m_pBuffer[i])		delete m_pBuffer[i];
+			if (m_pBuffer[i])		NDELETE(m_pBuffer[i], NObject);
 
 	if (_c>=m_dwSize)
 	{
-		m_pBuffer = (NObject**)NMemRealloc(m_pBuffer, sizeof(NObject*) * (_c + OBJARRAY_GROWSIZE));
-		m_dwSize = _c + OBJARRAY_GROWSIZE;
+	  SetSize(_c + OBJARRAY_GROWSIZE);
+		//m_pBuffer = (NObject**)NMemRealloc(m_pBuffer, sizeof(NObject*) * (_c + OBJARRAY_GROWSIZE));
+		//m_dwSize = _c + OBJARRAY_GROWSIZE;
 	}
 	m_dwCount = _c;
 }
@@ -877,10 +879,17 @@ void NObjectArray::SetSize(udword _s)
 
 	if (m_bManagedDel && _s<m_dwCount)
 		for (udword i=_s; i<m_dwCount; i++)
-			if (m_pBuffer[i])		delete m_pBuffer[i];
+			if (m_pBuffer[i])		NDELETE(m_pBuffer[i], NObject);
 
-	m_pBuffer = (NObject**)NMemRealloc(m_pBuffer, sizeof(NObject*) * _s);
-	m_dwSize = _s;
+  NObject**	pnewBuffer = NNEWARRAY(NObject*, _s);
+	if (m_dwCount)
+		NMemCopy(pnewBuffer, m_pBuffer, m_dwCount*sizeof(NObject*));
+  NDELETEARRAY(m_pBuffer);
+  m_pBuffer=pnewBuffer;
+  m_dwSize=_s;
+
+	//m_pBuffer = (NObject**)NMemRealloc(m_pBuffer, sizeof(NObject*) * _s);
+	//m_dwSize = _s;
 }
 
 //-----------------------------------------------------------------
@@ -891,7 +900,7 @@ void NObjectArray::AddArray(NObjectArray& _array)
 {
 	udword dwOldCount = m_dwCount;
 	SetSize(m_dwCount+_array.Count()+OBJARRAY_GROWSIZE);
-	memcpy(m_pBuffer + dwOldCount, _array.m_pBuffer, _array.m_dwCount * sizeof(NObject*));
+	NMemCopy(m_pBuffer + dwOldCount, _array.m_pBuffer, _array.m_dwCount * sizeof(NObject*));
 	m_dwCount+=_array.m_dwCount;
 }
 
@@ -928,12 +937,12 @@ void NObjectArray::Sort(CompareFnc _cmp)
 //!	\brief	Constructor
 //!	\param	_pszModuleName				Module name for RTClasses
 //-----------------------------------------------------------------
-NRTClassModule::NRTClassModule(const char* _pszModuleName)
+NRTClassModule::NRTClassModule()
 {
   if (m_pFirstRTClassModule==null)  m_pFirstRTClassModule = this;
   if (m_pLastRTClassModule)         m_pLastRTClassModule->m_pNextRTClassModule = this;
 
-  m_pszModuleName = _pszModuleName;
+  //m_pszModuleName = _pszModuleName;
   m_pNextRTClassModule=null;
 
   m_pFirstRTClass = null;
@@ -1205,7 +1214,7 @@ bool NTreeNode::Load(NArchive* _l)
 
 	while (dwCount--)
 	{
-		NTreeNode* pcurnode = new NTreeNode;
+		NTreeNode* pcurnode = NNEW(NTreeNode);
 		if (!pcurnode->Load(_l))
 			return false;
 
@@ -1285,7 +1294,7 @@ void NTreeNode::DeleteSon(udword _idx)
 			NTreeNode* pnodeToDel = *ppnode;
 			*ppnode = pnodeToDel->m_pBrother;	//Unlink
 			if (*ppnode==null)	m_ppLastSon = ppnode;
-			delete pnodeToDel;
+			NDELETE(pnodeToDel, NTreeNode);
 			return;
 		}
 		ppnode=&( (*ppnode)->m_pBrother );
@@ -1302,7 +1311,7 @@ void NTreeNode::DeleteAllSons()
 	while (pcurnode)
 	{
 		NTreeNode* pcurnodeToDel = pcurnode->m_pBrother;
-		delete pcurnode;
+		NDELETE(pcurnode, NTreeNode);
 		pcurnode = pcurnodeToDel;
 
 	}
@@ -1405,7 +1414,7 @@ NObjectGarbage::NObjectGarbage()
 NObjectGarbage::~NObjectGarbage()
 {
 	if (m_aobjects)
-		NMemFree(m_aobjects);
+		NDELETEARRAY(m_aobjects);
 }
 
 //-----------------------------------------------------------------
@@ -1417,7 +1426,7 @@ void NObjectGarbage::SetManagedClassID(ID _CLASSID)
 	m_CLASSID = _CLASSID;
 
 	m_dwSize		= 256;	//!< 256 objects managed by default
-	m_aobjects = (NObjGarbageDesc*)NMemAlloc(m_dwSize*sizeof(NObjGarbageDesc));
+	m_aobjects = (NObjGarbageDesc*)NNEWARRAY(NObjGarbageDesc, m_dwSize);
 }
 
 //-----------------------------------------------------------------
@@ -1432,7 +1441,7 @@ void NObjectGarbage::Compact(ubyte _byTypeMask, udword _dwTimevalidityMs)
 	udword	dwCount = 0;
 	bool bToKeep = false;
 
-	NObjGarbageDesc*	aobjectsCompact = (NObjGarbageDesc*)NMemAlloc(m_dwSize*sizeof(NObjGarbageDesc));
+	NObjGarbageDesc*	aobjectsCompact = (NObjGarbageDesc*)NNEWARRAY(NObjGarbageDesc, m_dwSize);
 
 	//Delete un-used entries and keep needed entries
 	for (udword i=0; i<m_dwCount; i++)
@@ -1444,7 +1453,7 @@ void NObjectGarbage::Compact(ubyte _byTypeMask, udword _dwTimevalidityMs)
 			udword dwDelta = dwTick - (*pdesc->ppobj)->m_dwLastUsedTime;
 			if (dwDelta > _dwTimevalidityMs)
 			{
-				delete *pdesc->ppobj;
+				NDELETE(*pdesc->ppobj, NObject);
 				*pdesc->ppobj = null;
 				dwCompacted++;
 				bToKeep = false;
@@ -1453,7 +1462,7 @@ void NObjectGarbage::Compact(ubyte _byTypeMask, udword _dwTimevalidityMs)
 
 		if (bToKeep)
 		{
-			memcpy(aobjectsCompact+dwCount, pdesc, sizeof(NObjGarbageDesc));
+			NMemCopy(aobjectsCompact+dwCount, pdesc, sizeof(NObjGarbageDesc));
 			dwCount++;
 		}
 
@@ -1462,7 +1471,7 @@ void NObjectGarbage::Compact(ubyte _byTypeMask, udword _dwTimevalidityMs)
 	//Switching Arrays
 	NObjGarbageDesc* ptoFree = m_aobjects;
 	m_aobjects = aobjectsCompact;
-	NMemFree(ptoFree);
+	NDELETEARRAY(ptoFree);
 	m_dwCount = dwCount;
 
 #ifdef _DEBUG
@@ -1492,8 +1501,15 @@ void NObjectGarbage::GetInstance(NObject** _ppobj, ubyte _byAsType)
 				m_dwCount++;
 				if (m_dwCount>=m_dwSize)
 				{
-					m_dwSize+= m_dwCount + 256;
-					m_aobjects = (NObjGarbageDesc*)NMemRealloc(m_aobjects, m_dwSize*sizeof(NObjGarbageDesc));
+          udword dwnewSize = m_dwCount + 256;
+          NObjGarbageDesc*	pnewBuffer = NNEWARRAY(NObjGarbageDesc, dwnewSize);
+          NMemCopy(pnewBuffer, m_aobjects, m_dwSize*sizeof(NObjGarbageDesc));
+          NDELETEARRAY(m_aobjects);
+          m_aobjects=pnewBuffer;
+          m_dwSize=dwnewSize;
+
+					//m_dwSize+= m_dwCount + 256;
+					//m_aobjects = (NObjGarbageDesc*)NMemRealloc(m_aobjects, m_dwSize*sizeof(NObjGarbageDesc));
 				}
 
 #ifdef _DEBUG
@@ -1522,10 +1538,10 @@ void NObjectGarbage::RemoveEntry(NObject** _ppobj)
 		{
 			if (*pdesc->ppobj!=null)
 			{
-				delete *pdesc->ppobj;
+				NDELETE(*pdesc->ppobj, NObject);
 			}
 
-			memcpy(m_aobjects+i, m_aobjects+i+1, (m_dwSize-i-1) * sizeof(NObjGarbageDesc*));
+			NMemCopy(m_aobjects+i, m_aobjects+i+1, (m_dwSize-i-1) * sizeof(NObjGarbageDesc*));
 			m_dwCount--;
 #ifdef _DEBUG
 			TRACE("NObjectGarbage::RemoveEntry Count<%d>\n", m_dwCount);
@@ -1549,7 +1565,7 @@ NErrors* g_perrors = null;
 extern NErrors* gGetErrors()
 {
 	if (g_perrors==null)
-		g_perrors = new NErrors();
+		g_perrors = NNEW(NErrors);
 	return g_perrors;
 }
 
@@ -1563,7 +1579,7 @@ NErrors::NErrors()
 }
 NErrors::~NErrors()
 {
-	if (m_pszErrors)	NMemFree(m_pszErrors);
+	if (m_pszErrors)	NDELETEARRAY(m_pszErrors);
 }
 
 void NErrors::AddError(udword _code, const char* _fmt, ... )
@@ -1578,8 +1594,18 @@ void NErrors::AddError(udword _code, const char* _fmt, ... )
 
 	if ((m_dwStringPos+len) >= m_dwStringSize)
 	{
-		m_dwStringSize=m_dwStringPos+len+4096;
-		m_pszErrors = (char*)NMemRealloc(m_pszErrors, m_dwStringSize);
+    udword dwnewSize = m_dwStringPos+len+4096;
+    char*	pnewBuffer = NNEWARRAY(char, dwnewSize);
+    if (m_dwStringSize)
+    {
+      NMemCopy(pnewBuffer, m_pszErrors, m_dwStringSize);
+      NDELETEARRAY(m_pszErrors);
+    }
+    m_pszErrors=pnewBuffer;
+    m_dwStringSize=dwnewSize;
+
+		//m_dwStringSize=m_dwStringPos+len+4096;
+		//m_pszErrors = (char*)NMemRealloc(m_pszErrors, m_dwStringSize);
 	}
 
 	udword ret = sprintf(m_pszErrors+m_dwStringPos, "<%d> %s", _code, buf);
@@ -1643,7 +1669,10 @@ NRTClassModule* NRTClassModule::RegisterModule(const char* _pszModuleName)
 
   //If not found
   if (pmodFound==null)
-    pmodFound = new NRTClassModule(_pszModuleName);
+	{
+    pmodFound = NNEW(NRTClassModule);
+		pmodFound->m_pszModuleName = _pszModuleName;
+	}
 
   return pmodFound;
 }

@@ -95,19 +95,19 @@ bool NMainFrm::Create(char* name, const NRect& rect)
 	NSplitWnd* pwrkspace = (NSplitWnd*)GetWorkspace();
 
 	//Create Operators window
-	m_opswnd = new NOperatorsWnd;
+	m_opswnd = NNEW(NOperatorsWnd);
 	m_opswnd->Create("Operators", GetClientRect(), pwrkspace);
 
 	//Create properties window
-	NPropertiesWnd* propswnd = new NPropertiesWnd;
+	NPropertiesWnd* propswnd = NNEW(NPropertiesWnd);
 	propswnd->Create("Properties", GetClientRect(), pwrkspace);
 
 	//Create Viewport window
-	NViewportsWnd* viewportswnd = new NViewportsWnd;
+	NViewportsWnd* viewportswnd = NNEW(NViewportsWnd);
 	viewportswnd->Create("Viewport", GetClientRect(), pwrkspace);
 
 	//Create Project window
-	m_pprojectwnd = new NProjectWnd;
+	m_pprojectwnd = NNEW(NProjectWnd);
 	m_pprojectwnd->Create("Project", GetClientRect(), pwrkspace);
 
 	///////////////////////////////////////////////
@@ -208,11 +208,11 @@ void NMainFrm::OnNewProject()
 	//Create empty project
 	prootNode = NEngineOp::GetEngine()->GetRootGroup();
 
-	NTreeNode* pNewGrpNode = new NTreeNode;
+	NTreeNode* pNewGrpNode = NNEW(NTreeNode);
 	pNewGrpNode->SetName("Group");
 	prootNode->AddSon(pNewGrpNode);
 
-	NOperatorsPage* ppage = new NOperatorsPage;
+	NOperatorsPage* ppage = NNEW(NOperatorsPage);
 	ppage->SetName("Page");
 	pNewGrpNode->GetObjsArray().AddItem(ppage);
 

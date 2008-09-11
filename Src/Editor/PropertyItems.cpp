@@ -49,7 +49,7 @@ NPropertyItem::NPropertyItem()
 //-----------------------------------------------------------------
 NPropertyItem::~NPropertyItem()
 {
-	if (m_pwNGraphicstrl)		delete m_pwNGraphicstrl;
+	if (m_pwNGraphicstrl)		NDELETE(m_pwNGraphicstrl, NWControl);
 }
 
 
@@ -689,12 +689,12 @@ bool NStringProp::BeginEdit(NRect& rcItem)
 	assert(m_pParent!=null);
 
 	//Delete Old Control
-	if (m_pwNGraphicstrl)	delete m_pwNGraphicstrl;
+	if (m_pwNGraphicstrl)	NDELETE(m_pwNGraphicstrl, NWControl);
 
 	//Create edit
 	NRect rcCB(rcItem);
 
-	NEditCtrl* pwNGraphicsB = new NEditCtrl;
+	NEditCtrl* pwNGraphicsB = NNEW(NEditCtrl);
 	pwNGraphicsB->Create("", rcCB, m_pParent);
 	m_pwNGraphicstrl = pwNGraphicsB;
 
@@ -719,7 +719,7 @@ bool NStringProp::EndEdit(bool bSaveChanged)
 	}
 
 	//Destroy control
-	delete m_pwNGraphicstrl;
+	NDELETE(m_pwNGraphicstrl, NWControl);
 	m_pwNGraphicstrl=null;
 
 	return bSaveChanged;

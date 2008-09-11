@@ -524,7 +524,7 @@ void NPropertiesCtrl::DeleteAllProperties()
 	for (udword i=0; i<m_carrayRowsDesc.Count(); i++)
 	{
 		NRowDesc* prd = &m_carrayRowsDesc[i];
-		if (prd->pItem)		delete prd->pItem;
+		if (prd->pItem)		NDELETE(prd->pItem, NPropertyItem);
 	}
 
 	m_carrayRowsDesc.Clear();
@@ -703,10 +703,10 @@ void NPropertiesCtrl::AddRemoveAnimControlToRow(udword _dwRowIdx)
 	bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc->bCanBeAnimate;
 	if (bCanBeAnimate && prd->pItem->m_pvarValue->pcCtrlObj==null)
 	{
-		prd->pItem->m_pvarValue->pcCtrlObj = new NController();
+		prd->pItem->m_pvarValue->pcCtrlObj = NNEW(NController);
 		DisplayObjectProperties(m_pobj);
 	} else if (prd->pItem->m_pvarValue->pcCtrlObj) {
-		delete prd->pItem->m_pvarValue->pcCtrlObj;
+		NDELETE(prd->pItem->m_pvarValue->pcCtrlObj, NObject);
 		prd->pItem->m_pvarValue->pcCtrlObj=null;
 		DisplayObjectProperties(m_pobj);
 	}

@@ -41,7 +41,7 @@ NString::NString(const char* string)
 {
 	udword len = (udword)strlen(string);
 	mBuffer = (char*)malloc(len+1);
-	memcpy(mBuffer, string, len);
+	NMemCopy(mBuffer, string, len);
 	mBuffer[len] = 0;
 }
 
@@ -50,7 +50,7 @@ NString::NString(const NString& string)
 {
 	udword len = string.Length();
 	mBuffer = (char*)malloc(len+1);
-	memcpy(mBuffer, string.Buffer(), len);
+	NMemCopy(mBuffer, string.Buffer(), len);
 	mBuffer[len] = 0;
 }
 
@@ -241,7 +241,7 @@ NString NString::Mid(udword first, udword count)
 	NString				str;
 	str.mBuffer			= (char*)malloc(count+1);
 	str.mBuffer[count]	= 0;
-	memcpy(str.mBuffer, mBuffer+first, count);
+	NMemCopy(str.mBuffer, mBuffer+first, count);
 
 	return str;
 }
@@ -268,8 +268,8 @@ void NString::InsertAt(udword _idx, const char* _str)
 		udword len1 = Length();
 		udword len2 = (udword)strlen(_str);
 		mBuffer = (char*)realloc(mBuffer, len1 + len2 + 1);
-		memmove(mBuffer+_idx+len2, mBuffer+_idx, len1-_idx);	//Move right part
-		memcpy(mBuffer+_idx, _str, len2);
+		NMemCopy(mBuffer+_idx+len2, mBuffer+_idx, len1-_idx);	//Move right part
+		NMemCopy(mBuffer+_idx, _str, len2);
 		mBuffer[len1+len2]=0;
 	}
 
@@ -280,7 +280,7 @@ void NString::RemoveAt(udword _idx, udword _count)
 	udword len1 = Length();
 	if (mBuffer && _idx<len1)
 	{
-		memmove(mBuffer+_idx, mBuffer+_idx+_count, len1-(_idx+_count));
+		NMemCopy(mBuffer+_idx, mBuffer+_idx+_count, len1-_count);
 		mBuffer[len1-_count]=0;
 	}
 

@@ -26,10 +26,7 @@
 //-----------------------------------------------------------------
 const char* GetModuleName()  { return "Editor"; }
 NEventsMgr*	g_pceventsMgr;
-NFxGenApp		theNApp;
 NGUISubSystem theGUI;
-
-NFxGenApp*		GetApp()	{ return &theNApp; }
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -45,71 +42,8 @@ NFxGenApp*		GetApp()	{ return &theNApp; }
 //-----------------------------------------------------------------
 NFxGenApp::NFxGenApp()
 {
-	g_pceventsMgr = new NEventsMgr;
+	g_pceventsMgr = NNEW(NEventsMgr);
 	m_fOldTime = 0;
-
-	//###TEST###
-/*	NRGBA rgba;
-	rgba.r=255;
-
-	udword col = RGBA(0,0,0,255);
-	NColor col2 = NColor(0,0,0,255);
-	NColor col3 = NColor(col);*/
-
-	//###TEST### NTreeNode class
-/*	NTreeNode* proot	= new NTreeNode;
-	proot->SetName("Root");
-
-	NTreeNode* pgroup1 = new NTreeNode;
-	pgroup1->SetName("Group1");
-
-	NTreeNode* pgroup2 = new NTreeNode;
-	pgroup2->SetName("Group2");
-
-	proot->AddSon(pgroup1, -1);
-	proot->AddSon(pgroup2, -1);
-
-	proot->DeleteSon(1);
-
-	pgroup2 = new NTreeNode;
-	pgroup2->SetName("Group2");
-
-	proot->AddSon(pgroup2, -1);
-	TRACE("");*/
-
-	//###TEST### NObject reference from variables
-/*
-	NObject* pobjRefTarget = new NObject();
-	pobjRefTarget->SetName(".Target");
-
-	NObject* pobjRefMaker01 = new NObject();
-	pobjRefMaker01->SetName(".Maker01");
-
-	NObject* pobjRefMaker02 = new NObject();
-	pobjRefMaker02->SetName(".Maker02");
-
-	NVarsBlocDesc blocdescOp[] =
-	{
-		VAR(erefobj,	false, "Load",	"0", "NUseStoredOpsProp")	//0
-	};
-
-	NVarsBloc* pcvarsBloc01 = pobjRefMaker01->AddVarsBloc(1, blocdescOp, 1);
-	NVarsBloc* pcvarsBloc02 = pobjRefMaker02->AddVarsBloc(1, blocdescOp, 1);
-
-	pcvarsBloc01->SetValue(0, 0.0, pobjRefTarget);
-	pcvarsBloc02->SetValue(0, 0.0, pobjRefTarget);
-
-	NOperator* popRef = null;
-	pcvarsBloc01->GetValue(0, 0.0, (NObject*&)popRef);
-	pcvarsBloc02->GetValue(0, 0.0, (NObject*&)popRef);
-
-	delete pobjRefTarget;
-
-	pcvarsBloc01->GetValue(0, 0.0, (NObject*&)popRef);
-	pcvarsBloc02->GetValue(0, 0.0, (NObject*&)popRef);
-
-	TRACE("");
-*/
 }
 
 //-----------------------------------------------------------------
@@ -117,8 +51,15 @@ NFxGenApp::NFxGenApp()
 //-----------------------------------------------------------------
 NFxGenApp::~NFxGenApp()
 {
-	delete g_pceventsMgr;
-	g_pceventsMgr = null;
+	NEngineOp* peng = NEngineOp::GetEngine();
+	NDELETE(peng, NEngineOp);
+
+	NWnd* pwnd = GetGUISubSystem()->GetMainWnd();
+	if (pwnd)
+		NDELETE(pwnd, NWnd);
+
+	if (g_pceventsMgr)
+		NDELETE(g_pceventsMgr, NEventsMgr);
 }
 
 //-----------------------------------------------------------------
@@ -135,7 +76,7 @@ bool NFxGenApp::Init()
 	pgui->Init();
 
 	//Create Main Frame Window
-	NMainFrm* frame = new NMainFrm();
+	NMainFrm* frame = NNEW( NMainFrm );
 	pgui->SetMainWnd(frame);
 
 	frame->Create(CAPTION, NRect(0,0,WIDTH,HEIGHT));	//###TOFIX### not reel client size (see wnd caption...)
@@ -159,7 +100,7 @@ void NFxGenApp::Run()
   // Start game loop
   while (m_appWnd.IsOpened() && !bExist)
   {
-		Sleep(1);
+		//Sleep(1);
 
     // Process events
     sf::Event Event;
@@ -282,7 +223,7 @@ void NFxGenApp::Run()
     // Finally, display the rendered frame on screen
     m_appWnd.Display();
   }
-	
+
 
 }
 
