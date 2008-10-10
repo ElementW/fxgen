@@ -37,7 +37,7 @@
 //!	\class		NFXGenApp
 //!	\brief		Application class declaration
 //-----------------------------------------------------------------
-class NFxGenApp
+class NFxGenApp : public NGUIHost
 {
 public:
 	//Constructor-Destructor
@@ -49,6 +49,8 @@ public:
 	void Run();
 	bool Exit();
 	void Update();
+
+	virtual void SetCursorPos(const NPoint& _pos);
 
 	NMainFrm* GetMainWnd()		{ return (NMainFrm*)GetGUISubSystem()->GetMainWnd(); }
 

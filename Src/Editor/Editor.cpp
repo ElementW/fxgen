@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------
 const char* GetModuleName()  { return "Editor"; }
 NEventsMgr*	g_pceventsMgr;
-NGUISubSystem theGUI;
+NGUISubSystem* pTheGUI;
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -42,6 +42,7 @@ NGUISubSystem theGUI;
 //-----------------------------------------------------------------
 NFxGenApp::NFxGenApp()
 {
+	pTheGUI = new NGUISubSystem(this);
 	g_pceventsMgr = NNEW(NEventsMgr);
 	m_fOldTime = 0;
 }
@@ -257,6 +258,11 @@ void NFxGenApp::Update()
 
 	}
 
+}
+
+void NFxGenApp::SetCursorPos(const NPoint& _pos)
+{
+	m_appWnd.SetCursorPosition(_pos.x, _pos.y);
 }
 
 //-----------------------------------------------------------------

@@ -237,6 +237,15 @@ struct GUI_API FDelegate
 	virtual void operator()(NObject* _psender) { if( TargetObject ) (TargetObject->*TargetInvoke)(_psender); }
 };
 
+//-----------------------------------------------------------------
+//!	\class	NGUIHost
+//!	\brief	Interface for hosts for the GUI subsystem
+//-----------------------------------------------------------------
+class GUI_API NGUIHost
+{
+public:
+	virtual void SetCursorPos(const NPoint& _pos) = 0;
+};
 
 //-----------------------------------------------------------------
 //!	\class	NGUISubSystem
@@ -246,7 +255,7 @@ class GUI_API NGUISubSystem
 {
 public:
 	//Constructor-Destructor
-	NGUISubSystem();
+	NGUISubSystem(NGUIHost* _host);
 	virtual ~NGUISubSystem();
 
 	//Platform Dependent Methods
@@ -254,6 +263,7 @@ public:
 	bool	ShutDown();
 	void Update();
 
+	void SetCursorPos(const NPoint& _pos) { m_pHost->SetCursorPos(_pos); }
 	void GetCursorPos(NPoint& _pos) { _pos=m_ptCursor;			}
 	bool IsKeyDown(NKey::Code _key) { return m_keyDown[_key]; }
 
@@ -284,7 +294,7 @@ public:
 	void ProcessMsgs_MouseMove(NPoint _ptScreen);
 
 	void ProcessMsgs_KeyDown(NKey::Code key);
-	void ProcessMsgs_KeyUp(NKey::Code key);
+	void ProcessMsgs_KeyUp(NKey::Code key);	
 
 	void ProcessMsgs_Text(udword _unicode);
 
@@ -308,7 +318,8 @@ protected:
 	NWnd*			m_pOldWndUnderMouse;
 	bool			m_keyDown[NKey::Count];
 	bool			m_bMustDrawWindows;
-	NPoint		m_ptCursor;
+	NPoint			m_ptCursor;
+	NGUIHost*		m_pHost;
 };
 
 extern	GUI_API	NGUISubSystem*			GetGUISubSystem();

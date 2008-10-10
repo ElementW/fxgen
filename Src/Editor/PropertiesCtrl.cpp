@@ -347,8 +347,11 @@ void NPropertiesCtrl::OnMouseMove(NPoint point )
 	if (m_bAddValue)
 	{
 		sdword dwOffset =	point.x - m_ptStartMouse.x;
+		NPoint ptScreenStartMouse = m_ptStartMouse;
+		ClientToScreen(ptScreenStartMouse);
+		GetGUISubSystem()->SetCursorPos(ptScreenStartMouse);
 		//TRACE("dwOffset <%d> point<%d> ptStartMouse<%d> ptCursor<%d,%d>\n", dwOffset, point.x, m_ptStartMouse.x, m_ptCursor.x, m_ptCursor.y);
-		m_ptStartMouse = point;
+		//m_ptStartMouse = point;
 
 		if (dwOffset)
 		{
