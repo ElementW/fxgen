@@ -48,9 +48,11 @@ NGUISubSystem*			GetGUISubSystem()		{ return g_pGUI;}
 //-----------------------------------------------------------------
 // Constructor
 //-----------------------------------------------------------------
-NGUISubSystem::NGUISubSystem()
+NGUISubSystem::NGUISubSystem(NGUIHost* _host)
 {
 	g_pGUI				= this;
+
+	m_pHost = _host;
 
 	m_pMainWnd		= null;
 	m_pFocusedWnd	= null;
