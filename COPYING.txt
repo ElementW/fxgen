@@ -1,5 +1,5 @@
 Each projects has its own license, described in a 'COPYING' file, at the base of each directory.
 
-- FxGenLib and GUILib are under LGPL licence.
+- FxGenLib is under LGPL licence.
 - Editor is under GPL licence.
 

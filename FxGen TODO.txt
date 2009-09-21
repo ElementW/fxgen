@@ -1,33 +1,30 @@
 TODO
 -------------
-.Editor
-	.add a merge project command menu
-	.add an editor's icon
-	.SVG format import
-	.Progress Bar while computing more than n ms
 	
 .FxGenLib
-	.MemoryManager
-	.Little and Big-Endian Management
-		.Native format is little Endian
-		.Create a class NFileStream for BigEndian with conversion on load and write (Little->Big endian)
-	.Review animation controllers
 	.Multi-Threading
+	.Rewrite animation processing
 	
-.GUI
-	.Review Properties Sliding.
-		.Add variables limits into properties items (see UFloat)
+.Editor:GUI
+	.Review Properties control.
+		.Add variables limits into properties items
 		.Add slider control
 	.TreeNodeCtrl
 		.Add node renaming
-	.ProgressPieCtrl
-	
 
-Version 0.7 alpha (Release: Now on Linux !)
+Version 0.7 alpha (Release: New FxGen Engine !)
 ----------------------------------
 .Main
-	.Code cleanup
+	.Separation between designer and engine code.
+	.Can now create operators library.
 .FxGenLib
+	.Entirely rewrite of operator engine
+		.Code lighter.
+		.Operators are now just C functions style. (not classes)
+		.Removed designer related code
+		.At end add support Multi-Core (future support for OpenML or OpenCL)	
+	.Added an operators compiler process (always split between designer and engine)
+		.Take an operators graph in input then generate a linear operators calls for engine.
 	.Added memory manager (detect memory leaks in debug)
 .GUILib
 	.Fixed Menu destruction crash
@@ -35,7 +32,6 @@ Version 0.7 alpha (Release: Now on Linux !)
 	.Win32 dependencies removed
 .Editor
 	.Use of SFML for main window creation for Windows,Linux and Mac (http://www.sfml-dev.org)
-
 
 Version 0.6 alpha (Release: CrossPlatForm GUI !)
 ----------------------------------

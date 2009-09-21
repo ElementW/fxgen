@@ -1,7 +1,5 @@
 FxGen is compatible with the following compilers: - MSVC 2008
  - gcc 3.4
  - gcc 4.2.
-B
-
-uild system consists of project files for MSVC and Code::Blocks.
+Build system consists of project files for MSVC and Code::Blocks.
 Use Code::Blocks on Linux, as it's currently the only way that guarantees FxGen will be built properly.
