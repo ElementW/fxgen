@@ -1,0 +1,38 @@
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FxGenLib", "..\..\..\FxGenLib\Build\VC9\FxGenLib.vcproj", "{D39F9951-FC48-4410-93AC-CEAF6934BF3F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Editor", "Editor\Editor.vcproj", "{BF696CA3-B1F2-4175-8CC9-29F348643F13}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F} = {D39F9951-FC48-4410-93AC-CEAF6934BF3F}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release DLL|Win32 = Release DLL|Win32
+		Release|Win32 = Release|Win32
+		Tiny Release|Win32 = Tiny Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Debug|Win32.Build.0 = Debug|Win32
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Release DLL|Win32.ActiveCfg = Release DLL|Win32
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Release DLL|Win32.Build.0 = Release DLL|Win32
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Release|Win32.ActiveCfg = Release|Win32
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Release|Win32.Build.0 = Release|Win32
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Tiny Release|Win32.ActiveCfg = Tiny Release|Win32
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Tiny Release|Win32.Build.0 = Tiny Release|Win32
+		{BF696CA3-B1F2-4175-8CC9-29F348643F13}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BF696CA3-B1F2-4175-8CC9-29F348643F13}.Debug|Win32.Build.0 = Debug|Win32
+		{BF696CA3-B1F2-4175-8CC9-29F348643F13}.Release DLL|Win32.ActiveCfg = Release|Win32
+		{BF696CA3-B1F2-4175-8CC9-29F348643F13}.Release DLL|Win32.Build.0 = Release|Win32
+		{BF696CA3-B1F2-4175-8CC9-29F348643F13}.Release|Win32.ActiveCfg = Release|Win32
+		{BF696CA3-B1F2-4175-8CC9-29F348643F13}.Release|Win32.Build.0 = Release|Win32
+		{BF696CA3-B1F2-4175-8CC9-29F348643F13}.Tiny Release|Win32.ActiveCfg = Release|Win32
+		{BF696CA3-B1F2-4175-8CC9-29F348643F13}.Tiny Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FxGenLib", "FxGenLib.vcproj", "{D39F9951-FC48-4410-93AC-CEAF6934BF3F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BMP Extractor", "..\..\..\Sample\BMP Extractor\Build\VC9\BMP Extractor.vcproj", "{F9250185-FCF1-4724-BDAD-CDA26D6F361D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F} = {D39F9951-FC48-4410-93AC-CEAF6934BF3F}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release DLL|Win32 = Release DLL|Win32
+		Release|Win32 = Release|Win32
+		Tiny Release|Win32 = Tiny Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Debug|Win32.Build.0 = Debug|Win32
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Release DLL|Win32.ActiveCfg = Release DLL|Win32
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Release DLL|Win32.Build.0 = Release DLL|Win32
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Release|Win32.ActiveCfg = Release|Win32
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Release|Win32.Build.0 = Release|Win32
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Tiny Release|Win32.ActiveCfg = Tiny Release|Win32
+		{D39F9951-FC48-4410-93AC-CEAF6934BF3F}.Tiny Release|Win32.Build.0 = Tiny Release|Win32
+		{F9250185-FCF1-4724-BDAD-CDA26D6F361D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F9250185-FCF1-4724-BDAD-CDA26D6F361D}.Debug|Win32.Build.0 = Debug|Win32
+		{F9250185-FCF1-4724-BDAD-CDA26D6F361D}.Release DLL|Win32.ActiveCfg = Release|Win32
+		{F9250185-FCF1-4724-BDAD-CDA26D6F361D}.Release DLL|Win32.Build.0 = Release|Win32
+		{F9250185-FCF1-4724-BDAD-CDA26D6F361D}.Release|Win32.ActiveCfg = Release|Win32
+		{F9250185-FCF1-4724-BDAD-CDA26D6F361D}.Release|Win32.Build.0 = Release|Win32
+		{F9250185-FCF1-4724-BDAD-CDA26D6F361D}.Tiny Release|Win32.ActiveCfg = Release|Win32
+		{F9250185-FCF1-4724-BDAD-CDA26D6F361D}.Tiny Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
