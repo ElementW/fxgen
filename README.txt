@@ -39,11 +39,5 @@ Try the library and tool, and let me know your impression.
 //	Editor
 //----------------------------------------------------------------- 
  
- 	Win32 version only but a cross-plaform is scheduled (see GUILib) 
+ 	Now cross-plaform.
  
-	Keyboard shortcuts:
-		S 		-> allow to see final result from a selected operator.
-		C 		-> copy selected operators to clipboard.
-		V 		-> paste copied operators under cursor.
-		Supr 	-> Delete selected operators.
-
