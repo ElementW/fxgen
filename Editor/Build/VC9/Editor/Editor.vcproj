@@ -357,14 +357,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Source\ProgressPieCtrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\ProgressPieCtrl.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\Source\ProjectWnd.cpp"
 				>
 			</File>

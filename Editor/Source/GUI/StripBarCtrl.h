@@ -46,7 +46,7 @@ struct NSBItemDesc
 //!	\class		NStripBarCtrl
 //!	\brief		GUI control for controls container as toolbar
 //-----------------------------------------------------------------
-class GUI_API NStripBarCtrl : public NWControl
+class  NStripBarCtrl : public NWControl
 {
 public:
 	// Constructor-Destructor

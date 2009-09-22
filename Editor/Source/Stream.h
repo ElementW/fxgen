@@ -28,15 +28,6 @@
 //-----------------------------------------------------------------
 //                   Macros
 //-----------------------------------------------------------------
-#ifndef STATIC_BUILD
-#ifdef FXGEN_EXPORTS
-	#define FXGEN_API __declspec(dllexport)
-#else
-	#define FXGEN_API __declspec(dllimport)
-#endif
-#else // STATIC_BUILD
-#define FXGEN_API
-#endif // STATIC_BUILD
 
 //-----------------------------------------------------------------
 //	Prototypes
@@ -47,7 +38,7 @@ class NObject;
 //!	\class	NStream
 //!	\brief	Base class for loading and saving datas
 //-----------------------------------------------------------------
-class FXGEN_API NStream
+class  NStream
 {
 public:
 	virtual bool	PutData(const void* _buf, udword _length) = 0;
@@ -82,7 +73,7 @@ public:
 //!	\class	NFileStream
 //!	\brief	Serializer for loading and saving to file
 //-----------------------------------------------------------------
-class FXGEN_API NFileStream : public NStream
+class  NFileStream : public NStream
 {
 public:
   NFileStream();
@@ -107,7 +98,7 @@ protected:
 //!	\class	NMemoryStream
 //!	\brief	Serializer for loading and saving to a memory buffer
 //-----------------------------------------------------------------
-class FXGEN_API NMemoryStream : public NStream
+class  NMemoryStream : public NStream
 {
 public:
 	NMemoryStream();

@@ -19,15 +19,6 @@
 //-----------------------------------------------------------------
 //                   Macros
 //-----------------------------------------------------------------
-#ifndef STATIC_BUILD
-#ifdef GUI_EXPORTS
-	#define GUI_API __declspec(dllexport)
-#else
-	#define GUI_API __declspec(dllimport)
-#endif
-#else // STATIC_BUILD
-#define FXGEN_API
-#endif // STATIC_BUILD
 
 //-----------------------------------------------------------------
 // Includes
@@ -44,7 +35,7 @@ typedef udword (NObject::*EVENTFNC)(udword dwParam1, udword dwParam2);
 //!	\class	NEventsMgr
 //!	\brief	Events manager
 //-----------------------------------------------------------------
-class GUI_API NEventsMgr
+class  NEventsMgr
 {
 	//Structs
 	struct ST_EVENTHANDLERINFO

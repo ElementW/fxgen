@@ -27,16 +27,6 @@
 //-----------------------------------------------------------------
 //                   Macros
 //-----------------------------------------------------------------
-#ifndef STATIC_BUILD
-#ifdef FXGEN_EXPORTS
-	#define FXGEN_API __declspec(dllexport)
-#else
-	#define FXGEN_API __declspec(dllimport)
-#endif
-#else // STATIC_BUILD
-#define FXGEN_API
-#endif // STATIC_BUILD
-
 
 #ifdef _DEBUG
 
@@ -44,7 +34,7 @@
 	//!	\class		NDebugMemoryMgr
 	//!	\brief		Memory manager for debug
 	//-----------------------------------------------------------------
-	class FXGEN_API NDebugMemoryMgr
+	class  NDebugMemoryMgr
 	{
 	public:
 		//Constructor-Destructor
@@ -77,7 +67,7 @@
 	};
 
 
-	extern FXGEN_API NDebugMemoryMgr gMemMgr;
+	extern  NDebugMemoryMgr gMemMgr;
 
 	//#define NEW(x)        new(((asALLOCFUNCDEBUG_t)(userAlloc))(sizeof(x), __FILE__, __LINE__)) x
 	//#define DELETE(ptr,x) {void *tmp = ptr; (ptr)->~x(); userFree(tmp);}

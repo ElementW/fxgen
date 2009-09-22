@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------
 #include "Core.h"
 #include "GUI\GUI.h"
-#include "StandardsCtrl.h"
+#include "GUI\StandardsCtrl.h"
 
 //-----------------------------------------------------------------
 //									Prototypes

@@ -19,21 +19,12 @@
 //-----------------------------------------------------------------
 //                   Macros
 //-----------------------------------------------------------------
-#ifndef STATIC_BUILD
-#ifdef GUI_EXPORTS
-	#define GUI_API __declspec(dllexport)
-#else
-	#define GUI_API __declspec(dllimport)
-#endif
-#else // STATIC_BUILD
-#define GUI_API
-#endif // STATIC_BUILD
 
 //-----------------------------------------------------------------
 //!	\class	NString
 //!	\brief	String class
 //-----------------------------------------------------------------
-class GUI_API NString
+class  NString
 {
 public:
 	//Constructors-Destructor
@@ -114,7 +105,7 @@ protected:
 //!	\class	NPoint
 //!	\brief	Point class
 //-----------------------------------------------------------------
-class GUI_API NPoint
+class  NPoint
 {
 public:
 	//Constructor-Destructor
@@ -152,7 +143,7 @@ public:
 //!	\class	NRect
 //!	\brief	Point class
 //-----------------------------------------------------------------
-class GUI_API NRect
+class  NRect
 {
 public:
 	//Constructors
@@ -209,7 +200,7 @@ public:
 #endif
 #define RGBA(r,g,b,a)          ((udword)((a<<24)|(b<<16)|(g<<8)|r ))
 
-class GUI_API NColor
+class  NColor
 {
 public:
 	//Constructors

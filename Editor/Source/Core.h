@@ -20,15 +20,6 @@
 //-----------------------------------------------------------------
 //                   Macros
 //-----------------------------------------------------------------
-#ifndef STATIC_BUILD
-#ifdef FXGEN_EXPORTS
-	#define FXGEN_API __declspec(dllexport)
-#else
-	#define FXGEN_API __declspec(dllimport)
-#endif
-#else // STATIC_BUILD
-#define FXGEN_API
-#endif // STATIC_BUILD
 
 //-----------------------------------------------------------------
 // Class Prototypes
@@ -74,7 +65,7 @@
 //!	\class		NRTClassModule
 //!	\brief		RuntimeClass Module description
 //-----------------------------------------------------------------
-class FXGEN_API NRTClassModule
+class  NRTClassModule
 {
 public:
   NRTClassModule();
@@ -103,7 +94,7 @@ extern const char* GetModuleName();  //!< Must had been defined in application a
 //!	\class		NRTClass
 //!	\brief		RuntimeClass description
 //-----------------------------------------------------------------
-class FXGEN_API NRTClass
+class  NRTClass
 {
 public:
 
@@ -154,7 +145,7 @@ public:
 
 #ifdef _DEBUG
 	#define TRACE	gDebugLog
-	void FXGEN_API gDebugLog(const char* fmt, ... );
+	void  gDebugLog(const char* fmt, ... );
 #else
 	#define TRACE
 #endif
@@ -182,7 +173,7 @@ public:
 //!	\class	NErrors Core.h
 //!	\brief	Errors manager
 //-----------------------------------------------------------------
-class FXGEN_API NErrors
+class  NErrors
 {
 public:
 	NErrors();
@@ -196,7 +187,7 @@ protected:
 	udword m_dwStringPos;
 	char* m_pszErrors;
 };
-extern FXGEN_API NErrors* gGetErrors();
+extern  NErrors* gGetErrors();
 
 
 //-----------------------------------------------------------------
@@ -271,7 +262,7 @@ struct NMapVarsBlocDesc
 //!	\class	NVarsBloc Core.h
 //!	\brief	Bloc of variables
 //-----------------------------------------------------------------
-class FXGEN_API NVarsBloc
+class  NVarsBloc
 {
 public:
 	NVarsBloc();
@@ -345,7 +336,7 @@ protected:
 typedef int(*CompareFnc) (const void *_elem1, const void *_elem2);
 
 
-class FXGEN_API NObjectArray
+class  NObjectArray
 {
 public:
 	NObjectArray();
@@ -394,7 +385,7 @@ protected:
 //!		.Automatic variables serialisation
 //!		.References management
 //-----------------------------------------------------------------
-class FXGEN_API NObject
+class  NObject
 {
 public:
 	//Constructor-Destructor
@@ -456,7 +447,7 @@ public:
 //	+Son/Brother idx0
 //	+Son/Brother idx1
 
-class FXGEN_API NTreeNode : public NObject
+class  NTreeNode : public NObject
 {
 public:
 	NTreeNode();
@@ -504,7 +495,7 @@ struct NObjGarbageDesc
 	ubyte			byType;
 };
 
-class FXGEN_API NObjectGarbage
+class  NObjectGarbage
 {
 public:
 	NObjectGarbage();
