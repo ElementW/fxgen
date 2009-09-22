@@ -19,15 +19,6 @@
 //-----------------------------------------------------------------
 //                   Macros
 //-----------------------------------------------------------------
-#ifndef STATIC_BUILD
-#ifdef GUI_EXPORTS
-	#define GUI_API __declspec(dllexport)
-#else
-	#define GUI_API __declspec(dllimport)
-#endif
-#else // STATIC_BUILD
-#define FXGEN_API
-#endif // STATIC_BUILD
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -72,7 +63,7 @@ struct NMEItemDesc
 //!	\class		NMenuCtrl
 //!	\brief		GUI control for menu
 //-----------------------------------------------------------------
-class GUI_API NMenuCtrl : public NWControl
+class  NMenuCtrl : public NWControl
 {
 
 public:

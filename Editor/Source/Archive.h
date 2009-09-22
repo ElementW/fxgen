@@ -27,15 +27,6 @@
 //-----------------------------------------------------------------
 //                   Macros
 //-----------------------------------------------------------------
-#ifndef STATIC_BUILD
-#ifdef FXGEN_EXPORTS
-	#define FXGEN_API __declspec(dllexport)
-#else
-	#define FXGEN_API __declspec(dllimport)
-#endif
-#else // STATIC_BUILD
-#define FXGEN_API
-#endif // STATIC_BUILD
 
 //-----------------------------------------------------------------
 // Defines
@@ -82,7 +73,7 @@ class NMemoryStream;
 //!	\class	NArchive
 //!	\brief	Serializer for data loading and saving
 //-----------------------------------------------------------------
-class FXGEN_API NArchive
+class NArchive
 {
 public:
 	//Constructor-Destructor

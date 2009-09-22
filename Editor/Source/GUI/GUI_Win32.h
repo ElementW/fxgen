@@ -19,15 +19,6 @@
 //-----------------------------------------------------------------
 //                   Macros
 //-----------------------------------------------------------------
-#ifndef STATIC_BUILD
-#ifdef GUI_EXPORTS
-	#define GUI_API __declspec(dllexport)
-#else
-	#define GUI_API __declspec(dllimport)
-#endif
-#else // STATIC_BUILD
-#define FXGEN_API
-#endif // STATIC_BUILD
 
 
 //-----------------------------------------------------------------
@@ -51,7 +42,7 @@ class NbaseFileDialog;
 //!	\class	NW32Application
 //!	\brief	Win32 Application Class Definition
 //-----------------------------------------------------------------
-	class GUI_API NW32Application : public NbaseApplication
+	class  NW32Application : public NbaseApplication
 {
 public:
 	//Constructor-Destructor
@@ -87,7 +78,7 @@ protected:
 //!	\class	NW32FileDialog
 //!	\brief	FileDialog Class Definition
 //-----------------------------------------------------------------
-class GUI_API NW32FileDialog : public NbaseFileDialog
+class  NW32FileDialog : public NbaseFileDialog
 {
 public:
 	//Platform Dependent Methods

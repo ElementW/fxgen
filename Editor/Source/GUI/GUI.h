@@ -19,15 +19,6 @@
 //-----------------------------------------------------------------
 //                   Macros
 //-----------------------------------------------------------------
-#ifndef STATIC_BUILD
-#ifdef GUI_EXPORTS
-	#define GUI_API __declspec(dllexport)
-#else
-	#define GUI_API __declspec(dllimport)
-#endif
-#else // STATIC_BUILD
-#define FXGEN_API
-#endif // STATIC_BUILD
 
 #ifndef _MAX_PATH
 #define _MAX_PATH 32768
@@ -102,7 +93,7 @@ struct NWNDCREATE
 //!	\class	NCmdTarget
 //!	\brief	Command Target
 //-----------------------------------------------------------------
-class  GUI_API NCmdTarget : public NObject
+class   NCmdTarget : public NObject
 {
 public:
 	virtual void Unused() {}
@@ -112,7 +103,7 @@ public:
 typedef void(NObject::*TDelegate)(NObject* _psender);
 
 // Simple bindings to an object and a member function of that object.
-struct GUI_API FDelegate
+struct  FDelegate
 {
 	NObject* TargetObject;
 	void (NObject::*TargetInvoke)(NObject* _psender);
@@ -130,7 +121,7 @@ struct GUI_API FDelegate
 //!	\class	NbaseApplication
 //!	\brief	Base Application Class Definition
 //-----------------------------------------------------------------
-class GUI_API NbaseApplication
+class  NbaseApplication
 {
 public:
 	//Constructor-Destructor
@@ -185,14 +176,14 @@ public:
 	bool	m_bMustDrawWindows;
 };
 
-extern	GUI_API	NbaseApplication*			GetApp();
+extern		NbaseApplication*			GetApp();
 
 
 //-----------------------------------------------------------------
 //!	\class	NGraphics
 //!	\brief	Graphics 2D
 //-----------------------------------------------------------------
-class GUI_API NGraphics
+class  NGraphics
 {
 public:
 	//Constructor-Destructor
@@ -226,7 +217,7 @@ protected:
 //!	\class	NWnd
 //!	\brief	Windows Class Definition
 //-----------------------------------------------------------------
-class GUI_API NWnd : public NCmdTarget
+class  NWnd : public NCmdTarget
 {
 public:
 	//Constructor-Destructor
@@ -304,7 +295,7 @@ protected:
 //!	\class	NFrmWnd
 //!	\brief	Frame Windows Class Definition
 //-----------------------------------------------------------------
-class  GUI_API NFrmWnd : public NWnd
+class   NFrmWnd : public NWnd
 {
 public:
 	//Constructor-Destructor
@@ -333,7 +324,7 @@ protected:
 //!	\class	NWControl
 //!	\brief	Control Class Definition
 //-----------------------------------------------------------------
-class  GUI_API NWControl : public NWnd
+class   NWControl : public NWnd
 {
 public:
 	//Constructor-Destructor
@@ -353,7 +344,7 @@ public:
 //!	\brief	Tab Control Class Definition
 //-----------------------------------------------------------------
 /*
-class GUI_API NTabCtrl : public NWControl
+class  NTabCtrl : public NWControl
 {
 public:
 	//Constructor-Destructor
@@ -382,7 +373,7 @@ protected:
 //!	\class	NbaseFileDialog
 //!	\brief	FileDialog Class Definition
 //-----------------------------------------------------------------
-class GUI_API NbaseFileDialog
+class  NbaseFileDialog
 {
 public:
 	//Constructor/Destructor

@@ -19,15 +19,6 @@
 //-----------------------------------------------------------------
 //                   Macros
 //-----------------------------------------------------------------
-#ifndef STATIC_BUILD
-#ifdef GUI_EXPORTS
-	#define GUI_API __declspec(dllexport)
-#else
-	#define GUI_API __declspec(dllimport)
-#endif
-#else // STATIC_BUILD
-#define FXGEN_API
-#endif // STATIC_BUILD
 
 //-----------------------------------------------------------------
 // Includes
@@ -86,7 +77,7 @@ struct  NSPLITBOX
 //!	\class	NSplitWnd
 //!	\brief	Splitter window Class Definition
 //-----------------------------------------------------------------
-class	GUI_API NSplitWnd : public NWnd
+class	 NSplitWnd : public NWnd
 {
 public:
 	//Constructor, destructor

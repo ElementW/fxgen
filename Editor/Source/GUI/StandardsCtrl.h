@@ -38,7 +38,7 @@
 //!	\class		NTextCtrl
 //!	\brief		GUI control for text
 //-----------------------------------------------------------------
-class GUI_API NTextCtrl : public NWControl
+class  NTextCtrl : public NWControl
 {
 public:
 	// Constructor-Destructor
@@ -71,7 +71,7 @@ protected:
 #define NBUT_STYLE_PUSH		0
 #define NBUT_STYLE_MENU		1
 
-class GUI_API NButtonCtrl : public NWControl
+class  NButtonCtrl : public NWControl
 {
 public:
 	// Constructor-Destructor
@@ -116,7 +116,7 @@ protected:
 //!	\class		NColorPickerCtrl
 //!	\brief		GUI control for color picker
 //-----------------------------------------------------------------
-class GUI_API NColorPickerCtrl : public NWControl
+class  NColorPickerCtrl : public NWControl
 {
 
 public:
@@ -165,7 +165,7 @@ protected:
 //!	\class	NEditCtrl
 //!	\brief	Edit Control Class Definition
 //-----------------------------------------------------------------
-class  GUI_API NEditCtrl : public NWControl
+class   NEditCtrl : public NWControl
 {
 public:
 	//Constructor-Destructor
