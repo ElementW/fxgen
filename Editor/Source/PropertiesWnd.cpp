@@ -20,6 +20,7 @@
 //-----------------------------------------------------------------
 #include "pch.h"
 #include "PropertiesWnd.h"
+#include "Operator.h"
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -64,8 +65,8 @@ bool NPropertiesWnd::Create(const char* name, const NRect& rect, NWnd* parent)
 void NPropertiesWnd::OnPropertiesChanged()
 {
 	//Set Operator Invalid
-	if (m_pcurOp)
-		NEngineOp::GetEngine()->InvalidateOp(m_pcurOp);
+//	if (m_pcurOp)
+//		NEngineOp::GetEngine()->InvalidateOp(m_pcurOp);
 
 }
 

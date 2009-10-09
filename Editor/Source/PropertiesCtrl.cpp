@@ -698,7 +698,7 @@ bool NPropertiesCtrl::IsAnimButtonUnderPoint(NPoint& _pt)
 //-----------------------------------------------------------------
 void NPropertiesCtrl::AddRemoveAnimControlToRow(udword _dwRowIdx)
 {
-	NRowDesc* prd = &m_carrayRowsDesc[_dwRowIdx];
+/*	NRowDesc* prd = &m_carrayRowsDesc[_dwRowIdx];
 	//bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc[prd->pItem->m_dwvarIdx].bCanBeAnimate;
 	bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc->bCanBeAnimate;
 	if (bCanBeAnimate && prd->pItem->m_pvarValue->pcCtrlObj==null)
@@ -713,7 +713,7 @@ void NPropertiesCtrl::AddRemoveAnimControlToRow(udword _dwRowIdx)
 
 	//Send Message
 	OnPropertiesChanged();
-
+*/
 }
 
 

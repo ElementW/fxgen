@@ -70,7 +70,7 @@ protected:
 	void RecalcLayout();
 
 	// Datas
-	NArray<NSBItemDesc>	m_carrayItems;
+	GArray<NSBItemDesc>	m_carrayItems;
 
 protected:
 	//Win32 Messages Dispatching

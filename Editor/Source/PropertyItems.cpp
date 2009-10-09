@@ -22,6 +22,7 @@
 #include "PropertiesCtrl.h"
 #include "PropertyItems.h"
 #include "Editor.h"
+#include "Operator.h"
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -460,7 +461,7 @@ bool NUseStoredOpsProp::BeginEdit(NRect& rcItem)
 {
 	NRect rc = rcItem;
 	rc.left = rc.right;
-
+/*
 	//Creation du menu
 	NTreeNode* pnode = NEngineOp::GetEngine()->GetRootGroup();
 	BuildMenu(pnode);
@@ -468,7 +469,7 @@ bool NUseStoredOpsProp::BeginEdit(NRect& rcItem)
 	NPoint pt(rcItem.left, rcItem.bottom);
 	m_pParent->ClientToScreen(pt);
 	m_wndMenu.TrackPopupMenu(pt, null);
-
+*/
 	return false;
 }
 
@@ -491,7 +492,7 @@ void NUseStoredOpsProp::OnMenuClick(NObject* _psender)
 
 void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 {
-
+/*
 	if (m_wndMenu.GetItemsCount()==0)
 	{
 		m_wndMenu.Create("", m_pParent);
@@ -526,7 +527,7 @@ void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 	_pnode = _pnode->GetSon();
 	if (_pnode)
 		BuildMenu(_pnode);
-
+*/
 }
 
 

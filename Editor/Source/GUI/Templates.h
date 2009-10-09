@@ -35,7 +35,7 @@
 typedef int( __cdecl *CompareFnc) (const void *elem1, const void *elem2);
 
 //-----------------------------------------------------------------
-//!	\class	NArray
+//!	\class	GArray
 //!	\brief	Template Array Class Definition
 //! \note
 //!		The return value of CompareFnc is show below in the
@@ -45,21 +45,21 @@ typedef int( __cdecl *CompareFnc) (const void *elem1, const void *elem2);
 //!			  0		if elem1 identical to elem2
 //!			> 0		if elem1 greater than elem2
 //-----------------------------------------------------------------
-template < class T >  class __declspec(dllexport) NArray
+template < class T >  class __declspec(dllexport) GArray
 {
 public:
 
-	NArray()
+	GArray()
 	{
 		m_pBuffer = (T*)malloc(sizeof(T)*16); m_dwSize=16; m_dwCount=0; memset(m_pBuffer, 0, 16 * sizeof(T)); m_dwGrow = 16;
 	}
 
-	NArray(udword size)
+	GArray(udword size)
 	{
 		m_pBuffer = (T*)malloc(sizeof(T)*size); m_dwSize=size; m_dwCount=0; memset(m_pBuffer, 0, size * sizeof(T)); m_dwGrow = 16;
 	}
 
-	virtual	~NArray()				{ if (m_pBuffer) free(m_pBuffer);	m_pBuffer=null; }
+	virtual	~GArray()				{ if (m_pBuffer) free(m_pBuffer);	m_pBuffer=null; }
 
 	//Methods
 			udword	Count()			{ return m_dwCount;}	//Return used entries
@@ -75,7 +75,7 @@ public:
 			udword	SetCount(udword c);						//Return count prior to SetCount
 			void		SetSize(udword s);
 			void		Sort(CompareFnc cmp);					//Sorts the array using the compare function
-			void		AddArray(NArray& array);
+			void		AddArray(GArray& array);
 			udword	Find(T& item);								//Return index if found else -1
 			udword	InsertItem(udword idx, T& item);	//Add an item at index into the array (Returns the number of items in use)
 			void		SetAtGrow(udword idx, T& item);
@@ -115,7 +115,7 @@ public:
 			//-----------------------------------------------------------------
 			//!	\brief	Add an array at the end of the array
 			//-----------------------------------------------------------------
-			void AddArray(NArray& array)
+			void AddArray(GArray& array)
 			{
 				udword dwOldCount = m_dwCount;
 				SetSize(m_dwCount+array.Count()+m_dwGrow);

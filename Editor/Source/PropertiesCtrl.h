@@ -101,7 +101,7 @@ protected:
 	bool			m_bAddValue;
 	NPoint		m_ptStartMouse, m_ptCursor;
 
-	NArray<NRowDesc>	m_carrayRowsDesc;
+	GArray<NRowDesc>	m_carrayRowsDesc;
 
 protected:
 	//Win32 Messages Dispatching

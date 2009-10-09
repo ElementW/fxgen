@@ -69,7 +69,7 @@ struct  NSPLITBOX
 {
 	udword					type;							//!< (0 = horizontal, 1 = vertical)
 	NRect						rect;
-	NArray<udword>	move;							//!< (plane*, side)
+	GArray<udword>	move;							//!< (plane*, side)
 };
 
 
@@ -103,7 +103,7 @@ protected:
 	udword			UpdateCursor(NPoint& mpos);
 	NSPLITBOX*	CreateSplitterBox(NPANEINFO* pane, udword side);
 	void				DestroySplitterBox(NSPLITBOX* splitbox);
-	void				GetHitPanes(NPANEINFO* pane, udword side, NArray<NPANEINFO*> &array);
+	void				GetHitPanes(NPANEINFO* pane, udword side, GArray<NPANEINFO*> &array);
 	bool				MoveSplit(NSPLITBOX* splitbox, NPoint &deltas);
 
 	//Win32 Messages Dispatching
@@ -115,7 +115,7 @@ protected:
 
 	//Datas
 	udword							mCurPaneId;
-	NArray<NPANEINFO*>	mPaneList;
+	GArray<NPANEINFO*>	mPaneList;
 	float								mFactorX, mFactorY;
 	NSPLITBOX*					mSplitBox;
 	NPoint							mLastMousePos;

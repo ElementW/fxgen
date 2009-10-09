@@ -20,7 +20,8 @@
 //-----------------------------------------------------------------
 #include "pch.h"
 #include "ViewportsWnd.h"
-#include "TGAWriter.h"
+//#include "TGAWriter.h"
+#include "Operator.h"
 
 //-----------------------------------------------------------------
 //                   Defines
@@ -93,10 +94,10 @@ bool NViewportsWnd::Create(const char* name, const NRect& rect, NWnd* parent)
 EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnOPDeleting)
 {
 	NOperator* pop = (NOperator*)dwParam1;
-	if (pop->m_pObj==m_pcurObject)
+/*	if (pop->m_pObj==m_pcurObject)
 	{
 		m_pcurObject=null;
-	}
+	}*/
 
 	return 0;
 }
@@ -106,7 +107,7 @@ EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnOPDeleting)
 //-----------------------------------------------------------------
 EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnRender)
 {
-	NOperator* pop = (NOperator*)dwParam1;
+/*	NOperator* pop = (NOperator*)dwParam1;
 	if (pop==null || pop->m_pObj==null || (pop!=null && pop->m_bError))
 	{
 		m_pcurObject = null;
@@ -115,7 +116,7 @@ EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnRender)
 	}
 
 	RedrawWindow();
-
+*/
 	return 0;
 }
 
@@ -126,7 +127,7 @@ EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnRender)
 void NViewportsWnd::DisplayTexture(NObject* pobj)
 {
 	//if (m_dwTextureID==0)		return;
-
+/*
 	//Copy Pixels to Texture
 	NBitmap* ptex = (NBitmap*)pobj;
 
@@ -215,18 +216,18 @@ void NViewportsWnd::DisplayTexture(NObject* pobj)
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL/*GL_MODULATE*/);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	//glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE_EXT);
 	//glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB_EXT, GL_MODULATE);
 	//glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB_EXT, GL_TEXTURE);
 	//glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB_EXT, GL_PRIMARY_COLOR_EXT);
 	if (m_bFiltering)
 	{
-		/*if (m_bHasMipmapGeneration && !m_bOrtho)
+		if (m_bHasMipmapGeneration && !m_bOrtho)
 		{
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,		GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,		GL_LINEAR_MIPMAP_LINEAR);
-		} else*/ {
+		} else {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,		GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,		GL_LINEAR);
 		}
@@ -263,7 +264,7 @@ void NViewportsWnd::DisplayTexture(NObject* pobj)
 
 	//Updating viewport
 	//m_renderer.Update();
-
+*/
 	//Texte
 /*	rc.top = rc.bottom-32;
 	NGraphics dc(this);
@@ -418,8 +419,8 @@ void NViewportsWnd::OnPaint()
 //-----------------------------------------------------------------
 udword NViewportsWnd::CreateTexture(udword _w, udword _h)
 {
-	sdword dwTexnameID;
-
+	sdword dwTexnameID=0;
+/*
 	//Creation
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -432,19 +433,19 @@ udword NViewportsWnd::CreateTexture(udword _w, udword _h)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,			GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,			GL_REPEAT);
-		/*if (m_bHasMipmapGeneration)
-		{
-			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP_SGIS, GL_TRUE);
-		}*/
-		/*if (m_bHasAnisotropicFiltering)
-		{
-			GLfloat maxAnisotropy = 0;
-			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
-			// Removing this for now... It seems like it has to be turned of for GL_NEAREST filtering to work
-			//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropy); 
-		}*/
+		//if (m_bHasMipmapGeneration)
+		//{
+		//	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP_SGIS, GL_TRUE);
+		//}
+		//if (m_bHasAnisotropicFiltering)
+		//{
+		//	GLfloat maxAnisotropy = 0;
+		//	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
+		//	// Removing this for now... It seems like it has to be turned of for GL_NEAREST filtering to work
+		//	//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropy); 
+		//}
 	}
-
+*/
 	return dwTexnameID;
 }
 
@@ -454,7 +455,7 @@ udword NViewportsWnd::CreateTexture(udword _w, udword _h)
 //-----------------------------------------------------------------
 void NViewportsWnd::DeleteTexture(udword _dwTextID)
 {
-	glDeleteTextures(1, (GLuint*)&_dwTextID);
+//	glDeleteTextures(1, (GLuint*)&_dwTextID);
 }
 
 
@@ -465,13 +466,13 @@ void NViewportsWnd::DeleteTexture(udword _dwTextID)
 //!	\param	_h				Height
 //!	\param	_ppixels	Pixels
 //-----------------------------------------------------------------
-void NViewportsWnd::CopyPixelsToTexture(udword _dwtexid, udword _w, udword _h, NRGBA* _ppixels)
+/*void NViewportsWnd::CopyPixelsToTexture(udword _dwtexid, udword _w, udword _h, NRGBA* _ppixels)
 {
 	glBindTexture(GL_TEXTURE_2D, _dwtexid);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, _w, _h, GL_RGBA, GL_UNSIGNED_BYTE, (const GLvoid*)_ppixels);
 	//GLenum e = glGetError();
 	//GL_INVALID_ENUM
-}
+}*/
 
 //-----------------------------------------------------------------
 //!	\brief	Windows Message Command
@@ -507,7 +508,7 @@ void NViewportsWnd::OnMenuItemClick(NObject* _psender)
 			break;
 		}
 
-		case ID_EXPORT:
+/*		case ID_EXPORT:
 		{
 			if (m_pcurObject != null && strcmp(m_pcurObject->GetRTClass()->m_pszClassName, "NBitmap") == 0)
 			{
@@ -521,7 +522,7 @@ void NViewportsWnd::OnMenuItemClick(NObject* _psender)
 				}
 			}
 			break;
-		}
+		}*/
 	}
 
 }

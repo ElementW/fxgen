@@ -183,7 +183,7 @@ public:
 
 protected:
 	NMenuCtrl	m_wndMenu;
-	NArray<NString>	m_carrayStringsList;
+	GArray<NString>	m_carrayStringsList;
 };
 
 //-----------------------------------------------------------------

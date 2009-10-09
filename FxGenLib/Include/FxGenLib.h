@@ -93,7 +93,7 @@ BEGIN_FG_NAMESPACE
 
 //Error ###TODO### Error management
 				//TRACE("Code:%d Msg:%s\n", errcode, msg);
-#define ERR		gGetErrors()->AddError
+//#define ERR		gGetErrors()->AddError
 
 //-----------------------------------------------------------------
 //!	\class	NErrors Core.h

@@ -23,6 +23,11 @@
 #include "Editor.h"
 
 //-----------------------------------------------------------------
+//                   Prototypes
+//-----------------------------------------------------------------
+class NOperator;
+
+//-----------------------------------------------------------------
 //!	\class		NViewportsWnd
 //!	\brief		Window for viewport
 //-----------------------------------------------------------------
@@ -55,7 +60,7 @@ protected:
 	void DisplayTexture(NObject* pobj);
 	udword CreateTexture(udword _w, udword _h);
 	void DeleteTexture(udword _dwTextID);
-	void CopyPixelsToTexture(udword _dwtexid, udword _w, udword _h, NRGBA* _ppixels);
+	//void CopyPixelsToTexture(udword _dwtexid, udword _w, udword _h, NRGBA* _ppixels);
 
 	// Messages Notify
 	void OnMenuItemClick(NObject* _psender);

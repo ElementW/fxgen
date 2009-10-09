@@ -298,7 +298,7 @@ bool	NSplitWnd::DestroyPane(udword id, udword sidetomerge)
 	if (!pane)														return false;
 
 	//Array for Hit panes
-	NArray<NPANEINFO*> hitlist;
+	GArray<NPANEINFO*> hitlist;
 
 	//Clear Panes Side Flag
 	for (i=mPaneList.Count()-1; i>=0; i--) 	mPaneList[i]->side = 0;
@@ -335,7 +335,7 @@ bool	NSplitWnd::DestroyPane(udword id, udword sidetomerge)
 NSPLITBOX*	NSplitWnd::CreateSplitterBox(NPANEINFO* pane, udword side)
 {
 	//Array for Hit panes
-	NArray<NPANEINFO*> hitlist;
+	GArray<NPANEINFO*> hitlist;
 
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -476,7 +476,7 @@ void	NSplitWnd::DestroySplitterBox(NSPLITBOX* splitbox)
 // Name:	GetHitPanes()
 // Desc:	Rq. user must Clear the Panes Side Flag !!!!
 //-----------------------------------------------------------------
-void	NSplitWnd::GetHitPanes(NPANEINFO* pane, udword side, NArray<NPANEINFO*> &array)
+void	NSplitWnd::GetHitPanes(NPANEINFO* pane, udword side, GArray<NPANEINFO*> &array)
 {
 	if (pane==null)															return;
 
