@@ -48,7 +48,7 @@ double my_atof(const char* s)
 //-----------------------------------------------------------------
 //                   Variables
 //-----------------------------------------------------------------
-const char* GetModuleName()  { return "FxGenCore"; }
+//const char* GetModuleName()  { return "FxGenCore"; }
 
 NRTClassModule* NRTClassModule::m_pFirstRTClassModule=null;
 NRTClassModule* NRTClassModule::m_pLastRTClassModule=null;
@@ -244,34 +244,34 @@ bool NVarsBloc::IsAnimated()
 //-----------------------------------------------------------------
 void NVarsBloc::GetValue(udword _idx, float _fTime, ubyte& _val)
 {
-	if (m_paVarsValues[_idx].pcCtrlObj)
-		_val = (ubyte)((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
-	else
+	//if (m_paVarsValues[_idx].pcCtrlObj)
+	//	_val = (ubyte)((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
+	//else
 		_val = m_paVarsValues[_idx].byVal;
 }
 
 void NVarsBloc::GetValue(udword _idx, float _fTime, uword&	_val)
 {
-	if (m_paVarsValues[_idx].pcCtrlObj)
-		_val = (uword)((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
-	else
+	//if (m_paVarsValues[_idx].pcCtrlObj)
+	//	_val = (uword)((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
+	//else
 		_val = m_paVarsValues[_idx].wVal;
 
 }
 
 void NVarsBloc::GetValue(udword _idx, float _fTime, udword&	_val)
 {
-	if (m_paVarsValues[_idx].pcCtrlObj)
-		_val = (udword)((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
-	else
+	//if (m_paVarsValues[_idx].pcCtrlObj)
+	//	_val = (udword)((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
+	//else
 		_val = m_paVarsValues[_idx].dwVal;
 }
 
 void NVarsBloc::GetValue(udword _idx, float _fTime, float& _val)
 {
-	if (m_paVarsValues[_idx].pcCtrlObj)
-		_val = ((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
-	else
+	//if (m_paVarsValues[_idx].pcCtrlObj)
+	//	_val = ((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
+	//else
 		_val = m_paVarsValues[_idx].fVal;
 }
 
@@ -1561,7 +1561,7 @@ void NObjectGarbage::RemoveEntry(NObject** _ppobj)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-
+/*
 NErrors* g_perrors = null;
 NErrors* gGetErrors()
 {
@@ -1619,6 +1619,7 @@ char* NErrors::GetErrors()
 	return m_pszErrors;
 }
 
+*/
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -1637,7 +1638,7 @@ void gDebugLog(const char* _fmt, ... )
 {
 	char buf[256];
 	vsprintf(buf, _fmt, (char *)(&_fmt+1));
-	OutputDebugString(buf);
+	printf(buf);
 }
 #else
 void gDebugLog(const char* /*_fmt*/, ... )

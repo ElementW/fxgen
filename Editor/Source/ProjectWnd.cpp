@@ -21,6 +21,7 @@
 #include "pch.h"
 #include "ProjectWnd.h"
 //#include "resource.h"
+#include "Operator.h"
 
 //-----------------------------------------------------------------
 //			Defines
@@ -73,7 +74,7 @@ bool NProjectWnd::Create(const char* name, const NRect& rect, NWnd* parent)
 //!	\brief	Display a new operators project
 //!	\param	_popsProject	Project to display
 //-----------------------------------------------------------------
-void NProjectWnd::DisplayOperatorsProject(NEngineOp* _popsProject)
+void NProjectWnd::DisplayOperatorsProject(NOperatorsProject* _popsProject)
 {
 	EVT_EXECUTE(EVT_PAGESELECTED, 0, 0 );
 

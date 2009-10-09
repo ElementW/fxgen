@@ -31,7 +31,7 @@
 	class NVarsBloc;
 	class NObjectArray;
 	class NObjectGarbage;
-	class NErrors;
+	//class NErrors;
 
 //-----------------------------------------------------------------
 // Types
@@ -152,7 +152,8 @@ public:
 
 //Error ###TODO### Error management
 				//TRACE("Code:%d Msg:%s\n", errcode, msg);
-#define ERR		gGetErrors()->AddError
+//#define ERR		gGetErrors()->AddError
+#define ERR		printf
 
 //Runtime class
 #define FDECLARE_CLASS() \
@@ -173,7 +174,7 @@ public:
 //!	\class	NErrors Core.h
 //!	\brief	Errors manager
 //-----------------------------------------------------------------
-class  NErrors
+/*class  NErrors
 {
 public:
 	NErrors();
@@ -188,7 +189,7 @@ protected:
 	char* m_pszErrors;
 };
 extern  NErrors* gGetErrors();
-
+*/
 
 //-----------------------------------------------------------------
 //!	\enum		eVarType

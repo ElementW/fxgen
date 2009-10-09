@@ -46,13 +46,6 @@ NFxGenApp::NFxGenApp()
 	g_pceventsMgr = new NEventsMgr;
 	m_fOldTime = 0;
 
-	NRGBA rgba;
-	rgba.r=255;
-
-	udword col = RGBA(0,0,0,255);
-	NColor col2 = NColor(0,0,0,255);
-	NColor col3 = NColor(col);
-
 	//###TEST### NTreeNode class
 /*	NTreeNode* proot	= new NTreeNode;
 	proot->SetName("Root");

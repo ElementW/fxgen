@@ -23,6 +23,12 @@
 #include "TreeNodeCtrl.h"
 
 //-----------------------------------------------------------------
+//			Prototypes
+//-----------------------------------------------------------------
+class NOperatorsPage;
+class NOperatorsProject;
+
+//-----------------------------------------------------------------
 //!	\class		NProjectWnd
 //!	\brief		Project's windows
 //-----------------------------------------------------------------
@@ -35,7 +41,7 @@ public:
 	//Methods
 	virtual	bool Create(const char* name, const NRect& rect, NWnd* parent);
 
-	void DisplayOperatorsProject(NEngineOp* _popsProject);
+	void DisplayOperatorsProject(NOperatorsProject* _popsProject);
 	void SelectFirstPage();
 
 protected:
@@ -61,6 +67,6 @@ protected:
 	void InitCtxMenu();
 
 	//Datas
-	NEngineOp*	m_popsProject;
+	NOperatorsProject*	m_popsProject;
 	NMenuCtrl		m_wndMenu;
 };

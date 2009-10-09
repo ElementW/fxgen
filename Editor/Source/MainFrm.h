@@ -21,12 +21,14 @@
 //-----------------------------------------------------------------
 #include "ProgressPieCtrl.h"
 
+
 //-----------------------------------------------------------------
 //		Prototypes
 //-----------------------------------------------------------------
 class NOperatorsWnd;
 class NProjectWnd;
 class NStoredWnd;
+class NOperator;
 
 //-----------------------------------------------------------------
 //!	\class		NMainFrm
@@ -55,7 +57,6 @@ protected:
 	void	OnNewProject();
 	void	OnOpenProject();
 	void	OnSaveProjectAs();
-	void	ExportToFx2();
 
 	void OnKeyDown(udword dwchar);
 
@@ -77,7 +78,6 @@ protected:
 	float							m_fDetailFactor;
 	NMenuCtrl					m_wndFileMenu;
 	NMenuCtrl					m_wndOptionMenu;
-	NProgressPieCtrl	m_wndProgress;
 
 };
 

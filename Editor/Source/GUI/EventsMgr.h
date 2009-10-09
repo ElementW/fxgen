@@ -47,7 +47,7 @@ class  NEventsMgr
 	struct ST_EVENTINFO
 	{
 		uword wID;
-		NArray<ST_EVENTHANDLERINFO>	carrayHandlers;
+		GArray<ST_EVENTHANDLERINFO>	carrayHandlers;
 	};
 
 
@@ -65,6 +65,6 @@ public:
 
 protected:
 	//Datas
-	NArray<ST_EVENTINFO*>	m_carrayEvents;
+	GArray<ST_EVENTINFO*>	m_carrayEvents;
 
 };

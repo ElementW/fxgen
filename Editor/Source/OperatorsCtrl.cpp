@@ -21,6 +21,7 @@
 #include "pch.h"
 #include "OperatorsCtrl.h"
 #include "Editor.h"
+#include "Operator.h"
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -668,8 +669,6 @@ NOperator* NOperatorsCtrl::AddOperator(sword x, sword y, sword w, ID CLASSID)
 		pop->m_wPosX			= x;
 		pop->m_wPosY			= y;
 		pop->m_wWidth			= w;
-		pop->m_byDepth		= 0;
-		pop->m_byInputs		= 0;
 		pop->m_bInvalided	= true;
 
 		//Add operator

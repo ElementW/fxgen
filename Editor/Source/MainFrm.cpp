@@ -25,7 +25,7 @@
 #include "PropertiesWnd.h"
 #include "ViewportsWnd.h"
 #include "ProjectWnd.h"
-
+#include "Operator.h"
 
 //-----------------------------------------------------------------
 //                   Defines
@@ -37,7 +37,6 @@
 #define	MENU_EXIT						103
 #define	MENU_SAVEPROJECT		104
 #define	MENU_RELOADPROJECT	105
-#define	MENU_EXPORTTOFX2PRJ	106
 
 #define	MENU_DETAILLOW			200
 #define	MENU_DETAILNORMAL		201
@@ -141,7 +140,6 @@ bool NMainFrm::Create(char* name, const NRect& rect)
 	m_wndFileMenu.AddItem("Open", MENU_OPENPROJECT, 0);
 	m_wndFileMenu.AddItem("Save", MENU_SAVEPROJECT, 0);
 	m_wndFileMenu.AddItem("Save as...", MENU_SAVEPROJECTAS, 0);
-	m_wndFileMenu.AddItem("Export to Fx2...", MENU_EXPORTTOFX2PRJ, 0);
 	m_wndFileMenu.AddItem("Exit", MENU_EXIT, 0);
 	m_wndFileMenu.OnItemClick=FDelegate(this, (TDelegate)&NMainFrm::OnFileMenuClick);
 
@@ -168,6 +166,7 @@ bool NMainFrm::Create(char* name, const NRect& rect)
 //-----------------------------------------------------------------
 bool NMainFrm::AnnoyUserProjectMayBeLost()
 {
+/*
 	static int firsttime = 2;
 
 	if (firsttime)
@@ -186,6 +185,7 @@ bool NMainFrm::AnnoyUserProjectMayBeLost()
 
 		if (dwRet == NIDNO)		return false;
 	}
+*/
 	return true;
 }
 
@@ -195,6 +195,7 @@ bool NMainFrm::AnnoyUserProjectMayBeLost()
 //-----------------------------------------------------------------
 void NMainFrm::OnNewProject()
 {
+/*
 	NTreeNode* prootNode = NEngineOp::GetEngine()->GetRootGroup();
 	if(!AnnoyUserProjectMayBeLost())
 		return;
@@ -230,10 +231,12 @@ void NMainFrm::OnNewProject()
 	SetText(strTitle.Buffer());
 
 	m_bExecuteLocked = false;
+*/
 }
 
 void NMainFrm::LoadProject(NString str)
 {
+/*
 	if(!AnnoyUserProjectMayBeLost())
 		return;
 
@@ -276,6 +279,7 @@ void NMainFrm::LoadProject(NString str)
 	m_pprojectwnd->SelectFirstPage();
 
 	m_bExecuteLocked = false;
+*/
 }
 
 //-----------------------------------------------------------------
@@ -294,6 +298,7 @@ void NMainFrm::OnOpenProject()
 
 void NMainFrm::SaveProject(NString path)
 {
+/*
 //	bool show_message = false;
 
 	if (!path.Length())
@@ -317,6 +322,7 @@ void NMainFrm::SaveProject(NString path)
 	}
 
 	m_bExecuteLocked = false;
+*/
 }
 
 //-----------------------------------------------------------------
@@ -451,7 +457,6 @@ void NMainFrm::OnFileMenuClick(NObject* _psender)
 		//case MENU_RELOADPROJECT:	LoadProject();				break;
 		case MENU_SAVEPROJECTAS:	OnSaveProjectAs();		break;
 		case MENU_SAVEPROJECT:		SaveProject();				break;
-		case MENU_EXPORTTOFX2PRJ:	ExportToFx2();				break;
 		case MENU_EXIT:						GetApp()->AskExit();	break;
 	};
 
@@ -464,24 +469,24 @@ void NMainFrm::OnOptionMenuClick(NObject* _psender)
 	{
 		case MENU_DETAILLOW:
 			m_bExecuteLocked = true;
-			NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-			NEngineOp::GetEngine()->InvalidateAllOps();
+			//NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			//NEngineOp::GetEngine()->InvalidateAllOps();
 			m_fDetailFactor = 0.5f;
 			m_bExecuteLocked = false;
 			break;
 
 		case MENU_DETAILNORMAL:
 			m_bExecuteLocked = true;
-			NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-			NEngineOp::GetEngine()->InvalidateAllOps();
+			//NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			//NEngineOp::GetEngine()->InvalidateAllOps();
 			m_fDetailFactor = 1.0f;
 			m_bExecuteLocked = false;
 			break;
 
 		case MENU_DETAILHIGH:
 			m_bExecuteLocked = true;
-			NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-			NEngineOp::GetEngine()->InvalidateAllOps();
+			//NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			//NEngineOp::GetEngine()->InvalidateAllOps();
 			m_fDetailFactor = 2.0f;
 			m_bExecuteLocked = false;
 			break;
@@ -512,17 +517,3 @@ void NMainFrm::OnOptionMenuClick(NObject* _psender)
 	};
 }
 
-
-
-void NMainFrm::ExportToFx2()
-{
-	//Save File Dialog
-	NFileDialog dlg;
-	dlg.Create("Export Project to Fx2...", this, false);
-	if (dlg.DoModal())
-	{
-		if (!NEngineOp::GetEngine()->ExportToFxGen2(dlg.GetPathName().Buffer()))
-			GetApp()->MessageBox("Error while exporting !", NMB_OK);
-	}
-
-}

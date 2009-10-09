@@ -23,6 +23,12 @@
 
 
 //-----------------------------------------------------------------
+//			Prototypes
+//-----------------------------------------------------------------
+class NOperatorsPage;
+class NOperator;
+
+//-----------------------------------------------------------------
 // 			Defines
 //-----------------------------------------------------------------
 #define GB_GRIDUNIT					16						//16 pixels = 1 unitee
@@ -105,8 +111,8 @@ protected:
 
 	//Datas Operators
 	NOperatorsPage*			m_popsPage;						//!< Page used for editing
-	NArray<NOperator*>	m_carrayOpsSelected;	//!< Operators selected
-	NArray<NOperator*>	m_carrayOpsClipboard;	//!< Operators in clipboard
+	GArray<NOperator*>	m_carrayOpsSelected;	//!< Operators selected
+	GArray<NOperator*>	m_carrayOpsClipboard;	//!< Operators in clipboard
 	NOperator	*m_popMarkedSelected, *m_popMarkedShow;
 	float								m_fupdateTime;
 	NRect	m_rcAllOperators;	//!< Operators zone

@@ -53,6 +53,12 @@
 //#include "DistordOps.h"
 //#include "RenderOps.h"
 //#include "CombineOps.h"
+#include "..\..\FxGenLib\Include\FxGenLib.h"
+
+#include "..\..\FxGenLib\Source\MemoryMgr.h"
+#include "..\..\FxGenLib\Source\Maths.h"
+#include "..\..\FxGenLib\Source\Bitmap.h"
+#include "..\..\FxGenLib\Source\CompilerOp.h"
 
 //Win32
 #ifdef WIN32

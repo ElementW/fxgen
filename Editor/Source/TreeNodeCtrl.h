@@ -93,8 +93,8 @@ protected:
 
 	NTreeNode* m_prootNode;
 
-	NArray<NTNItemDesc>	m_carrayItems;
-	NArray<udword>			m_carrayItemsSortedPos;
+	GArray<NTNItemDesc>	m_carrayItems;
+	GArray<udword>			m_carrayItemsSortedPos;
 
 	udword	m_dwCurItemIdx;	//Idx in m_carrayItems
 	udword	m_dwLastUpdate;
