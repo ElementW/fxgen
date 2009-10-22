@@ -336,7 +336,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Core"
+			Name="Utils"
 			>
 			<File
 				RelativePath="..\..\Source\Maths.cpp"
@@ -388,13 +388,6 @@
 			<File
 				RelativePath="..\..\Source\DistordOpsFunc.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\Source\FilterOpsFunc.cpp"
@@ -421,6 +414,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\Include\FxGenLib.h"
+			>
+		</File>
 		<File
 			RelativePath="..\..\Source\pch.cpp"
 			>

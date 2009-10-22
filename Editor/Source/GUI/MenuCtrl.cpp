@@ -14,7 +14,6 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -59,6 +58,7 @@ NMenuCtrl::NMenuCtrl()
 //-----------------------------------------------------------------
 NMenuCtrl::~NMenuCtrl()
 {
+	DeleteAllItems();
 }
 
 //-----------------------------------------------------------------
@@ -85,7 +85,7 @@ bool NMenuCtrl::Create(char* name, NWnd* parent)
 //-----------------------------------------------------------------
 void NMenuCtrl::Update()
 {
-	GetApp()->RedrawWindow(null);	//All Windows
+	GetGUISubSystem()->RedrawWindow(null);	//All Windows
 
 }
 
@@ -187,9 +187,9 @@ void NMenuCtrl::OnSize()
 }
 
 
-void NMenuCtrl::OnLeftButtonDown(udword flags, NPoint _point)
+void NMenuCtrl::OnLButtonDown(NPoint _point)
 {
-	//TRACE("OnLeftButtonDown\n");
+	//TRACE("OnLButtonDown\n");
 	//SetFocus();
 
 	if (m_dwItemHighLightedIdx!=-1)
@@ -213,23 +213,17 @@ void NMenuCtrl::OnLeftButtonDown(udword flags, NPoint _point)
 
 }
 
-void NMenuCtrl::OnLeftButtonUp(udword flags, NPoint point)
+void NMenuCtrl::OnLButtonUp(NPoint point)
 {
 }
 
-
-void NMenuCtrl::OnLeftButtonDblClk(udword flags, NPoint point)
-{
-}
-
-
-void NMenuCtrl::OnRightButtonDown(udword flags, NPoint point)
+void NMenuCtrl::OnRButtonDown(NPoint point)
 {
 	//TrackPopupMenu(point);
 	//ShowMenu(false);
 }
 
-void NMenuCtrl::OnMouseMove(udword flags, NPoint point )
+void NMenuCtrl::OnMouseMove(NPoint point )
 {
 	udword idx = GetItemIdxUnderPt(point);
 	TRACE("HighLighted idx %d\n", idx);
@@ -243,7 +237,7 @@ void NMenuCtrl::OnMouseMove(udword flags, NPoint point )
 		if (m_dwItemHighLightedIdx!=-1)
 		{
 			NMEItemDesc* pitem = &m_carrayItems[m_dwItemHighLightedIdx];
-			
+
 
 			//Open Popup Menu
 			if (pitem->ppopUpMenu)
@@ -263,7 +257,7 @@ void NMenuCtrl::OnMouseMove(udword flags, NPoint point )
 				NRect rcPopup;
 				pitem->ppopUpMenu->CalcMenuSize(rcPopup);
 
-				NRect rcApp = GetApp()->GetMainWnd()->GetWindowRect();
+				NRect rcApp = GetGUISubSystem()->GetMainWnd()->GetWindowRect();
 				if (pTF.x + rcPopup.Width() > rcApp.right)
 				{
 					pT.x=pitem->rcItem.left-rcPopup.Width();
@@ -291,19 +285,19 @@ void NMenuCtrl::OnMouseMove(udword flags, NPoint point )
 }
 
 
-void NMenuCtrl::OnMButtonDown(udword flags, NPoint pos)
+void NMenuCtrl::OnMButtonDown(NPoint pos)
 {
 	//SetFocus();
 }
 
-void NMenuCtrl::OnMButtonUp(udword flags, NPoint pos)
+void NMenuCtrl::OnMButtonUp(NPoint pos)
 {
 }
 
 
 void NMenuCtrl::OnKeyUp(udword dwchar)
 {
-	if (dwchar==NK_ESCAPE)
+	if (dwchar==NKey::Escape)
 		ShowMenu(false);
 }
 
@@ -371,12 +365,12 @@ NMEItemDesc* NMenuCtrl::AddItem(const char* _pszName, udword _id, udword _dwStyl
 //-----------------------------------------------------------------
 NMenuCtrl* NMenuCtrl::CreatePopupMenu(const char* _pszName, udword _idx)
 {
-	NMenuCtrl* ppopup = new NMenuCtrl;
+	NMenuCtrl* ppopup =NNEW(NMenuCtrl);
 
 	if (_idx<m_carrayItems.Count())
 	{
 		m_carrayItems[_idx].ppopUpMenu = ppopup;
-		m_carrayItems[_idx].ppopUpMenu->Create("", m_pParentWnd);
+		m_carrayItems[_idx].ppopUpMenu->Create("", this);
 		m_carrayItems[_idx].strName = _pszName;
 
 	//Append
@@ -392,7 +386,7 @@ NMenuCtrl* NMenuCtrl::CreatePopupMenu(const char* _pszName, udword _idx)
 		st.ppopUpMenu	= ppopup;
 		m_carrayItems.AddItem(st);
 
-		st.ppopUpMenu->Create("", m_pParentWnd);
+		st.ppopUpMenu->Create("", this);
 	}
 
 	return ppopup;
@@ -416,6 +410,13 @@ void NMenuCtrl::TrackPopupMenu(NPoint _ptScreen, NMenuCtrl* _pParentMenu/*=null*
 	//Move Menu
 	//if (m_pParentWnd)
 	//	m_pParentWnd->ClientToScreen(_ptScreen);
+
+	// Clipping
+	NRect rcApp = GetGUISubSystem()->GetMainWnd()->GetWindowRect();
+	if(_ptScreen.x + rc.Width() > rcApp.right)
+		_ptScreen.x -= _ptScreen.x + rc.Width() - rcApp.right;
+	if(_ptScreen.y + rc.Height() > rcApp.bottom)
+		_ptScreen.y -= _ptScreen.y + rc.Height() - rcApp.bottom;
 
 	if (m_pParentWnd)
 		m_pParentWnd->ScreenToClient(_ptScreen);
@@ -442,6 +443,14 @@ void NMenuCtrl::TrackPopupMenu(NPoint _ptScreen, NMenuCtrl* _pParentMenu/*=null*
 //-----------------------------------------------------------------
 void NMenuCtrl::DeleteAllItems()
 {
+	udword dwCount = m_carrayItems.Count();
+	for (udword i=0; i<dwCount; i++)
+	{
+		NMEItemDesc* pitem = &m_carrayItems[i];
+		if (pitem->ppopUpMenu)
+			NDELETE(pitem->ppopUpMenu, NMenuCtrl);
+	}
+
 	m_carrayItems.Clear();
 }
 
@@ -516,25 +525,6 @@ NMenuCtrl* NMenuCtrl::GetPopupMenu(udword _idx)
 	return null;
 }
 
-/*void NMenuCtrl::OnTimer(udword _dwTimerID)
-{
-	if (_dwTimerID==IDTIMER_HIDE)
-	{
-		POINT pt;		::GetCursorPos(&pt);
-		NPoint point(pt.x, pt.y);
-
-		NRect rc	= GetWindowRect();
-		NRect rcPM;
-		if (m_pcurPopupMenu)
-			rcPM = m_pcurPopupMenu->GetWindowRect();
-
-		if (!rc.Contain(point) && !rcPM.Contain(point) && m_bEntered)
-		{
-			ShowMenu(false);
-		}
-	}
-}*/
-
 void NMenuCtrl::OnKillFocus(NWnd* pNewWnd)
 {
 	//TRACE("NMenuCtrl::OnKillFocus\n");
@@ -542,7 +532,7 @@ void NMenuCtrl::OnKillFocus(NWnd* pNewWnd)
 	{
 		if (m_pcurParentMenu)
 			m_pcurParentMenu->ShowMenu(false, NULL);
-		else 
+		else
 			ShowMenu(false, NULL);
 	}
 }

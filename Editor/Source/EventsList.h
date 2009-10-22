@@ -14,15 +14,18 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef EVENTSLIST_H
+#define EVENTSLIST_H
 
 //Operator window
-#define EVT_OPSELECTED			1		// param1=NOperator*			param2=
-#define EVT_OPDELETING			2		// param1=NOperator*			param2=
+#define EVT_OPSELECTED			1		// param1=NOperatorNode*			param2=
+#define EVT_OPDELETING			2		// param1=NOperatorNode*			param2=
 
 //Viewport Window
-#define EVT_RENDER					4		// param1=NOperator*			param2=float* ftime
+#define EVT_RENDER					4		// param1=NOperatorNode*			param2=float* ftime
 
 
 //Project
 #define EVT_PAGESELECTED		6		// param1=NOperatorsPage*	param2=
+
+#endif //EVENTSLIST_H

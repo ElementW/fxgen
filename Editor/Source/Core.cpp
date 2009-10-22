@@ -314,14 +314,14 @@ void NVarsBloc::SetValue(udword _idx, float /*_fTime*/, float _val)
 void NVarsBloc::SetValue(udword _idx, float /*_fTime*/, NObject* _val)
 {
 	//Remove old reference link
-	if (m_paVarsValues[_idx].pcRefObj != null)
+	/*if (m_paVarsValues[_idx].pcRefObj != null)
 	{
 		m_powner->RemoveRef( m_paVarsValues[_idx].pcRefObj );
-	}
+	}*/
 
 	//Set New reference
 	m_paVarsValues[_idx].pcRefObj = _val;
-	if (_val)	m_powner->AddRef(_val);
+	//if (_val)	m_powner->AddRef(_val);
 }
 
 void NVarsBloc::SetValue(udword _idx, float /*_fTime*/, const char*	_val)
@@ -695,12 +695,11 @@ void NObject::RemoveRefToMe(NObject* _pobj)
 		{
 			m_carrayRefMakers.RemoveItem(i);
 			_pobj->RemoveRef(this);
-			_pobj->RemoveVarsRef(this);		//###NNEW###
+			_pobj->RemoveVarsRef(this);		//###NEW###
 			break;
 		}
 	}
 }
-
 
 
 

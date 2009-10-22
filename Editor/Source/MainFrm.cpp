@@ -25,7 +25,7 @@
 #include "PropertiesWnd.h"
 #include "ViewportsWnd.h"
 #include "ProjectWnd.h"
-#include "Operator.h"
+#include "FileChooserDialog.h"
 
 //-----------------------------------------------------------------
 //                   Defines
@@ -44,6 +44,8 @@
 #define	MENU_DETAILFINE			203
 #define	MENU_DETAILREALISTIC	204
 #define	MENU_DETAILULTRA		205
+
+
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -69,6 +71,7 @@ NMainFrm::NMainFrm(void)
 	m_bExecuteLocked	= false;
 	m_popMarkedShow		= null;
 	m_fDetailFactor		= 1.0f;
+	m_pcurProject			= null;
 }
 
 //-----------------------------------------------------------------
@@ -93,19 +96,19 @@ bool NMainFrm::Create(char* name, const NRect& rect)
 	NSplitWnd* pwrkspace = (NSplitWnd*)GetWorkspace();
 
 	//Create Operators window
-	m_opswnd = new NOperatorsWnd;
+	m_opswnd = NNEW(NOperatorsWnd);
 	m_opswnd->Create("Operators", GetClientRect(), pwrkspace);
 
 	//Create properties window
-	NPropertiesWnd* propswnd = new NPropertiesWnd;
+	NPropertiesWnd* propswnd = NNEW(NPropertiesWnd);
 	propswnd->Create("Properties", GetClientRect(), pwrkspace);
 
 	//Create Viewport window
-	NViewportsWnd* viewportswnd = new NViewportsWnd;
+	NViewportsWnd* viewportswnd = NNEW(NViewportsWnd);
 	viewportswnd->Create("Viewport", GetClientRect(), pwrkspace);
 
 	//Create Project window
-	m_pprojectwnd = new NProjectWnd;
+	m_pprojectwnd = NNEW(NProjectWnd);
 	m_pprojectwnd->Create("Project", GetClientRect(), pwrkspace);
 
 	///////////////////////////////////////////////
@@ -182,7 +185,6 @@ bool NMainFrm::AnnoyUserProjectMayBeLost()
 	if (dwCount != 0)
 	{
 		udword dwRet = GetApp()->MessageBox("You will lose your current project! Do you want to continue ?", NMB_YESNO);
-
 		if (dwRet == NIDNO)		return false;
 	}
 */
@@ -210,11 +212,11 @@ void NMainFrm::OnNewProject()
 	//Create empty project
 	prootNode = NEngineOp::GetEngine()->GetRootGroup();
 
-	NTreeNode* pNewGrpNode = new NTreeNode;
+	NTreeNode* pNewGrpNode = NNEW(NTreeNode);
 	pNewGrpNode->SetName("Group");
 	prootNode->AddSon(pNewGrpNode);
 
-	NOperatorsPage* ppage = new NOperatorsPage;
+	NOperatorsPage* ppage = NNEW(NOperatorsPage);
 	ppage->SetName("Page");
 	pNewGrpNode->GetObjsArray().AddItem(ppage);
 
@@ -269,7 +271,7 @@ void NMainFrm::LoadProject(NString str)
 
 	} else {
 		//Error Message
-		GetApp()->MessageBox(gGetErrors()->GetErrors());
+		GetApp()->MessageBox(gGetErrors()->GetErrors(), NMB_OK);
 		//Clean up
 		OnNewProject();
 	}
@@ -288,7 +290,7 @@ void NMainFrm::LoadProject(NString str)
 void NMainFrm::OnOpenProject()
 {
 	//Open File Dialog
-	NFileDialog dlg;
+	NFileChooserDialog dlg;
 	dlg.Create("Opening Project...", this);
 	if (dlg.DoModal())
 	{
@@ -322,7 +324,7 @@ void NMainFrm::SaveProject(NString path)
 	}
 
 	m_bExecuteLocked = false;
-*/
+	*/
 }
 
 //-----------------------------------------------------------------
@@ -331,7 +333,7 @@ void NMainFrm::SaveProject(NString path)
 void NMainFrm::OnSaveProjectAs()
 {
 	//Save File Dialog
-	NFileDialog dlg;
+	NFileChooserDialog dlg;
 	dlg.Create("Saving Project...", this, false);
 	if (dlg.DoModal())
 		SaveProject(dlg.GetPathName());
@@ -343,9 +345,10 @@ void NMainFrm::OnSaveProjectAs()
 //!	\param	_ftime	time
 //!	\return	Operator result
 //-----------------------------------------------------------------
-NOperator* NMainFrm::Execute(float _ftime)
+NOperatorNode* NMainFrm::Execute(float _ftime)
 {
-	/*if (!m_bExecuteLocked)
+/*
+	if (!m_bExecuteLocked)
 	{
 		m_bExecuteLocked = true;
 
@@ -360,8 +363,8 @@ NOperator* NMainFrm::Execute(float _ftime)
 		//m_wndProgress.ShowWindow(false);
 
 		m_bExecuteLocked = false;
-	}*/
-
+	}
+*/
 	return m_popMarkedShow;
 }
 
@@ -370,13 +373,13 @@ NOperator* NMainFrm::Execute(float _ftime)
 //!	\brief	Show an operator to viewport
 //!	\param	pop		operator to show
 //-----------------------------------------------------------------
-void NMainFrm::MarkShowOperator(NOperator* _pop)
+void NMainFrm::MarkShowOperator(NOperatorNode* _pop)
 {
 	m_popMarkedShow = _pop;
 
 	//###DEBUG###
 	//float ftime = (float)GetTickCount() * 60.0f / 1000.0f;
-	//NOperator* pop = Execute(ftime);
+	//NOperatorNode* pop = Execute(ftime);
 
 }
 
@@ -384,7 +387,7 @@ void NMainFrm::MarkShowOperator(NOperator* _pop)
 //!	\brief	Delete an operator
 //!	\param	pop		operator to delete
 //-----------------------------------------------------------------
-void NMainFrm::DeletingOperator(NOperator* _pop)
+void NMainFrm::DeletingOperator(NOperatorNode* _pop)
 {
 	m_bExecuteLocked = true;
 
@@ -400,9 +403,18 @@ void NMainFrm::DeletingOperator(NOperator* _pop)
 //!	\brief	operator Deleted
 //!	\param	pop		operator deleted
 //-----------------------------------------------------------------
-void NMainFrm::DeletedOperator(NOperator* pop)
+void NMainFrm::DeletedOperator(NOperatorNode* pop)
 {
 	m_bExecuteLocked = false;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	operator properties changed
+//!	\param	pop		operator
+//-----------------------------------------------------------------
+void NMainFrm::EmitPropertiesChanged(NOperatorNode* pop)
+{
+	
 }
 
 //-----------------------------------------------------------------
@@ -457,36 +469,37 @@ void NMainFrm::OnFileMenuClick(NObject* _psender)
 		//case MENU_RELOADPROJECT:	LoadProject();				break;
 		case MENU_SAVEPROJECTAS:	OnSaveProjectAs();		break;
 		case MENU_SAVEPROJECT:		SaveProject();				break;
-		case MENU_EXIT:						GetApp()->AskExit();	break;
+//		case MENU_EXIT:						GetGUISubSystem()->AskExit();	break;
 	};
 
 }
 
 void NMainFrm::OnOptionMenuClick(NObject* _psender)
 {
+/*
 	NMenuCtrl* pmenu = (NMenuCtrl*)_psender;
 	switch (pmenu->GetClickedCmdID())
 	{
 		case MENU_DETAILLOW:
 			m_bExecuteLocked = true;
-			//NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-			//NEngineOp::GetEngine()->InvalidateAllOps();
+			NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			NEngineOp::GetEngine()->InvalidateAllOps();
 			m_fDetailFactor = 0.5f;
 			m_bExecuteLocked = false;
 			break;
 
 		case MENU_DETAILNORMAL:
 			m_bExecuteLocked = true;
-			//NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-			//NEngineOp::GetEngine()->InvalidateAllOps();
+			NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			NEngineOp::GetEngine()->InvalidateAllOps();
 			m_fDetailFactor = 1.0f;
 			m_bExecuteLocked = false;
 			break;
 
 		case MENU_DETAILHIGH:
 			m_bExecuteLocked = true;
-			//NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-			//NEngineOp::GetEngine()->InvalidateAllOps();
+			NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			NEngineOp::GetEngine()->InvalidateAllOps();
 			m_fDetailFactor = 2.0f;
 			m_bExecuteLocked = false;
 			break;
@@ -515,5 +528,5 @@ void NMainFrm::OnOptionMenuClick(NObject* _psender)
 		//	m_bExecuteLocked = false;
 		//	break;
 	};
+*/
 }
-

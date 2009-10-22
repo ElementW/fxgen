@@ -14,7 +14,8 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef TEMPLATES_H
+#define TEMPLATES_H
 
 //-----------------------------------------------------------------
 //                   Macros
@@ -26,13 +27,13 @@
 	#define  __declspec(dllimport)
 #endif
 #else // STATIC_BUILD
-#define FXGEN_API
+#define 
 #endif // STATIC_BUILD
 
 //-----------------------------------------------------------------
 //	Type def
 //-----------------------------------------------------------------
-typedef int( __cdecl *CompareFnc) (const void *elem1, const void *elem2);
+typedef int(*CompareFnc) (const void *elem1, const void *elem2);
 
 //-----------------------------------------------------------------
 //!	\class	GArray
@@ -45,7 +46,8 @@ typedef int( __cdecl *CompareFnc) (const void *elem1, const void *elem2);
 //!			  0		if elem1 identical to elem2
 //!			> 0		if elem1 greater than elem2
 //-----------------------------------------------------------------
-template < class T >  class __declspec(dllexport) GArray
+//template < class T >  class __declspec(dllexport) GArray
+template < class T >  class  GArray
 {
 public:
 
@@ -119,7 +121,7 @@ public:
 			{
 				udword dwOldCount = m_dwCount;
 				SetSize(m_dwCount+array.Count()+m_dwGrow);
-				memcpy(m_pBuffer + dwOldCount, array.m_pBuffer, array.m_dwCount * sizeof(T));
+				NMemCopy(m_pBuffer + dwOldCount, array.m_pBuffer, array.m_dwCount * sizeof(T));
 				m_dwCount+=array.m_dwCount;
 			}
 
@@ -132,7 +134,7 @@ public:
 				m_dwCount--;
 				T* pBuffer = m_pBuffer+idx;
 
-				memcpy(pBuffer, pBuffer+1, (m_dwSize-idx-1) * sizeof(T));
+				NMemCopy(pBuffer, pBuffer+1, (m_dwSize-idx-1) * sizeof(T));
 			}
 
 			//-----------------------------------------------------------------
@@ -195,7 +197,7 @@ public:
 
 				T* pBuffer = m_pBuffer+idx;
 
-				memcpy(pBuffer+1, pBuffer, (m_dwSize-idx) * sizeof(T));
+				NMemCopy(pBuffer+1, pBuffer, (m_dwSize-idx) * sizeof(T));
 
 				m_pBuffer[idx] = item;
 				return m_dwCount++;
@@ -209,3 +211,6 @@ public:
 			udword	m_dwGrow;
 
 };
+
+
+#endif //TEMPLATES_H

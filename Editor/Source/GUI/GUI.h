@@ -14,12 +14,12 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef GUI_H
+#define GUI_H
 
 //-----------------------------------------------------------------
 //                   Macros
 //-----------------------------------------------------------------
-
 #ifndef _MAX_PATH
 #define _MAX_PATH 32768
 #endif
@@ -29,27 +29,20 @@
 //-----------------------------------------------------------------
 #include "Types.h"
 #include "Templates.h"
-#include "Keyboard.h"
-
-#include <GL/gl.h>	//Header File For The OpenGL Library
 
 
 //-----------------------------------------------------------------
 // Class Prototypes
 //-----------------------------------------------------------------
-class NbaseApplication;
+class NGUISubSystem;
 class NGraphics;
 class NGUIFont;
 
-	class NDialog;
-	class NbaseFileDialog;
-
-	class NCmdTarget;
-		class NWnd;
-			class NFrmWnd;
-			class NSplitWnd;
-			class NWControl;
-				class NTabCtrl;
+class NCmdTarget;
+	class NWnd;
+		class NFrmWnd;
+		class NSplitWnd;
+		class NWControl;
 
 //-----------------------------------------------------------------
 //			Defines Window Styles
@@ -76,6 +69,14 @@ class NGUIFont;
 #define NDT_SINGLELINE			8
 
 //-----------------------------------------------------------------
+//			Defines Mouse Buttons Type
+//-----------------------------------------------------------------
+#define	NM_LBUTTON	1
+#define	NM_MBUTTON	2
+#define	NM_RBUTTON	4
+
+
+//-----------------------------------------------------------------
 //! \struct NWNDCREATE
 //! \brief	Window Description
 //-----------------------------------------------------------------
@@ -88,7 +89,115 @@ struct NWNDCREATE
 	NRect			rcRect;						//Window rect (pos relative to parent if any else to desktop)
 };
 
+namespace NKey
+{
+	enum Code
+	{
+			A = 'a',
+			B = 'b',
+			C = 'c',
+			D = 'd',
+			E = 'e',
+			F = 'f',
+			G = 'g',
+			H = 'h',
+			I = 'i',
+			J = 'j',
+			K = 'k',
+			L = 'l',
+			M = 'm',
+			N = 'n',
+			O = 'o',
+			P = 'p',
+			Q = 'q',
+			R = 'r',
+			S = 's',
+			T = 't',
+			U = 'u',
+			V = 'v',
+			W = 'w',
+			X = 'x',
+			Y = 'y',
+			Z = 'z',
+			Num0 = '0',
+			Num1 = '1',
+			Num2 = '2',
+			Num3 = '3',
+			Num4 = '4',
+			Num5 = '5',
+			Num6 = '6',
+			Num7 = '7',
+			Num8 = '8',
+			Num9 = '9',
+			Escape = 256,
+			LControl,
+			LShift,
+			LAlt,
+			LSystem,      ///< OS specific key (left side) : windows (Win and Linux), apple (MacOS), ...
+			RControl,
+			RShift,
+			RAlt,
+			RSystem,      ///< OS specific key (right side) : windows (Win and Linux), apple (MacOS), ...
+			Menu,
+			LBracket,     ///< [
+			RBracket,     ///< ]
+			SemiColon,    ///< ;
+			Comma,        ///< ,
+			Period,       ///< .
+			Quote,        ///< '
+			Slash,        ///< /
+			BackSlash,
+			Tilde,        ///< ~
+			Equal,        ///< =
+			Dash,         ///< -
+			Space,
+			Return,
+			Back,
+			Tab,
+			PageUp,
+			PageDown,
+			End,
+			Home,
+			Insert,
+			Delete,
+			Add,          ///< +
+			Subtract,     ///< -
+			Multiply,     ///< *
+			Divide,       ///< /
+			Left,         ///< Left arrow
+			Right,        ///< Right arrow
+			Up,           ///< Up arrow
+			Down,         ///< Down arrow
+			Numpad0,
+			Numpad1,
+			Numpad2,
+			Numpad3,
+			Numpad4,
+			Numpad5,
+			Numpad6,
+			Numpad7,
+			Numpad8,
+			Numpad9,
+			F1,
+			F2,
+			F3,
+			F4,
+			F5,
+			F6,
+			F7,
+			F8,
+			F9,
+			F10,
+			F11,
+			F12,
+			F13,
+			F14,
+			F15,
+			Pause,
 
+			Count // For internal use
+	};
+}
 //-----------------------------------------------------------------
 //!	\class	NCmdTarget
 //!	\brief	Command Target
@@ -118,28 +227,23 @@ struct  FDelegate
 
 
 //-----------------------------------------------------------------
-//!	\class	NbaseApplication
-//!	\brief	Base Application Class Definition
+//!	\class	NGUISubSystem
+//!	\brief	GUI SubSystem Class Definition
 //-----------------------------------------------------------------
-class  NbaseApplication
+class  NGUISubSystem
 {
 public:
 	//Constructor-Destructor
-	NbaseApplication();
-	virtual						~NbaseApplication();
+	NGUISubSystem();
+	virtual ~NGUISubSystem();
 
 	//Platform Dependent Methods
-	virtual	bool	Init() { return false; }		//!< Override to perform Windows instance initialization, such as creating your window objects.
-	virtual	void	Run();				//!< OverLoad Runs the default message loop. Override to customize the message loop.
-	virtual	bool	Exit();				//!< OverLoad to clean up when your application terminates.
-	virtual void	Idle()		{}	//!< OverRide It is called by the framework when there is no message in the queue.
-	virtual void	Update()	{}	//!< OverRide It is called by the framework in Run Loop
+	bool Init();
+	bool ShutDown();
+	void Update();
 
-	virtual void	AskExit() {} 	//!< Called in order to exit application
-
-	virtual	void GetCursorPos(NPoint& _pos) {}; //Override
-	virtual	void SetCursorPos(const NPoint& _pos) {}; //Override
-	virtual	udword MessageBox(char* _pszText, udword _dwStyle=NMB_OK) { return 0; }
+	void GetCursorPos(NPoint& _pos) { _pos=m_ptCursor;			}
+	bool IsKeyDown(NKey::Code _key) { return m_keyDown[_key]; }
 
 	//GUI
 	void	RedrawWindow(NWnd* _pwndFrom);
@@ -150,33 +254,50 @@ public:
 	void	SetCapture(NWnd* _pwnd);
 	void	ReleaseCapture();
 
+	void SetMainWnd(NWnd* _mainfrm)	{ m_pMainWnd = _mainfrm; }
+
 	//Members access
 	NWnd*	GetMainWnd()			{ return m_pMainWnd;	}
 	NGUIFont* GetFont()			{ return m_pfont;			}
 
-
-//protected:
 	//Methods
-	void ProcessMsgs_OnSize(udword _w, udword _h);	//!< Process Msgs (mouse, resize, paint ...)
+	void ProcessMsgs_OnSize(udword _w, udword _h);
+
+	void ProcessMsgs_MouseButtonDown(NPoint _ptScreen, udword _dwButton);
+	void ProcessMsgs_MouseButtonUp(NPoint _ptScreen, udword _dwButton);
+	void ProcessMsgs_MouseButtonDblClick(NPoint _ptScreen, udword _dwButton);
+	void ProcessMsgs_MouseWheel(NPoint _ptScreen, sdword _dwDelta);
+	void ProcessMsgs_MouseMove(NPoint _ptScreen);
+
+	void ProcessMsgs_KeyDown(NKey::Code key);
+	void ProcessMsgs_KeyUp(NKey::Code key);
+
+	void ProcessMsgs_Text(udword _unicode);
+
+	void NotifyWindowDeletion(NWnd* _pWnd);
+protected:
+
 	NWnd* GetWndUnderMouse(sdword _x, sdword _y);
 	NWnd* _GetWndUnderMouse(sdword _x, sdword _y, NWnd* _pwndParent);
 	NWnd* _GetPopupWndUnderMouse(sdword _x, sdword _y, NWnd* _pwndParent);
-	void InitGLState();
 	void	_RedrawWindowChild(NWnd* _pwndFrom);
 	void	_RedrawWindowPopup(NWnd* _pwndFrom);
+
+	void InitGLState();
+
 	//Datas
 	NWnd*			m_pMainWnd;
-	NString		m_strCmdLine;
 	NGUIFont*	m_pfont;
 
 	NWnd*			m_pFocusedWnd;
 	NWnd*			m_pCapturedWnd;
 	NWnd*			m_pOldWndUnderMouse;
-
-	bool	m_bMustDrawWindows;
+	bool			m_keyDown[NKey::Count];
+	bool			m_bMustDrawWindows;
+	NPoint		m_ptCursor;
 };
 
-extern		NbaseApplication*			GetApp();
+extern		NGUISubSystem*			GetGUISubSystem();
 
 
 //-----------------------------------------------------------------
@@ -191,7 +312,7 @@ public:
 	~NGraphics();
 
 	//Rect
-	void FillSolidRect(NRect& rc, NColor clr);
+	void FillSolidRect(NRect& rc, NColor _clr);
 	void Draw3dRect(NRect& rc, NColor clrTopLeft, NColor clrBottomRight);
 	void GradientVRect(NRect& rc, NColor clrStart, NColor clrEnd);
 	void RoundRect(ubyte _roundboxtype, NRect& _rc, float _rad, NColor _clr);
@@ -226,9 +347,9 @@ public:
 
 	//Windows Creation
 	virtual	bool Create(NWNDCREATE& c);
- 
+
 	//Methods
-	NRect	GetClientRect();	//!< 
+	NRect	GetClientRect();	//!<
 	NRect	GetWindowRect();	//!< Get Rect relative to parent
 	void	ScreenToClient(NPoint& _pt);
 	void	ClientToScreen(NPoint& _pt);
@@ -260,21 +381,24 @@ public:
 	//Messages
 	virtual	void	OnPaint()		{}
 	virtual	void	OnSize()		{}
-	virtual void	OnMouseMove(udword flags, NPoint pos )				{}
-	virtual	void	OnLeftButtonDown(udword flags, NPoint pos )		{}
-	virtual	void	OnRightButtonDown(udword flags, NPoint pos )	{}
-	virtual	void	OnMButtonDown(udword flags, NPoint pos )			{}
-	virtual	void	OnLeftButtonUp(udword flags, NPoint pos )			{}
-	virtual	void	OnRightButtonUp(udword flags, NPoint pos )		{}
-	virtual	void	OnMButtonUp(udword flags, NPoint pos )				{}
-	virtual	void	OnLeftButtonDblClk(udword flags, NPoint point){}
-	virtual	void	OnMouseWheel(udword flags, sword zDelta, NPoint point)			{}
-	virtual	void	OnCommand(udword id)			{}
-	virtual	void	OnKeyUp(udword dwchar)		{}
+
+	virtual void	OnMouseMove(NPoint pos )				{}
+	virtual	void	OnLButtonDown(NPoint pos )			{}
+	virtual	void	OnRButtonDown(NPoint pos )			{}
+	virtual	void	OnMButtonDown(NPoint pos )			{}
+	virtual	void	OnLButtonUp(NPoint pos )				{}
+	virtual	void	OnRButtonUp(NPoint pos )				{}
+	virtual	void	OnMButtonUp(NPoint pos )				{}
+	virtual	void	OnLButtonDblClk(NPoint pos)			{}
+	virtual	void	OnMouseWheel(NPoint pos, sdword zDelta)			{}
+
+	virtual	void	OnCommand(udword id)				{}
+	virtual	void	OnKeyUp(udword dwchar)			{}
 	virtual	void	OnKeyDown(udword dwchar)		{}
-	virtual	void	OnKillFocus(NWnd* pNewWnd)		{}
-	virtual	void	OnTimer(udword _dwTimerID)		{}
+	virtual	void	OnKillFocus(NWnd* pNewWnd)	{}
+	virtual	void	OnTimer(udword _dwTimerID)	{}
 	virtual	void	OnMouseLeave() {}
+	virtual	void	OnText(udword _unicode)		{}
 
 protected:
 	//Datas
@@ -287,7 +411,7 @@ protected:
 	NObjectArray	m_arrayChildren;
 
 	//Friends
-	friend class NbaseApplication;
+	friend class NGUISubSystem;
 };
 
 
@@ -337,62 +461,4 @@ public:
 
 
 
-
-
-//-----------------------------------------------------------------
-//!	\class	NTabCtrl
-//!	\brief	Tab Control Class Definition
-//-----------------------------------------------------------------
-/*
-class  NTabCtrl : public NWControl
-{
-public:
-	//Constructor-Destructor
-					NTabCtrl() : NWControl()	{}
-	virtual	~NTabCtrl()								{}
-
-	//Windows Creation
-	virtual	bool Create(char* name, NRect& rect, NWnd* parent);
-
-	//Methods
-	void		InsertItem(udword pos, char* name, NWnd* wnd);	//pos from 0 to ...
-	void		SelectItem(udword idx);	//idx from 0 to ...
-	udword	GetSelectedItem();
-
-	//Notification Messages
-	FDelegate		OnSelChange;
-
-protected:
-	//Win32 messages
-	virtual	void		OnSize();
-	//virtual udword	CatchControlNotify(udword code);
-};
-*/
-
-//-----------------------------------------------------------------
-//!	\class	NbaseFileDialog
-//!	\brief	FileDialog Class Definition
-//-----------------------------------------------------------------
-class  NbaseFileDialog
-{
-public:
-	//Constructor/Destructor
-					NbaseFileDialog()		{}
-	virtual	~NbaseFileDialog()		{}
-
-	//Platform Dependent Methods
-	virtual bool Create(char* name, NWnd* parent, bool open=true, bool multiselect=false)	= 0;
-	virtual udword	DoModal() = 0;												//Displays the dialog box and allows the user to make a selection
-
-	//Methods
-	udword	GetFileNumber();
-	NString	GetPathName(udword Index=0)		const;	//The path of the filename includes the file's title plus the entire directory path
-
-protected:
-	//Methods
-
-	//Datas
-	char		mFileName[_MAX_PATH];			//Contains full path name after filedialog return
-	NString	mTransfilter;							//File filter (ex. "TLM Files (*.tlm)|*.tlm|All Files (*.*)|*.*||")
-};
-
+#endif //GUI_H

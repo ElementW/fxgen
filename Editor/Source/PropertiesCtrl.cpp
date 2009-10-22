@@ -249,11 +249,11 @@ void NPropertiesCtrl::OnSize()
 //-----------------------------------------------------------------
 //!	\brief	control Left button down message
 //-----------------------------------------------------------------
-void NPropertiesCtrl::OnLeftButtonDown(udword flags, NPoint point)
+void NPropertiesCtrl::OnLButtonDown(NPoint point)
 {
 	SetFocus();
 
-	//TRACE("OnLeftButtonDown\n");
+	//TRACE("OnLButtonDown\n");
 	udword idx = GetRowUnderPoint(point);
 
 	//Row selection and AddValue
@@ -272,7 +272,7 @@ void NPropertiesCtrl::OnLeftButtonDown(udword flags, NPoint point)
 			{
 				SetCapture();
 
-				GetApp()->GetCursorPos(m_ptCursor);
+				GetGUISubSystem()->GetCursorPos(m_ptCursor);
 				m_ptStartMouse = point;
 				m_bAddValue = true;
 				TRACE("Start Sliding...\n");
@@ -297,7 +297,7 @@ void NPropertiesCtrl::OnLeftButtonDown(udword flags, NPoint point)
 //-----------------------------------------------------------------
 //!	\brief	control right button up message
 //-----------------------------------------------------------------
-void NPropertiesCtrl::OnLeftButtonUp(udword flags, NPoint point)
+void NPropertiesCtrl::OnLButtonUp(NPoint point)
 {
 	if (m_bAddValue)
 	{
@@ -310,7 +310,7 @@ void NPropertiesCtrl::OnLeftButtonUp(udword flags, NPoint point)
 //-----------------------------------------------------------------
 //!	\brief	control right button down message
 //-----------------------------------------------------------------
-void NPropertiesCtrl::OnRightButtonDown(udword flags, NPoint point)
+void NPropertiesCtrl::OnRButtonDown(NPoint point)
 {
 	SetFocus();
 }
@@ -319,7 +319,7 @@ void NPropertiesCtrl::OnRightButtonDown(udword flags, NPoint point)
 //-----------------------------------------------------------------
 //!	\brief	control left button double click message
 //-----------------------------------------------------------------
-void NPropertiesCtrl::OnLeftButtonDblClk(udword flags, NPoint point)
+void NPropertiesCtrl::OnLButtonDblClk(NPoint point)
 {
 	//Row selection
 	int nidx = GetRowUnderPoint(point);
@@ -341,7 +341,7 @@ void NPropertiesCtrl::OnLeftButtonDblClk(udword flags, NPoint point)
 //-----------------------------------------------------------------
 //!	\brief	control mouse move message
 //-----------------------------------------------------------------
-void NPropertiesCtrl::OnMouseMove(udword flags, NPoint point )
+void NPropertiesCtrl::OnMouseMove(NPoint point )
 {
 	//Value sliding
 	if (m_bAddValue)
@@ -362,7 +362,7 @@ void NPropertiesCtrl::OnMouseMove(udword flags, NPoint point )
 //-----------------------------------------------------------------
 //!	\brief	control left button double click message
 //-----------------------------------------------------------------
-void NPropertiesCtrl::OnMButtonDown(udword flags, NPoint pos)
+void NPropertiesCtrl::OnMButtonDown(NPoint pos)
 {
 	SetFocus();
 }
@@ -370,7 +370,7 @@ void NPropertiesCtrl::OnMButtonDown(udword flags, NPoint pos)
 //-----------------------------------------------------------------
 //!	\brief	control middle button up message
 //-----------------------------------------------------------------
-void NPropertiesCtrl::OnMButtonUp(udword flags, NPoint pos)
+void NPropertiesCtrl::OnMButtonUp(NPoint pos)
 {
 }
 
@@ -379,7 +379,7 @@ void NPropertiesCtrl::OnMButtonUp(udword flags, NPoint pos)
 //-----------------------------------------------------------------
 void NPropertiesCtrl::OnKeyDown(udword dwchar)
 {
-	//GetApp()->GetMainWnd()->OnKeyDown(dwchar);
+	//GetGUISubSystem()->GetMainWnd()->OnKeyDown(dwchar);
 }
 
 //-----------------------------------------------------------------
@@ -524,7 +524,7 @@ void NPropertiesCtrl::DeleteAllProperties()
 	for (udword i=0; i<m_carrayRowsDesc.Count(); i++)
 	{
 		NRowDesc* prd = &m_carrayRowsDesc[i];
-		if (prd->pItem)		delete prd->pItem;
+		if (prd->pItem)		NDELETE(prd->pItem, NPropertyItem);
 	}
 
 	m_carrayRowsDesc.Clear();
@@ -698,15 +698,16 @@ bool NPropertiesCtrl::IsAnimButtonUnderPoint(NPoint& _pt)
 //-----------------------------------------------------------------
 void NPropertiesCtrl::AddRemoveAnimControlToRow(udword _dwRowIdx)
 {
-/*	NRowDesc* prd = &m_carrayRowsDesc[_dwRowIdx];
+/*
+	NRowDesc* prd = &m_carrayRowsDesc[_dwRowIdx];
 	//bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc[prd->pItem->m_dwvarIdx].bCanBeAnimate;
 	bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc->bCanBeAnimate;
 	if (bCanBeAnimate && prd->pItem->m_pvarValue->pcCtrlObj==null)
 	{
-		prd->pItem->m_pvarValue->pcCtrlObj = new NController();
+		prd->pItem->m_pvarValue->pcCtrlObj = NNEW(NController);
 		DisplayObjectProperties(m_pobj);
 	} else if (prd->pItem->m_pvarValue->pcCtrlObj) {
-		delete prd->pItem->m_pvarValue->pcCtrlObj;
+		NDELETE(prd->pItem->m_pvarValue->pcCtrlObj, NObject);
 		prd->pItem->m_pvarValue->pcCtrlObj=null;
 		DisplayObjectProperties(m_pobj);
 	}

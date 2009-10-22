@@ -4,7 +4,7 @@
 //! \brief	FxGen Editor application
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
-//!	\date		12-02-2007
+//!	\date		01-09-2008
 //!
 //!	\brief	This file applies the GNU GENERAL PUBLIC LICENSE
 //!					Version 2, read file COPYING.
@@ -14,29 +14,37 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef EDITOR_H
+#define EDITOR_H
 
 //-----------------------------------------------------------------
 //                   Includes
 //-----------------------------------------------------------------
 #include "MainFrm.h"
+#include "EventsList.h"
 
 //-----------------------------------------------------------------
 //                   Defines
 //-----------------------------------------------------------------
 #ifdef __GNUC__
-#define CAPTION		"FxGen Editor v0.6 alpha (gcc) - "
+#define CAPTION		"FxGen Editor v0.7 alpha (gcc) - "
 #else
-#define CAPTION		"FxGen Editor v0.6 alpha - "
+#define CAPTION		"FxGen Editor v0.7 alpha - "
 #endif
 #define WIDTH			800
 #define HEIGHT		600
 
 //-----------------------------------------------------------------
+//                   Prototypes
+//-----------------------------------------------------------------
+class NEventsMgr;
+
+
+//-----------------------------------------------------------------
 //!	\class		NFXGenApp
 //!	\brief		Application class declaration
 //-----------------------------------------------------------------
-class NFxGenApp : public NApplication
+class NFxGenApp
 {
 public:
 	//Constructor-Destructor
@@ -44,13 +52,18 @@ public:
 	virtual	~NFxGenApp();
 
 	//Methods
-	virtual	bool Init();		//!< Override to perform Windows instance initialization, such as creating your window objects.
-	virtual	bool Exit();		//!< Override to clean up when your application terminates.
-	virtual void Idle();		//!< It is called by the framework when there is no message in the queue.
-	virtual void Update();	//!< It is called by the framework in Run Loop
+	bool Init();
+	void Run();
+	bool Exit();
+	void Update();
+
+	NMainFrm* GetMainWnd()		{ return (NMainFrm*)GetGUISubSystem()->GetMainWnd(); }
+
+	udword MessageBox(char* _pszText, udword _dwStyle);
 
 protected:
 	//Datas
+	sf::Window m_appWnd;
 	float m_fOldTime;
 };
 
@@ -59,3 +72,5 @@ protected:
 //                   Externs
 //-----------------------------------------------------------------
 extern NEventsMgr*	g_pceventsMgr;
+extern NFxGenApp*		GetApp();
+#endif //EDITOR_H

@@ -14,7 +14,9 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef PROPERTIESWND_H
+#define PROPERTIESWND_H
+
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -48,5 +50,7 @@ protected:
 	//Win32 Messages Dispatching
 
 	//Datas
-	NOperator* m_pcurOp;	//!< current viewed operator
+	NOperatorNode* m_pcurOp;	//!< current viewed operator
 };
+
+#endif //PROPERTIESWND_H

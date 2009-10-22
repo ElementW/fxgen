@@ -14,7 +14,8 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef VIEWPORTWND_H
+#define VIEWPORTWND_H
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -25,7 +26,7 @@
 //-----------------------------------------------------------------
 //                   Prototypes
 //-----------------------------------------------------------------
-class NOperator;
+class NOperatorNode;
 
 //-----------------------------------------------------------------
 //!	\class		NViewportsWnd
@@ -43,14 +44,13 @@ public:
 protected:
 	//Messages
 	virtual	void	OnPaint();
-	virtual	void	OnMouseWheel	(udword flags, sword zDelta, NPoint point);
-	virtual void	OnMouseMove		(udword flags, NPoint pos);
-	virtual void	OnMButtonDown	(udword flags, NPoint pos);
-	virtual void	OnMButtonUp		(udword flags, NPoint pos);
-	virtual void	OnLeftButtonDown(udword flags, NPoint pos);
-	virtual void	OnLeftButtonUp(udword flags, NPoint pos);
-	virtual void	OnRightButtonDown(udword flags, NPoint pos);
-
+	virtual	void	OnMouseWheel		(NPoint pos, sdword zDelta);
+	virtual void	OnMouseMove			(NPoint pos);
+	virtual void	OnMButtonDown		(NPoint pos);
+	virtual void	OnMButtonUp			(NPoint pos);
+	virtual void	OnLButtonDown(NPoint pos);
+	virtual void	OnLButtonUp	(NPoint pos);
+	virtual void	OnRButtonDown(NPoint pos);
 
 	//Events
 	EVT_DECLARE_HANDLER(OnOPDeleting);
@@ -60,7 +60,7 @@ protected:
 	void DisplayTexture(NObject* pobj);
 	udword CreateTexture(udword _w, udword _h);
 	void DeleteTexture(udword _dwTextID);
-	//void CopyPixelsToTexture(udword _dwtexid, udword _w, udword _h, NRGBA* _ppixels);
+	void CopyPixelsToTexture(udword _dwtexid, udword _w, udword _h, NRGBA* _ppixels);
 
 	// Messages Notify
 	void OnMenuItemClick(NObject* _psender);
@@ -88,5 +88,7 @@ protected:
 	bool				m_bFiltering;
 	bool				m_bOrtho;
 
-	NObject*		m_pcurObject;		//!< Objet in visualisation
+	NOperatorNode*		m_pcurOp;		//!< Op in visualisation
 };
+
+#endif //VIEWPORTWND_H

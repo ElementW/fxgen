@@ -19,7 +19,6 @@
 //-----------------------------------------------------------------
 //                   Includes
 //-----------------------------------------------------------------
-#include "GUI\GUI.h"
 #include "PropertyItems.h"
 
 //-----------------------------------------------------------------
@@ -65,6 +64,7 @@ public:
 	void	DisplayObjectProperties(NObject* pobj);		//!< Display Object Properties
 
 	void 	SaveRowEditing();
+	void 	EndRowEditing(bool bSaveChanged=true);
 
 	// Messages Notify
 	virtual void OnPropertiesChanged()	{};
@@ -86,7 +86,6 @@ protected:
 	bool			ExpandRow(udword _dwRowIdx);
 	void 			ClickRow(udword dwRowIdx, NPoint& pt);
 	void 			StartRowEditing(udword dwRowIdx);
-	void 			EndRowEditing(bool bSaveChanged=true);
 	bool			IsAnimButtonUnderPoint(NPoint& pt);
 	void			AddRemoveAnimControlToRow(udword _dwRowIdx);
 	udword		GetRowIdxFromGroupIdx(udword _groupIdx);
@@ -107,13 +106,13 @@ protected:
 	//Win32 Messages Dispatching
 	virtual	void	OnPaint();
 	virtual void	OnSize();
-	virtual void	OnMouseMove(udword flags, NPoint pos );
-	virtual void	OnMButtonDown(udword flags, NPoint pos);
-	virtual void	OnMButtonUp(udword flags, NPoint pos);
-	virtual void	OnLeftButtonUp(udword flags, NPoint pos);
-	virtual void	OnLeftButtonDown(udword flags, NPoint pos);
-	virtual	void	OnLeftButtonDblClk(udword flags, NPoint point);
-	virtual void	OnRightButtonDown(udword flags, NPoint pos);
+	virtual void	OnMouseMove(NPoint pos );
+	virtual void	OnMButtonDown(NPoint pos);
+	virtual void	OnMButtonUp(NPoint pos);
+	virtual void	OnLButtonUp(NPoint pos);
+	virtual void	OnLButtonDown(NPoint pos);
+	virtual	void	OnLButtonDblClk(NPoint point);
+	virtual void	OnRButtonDown(NPoint pos);
 	virtual	void	OnKeyDown(udword dwchar);
 
 };

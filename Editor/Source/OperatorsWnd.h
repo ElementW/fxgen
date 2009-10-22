@@ -14,7 +14,8 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef OPERATORSWND_H
+#define OPERATORSWND_H
 
 //-----------------------------------------------------------------
 //			Includes
@@ -34,10 +35,10 @@ public:
 
 	//Methods
 	virtual	bool Create(const char* name, const NRect& rect, NWnd* parent);
-	virtual void OnMarkShowOperator(NOperator* pop);
+	virtual void OnMarkShowOperator(NOperatorNode* pop);
 
-	virtual void OnDeletingOperator(NOperator* pop);
-	virtual void OnDeletedOperator(NOperator* pop);
+	virtual void OnDeletingOperator(NOperatorNode* pop);
+	virtual void OnDeletedOperator(NOperatorNode* pop);
 
 	//Methods Debug
 	void Dump();
@@ -54,9 +55,11 @@ protected:
 	EVT_DECLARE_HANDLER(OnRendering);
 
 	//Messages Dispatching
-	virtual void OnRightButtonDown(udword flags, NPoint pos);
+	virtual void OnRButtonDown(NPoint pos);
 
 	//Datas
 	NMenuCtrl	m_wndMenu;
 
 };
+
+#endif //OPERATORSWND_H

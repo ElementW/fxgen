@@ -41,7 +41,7 @@ NString::NString(const char* string)
 {
 	udword len = (udword)strlen(string);
 	mBuffer = (char*)malloc(len+1);
-	memcpy(mBuffer, string, len);
+	NMemCopy(mBuffer, string, len);
 	mBuffer[len] = 0;
 }
 
@@ -50,7 +50,7 @@ NString::NString(const NString& string)
 {
 	udword len = string.Length();
 	mBuffer = (char*)malloc(len+1);
-	memcpy(mBuffer, string.Buffer(), len);
+	NMemCopy(mBuffer, string.Buffer(), len);
 	mBuffer[len] = 0;
 }
 
@@ -241,7 +241,7 @@ NString NString::Mid(udword first, udword count)
 	NString				str;
 	str.mBuffer			= (char*)malloc(count+1);
 	str.mBuffer[count]	= 0;
-	memcpy(str.mBuffer, mBuffer+first, count);
+	NMemCopy(str.mBuffer, mBuffer+first, count);
 
 	return str;
 }
@@ -252,7 +252,7 @@ NString& NString::Format(const char* str, ...)
 	char buf[256];
 	va_list args;
 	va_start(args, str);
-	_vsnprintf_s(buf, sizeof(buf), sizeof(buf), str, args);
+	vsnprintf(buf, sizeof(buf), str, args);
 	va_end(args);
 
 	//set formated string
@@ -268,8 +268,8 @@ void NString::InsertAt(udword _idx, const char* _str)
 		udword len1 = Length();
 		udword len2 = (udword)strlen(_str);
 		mBuffer = (char*)realloc(mBuffer, len1 + len2 + 1);
-		memcpy(mBuffer+_idx+len2, mBuffer+_idx, len1-_idx);	//Move right part
-		memcpy(mBuffer+_idx, _str, len2);
+		NMemCopy(mBuffer+_idx+len2, mBuffer+_idx, len1-_idx);	//Move right part
+		NMemCopy(mBuffer+_idx, _str, len2);
 		mBuffer[len1+len2]=0;
 	}
 
@@ -280,7 +280,7 @@ void NString::RemoveAt(udword _idx, udword _count)
 	udword len1 = Length();
 	if (mBuffer && _idx<len1)
 	{
-		memcpy(mBuffer+_idx, mBuffer+_idx+_count, len1-_count);
+		NMemCopy(mBuffer+_idx, mBuffer+_idx+_count, len1-_count);
 		mBuffer[len1-_count]=0;
 	}
 
@@ -294,38 +294,39 @@ void NString::RemoveAt(udword _idx, udword _count)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 
-void NColor::ToHLS(float &_h, float &_l, float &_s) 
+void NColor::ToHLS(float &_h, float &_l, float &_s)
 {
+	float r = mR*255.0f;
+	float g = mG*255.0f;
+	float b = mB*255.0f;
+	float minval = nmin(r, nmin(g, b));
+	float maxval = nmax(r, nmax(g, b));
+	float mdiff  = float(maxval) - float(minval);
+	float msum   = float(maxval) + float(minval);
 
-  float minval = min(mR*255.0f, min(mG*255.0f, mB*255.0f));
-  float maxval = max(mR*255.0f, max(mG*255.0f, mB*255.0f));
-  float mdiff  = float(maxval) - float(minval);
-  float msum   = float(maxval) + float(minval);
- 
-  _l = msum / 510.0f;
+	_l = msum / 510.0f;
 
-  if (maxval == minval) 
-  {
-    _s = 0.0f;
-    _h = 0.0f;
-  }   
-  else 
-  { 
-    float rnorm = (maxval - mR*255.0f ) / mdiff;      
-    float gnorm = (maxval - mG*255.0f ) / mdiff;
-    float bnorm = (maxval - mB*255.0f ) / mdiff;   
+	if (maxval == minval)
+	{
+		_s = 0.0f;
+		_h = 0.0f;
+	}
+	else
+	{
+		float rnorm = (maxval - r ) / mdiff;
+		float gnorm = (maxval - g ) / mdiff;
+		float bnorm = (maxval - b ) / mdiff;
 
-    _s = (_l <= 0.5f) ? (mdiff / msum) : (mdiff / (510.0f - msum));
+		_s = (_l <= 0.5f) ? (mdiff / msum) : (mdiff / (510.0f - msum));
 
-    if (mR*255.0f == maxval) _h = 60.0f * (6.0f + bnorm - gnorm);
-    if (mG*255.0f == maxval) _h = 60.0f * (2.0f + rnorm - bnorm);
-    if (mB*255.0f == maxval) _h = 60.0f * (4.0f + gnorm - rnorm);
-    if (_h > 360.0f)	_h = _h - 360.0f;
-  }
-
+		if (r == maxval) _h = 60.0f * (6.0f + bnorm - gnorm);
+		if (g == maxval) _h = 60.0f * (2.0f + rnorm - bnorm);
+		if (b == maxval) _h = 60.0f * (4.0f + gnorm - rnorm);
+		if (_h > 360.0f)	 _h = _h - 360.0f;
+	}
 }
 
-void NColor::SetFromHLS(float _h, float _l, float _s) 
+void NColor::SetFromHLS(float _h, float _l, float _s)
 {
 	//mA=1.0f;
   if (_s == 0.0)
@@ -335,11 +336,11 @@ void NColor::SetFromHLS(float _h, float _l, float _s)
   else
   {
     float rm1, rm2;
-       
-    if (_l <= 0.5f) rm2 = _l + _l * _s;  
+
+    if (_l <= 0.5f) rm2 = _l + _l * _s;
     else            rm2 = _l + _s - _l * _s;
-    rm1 = 2.0f * _l - rm2;   
-    mR = ToRGB1(rm1, rm2, _h + 120.0f);   
+    rm1 = 2.0f * _l - rm2;
+    mR = ToRGB1(rm1, rm2, _h + 120.0f);
     mG = ToRGB1(rm1, rm2, _h);
     mB = ToRGB1(rm1, rm2, _h - 120.0f);
   }
@@ -350,11 +351,11 @@ float NColor::ToRGB1(float rm1, float rm2, float rh)
 {
   if      (rh > 360.0f) rh -= 360.0f;
   else if (rh <   0.0f) rh += 360.0f;
- 
-  if      (rh <  60.0f) rm1 = rm1 + (rm2 - rm1) * rh / 60.0f;   
+
+  if      (rh <  60.0f) rm1 = rm1 + (rm2 - rm1) * rh / 60.0f;
   else if (rh < 180.0f) rm1 = rm2;
-  else if (rh < 240.0f) rm1 = rm1 + (rm2 - rm1) * (240.0f - rh) / 60.0f;      
-                   
+  else if (rh < 240.0f) rm1 = rm1 + (rm2 - rm1) * (240.0f - rh) / 60.0f;
+
   return rm1;
 }
 
