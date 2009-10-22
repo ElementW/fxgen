@@ -14,7 +14,8 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef KEYBOARD_H
+#define KEYBOARD_H
 
 //Code From SDL :-)
 #ifndef VK_0
@@ -115,7 +116,7 @@ typedef enum {
 	NK_GREATER		= 62,
 	NK_QUESTION		= 63,
 	NK_AT			= 64,
-	/* 
+	/*
 	   Skip uppercase letters
 	 */
 	NK_LEFTBRACKET	= 91,
@@ -346,3 +347,5 @@ typedef enum {
 	KMOD_MODE  = 0x4000,
 	KMOD_RESERVED = 0x8000
 } SDLMod;*/
+
+#endif //KEYBOARD_H

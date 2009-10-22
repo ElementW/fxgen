@@ -14,13 +14,15 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef MAINFRM_H
+#define MAINFRM_H
 
 //-----------------------------------------------------------------
 //		Includes
 //-----------------------------------------------------------------
-#include "ProgressPieCtrl.h"
-
+//#include "ProgressPieCtrl.h"
+#include "GUI\GUI.h"
+#include "GUI\MenuCtrl.h"
 
 //-----------------------------------------------------------------
 //		Prototypes
@@ -28,7 +30,8 @@
 class NOperatorsWnd;
 class NProjectWnd;
 class NStoredWnd;
-class NOperator;
+class NOperatorNode;
+class NOperatorsProject;
 
 //-----------------------------------------------------------------
 //!	\class		NMainFrm
@@ -43,14 +46,17 @@ public:
 	virtual	bool Create(char* name, const NRect& rect);
 
 	//Methods
-	void MarkShowOperator(NOperator* pop);	//!< Set final Operator to mark final result
-	void DeletingOperator(NOperator* pop);	//!< Notif deleting operator
-	void DeletedOperator(NOperator* pop);		//!< Notif deleted operator
+	void MarkShowOperator(NOperatorNode* pop);	//!< Set final Operator to mark final result
+	void DeletingOperator(NOperatorNode* pop);	//!< Notif deleting operator
+	void DeletedOperator(NOperatorNode* pop);		//!< Notif deleted operator
+	void EmitPropertiesChanged(NOperatorNode* pop);
 
-	NOperator* Execute(float _ftime);
+	NOperatorNode* Execute(float _ftime);
 
 	void LoadProject(NString path = NString());
 	void SaveProject(NString path = NString());
+
+	NOperatorsProject* GetProject() { return m_pcurProject; }
 
 protected:
 	//Methods
@@ -69,11 +75,12 @@ protected:
 	void OnOptionMenuClick(NObject* _psender);
 
 	//Datas
+	NOperatorsProject*	m_pcurProject;		//!< Current project
 	bool							m_bExecuteLocked;	//!< Lock-Unlock operators execution
 	NOperatorsWnd*		m_opswnd;					//!< Operators Window
 	NProjectWnd*			m_pprojectwnd;		//!< Pages Window
 	NStoredWnd*				m_pstoredwnd;			//!< Stored Window
-	NOperator*				m_popMarkedShow;	//!< Operator marked show for final result
+	NOperatorNode*		m_popMarkedShow;	//!< Operator marked show for final result
 	NString						projectname;
 	float							m_fDetailFactor;
 	NMenuCtrl					m_wndFileMenu;
@@ -82,3 +89,4 @@ protected:
 };
 
 
+#endif //MAINFRM_H

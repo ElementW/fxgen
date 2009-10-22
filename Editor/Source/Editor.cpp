@@ -4,7 +4,7 @@
 //! \brief	FxGen Editor application
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
-//!	\date		12-02-2007
+//!	\date		01-09-2008
 //!
 //!	\brief	This file applies the GNU GENERAL PUBLIC LICENSE
 //!					Version 2, read file COPYING.
@@ -19,7 +19,6 @@
 //                   Includes
 //-----------------------------------------------------------------
 #include "pch.h"
-#include "GUI\WinMain.h"
 #include "Editor.h"
 
 //-----------------------------------------------------------------
@@ -28,6 +27,9 @@
 const char* GetModuleName()  { return "Editor"; }
 NEventsMgr*	g_pceventsMgr;
 NFxGenApp		theNApp;
+NGUISubSystem theGUI;
+
+NFxGenApp*		GetApp()	{ return &theNApp; }
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -43,63 +45,8 @@ NFxGenApp		theNApp;
 //-----------------------------------------------------------------
 NFxGenApp::NFxGenApp()
 {
-	g_pceventsMgr = new NEventsMgr;
+	g_pceventsMgr = NNEW(NEventsMgr);
 	m_fOldTime = 0;
-
-	//###TEST### NTreeNode class
-/*	NTreeNode* proot	= new NTreeNode;
-	proot->SetName("Root");
-
-	NTreeNode* pgroup1 = new NTreeNode;
-	pgroup1->SetName("Group1");
-
-	NTreeNode* pgroup2 = new NTreeNode;
-	pgroup2->SetName("Group2");
-
-	proot->AddSon(pgroup1, -1);
-	proot->AddSon(pgroup2, -1);
-
-	proot->DeleteSon(1);
-
-	pgroup2 = new NTreeNode;
-	pgroup2->SetName("Group2");
-
-	proot->AddSon(pgroup2, -1);
-	TRACE("");*/
-
-	//###TEST### NObject reference from variables
-/*
-	NObject* pobjRefTarget = new NObject();
-	pobjRefTarget->SetName(".Target");
-
-	NObject* pobjRefMaker01 = new NObject();
-	pobjRefMaker01->SetName(".Maker01");
-
-	NObject* pobjRefMaker02 = new NObject();
-	pobjRefMaker02->SetName(".Maker02");
-
-	NVarsBlocDesc blocdescOp[] =
-	{
-		VAR(erefobj,	false, "Load",	"0", "NUseStoredOpsProp")	//0
-	};
-
-	NVarsBloc* pcvarsBloc01 = pobjRefMaker01->AddVarsBloc(1, blocdescOp, 1);
-	NVarsBloc* pcvarsBloc02 = pobjRefMaker02->AddVarsBloc(1, blocdescOp, 1);
-
-	pcvarsBloc01->SetValue(0, 0.0, pobjRefTarget);
-	pcvarsBloc02->SetValue(0, 0.0, pobjRefTarget);
-
-	NOperator* popRef = null;
-	pcvarsBloc01->GetValue(0, 0.0, (NObject*&)popRef);
-	pcvarsBloc02->GetValue(0, 0.0, (NObject*&)popRef);
-
-	delete pobjRefTarget;
-
-	pcvarsBloc01->GetValue(0, 0.0, (NObject*&)popRef);
-	pcvarsBloc02->GetValue(0, 0.0, (NObject*&)popRef);
-
-	TRACE("");
-*/
 }
 
 //-----------------------------------------------------------------
@@ -107,8 +54,14 @@ NFxGenApp::NFxGenApp()
 //-----------------------------------------------------------------
 NFxGenApp::~NFxGenApp()
 {
-	delete g_pceventsMgr;
-	g_pceventsMgr = null;
+	NWnd* pwnd = GetGUISubSystem()->GetMainWnd();
+	if (pwnd)
+		NDELETE(pwnd, NWnd);
+
+	if (g_pceventsMgr)
+		NDELETE(g_pceventsMgr, NEventsMgr);
+
+
 }
 
 //-----------------------------------------------------------------
@@ -117,17 +70,163 @@ NFxGenApp::~NFxGenApp()
 //-----------------------------------------------------------------
 bool NFxGenApp::Init()
 {
-	NApplication::Init();
+	// Create main window
+	m_appWnd.Create(sf::VideoMode(WIDTH, HEIGHT), CAPTION);
+
+	// GUI SubSystem
+	NGUISubSystem* pgui = GetGUISubSystem();
+	pgui->Init();
 
 	//Create Main Frame Window
-	NMainFrm* frame = new NMainFrm();
-	m_pMainWnd = frame;
+	NMainFrm* frame = NNEW( NMainFrm );
+	pgui->SetMainWnd(frame);
 
 	frame->Create(CAPTION, NRect(0,0,WIDTH,HEIGHT));	//###TOFIX### not reel client size (see wnd caption...)
-	//frame->OnSize();
-//	if(lpCmdLine.Length())		frame->LoadProject(lpCmdLine);
 
 	return true;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Run application
+//!	\return	True if success
+//-----------------------------------------------------------------
+void NFxGenApp::Run()
+{
+	NGUISubSystem* pgui = GetGUISubSystem();
+	NPoint pt;
+
+	// Create a clock for measuring the time elapsed
+  sf::Clock clock;
+	bool bExist = false;
+
+  // Start game loop
+  while (m_appWnd.IsOpened() && !bExist)
+  {
+		//Sleep(1);
+
+    // Process events
+    sf::Event Event;
+    while (m_appWnd.GetEvent(Event))
+    {
+      // Close window
+      if (Event.Type == sf::Event::Closed)
+				bExist=true;
+
+			//Mouse Move
+			if (Event.Type == sf::Event::MouseMoved)
+			{
+				pt.x=m_appWnd.GetInput().GetMouseX();
+				pt.y=m_appWnd.GetInput().GetMouseY();
+				pgui->ProcessMsgs_MouseMove(pt);
+			}
+
+			//Mouse Wheel
+			if (Event.Type == sf::Event::MouseWheelMoved)
+			{
+				pt.x=m_appWnd.GetInput().GetMouseX();
+				pt.y=m_appWnd.GetInput().GetMouseY();
+				pgui->ProcessMsgs_MouseWheel(pt, Event.MouseWheel.Delta);
+			}
+
+
+			//Mouse Button Down
+			if (Event.Type == sf::Event::MouseButtonPressed)
+			{
+				udword dwBut = 0;
+				switch (Event.MouseButton.Button)
+				{
+					case sf::Mouse::Left:			dwBut = NM_LBUTTON; break;
+					case sf::Mouse::Middle:		dwBut = NM_MBUTTON; break;
+					case sf::Mouse::Right:		dwBut = NM_RBUTTON; break;
+				}
+
+				pt.x=m_appWnd.GetInput().GetMouseX();
+				pt.y=m_appWnd.GetInput().GetMouseY();
+
+				float Time = clock.GetElapsedTime() * 1000.0f;
+				if (Time<250.0f)	//ms ###TODO## Get system Pref
+				{
+					pgui->ProcessMsgs_MouseButtonDblClick(pt, dwBut);
+
+				} else {
+
+					clock.Reset();
+					pgui->ProcessMsgs_MouseButtonDown(pt, dwBut);
+				}
+
+			}
+
+			//Mouse Button Up
+			if (Event.Type == sf::Event::MouseButtonReleased)
+			{
+				udword dwBut = 0;
+				switch (Event.MouseButton.Button)
+				{
+					case sf::Mouse::Left:		dwBut = NM_LBUTTON; break;
+					case sf::Mouse::Middle:	dwBut = NM_MBUTTON; break;
+					case sf::Mouse::Right:	dwBut = NM_RBUTTON; break;
+				}
+				pt.x=m_appWnd.GetInput().GetMouseX();
+				pt.y=m_appWnd.GetInput().GetMouseY();
+				pgui->ProcessMsgs_MouseButtonUp(pt, dwBut);
+			}
+
+			// Text entry
+			if ((Event.Type == sf::Event::TextEntered) )
+			{
+				pgui->ProcessMsgs_Text(Event.Text.Unicode);
+			}
+
+			// Key Down
+			if ((Event.Type == sf::Event::KeyPressed) )
+			{
+				NKey::Code key = (NKey::Code)Event.Key.Code;	//KeyCode are identical
+				pgui->ProcessMsgs_KeyDown(key);
+			}
+
+			// Key Up
+			if ((Event.Type == sf::Event::KeyReleased) )
+			{
+				NKey::Code key = (NKey::Code)Event.Key.Code;	//KeyCode are identical
+				pgui->ProcessMsgs_KeyUp(key);
+			}
+
+      // Resize
+      if (Event.Type == sf::Event::Resized)
+				pgui->ProcessMsgs_OnSize(Event.Size.Width, Event.Size.Height);
+
+    }
+
+		//Double Click TimeOut
+		/*if (bDblClickStarted)
+		{
+			float Time = clock.GetElapsedTime() * 1000.0f;
+			if (Time>150.0f)	//50ms
+			{
+				pgui->ProcessMsgs_MouseButtonDown(ptDblClick, dwDblClickButton);
+
+				bDblClickStarted = false;
+
+				if (bMouseReleased)
+				{
+					pgui->ProcessMsgs_MouseButtonUp(ptDblClick, dwDblClickButton);
+				}
+			}
+
+		}*/
+
+
+		//Update Windows drawing
+		pgui->Update();
+
+		//Update Application
+		Update();
+
+    // Finally, display the rendered frame on screen
+    m_appWnd.Display();
+  }
+
+
 }
 
 //-----------------------------------------------------------------
@@ -136,16 +235,10 @@ bool NFxGenApp::Init()
 //-----------------------------------------------------------------
 bool NFxGenApp::Exit()
 {
+	GetGUISubSystem()->ShutDown();
+	m_appWnd.Close();
 
-	return NApplication::Exit();
-}
-
-//-----------------------------------------------------------------
-//!	\brief	IDLE
-//-----------------------------------------------------------------
-void NFxGenApp::Idle()
-{
-	NApplication::Idle();
+	return true;
 }
 
 //-----------------------------------------------------------------
@@ -153,17 +246,41 @@ void NFxGenApp::Idle()
 //-----------------------------------------------------------------
 void NFxGenApp::Update()
 {
-	NMainFrm* pfrm = (NMainFrm*)m_pMainWnd;
+	NMainFrm* pfrm = (NMainFrm*)GetGUISubSystem()->GetMainWnd();
 
 	//Time 60 Images/Seconds
-	float ftime = (float)GetTickCount() * 60.0f / 1000.0f;
+	float ftime = (float)clock() * 60.0f / 1000.0f;
 	if (m_fOldTime==0)		m_fOldTime = ftime;
 
 	if (ftime-m_fOldTime>1.0f)
 	{
 		//Execute operators rendering
-		NOperator* pop = pfrm->Execute(ftime);
+		NOperatorNode* pop = pfrm->Execute(ftime);
 
 	}
 
 }
+
+//-----------------------------------------------------------------
+//!	\brief	MessageBox
+//-----------------------------------------------------------------
+#ifdef WIN32
+udword NFxGenApp::MessageBox(char* _pszText, udword _dwStyle)
+{
+	udword dwW32Style = 0;
+	if (_dwStyle&NMB_OK)			dwW32Style|=MB_OK;
+	if (_dwStyle&NMB_YESNO)		dwW32Style|=MB_YESNO;
+	udword dwW32Ret = ::MessageBox(NULL, _pszText, "FxGen", dwW32Style);
+	if (dwW32Ret==IDOK)		return NIDOK;
+	if (dwW32Ret==IDYES)	return NIDYES;
+	if (dwW32Ret==IDNO)		return NIDNO;
+
+	return 0;
+}
+#else	//###TODO### Linux, Mac...
+udword NFxGenApp::MessageBox(char* _szTest, udword _dwFlag)
+{
+
+	return 0;
+}
+#endif

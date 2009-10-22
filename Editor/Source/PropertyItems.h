@@ -14,19 +14,19 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef PROPERTYITEMS_H
+#define PROPERTYITEMS_H
+
 
 //-----------------------------------------------------------------
 //									Includes
 //-----------------------------------------------------------------
 #include "Core.h"
-#include "GUI\GUI.h"
-#include "GUI\StandardsCtrl.h"
 
 //-----------------------------------------------------------------
 //									Prototypes
 //-----------------------------------------------------------------
-class NOperator;
+class NOperatorNode;
 
 class NPropertyItem;
 	class NUbyteProp;
@@ -84,6 +84,9 @@ public:
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
+
+	virtual void		OnEnter(NEditCtrl* pEdit);
+	virtual void		OnEscape(NEditCtrl* pEdit);
 };
 
 //-----------------------------------------------------------------
@@ -99,6 +102,9 @@ public:
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
+
+	virtual void		OnEnter(NEditCtrl* pEdit);
+	virtual void		OnEscape(NEditCtrl* pEdit);
 };
 
 //-----------------------------------------------------------------
@@ -124,6 +130,9 @@ public:
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
+
+	virtual void		OnEnter(NEditCtrl* pEdit);
+	virtual void		OnEscape(NEditCtrl* pEdit);
 };
 
 //-----------------------------------------------------------------
@@ -138,6 +147,9 @@ public:
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
+
+	virtual void		OnEnter(NEditCtrl* pEdit);
+	virtual void		OnEscape(NEditCtrl* pEdit);
 };
 
 //-----------------------------------------------------------------
@@ -236,4 +248,8 @@ public:
 	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
+	virtual void		OnEnter(NEditCtrl* pEdit);
+	virtual void		OnEscape(NEditCtrl* pEdit);
 };
+
+#endif //PROPERTYITEMS_H

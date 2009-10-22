@@ -21,6 +21,7 @@
 #include "pch.h"
 #include "ViewportsWnd.h"
 //#include "TGAWriter.h"
+#include "FileChooserDialog.h"
 #include "Operator.h"
 
 //-----------------------------------------------------------------
@@ -45,7 +46,7 @@
 //-----------------------------------------------------------------
 NViewportsWnd::NViewportsWnd(void)
 {
-	m_pcurObject	= null;
+	m_pcurOp	= null;
 	m_dwTextureID = 0;
 	m_dwTexWidth=m_dwTexHeight=0;
 	m_fScale			= 1.0f;
@@ -62,6 +63,7 @@ NViewportsWnd::NViewportsWnd(void)
 //-----------------------------------------------------------------
 NViewportsWnd::~NViewportsWnd(void)
 {
+	EVT_UNREGISTERALL();
 }
 
 //-----------------------------------------------------------------
@@ -79,7 +81,7 @@ bool NViewportsWnd::Create(const char* name, const NRect& rect, NWnd* parent)
 	m_wndMenu.AddItem("Tiling",				ID_TILEONOFF,		ME_ITEMSTYLE_CHECKBOX);
 	m_wndMenu.AddItem("Filtering",		ID_FILTERONOFF,	ME_ITEMSTYLE_CHECKBOX);
 	m_wndMenu.AddItem("Toggle 2D/3D",	ID_2D3D,				ME_ITEMSTYLE_CHECKBOX);
-	m_wndMenu.AddItem("Export TGA",		ID_EXPORT,			null);
+	//m_wndMenu.AddItem("Export TGA",		ID_EXPORT,			null);
 
 	//Register Events
 	EVT_REGISTER(EVT_OPDELETING,	(EVENTFNC)&NViewportsWnd::OnOPDeleting	);
@@ -93,11 +95,11 @@ bool NViewportsWnd::Create(const char* name, const NRect& rect, NWnd* parent)
 //-----------------------------------------------------------------
 EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnOPDeleting)
 {
-	NOperator* pop = (NOperator*)dwParam1;
-/*	if (pop->m_pObj==m_pcurObject)
+	NOperatorNode* pop = (NOperatorNode*)dwParam1;
+	if (pop==m_pcurOp)
 	{
-		m_pcurObject=null;
-	}*/
+		m_pcurOp=null;
+	}
 
 	return 0;
 }
@@ -107,16 +109,16 @@ EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnOPDeleting)
 //-----------------------------------------------------------------
 EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnRender)
 {
-/*	NOperator* pop = (NOperator*)dwParam1;
+	NOperatorNode* pop = (NOperatorNode*)dwParam1;
 	if (pop==null || pop->m_pObj==null || (pop!=null && pop->m_bError))
 	{
-		m_pcurObject = null;
+		m_pcurOp = null;
 	} else {
-		m_pcurObject = pop->m_pObj;
+		m_pcurOp = pop;
 	}
 
 	RedrawWindow();
-*/
+
 	return 0;
 }
 
@@ -264,23 +266,23 @@ void NViewportsWnd::DisplayTexture(NObject* pobj)
 
 	//Updating viewport
 	//m_renderer.Update();
-*/
+
 	//Texte
-/*	rc.top = rc.bottom-32;
+	rc.top = rc.bottom-32;
 	NGraphics dc(this);
 	//dc.FillSolidRect(rc, RGBA(115,115,115));
 	dc.SetTextColor(RGBA(200,255,200));
 	NString str;
 	str.Format("Texture Size %dx%d", m_dwTexWidth, m_dwTexHeight);
-	dc.DrawText(str.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE);*/
-
+	dc.DrawText(str.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE);
+*/
 }
 
 
 //-----------------------------------------------------------------
 //!	\brief	Mouse wheel message
 //-----------------------------------------------------------------
-void NViewportsWnd::OnMouseWheel(udword flags, sword zDelta, NPoint point)
+void NViewportsWnd::OnMouseWheel(NPoint pos, sdword zDelta)
 {
 	if (zDelta>0) m_fScale*=2.0f;
 	else					m_fScale/=2.0f;
@@ -293,7 +295,7 @@ void NViewportsWnd::OnMouseWheel(udword flags, sword zDelta, NPoint point)
 //-----------------------------------------------------------------
 //!	\brief	Mouse move message
 //-----------------------------------------------------------------
-void NViewportsWnd::OnMouseMove(udword flags, NPoint pos)
+void NViewportsWnd::OnMouseMove(NPoint pos)
 {
 	if (m_eDragMode == PANNING)
 	{
@@ -315,7 +317,7 @@ void NViewportsWnd::OnMouseMove(udword flags, NPoint pos)
 //-----------------------------------------------------------------
 //!	\brief	Mouse Middle button message
 //-----------------------------------------------------------------
-void NViewportsWnd::OnMButtonDown(udword flags, NPoint pos)
+void NViewportsWnd::OnMButtonDown(NPoint pos)
 {
 	SetFocus();
 	if (m_eDragMode == NONE)
@@ -329,7 +331,7 @@ void NViewportsWnd::OnMButtonDown(udword flags, NPoint pos)
 //-----------------------------------------------------------------
 //!	\brief	Mouse Middle button message
 //-----------------------------------------------------------------
-void NViewportsWnd::OnMButtonUp(udword flags, NPoint pos)
+void NViewportsWnd::OnMButtonUp(NPoint pos)
 {
 	SetFocus();
 	if (m_eDragMode == PANNING)
@@ -342,7 +344,7 @@ void NViewportsWnd::OnMButtonUp(udword flags, NPoint pos)
 //-----------------------------------------------------------------
 //!	\brief	Mouse Left button message
 //-----------------------------------------------------------------
-void NViewportsWnd::OnLeftButtonDown(udword flags, NPoint pos)
+void NViewportsWnd::OnLButtonDown(NPoint pos)
 {
 	SetFocus();
 	if (!m_bOrtho && m_eDragMode == NONE)
@@ -356,7 +358,7 @@ void NViewportsWnd::OnLeftButtonDown(udword flags, NPoint pos)
 //-----------------------------------------------------------------
 //!	\brief	Mouse Left button message
 //-----------------------------------------------------------------
-void NViewportsWnd::OnLeftButtonUp(udword flags, NPoint pos)
+void NViewportsWnd::OnLButtonUp(NPoint pos)
 {
 	SetFocus();
 	if (m_eDragMode == ROTATING)
@@ -369,7 +371,7 @@ void NViewportsWnd::OnLeftButtonUp(udword flags, NPoint pos)
 //-----------------------------------------------------------------
 //!	\brief	Mouse Right button message
 //-----------------------------------------------------------------
-void NViewportsWnd::OnRightButtonDown(udword flags, NPoint pos)
+void NViewportsWnd::OnRButtonDown(NPoint pos)
 {
 	SetFocus();
 
@@ -386,25 +388,21 @@ void NViewportsWnd::OnPaint()
 	NGraphics dc(this);
 	dc.FillSolidRect(rc, RGBA(115,115,115,255));
 
-	NOperator* pop = (NOperator*)m_pcurObject;
-
 	////////////////////////////////////////
 	//No operator valid
-	if (m_pcurObject==null)
+	if (m_pcurOp==null || m_pcurOp->m_pObj==null || m_pcurOp->m_bError)
 	{
 		//Texte
 		//dc.FillSolidRect(rc, RGBA(255,115,115,115));
-		if (pop==null)
+		if (m_pcurOp==null)
 			dc.DrawText("Select an operator by double clicking on it", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(200,255,200,255) );
-		else if (pop && pop->m_bError)
+		else
 			dc.DrawText("Invalid links !", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(200,255,200,255) );
 
 	////////////////////////////////////////
 	//Display operator
 	} else {
-
-		if (strcmp(m_pcurObject->GetRTClass()->m_pszClassName, "NBitmap") == 0)
-			DisplayTexture(m_pcurObject);
+		DisplayTexture(m_pcurOp->m_pObj);
 	}
 	
 
@@ -419,8 +417,8 @@ void NViewportsWnd::OnPaint()
 //-----------------------------------------------------------------
 udword NViewportsWnd::CreateTexture(udword _w, udword _h)
 {
-	sdword dwTexnameID=0;
-/*
+	sdword dwTexnameID;
+
 	//Creation
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -433,19 +431,19 @@ udword NViewportsWnd::CreateTexture(udword _w, udword _h)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,			GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,			GL_REPEAT);
-		//if (m_bHasMipmapGeneration)
-		//{
-		//	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP_SGIS, GL_TRUE);
-		//}
-		//if (m_bHasAnisotropicFiltering)
-		//{
-		//	GLfloat maxAnisotropy = 0;
-		//	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
-		//	// Removing this for now... It seems like it has to be turned of for GL_NEAREST filtering to work
-		//	//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropy); 
-		//}
+		/*if (m_bHasMipmapGeneration)
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP_SGIS, GL_TRUE);
+		}*/
+		/*if (m_bHasAnisotropicFiltering)
+		{
+			GLfloat maxAnisotropy = 0;
+			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
+			// Removing this for now... It seems like it has to be turned of for GL_NEAREST filtering to work
+			//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropy); 
+		}*/
 	}
-*/
+
 	return dwTexnameID;
 }
 
@@ -455,7 +453,7 @@ udword NViewportsWnd::CreateTexture(udword _w, udword _h)
 //-----------------------------------------------------------------
 void NViewportsWnd::DeleteTexture(udword _dwTextID)
 {
-//	glDeleteTextures(1, (GLuint*)&_dwTextID);
+	glDeleteTextures(1, (GLuint*)&_dwTextID);
 }
 
 
@@ -466,13 +464,13 @@ void NViewportsWnd::DeleteTexture(udword _dwTextID)
 //!	\param	_h				Height
 //!	\param	_ppixels	Pixels
 //-----------------------------------------------------------------
-/*void NViewportsWnd::CopyPixelsToTexture(udword _dwtexid, udword _w, udword _h, NRGBA* _ppixels)
+void NViewportsWnd::CopyPixelsToTexture(udword _dwtexid, udword _w, udword _h, NRGBA* _ppixels)
 {
 	glBindTexture(GL_TEXTURE_2D, _dwtexid);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, _w, _h, GL_RGBA, GL_UNSIGNED_BYTE, (const GLvoid*)_ppixels);
 	//GLenum e = glGetError();
 	//GL_INVALID_ENUM
-}*/
+}
 
 //-----------------------------------------------------------------
 //!	\brief	Windows Message Command
@@ -508,17 +506,17 @@ void NViewportsWnd::OnMenuItemClick(NObject* _psender)
 			break;
 		}
 
-/*		case ID_EXPORT:
+		/*case ID_EXPORT:
 		{
-			if (m_pcurObject != null && strcmp(m_pcurObject->GetRTClass()->m_pszClassName, "NBitmap") == 0)
+			if (m_pcurOp != null && !m_pcurOp->m_bError)
 			{
 				//Save File Dialog
-				NFileDialog dlg;
+				NFileChooserDialog dlg;
 				dlg.Create("Export TGA...", this, false);
 				if (dlg.DoModal())
 				{
 					NString str = dlg.GetPathName();
-					WriteTGA((NBitmap*)m_pcurObject, str);
+					WriteTGA((NBitmap*)m_pcurOp->m_pObj, str);
 				}
 			}
 			break;

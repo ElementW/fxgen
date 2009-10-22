@@ -14,11 +14,9 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma	once
+#ifndef SPLITWND_H
+#define SPLITWND_H
 
-//-----------------------------------------------------------------
-//                   Macros
-//-----------------------------------------------------------------
 
 //-----------------------------------------------------------------
 // Includes
@@ -85,7 +83,7 @@ public:
 	virtual	~NSplitWnd();
 
 	//Windows Creation
-	virtual	bool	Create(char* name, NRect& rect, NWnd* parent);
+	virtual	bool	Create(const char* name, NRect& rect, NWnd* parent);
 
 	//Methods
 	udword	SplitColumn	(udword paneid, sdword dwPosInPercent);			//split the frame in 2 Columns	(return the new right pane identifier)  pos is the location where the split occurs.
@@ -109,9 +107,9 @@ protected:
 	//Win32 Messages Dispatching
 	virtual	void	OnPaint();
 	virtual void	OnSize();
-	virtual void	OnMouseMove(udword flags, NPoint pos);
-	virtual void	OnLeftButtonUp(udword flags, NPoint pos);
-	virtual void	OnLeftButtonDown(udword flags, NPoint pos);
+	virtual void	OnMouseMove(NPoint pos);
+	virtual void	OnLButtonUp(NPoint pos);
+	virtual void	OnLButtonDown(NPoint pos);
 
 	//Datas
 	udword							mCurPaneId;
@@ -120,3 +118,5 @@ protected:
 	NSPLITBOX*					mSplitBox;
 	NPoint							mLastMousePos;
 };
+
+#endif //SPLITWND_H

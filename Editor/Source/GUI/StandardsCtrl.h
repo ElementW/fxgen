@@ -14,7 +14,8 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef STANDARDSCTRL_H
+#define STANDARDSCTRL_H
 
 //-----------------------------------------------------------------
 //                   Includes
@@ -99,13 +100,12 @@ protected:
 	//Messages Dispatching
 	virtual	void	OnPaint();
 	virtual void	OnSize();
-	virtual void	OnMouseMove(udword flags, NPoint pos );
-	virtual void	OnMButtonDown(udword flags, NPoint pos);
-	virtual void	OnMButtonUp(udword flags, NPoint pos);
-	virtual void	OnLeftButtonUp(udword flags, NPoint pos);
-	virtual void	OnLeftButtonDown(udword flags, NPoint pos);
-	virtual	void	OnLeftButtonDblClk(udword flags, NPoint point);
-	virtual void	OnRightButtonDown(udword flags, NPoint pos);
+	virtual void	OnMouseMove(NPoint pos );
+	virtual void	OnMButtonDown(NPoint pos);
+	virtual void	OnMButtonUp(NPoint pos);
+	virtual void	OnLButtonUp(NPoint pos);
+	virtual void	OnLButtonDown(NPoint pos);
+	virtual void	OnRButtonDown(NPoint pos);
 	virtual	void	OnKeyDown(udword dwchar);
 	virtual	void	OnMouseLeave();
 
@@ -138,8 +138,8 @@ public:
 
 protected:
 	// Internal methods
-	bool GetHueAtPoint(NPoint& _pt, float& _fHue);
-	bool GetLSAtPoint(NPoint& _pt, float& _fL, float& _fS);
+	void GetHueAtPoint(NPoint& _pt, float& _fHue);
+	void GetLSAtPoint(NPoint& _pt, float& _fL, float& _fS);
 	void UpdateColorFromMousePt(NPoint& _pt);
 
 	// Datas
@@ -147,15 +147,16 @@ protected:
 	bool		m_bEntered;
 	NRect		m_rcHue, m_rcLS;
 	float		m_fHue, m_fL, m_fS;
-	bool		m_bPicked;
+	bool		m_bPickedLS;
+	bool		m_bPickedHue;
 
 protected:
 	//Messages Dispatching
 	virtual	void	OnPaint();
-	virtual void	OnMouseMove(udword flags, NPoint pos );
-	virtual void	OnLeftButtonUp(udword flags, NPoint pos);
-	virtual void	OnLeftButtonDown(udword flags, NPoint pos);
-	virtual	void	OnLeftButtonDblClk(udword flags, NPoint point);
+	virtual void	OnMouseMove(NPoint pos );
+	virtual void	OnLButtonUp(NPoint pos);
+	virtual void	OnLButtonDown(NPoint pos);
+	virtual	void	OnLButtonDblClk(NPoint point);
 	virtual	void	OnKillFocus(NWnd* pNewWnd);
 	virtual	void	OnKeyUp(udword _dwchar);
 };
@@ -173,37 +174,29 @@ public:
 	virtual		~NEditCtrl();
 
 	//Windows Creation
-	virtual	bool Create(const char* _pszname, const NRect& _rect, NWnd* _parent, bool _bMultiLine);
-
-	//General
-	//void			SetText(const char* text);
-	//NString		GetText();
-
-	//Caret
-	void	GetCaretPos(udword& _cx, udword& _cy)		{ _cx=m_dwCurX; _cy=m_dwCurY; }
-
-	//Line operations
-	udword		GetLineCount()	{ return m_dwLinesCount; }
-	NString		GetLine(udword _line);
-	//udword		GetLineIdx(udword _line);
+	virtual	bool Create(const char* _pszname, const NRect& _rect, NWnd* _parent);
 
 	//Selection operations
 	void			SetSel(udword _startchar, udword _endchar);
-	void			GetSel(udword& _startchar, udword& _endChar) { _startchar=m_dwStartSel; _endChar=m_dwEndSel; }
-	void			SelectLine(udword _line);
+	void			GetSel(udword& _startchar, udword& _endChar) { _startchar=nmin(m_dwCursorPos, m_dwSelectionTail); _endChar=nmax(m_dwCursorPos, m_dwSelectionTail); }
+	void			SelectAll();
 	void			ReplaceSel(const char* _pszText);
-	//void			HideSelection(bool _hide);
+
+	//Notification Messages
+	FDelegate		OnEnter;
+	FDelegate		OnEscape;
 
 protected:
 	//Messages Dispatching
 	virtual	void	OnPaint();
-	virtual void	OnLeftButtonUp(udword _flags, NPoint _pos);
-	virtual void	OnLeftButtonDown(udword _flags, NPoint _pos);
-	virtual	void	OnLeftButtonDblClk(udword _flags, NPoint _point);
+	virtual void	OnLButtonUp(udword _flags, NPoint _pos);
+	virtual void	OnLButtonDown(udword _flags, NPoint _pos);
+	virtual	void	OnLButtonDblClk(udword _flags, NPoint _point);
 	virtual	void	OnKillFocus(NWnd* _pNewWnd);
 	virtual	void	OnKeyDown(udword _dwchar);
+	virtual	void	OnText(udword _unicode);
 	//Datas
-	udword m_dwLinesCount;
-	udword m_dwCurX, m_dwCurY;
-	udword m_dwStartSel, m_dwEndSel;
+	udword m_dwCursorPos, m_dwSelectionTail;
 };
+
+#endif  //STANDARDSCTRL_H

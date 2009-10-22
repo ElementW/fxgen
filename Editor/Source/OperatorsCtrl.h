@@ -19,14 +19,7 @@
 //-----------------------------------------------------------------
 //			Includes
 //-----------------------------------------------------------------
-#include "GUI\GUI.h"
-
-
-//-----------------------------------------------------------------
-//			Prototypes
-//-----------------------------------------------------------------
-class NOperatorsPage;
-class NOperator;
+#include "Operator.h"
 
 //-----------------------------------------------------------------
 // 			Defines
@@ -56,31 +49,31 @@ public:
 
 	void	PlaceOperator(ID CLASSID);
 
-	void	SelectOperator(NOperator* pop);
+	void	SelectOperator(NOperatorNode* pop);
 	void	DeleteOperatorsSelected();
 
 	void	Update();	//!< MAJ de l'affichage
 	void	Update(float _ftime);
 
-	virtual void	OnMarkShowOperator(NOperator* pop);			//OVERLOAD
-	virtual void	OnDeletingOperator(NOperator* pop)	{}	//OVERRIDE
-	virtual void	OnDeletedOperator(NOperator* pop)		{}	//OVERRIDE
+	virtual void	OnMarkShowOperator(NOperatorNode* pop);			//OVERLOAD
+	virtual void	OnDeletingOperator(NOperatorNode* pop)	{}	//OVERRIDE
+	virtual void	OnDeletedOperator(NOperatorNode* pop)		{}	//OVERRIDE
 
 	//Members Access
-	NOperator*	GetMarkedShowOperator()		{ return m_popMarkedShow; }
+	NOperatorNode*	GetMarkedShowOperator()		{ return m_popMarkedShow; }
 
 protected:
 	// Internal methods
-	NOperator*	AddOperator(sword x, sword y, sword w, ID CLASSID);
-	void				DeleteOperator(NOperator* pop);
+	NOperatorNode*	AddOperator(sword x, sword y, sword w, ID CLASSID);
+	void				DeleteOperator(NOperatorNode* pop);
 	void				Reset();
 
-	NOperator*	GetOperatorAt(NPoint& pt, bool& bResizeZone);
+	NOperatorNode*	GetOperatorAt(NPoint& pt, bool& bResizeZone);
 	void				UpdateCursor(NPoint& pt);
 	void				SelectOperatorsIntoRect(NRect& rc);
-	void				GetOperatorRect(NOperator* _pop, NRect& _rc);
+	void				GetOperatorRect(NOperatorNode* _pop, NRect& _rc);
 
-	void				DisplayOperator(NGraphics* _pdc, NOperator* _pop);
+	void				DisplayOperator(NGraphics* _pdc, NOperatorNode* _pop);
 
 	bool				IsMovedSelOperatorsCollide(sdword _dwoffsetX, sdword _dwoffsetY);
 	bool				IsOpRectCollide(NRect _rcItemTest, bool _bExcludeSel);
@@ -93,11 +86,11 @@ protected:
 	void ClearClipboard();
 
 	//Selection Methods
-	bool				IsOperatorSelected(NOperator* pcbloc);
+	bool				IsOperatorSelected(NOperatorNode* pcbloc);
 
 	//Cursor Methods
 	void				DisplayCursor(NGraphics* _pdc);
-	void				SetCursorPos(sdword _dwX, sdword _dwY);
+	void				SetOpCursorPos(sdword _dwX, sdword _dwY);
 
 	// Datas
 	float		m_fPosX, m_fPosY, m_fStartPosXPan, m_fStartPosYPan;
@@ -111,9 +104,9 @@ protected:
 
 	//Datas Operators
 	NOperatorsPage*			m_popsPage;						//!< Page used for editing
-	GArray<NOperator*>	m_carrayOpsSelected;	//!< Operators selected
-	GArray<NOperator*>	m_carrayOpsClipboard;	//!< Operators in clipboard
-	NOperator	*m_popMarkedSelected, *m_popMarkedShow;
+	GArray<NOperatorNode*>	m_carrayOpsSelected;	//!< Operators selected
+	GArray<NOperatorNode*>	m_carrayOpsClipboard;	//!< Operators in clipboard
+	NOperatorNode	*m_popMarkedSelected, *m_popMarkedShow;
 	float								m_fupdateTime;
 	NRect	m_rcAllOperators;	//!< Operators zone
 
@@ -124,14 +117,16 @@ protected:
 	//Messages Dispatching
 	virtual	void	OnPaint();
 	virtual void	OnSize();
-	virtual void	OnMouseMove(udword flags, NPoint pos );
-	virtual void	OnMButtonDown(udword flags, NPoint pos);
-	virtual void	OnMButtonUp(udword flags, NPoint pos);
-	virtual void	OnLeftButtonUp(udword flags, NPoint pos);
-	virtual void	OnLeftButtonDown(udword flags, NPoint pos);
-	virtual	void	OnLeftButtonDblClk(udword flags, NPoint point);
-	virtual void	OnRightButtonDown(udword flags, NPoint pos);
-	virtual	void	OnMouseWheel(udword flags, sword zDelta, NPoint pos);
+
+	virtual void	OnMouseMove(NPoint pos );
+	virtual void	OnMButtonDown(NPoint pos);
+	virtual void	OnMButtonUp(NPoint pos);
+	virtual void	OnLButtonUp(NPoint pos);
+	virtual void	OnLButtonDown(NPoint pos);
+	virtual	void	OnLButtonDblClk(NPoint point);
+	virtual void	OnRButtonDown(NPoint pos);
+	virtual	void	OnMouseWheel(NPoint pos, sdword zDelta);
+
 	virtual	void	OnKeyUp(udword dwchar);
 
 };

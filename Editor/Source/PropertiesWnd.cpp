@@ -20,7 +20,6 @@
 //-----------------------------------------------------------------
 #include "pch.h"
 #include "PropertiesWnd.h"
-#include "Operator.h"
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -43,6 +42,7 @@ NPropertiesWnd::NPropertiesWnd(void)
 //-----------------------------------------------------------------
 NPropertiesWnd::~NPropertiesWnd(void)
 {
+	EVT_UNREGISTERALL();
 }
 
 //-----------------------------------------------------------------
@@ -65,8 +65,8 @@ bool NPropertiesWnd::Create(const char* name, const NRect& rect, NWnd* parent)
 void NPropertiesWnd::OnPropertiesChanged()
 {
 	//Set Operator Invalid
-//	if (m_pcurOp)
-//		NEngineOp::GetEngine()->InvalidateOp(m_pcurOp);
+	if (m_pcurOp)
+		GetApp()->GetMainWnd()->EmitPropertiesChanged(m_pcurOp);
 
 }
 
@@ -75,8 +75,8 @@ void NPropertiesWnd::OnPropertiesChanged()
 //-----------------------------------------------------------------
 EVT_IMPLEMENT_HANDLER(NPropertiesWnd, OnOPSelChanged)
 {
-	m_pcurOp = (NOperator*)dwParam1;
-	DisplayObjectProperties(m_pcurOp);
+	m_pcurOp = (NOperatorNode*)dwParam1;
+	DisplayObjectProperties((NObject*)m_pcurOp);
 	Update();
 
 	return 0;

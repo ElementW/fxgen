@@ -14,7 +14,8 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#pragma once
+#ifndef PROJECTWND_H
+#define PROJECTWND_H
 
 //-----------------------------------------------------------------
 //			Includes
@@ -26,7 +27,6 @@
 //			Prototypes
 //-----------------------------------------------------------------
 class NOperatorsPage;
-class NOperatorsProject;
 
 //-----------------------------------------------------------------
 //!	\class		NProjectWnd
@@ -60,7 +60,7 @@ protected:
 	void OnTreeSelChange(NObject* _psender);
 
 	//Messages Dispatching
-	virtual void OnRightButtonDown(udword flags, NPoint pos);
+	virtual void OnRButtonDown(NPoint pos);
 	void OnMenuClick(NObject* _psender);
 
 	//Methods
@@ -70,3 +70,5 @@ protected:
 	NOperatorsProject*	m_popsProject;
 	NMenuCtrl		m_wndMenu;
 };
+
+#endif //PROJECTWND_H

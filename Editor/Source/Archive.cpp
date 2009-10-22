@@ -324,13 +324,13 @@ NArchive &NArchive::operator >>(char *_val)
 void NArchive::PutClass(NObject* _c)
 {
 	//Not referenced Class
-	if (_c->GetRefToMeCount()==0)
+	//if (_c->GetRefToMeCount()==0)
 	{
 		PutObj(_c);
 	//Referenced Class
-	} else {
-		PutMappedObj(_c);
-	}
+	}// else {
+		//PutMappedObj(_c);
+	//}
 }
 
 

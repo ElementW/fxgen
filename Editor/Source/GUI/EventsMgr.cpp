@@ -35,8 +35,8 @@ NEventsMgr::NEventsMgr()
 
 NEventsMgr::~NEventsMgr()
 {
-		if (m_carrayEvents.Count())
-			TRACE("NEventsMgr warning exiting with events registered !\n");
+  if (m_carrayEvents.Count())
+    TRACE("NEventsMgr warning exiting with events registered !\n");
 }
 
 void NEventsMgr::Exec(uword wEventID, udword dwParam1, udword dwParam2)
@@ -61,7 +61,7 @@ void NEventsMgr::Register(uword _wEventID, NObject* _pObject, EVENTFNC _pfnc)
 	ST_EVENTINFO* pei = GetEventFromID(_wEventID);
 	if (!pei)
 	{
-		pei = new ST_EVENTINFO;
+		pei = NNEW(ST_EVENTINFO);
 		pei->wID = _wEventID;
 		m_carrayEvents.AddItem(pei);
 	}
@@ -85,7 +85,7 @@ void NEventsMgr::UnRegisterAllByObject(NObject* _pObject)
 				{
 					m_carrayEvents.RemoveItem(i);
 					i--;
-					delete pei;
+					NDELETE(pei, ST_EVENTINFO);
 				}
 				break;
 			}
