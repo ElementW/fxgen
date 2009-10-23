@@ -47,7 +47,7 @@ NOperatorsWnd::~NOperatorsWnd(void)
 //-----------------------------------------------------------------
 //!	\brief	Control creation
 //-----------------------------------------------------------------
-bool NOperatorsWnd::Create(const char* name, const NRect& rect, NWnd* parent)
+bool NOperatorsWnd::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 {
 	NOperatorsCtrl::Create(name, rect, parent);
 
@@ -139,7 +139,7 @@ void NOperatorsWnd::OnMarkShowOperator(NOperatorNode* pop)
 	NOperatorsCtrl::OnMarkShowOperator(pop);
 
 	NFxGenApp* papp = GetApp();
-	NMainFrm* pfrm = (NMainFrm*)papp->GetMainWnd();
+	NEditorGUI* pfrm = (NEditorGUI*)papp->GetMainWnd();
 	pfrm->MarkShowOperator(pop);
 
 }
@@ -150,7 +150,7 @@ void NOperatorsWnd::OnMarkShowOperator(NOperatorNode* pop)
 void NOperatorsWnd::OnDeletingOperator(NOperatorNode* pop)
 {
 	NFxGenApp* papp = (NFxGenApp*)GetGUISubSystem();
-	NMainFrm* pfrm = (NMainFrm*)papp->GetMainWnd();
+	NEditorGUI* pfrm = (NEditorGUI*)papp->GetMainWnd();
 	pfrm->DeletingOperator(pop);
 }
 
@@ -160,7 +160,7 @@ void NOperatorsWnd::OnDeletingOperator(NOperatorNode* pop)
 void NOperatorsWnd::OnDeletedOperator(NOperatorNode* pop)
 {
 	NFxGenApp* papp = (NFxGenApp*)GetGUISubSystem();
-	NMainFrm* pfrm = (NMainFrm*)papp->GetMainWnd();
+	NEditorGUI* pfrm = (NEditorGUI*)papp->GetMainWnd();
 	pfrm->DeletedOperator(pop);
 }
 

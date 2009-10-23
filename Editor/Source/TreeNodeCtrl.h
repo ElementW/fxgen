@@ -48,7 +48,7 @@ struct NTNItemDesc
 //!	\class		NTreeNodeCtrl
 //!	\brief		GUI control for tree nodes editing
 //-----------------------------------------------------------------
-class NTreeNodeCtrl : public NWControl
+class NTreeNodeCtrl : public NGUIWnd
 {
 
 public:
@@ -57,7 +57,7 @@ public:
 	virtual ~NTreeNodeCtrl();
 
 	// Methods
-	virtual	bool Create(const char* name, const NRect& rect, NWnd* parent);
+	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
 
 	// Methods
 	void	Clear();

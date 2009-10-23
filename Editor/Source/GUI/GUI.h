@@ -35,14 +35,14 @@
 // Class Prototypes
 //-----------------------------------------------------------------
 class NGUISubSystem;
-class NGraphics;
+class N2DPainter;
 class NGUIFont;
 
 class NCmdTarget;
-	class NWnd;
+	class NGUIWnd;
 		class NFrmWnd;
-		class NSplitWnd;
-		class NWControl;
+		class NGUILayout;
+		class NGUIWnd;
 
 //-----------------------------------------------------------------
 //			Defines Window Styles
@@ -85,7 +85,7 @@ struct NWNDCREATE
 	udword		dwStyle;
 	char*			pszText;					//This window text
 	udword		dwId;							//This window identifier
-	NWnd*			pwndParent;				//The parent window pointer if any else null
+	NGUIWnd*			pwndParent;				//The parent window pointer if any else null
 	NRect			rcRect;						//Window rect (pos relative to parent if any else to desktop)
 };
 
@@ -246,18 +246,18 @@ public:
 	bool IsKeyDown(NKey::Code _key) { return m_keyDown[_key]; }
 
 	//GUI
-	void	RedrawWindow(NWnd* _pwndFrom);
+	void	RedrawWindow(NGUIWnd* _pwndFrom);
 
-	void	SetFocus(NWnd* _pwnd);
-	NWnd* GetFocus();
+	void	SetFocus(NGUIWnd* _pwnd);
+	NGUIWnd* GetFocus();
 
-	void	SetCapture(NWnd* _pwnd);
+	void	SetCapture(NGUIWnd* _pwnd);
 	void	ReleaseCapture();
 
-	void SetMainWnd(NWnd* _mainfrm)	{ m_pMainWnd = _mainfrm; }
+	void SetMainWnd(NGUIWnd* _mainfrm)	{ m_pMainWnd = _mainfrm; }
 
 	//Members access
-	NWnd*	GetMainWnd()			{ return m_pMainWnd;	}
+	NGUIWnd*	GetMainWnd()	{ return m_pMainWnd;	}
 	NGUIFont* GetFont()			{ return m_pfont;			}
 
 	//Methods
@@ -274,24 +274,24 @@ public:
 
 	void ProcessMsgs_Text(udword _unicode);
 
-	void NotifyWindowDeletion(NWnd* _pWnd);
+	void NotifyWindowDeletion(NGUIWnd* _pWnd);
 protected:
 
-	NWnd* GetWndUnderMouse(sdword _x, sdword _y);
-	NWnd* _GetWndUnderMouse(sdword _x, sdword _y, NWnd* _pwndParent);
-	NWnd* _GetPopupWndUnderMouse(sdword _x, sdword _y, NWnd* _pwndParent);
-	void	_RedrawWindowChild(NWnd* _pwndFrom);
-	void	_RedrawWindowPopup(NWnd* _pwndFrom);
+	NGUIWnd* GetWndUnderMouse(sdword _x, sdword _y);
+	NGUIWnd* _GetWndUnderMouse(sdword _x, sdword _y, NGUIWnd* _pwndParent);
+	NGUIWnd* _GetPopupWndUnderMouse(sdword _x, sdword _y, NGUIWnd* _pwndParent);
+	void	_RedrawWindowChild(NGUIWnd* _pwndFrom);
+	void	_RedrawWindowPopup(NGUIWnd* _pwndFrom);
 
 	void InitGLState();
 
 	//Datas
-	NWnd*			m_pMainWnd;
+	NGUIWnd*			m_pMainWnd;
 	NGUIFont*	m_pfont;
 
-	NWnd*			m_pFocusedWnd;
-	NWnd*			m_pCapturedWnd;
-	NWnd*			m_pOldWndUnderMouse;
+	NGUIWnd*			m_pFocusedWnd;
+	NGUIWnd*			m_pCapturedWnd;
+	NGUIWnd*			m_pOldWndUnderMouse;
 	bool			m_keyDown[NKey::Count];
 	bool			m_bMustDrawWindows;
 	NPoint		m_ptCursor;
@@ -301,15 +301,15 @@ extern		NGUISubSystem*			GetGUISubSystem();
 
 
 //-----------------------------------------------------------------
-//!	\class	NGraphics
+//!	\class	N2DPainter
 //!	\brief	Graphics 2D
 //-----------------------------------------------------------------
-class  NGraphics
+class  N2DPainter
 {
 public:
 	//Constructor-Destructor
-	NGraphics(NWnd* pwnd);
-	~NGraphics();
+	N2DPainter(NGUIWnd* pwnd);
+	~N2DPainter();
 
 	//Rect
 	void FillSolidRect(NRect& rc, NColor _clr);
@@ -331,19 +331,19 @@ public:
 	//void Blit(HBITMAP _hbmp, udword _srcW, udword _srcH, udword _dstW, udword _dstY, udword _dstW, udword _dstH);
 
 protected:
-	NWnd* m_pwnd;
+	NGUIWnd* m_pwnd;
 };
 
 //-----------------------------------------------------------------
-//!	\class	NWnd
+//!	\class	NGUIWnd
 //!	\brief	Windows Class Definition
 //-----------------------------------------------------------------
-class  NWnd : public NCmdTarget
+class  NGUIWnd : public NCmdTarget
 {
 public:
 	//Constructor-Destructor
-					NWnd();
-	virtual	~NWnd();
+					NGUIWnd();
+	virtual	~NGUIWnd();
 
 	//Windows Creation
 	virtual	bool Create(NWNDCREATE& c);
@@ -359,7 +359,7 @@ public:
 	NRect	GetScreenRect() { return m_rcWnd; }	//!< Get Rect in relative to main window (screen space)
 
 	void	SetFocus();
-	NWnd*	GetFocus();
+	NGUIWnd*	GetFocus();
 
 	void	SetCapture();
 	void	ReleaseCapture();
@@ -372,7 +372,7 @@ public:
 
 	void RedrawWindow();
 
-	NWnd* GetParent()	{ return m_pParentWnd; }
+	NGUIWnd* GetParent()	{ return m_pParentWnd; }
 
 	udword GetStyle()	{ return m_dwStyle; }
 
@@ -395,14 +395,14 @@ public:
 	virtual	void	OnCommand(udword id)				{}
 	virtual	void	OnKeyUp(udword dwchar)			{}
 	virtual	void	OnKeyDown(udword dwchar)		{}
-	virtual	void	OnKillFocus(NWnd* pNewWnd)	{}
+	virtual	void	OnKillFocus(NGUIWnd* pNewWnd)	{}
 	virtual	void	OnTimer(udword _dwTimerID)	{}
 	virtual	void	OnMouseLeave() {}
 	virtual	void	OnText(udword _unicode)		{}
 
 protected:
 	//Datas
-	NWnd*		m_pParentWnd;
+	NGUIWnd*		m_pParentWnd;
 	NString	m_cstrText;
 	NRect		m_rcWnd;	//Window Rect in Screen coords.
 	udword	m_dwDepth;
@@ -413,52 +413,6 @@ protected:
 	//Friends
 	friend class NGUISubSystem;
 };
-
-
-//-----------------------------------------------------------------
-//!	\class	NFrmWnd
-//!	\brief	Frame Windows Class Definition
-//-----------------------------------------------------------------
-class   NFrmWnd : public NWnd
-{
-public:
-	//Constructor-Destructor
-					NFrmWnd();
-	virtual	~NFrmWnd();
-
-	//Creation
-	virtual	bool Create(char* name, const NRect& rect);
-
-	//Methods
-	void ReplaceWorkspace(NWnd* wnd);
-
-	//Members access
-	NWnd*				GetWorkspace()		{ return mWorkspace;		}
-
-	//Messages
-	virtual void	OnSize();
-
-protected:
-	//Datas
-	NWnd*				mWorkspace;
-};
-
-
-//-----------------------------------------------------------------
-//!	\class	NWControl
-//!	\brief	Control Class Definition
-//-----------------------------------------------------------------
-class   NWControl : public NWnd
-{
-public:
-	//Constructor-Destructor
-	NWControl() : NWnd()		{}
-	virtual	~NWControl()		{}
-
-	//Windows Creation
-	virtual	bool	Create(NWNDCREATE& c);
-};
-
 
 
 #endif //GUI_H

@@ -53,7 +53,7 @@ NTreeNodeCtrl::~NTreeNodeCtrl()
 //-----------------------------------------------------------------
 //!	\brief	Control creation
 //-----------------------------------------------------------------
-bool NTreeNodeCtrl::Create(const char* name, const NRect& rect, NWnd* parent)
+bool NTreeNodeCtrl::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 {
 	//Call Base class
 	NWNDCREATE			wc;
@@ -62,7 +62,7 @@ bool NTreeNodeCtrl::Create(const char* name, const NRect& rect, NWnd* parent)
 	wc.pwndParent		= parent;
 	wc.rcRect				= rect;
 	wc.dwStyle			= NWS_VISIBLE;
-	NWControl::Create(wc);
+	NGUIWnd::Create(wc);
 
 	return true;
 }
@@ -83,7 +83,7 @@ void NTreeNodeCtrl::OnPaint()
 {
 	NRect rc = GetClientRect();
 
-	NGraphics dc(this);
+	N2DPainter dc(this);
 
 	/////////////////////////////////////////////////
 	//Erase Background

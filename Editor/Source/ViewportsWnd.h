@@ -21,7 +21,7 @@
 //                   Includes
 //-----------------------------------------------------------------
 #include "ViewportsCtrl.h"
-#include "Editor.h"
+#include "EditorApp.h"
 
 //-----------------------------------------------------------------
 //                   Prototypes
@@ -39,7 +39,7 @@ public:
 	virtual ~NViewportsWnd(void);
 
 	//Methods
-	virtual	bool Create(const char* name, const NRect& rect, NWnd* parent);
+	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
 
 protected:
 	//Messages

@@ -69,7 +69,7 @@ NViewportsWnd::~NViewportsWnd(void)
 //-----------------------------------------------------------------
 //!	\brief	Control creation
 //-----------------------------------------------------------------
-bool NViewportsWnd::Create(const char* name, const NRect& rect, NWnd* parent)
+bool NViewportsWnd::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 {
 	NViewportsCtrl::Create(name, rect, parent);
 
@@ -269,7 +269,7 @@ void NViewportsWnd::DisplayTexture(NObject* pobj)
 
 	//Texte
 	rc.top = rc.bottom-32;
-	NGraphics dc(this);
+	N2DPainter dc(this);
 	//dc.FillSolidRect(rc, RGBA(115,115,115));
 	dc.SetTextColor(RGBA(200,255,200));
 	NString str;
@@ -385,7 +385,7 @@ void NViewportsWnd::OnPaint()
 {
 	NRect rc = GetClientRect();
 
-	NGraphics dc(this);
+	N2DPainter dc(this);
 	dc.FillSolidRect(rc, RGBA(115,115,115,255));
 
 	////////////////////////////////////////

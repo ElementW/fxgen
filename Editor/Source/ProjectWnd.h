@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------
 //			Includes
 //-----------------------------------------------------------------
-#include "Editor.h"
+#include "EditorApp.h"
 #include "TreeNodeCtrl.h"
 
 //-----------------------------------------------------------------
@@ -39,7 +39,7 @@ public:
 	virtual ~NProjectWnd(void);
 
 	//Methods
-	virtual	bool Create(const char* name, const NRect& rect, NWnd* parent);
+	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
 
 	void DisplayOperatorsProject(NOperatorsProject* _popsProject);
 	void SelectFirstPage();

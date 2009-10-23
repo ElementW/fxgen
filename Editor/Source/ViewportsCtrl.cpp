@@ -46,7 +46,7 @@ NViewportsCtrl::~NViewportsCtrl()
 //-----------------------------------------------------------------
 //!	\brief	Control creation
 //-----------------------------------------------------------------
-bool NViewportsCtrl::Create(const char* name, const NRect& rect, NWnd* parent)
+bool NViewportsCtrl::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 {
 	//Call Base class
 	NWNDCREATE			wc;
@@ -55,7 +55,7 @@ bool NViewportsCtrl::Create(const char* name, const NRect& rect, NWnd* parent)
 	wc.pwndParent		= parent;
 	wc.rcRect				= rect;
 	wc.dwStyle			= NWS_VISIBLE;
-	NWControl::Create(wc);
+	NGUIWnd::Create(wc);
 
 	return true;
 }

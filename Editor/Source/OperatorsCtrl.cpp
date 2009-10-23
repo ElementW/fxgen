@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------
 #include "pch.h"
 #include "OperatorsCtrl.h"
-#include "Editor.h"
+#include "EditorApp.h"
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -59,7 +59,7 @@ NOperatorsCtrl::~NOperatorsCtrl()
 	ClearClipboard();
 }
 
-bool NOperatorsCtrl::Create(const char* name, const NRect& rect, NWnd* parent)
+bool NOperatorsCtrl::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 {
 	//Call Base class
 	NWNDCREATE			wc;
@@ -68,7 +68,7 @@ bool NOperatorsCtrl::Create(const char* name, const NRect& rect, NWnd* parent)
 	wc.pwndParent		= parent;
 	wc.rcRect				= rect;
 	wc.dwStyle			= NWS_VISIBLE;
-	NWControl::Create(wc);
+	NGUIWnd::Create(wc);
 
 	return true;
 }
@@ -78,7 +78,7 @@ void NOperatorsCtrl::OnPaint()
 {
 	NRect rc = GetClientRect();
 
-	NGraphics dc(this);
+	N2DPainter dc(this);
 	dc.FillSolidRect(rc, RGBA(115,115,115,255));
 
 	/////////////////////////////////////////////////
@@ -138,7 +138,7 @@ void NOperatorsCtrl::OnPaint()
 }
 
 
-void NOperatorsCtrl::DisplayOperator(NGraphics* _pdc, NOperatorNode* _pop)
+void NOperatorsCtrl::DisplayOperator(N2DPainter* _pdc, NOperatorNode* _pop)
 {
 	//Operator's Zone
 	NRect rcBloc;
@@ -206,7 +206,7 @@ void NOperatorsCtrl::DisplayOperator(NGraphics* _pdc, NOperatorNode* _pop)
 }
 
 
-void NOperatorsCtrl::DisplayCursor(NGraphics* _pdc)
+void NOperatorsCtrl::DisplayCursor(N2DPainter* _pdc)
 {
 	if (m_bMovingBloc && m_popMarkedSelected)
 	{
@@ -265,7 +265,7 @@ void NOperatorsCtrl::DisplayCursor(NGraphics* _pdc)
 }
 
 
-void NOperatorsCtrl::DisplayOperatorsMap(NGraphics* _pdc)
+void NOperatorsCtrl::DisplayOperatorsMap(N2DPainter* _pdc)
 {
 	if (m_popsPage==null)		return;
 

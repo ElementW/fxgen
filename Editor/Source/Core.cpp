@@ -792,7 +792,9 @@ void NObjectArray::Clear()
 		for (udword i=0; i<m_dwCount; i++)
 			if (m_pBuffer[i])	NDELETE(m_pBuffer[i], NObject);
 
-	memset(m_pBuffer, 0, m_dwSize * sizeof(NObject*));
+	if (m_pBuffer!=null)
+		memset(m_pBuffer, 0, m_dwSize * sizeof(NObject*));
+
 	m_dwCount=0;
 }
 

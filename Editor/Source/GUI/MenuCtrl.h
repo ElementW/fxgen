@@ -61,7 +61,7 @@ struct NMEItemDesc
 //!	\class		NMenuCtrl
 //!	\brief		GUI control for menu
 //-----------------------------------------------------------------
-class  NMenuCtrl : public NWControl
+class  NMenuCtrl : public NGUIWnd
 {
 
 public:
@@ -70,7 +70,7 @@ public:
 	virtual ~NMenuCtrl();
 
 	// Methods
-	virtual	bool Create(char* name, NWnd* parent);
+	virtual	bool Create(char* name, NGUIWnd* parent);
 
 	// Methods
 	void	Update();
@@ -122,7 +122,7 @@ protected:
 	virtual void	OnLButtonDown(NPoint pos);
 	virtual void	OnRButtonDown(NPoint pos);
 	virtual	void	OnKeyUp(udword dwchar);
-	virtual	void	OnKillFocus(NWnd* pNewWnd);
+	virtual	void	OnKillFocus(NGUIWnd* pNewWnd);
 	//virtual	void	OnTimer(udword _dwTimerID);
 
 };

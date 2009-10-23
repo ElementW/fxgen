@@ -35,7 +35,7 @@
 //!	\class		NOperatorsCtrl
 //!	\brief		GUI control for operators editing
 //-----------------------------------------------------------------
-class NOperatorsCtrl : public NWControl
+class NOperatorsCtrl : public NGUIWnd
 {
 public:
 	// Constructor-Destructor
@@ -43,7 +43,7 @@ public:
 	virtual ~NOperatorsCtrl();
 
 	// Methods
-	virtual	bool Create(const char* name, const NRect& rect, NWnd* parent);
+	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
 
 	void DisplayOperatorsPage(NOperatorsPage* popsPage);
 
@@ -73,12 +73,12 @@ protected:
 	void				SelectOperatorsIntoRect(NRect& rc);
 	void				GetOperatorRect(NOperatorNode* _pop, NRect& _rc);
 
-	void				DisplayOperator(NGraphics* _pdc, NOperatorNode* _pop);
+	void				DisplayOperator(N2DPainter* _pdc, NOperatorNode* _pop);
 
 	bool				IsMovedSelOperatorsCollide(sdword _dwoffsetX, sdword _dwoffsetY);
 	bool				IsOpRectCollide(NRect _rcItemTest, bool _bExcludeSel);
 
-	void				DisplayOperatorsMap(NGraphics* _pdc);
+	void				DisplayOperatorsMap(N2DPainter* _pdc);
 
 	// Clipboard Methods
 	void CopyOperatorsSelectedToClipboard();
@@ -89,7 +89,7 @@ protected:
 	bool				IsOperatorSelected(NOperatorNode* pcbloc);
 
 	//Cursor Methods
-	void				DisplayCursor(NGraphics* _pdc);
+	void				DisplayCursor(N2DPainter* _pdc);
 	void				SetOpCursorPos(sdword _dwX, sdword _dwY);
 
 	// Datas

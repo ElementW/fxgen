@@ -47,7 +47,7 @@
 #include "Core.h"
 #include "GUI/GUI.h"
 
-#include "GUI/SplitWnd.h"
+#include "GUI/Layout.h"
 #include "GUI/MenuCtrl.h"
 #include "GUI/EventsMgr.h"
 //#include "EventsList.h"

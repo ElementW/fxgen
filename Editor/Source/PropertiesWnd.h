@@ -22,7 +22,7 @@
 //                   Includes
 //-----------------------------------------------------------------
 #include "PropertiesCtrl.h"
-#include "Editor.h"
+#include "EditorApp.h"
 
 //-----------------------------------------------------------------
 //!	\class		NPropertiesWnd
@@ -35,7 +35,7 @@ public:
 	virtual ~NPropertiesWnd(void);
 
 	//Methods
-	virtual	bool Create(const char* name, const NRect& rect, NWnd* parent);
+	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
 
 
 protected:

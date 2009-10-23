@@ -21,7 +21,7 @@
 //			Includes
 //-----------------------------------------------------------------
 #include "OperatorsCtrl.h"
-#include "Editor.h"
+#include "EditorApp.h"
 
 //-----------------------------------------------------------------
 //!	\class		NOperatorsWnd
@@ -34,7 +34,7 @@ public:
 	virtual ~NOperatorsWnd(void);
 
 	//Methods
-	virtual	bool Create(const char* name, const NRect& rect, NWnd* parent);
+	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
 	virtual void OnMarkShowOperator(NOperatorNode* pop);
 
 	virtual void OnDeletingOperator(NOperatorNode* pop);

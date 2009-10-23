@@ -51,7 +51,7 @@ NTextCtrl::~NTextCtrl()
 //-----------------------------------------------------------------
 //!	\brief	Control creation
 //-----------------------------------------------------------------
-bool NTextCtrl::Create(const char* name, const NRect& rect, NWnd* parent)
+bool NTextCtrl::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 {
 	//Call Base class
 	NWNDCREATE			wc;
@@ -60,7 +60,7 @@ bool NTextCtrl::Create(const char* name, const NRect& rect, NWnd* parent)
 	wc.pwndParent		= parent;
 	wc.rcRect				= rect;
 	wc.dwStyle			= NWS_VISIBLE;
-	NWControl::Create(wc);
+	NGUIWnd::Create(wc);
 
 	return true;
 }
@@ -81,7 +81,7 @@ void NTextCtrl::OnPaint()
 {
 	NRect rc = GetClientRect();
 
-	NGraphics dc(this);
+	N2DPainter dc(this);
 	dc.FillSolidRect(rc, RGBA(192,192,192,255));
 	dc.DrawText(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
 }
@@ -127,7 +127,7 @@ NButtonCtrl::~NButtonCtrl()
 //-----------------------------------------------------------------
 //!	\brief	Control creation
 //-----------------------------------------------------------------
-bool NButtonCtrl::Create(const char* name, const NRect& rect, NWnd* parent, udword _dwStyle)
+bool NButtonCtrl::Create(const char* name, const NRect& rect, NGUIWnd* parent, udword _dwStyle)
 {
 	//Bouton style
 	m_dwStyle = _dwStyle;
@@ -139,7 +139,7 @@ bool NButtonCtrl::Create(const char* name, const NRect& rect, NWnd* parent, udwo
 	wc.pwndParent		= parent;
 	wc.rcRect				= rect;
 	wc.dwStyle			= NWS_VISIBLE;
-	NWControl::Create(wc);
+	NGUIWnd::Create(wc);
 
 	return true;
 }
@@ -159,7 +159,7 @@ void NButtonCtrl::OnPaint()
 {
 	NRect rc = GetClientRect();
 
-	NGraphics dc(this);
+	N2DPainter dc(this);
 
 	///////////////////////////////////////////////////////////
 	//Normal Button
@@ -281,7 +281,7 @@ NColorPickerCtrl::~NColorPickerCtrl()
 //-----------------------------------------------------------------
 //!	\brief	Control creation
 //-----------------------------------------------------------------
-bool NColorPickerCtrl::Create(NWnd* parent)
+bool NColorPickerCtrl::Create(NGUIWnd* parent)
 {
 	//Call Base class
 	NWNDCREATE			wc;
@@ -290,7 +290,7 @@ bool NColorPickerCtrl::Create(NWnd* parent)
 	wc.pwndParent		= parent;
 	wc.rcRect				= NRect(0,0,0,0);
 	wc.dwStyle			= NWS_POPUP;
-	NWControl::Create(wc);
+	NGUIWnd::Create(wc);
 
 	return true;
 }
@@ -338,7 +338,7 @@ void NColorPickerCtrl::OnPaint()
 {
 	NRect rc = GetClientRect();
 
-	NGraphics gfx(this);
+	N2DPainter gfx(this);
 	gfx.FillSolidRect(rc, RGBA(255,255,255,190));
 
 	//Hue Rect
@@ -460,7 +460,7 @@ void NColorPickerCtrl::OnLButtonDblClk(NPoint point)
 {
 }
 
-void NColorPickerCtrl::OnKillFocus(NWnd* pNewWnd)
+void NColorPickerCtrl::OnKillFocus(NGUIWnd* pNewWnd)
 {
 	TRACE("NColorPickerCtrl::OnKillFocus\n");
 	ShowWindow(false);
@@ -520,7 +520,7 @@ void NColorPickerCtrl::OnKeyUp(udword dwchar)
 //-----------------------------------------------------------------
 //										Constructor
 //-----------------------------------------------------------------
-NEditCtrl::NEditCtrl() : NWControl()
+NEditCtrl::NEditCtrl() : NGUIWnd()
 {
 	m_dwCursorPos=m_dwSelectionTail=0;
 }
@@ -536,7 +536,7 @@ NEditCtrl::~NEditCtrl()
 //-----------------------------------------------------------------
 //!	\brief	Control creation
 //-----------------------------------------------------------------
-bool NEditCtrl::Create(const char* _pszname, const NRect& _rect, NWnd* _parent)
+bool NEditCtrl::Create(const char* _pszname, const NRect& _rect, NGUIWnd* _parent)
 {
 	//Call Base class
 	NWNDCREATE			wc;
@@ -545,7 +545,7 @@ bool NEditCtrl::Create(const char* _pszname, const NRect& _rect, NWnd* _parent)
 	wc.pwndParent		= _parent;
 	wc.rcRect				= _rect;
 	wc.dwStyle			= NWS_VISIBLE;
-	NWControl::Create(wc);
+	NGUIWnd::Create(wc);
 
 	return true;
 }
@@ -598,7 +598,7 @@ void NEditCtrl::OnPaint()
 {
 	NRect rc = GetClientRect();
 
-	NGraphics dc(this);
+	N2DPainter dc(this);
 	dc.FillSolidRect(rc, RGBA(255,255,255,255));
 	dc.DrawText(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 	//Cursor
@@ -635,7 +635,7 @@ void NEditCtrl::OnLButtonDblClk(udword _flags, NPoint _point)
 //-----------------------------------------------------------------
 //!	\brief
 //-----------------------------------------------------------------
-void NEditCtrl::OnKillFocus(NWnd* _pNewWnd)
+void NEditCtrl::OnKillFocus(NGUIWnd* _pNewWnd)
 {
 	OnEscape(this);
 }
