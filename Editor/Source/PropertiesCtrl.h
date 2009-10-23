@@ -50,7 +50,7 @@ struct NRowDesc
 //!	\class		NPropertiesCtrl
 //!	\brief		Object's Properties control viewer
 //-----------------------------------------------------------------
-class NPropertiesCtrl : public NWControl
+class NPropertiesCtrl : public NGUIWnd
 {
 public:
 	// Constructor-Destructor
@@ -58,7 +58,7 @@ public:
 	virtual ~NPropertiesCtrl();
 
 	// Methods
-	virtual	bool Create(const char* name, const NRect& rect, NWnd* parent);
+	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
 
 	void	Update();	//!< Update Display
 	void	DisplayObjectProperties(NObject* pobj);		//!< Display Object Properties

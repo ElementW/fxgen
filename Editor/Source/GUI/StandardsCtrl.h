@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------
 //                   Prototypes
 //-----------------------------------------------------------------
-//class NWControl
+//class NGUIWnd
 		class NTextCtrl;
 		class NButtonCtrl;
 		class NColorPickerCtrl;
@@ -39,7 +39,7 @@
 //!	\class		NTextCtrl
 //!	\brief		GUI control for text
 //-----------------------------------------------------------------
-class  NTextCtrl : public NWControl
+class  NTextCtrl : public NGUIWnd
 {
 public:
 	// Constructor-Destructor
@@ -47,7 +47,7 @@ public:
 	virtual ~NTextCtrl();
 
 	// Methods
-	virtual	bool Create(const char* name, const NRect& rect, NWnd* parent);
+	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
 
 	// Methods
 	void	Update();
@@ -72,7 +72,7 @@ protected:
 #define NBUT_STYLE_PUSH		0
 #define NBUT_STYLE_MENU		1
 
-class  NButtonCtrl : public NWControl
+class  NButtonCtrl : public NGUIWnd
 {
 public:
 	// Constructor-Destructor
@@ -80,7 +80,7 @@ public:
 	virtual ~NButtonCtrl();
 
 	// Methods
-	virtual	bool Create(const char* name, const NRect& rect, NWnd* parent, udword _dwStyle);
+	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent, udword _dwStyle);
 
 	// Methods
 	void	Update();
@@ -116,7 +116,7 @@ protected:
 //!	\class		NColorPickerCtrl
 //!	\brief		GUI control for color picker
 //-----------------------------------------------------------------
-class  NColorPickerCtrl : public NWControl
+class  NColorPickerCtrl : public NGUIWnd
 {
 
 public:
@@ -125,7 +125,7 @@ public:
 	virtual ~NColorPickerCtrl();
 
 	// Methods
-	virtual	bool Create(NWnd* parent);
+	virtual	bool Create(NGUIWnd* parent);
 
 	// Methods
 	void	TrackPopup(NPoint _ptScreen, const NColor& _clr);
@@ -157,7 +157,7 @@ protected:
 	virtual void	OnLButtonUp(NPoint pos);
 	virtual void	OnLButtonDown(NPoint pos);
 	virtual	void	OnLButtonDblClk(NPoint point);
-	virtual	void	OnKillFocus(NWnd* pNewWnd);
+	virtual	void	OnKillFocus(NGUIWnd* pNewWnd);
 	virtual	void	OnKeyUp(udword _dwchar);
 };
 
@@ -166,7 +166,7 @@ protected:
 //!	\class	NEditCtrl
 //!	\brief	Edit Control Class Definition
 //-----------------------------------------------------------------
-class   NEditCtrl : public NWControl
+class   NEditCtrl : public NGUIWnd
 {
 public:
 	//Constructor-Destructor
@@ -174,7 +174,7 @@ public:
 	virtual		~NEditCtrl();
 
 	//Windows Creation
-	virtual	bool Create(const char* _pszname, const NRect& _rect, NWnd* _parent);
+	virtual	bool Create(const char* _pszname, const NRect& _rect, NGUIWnd* _parent);
 
 	//Selection operations
 	void			SetSel(udword _startchar, udword _endchar);
@@ -192,7 +192,7 @@ protected:
 	virtual void	OnLButtonUp(udword _flags, NPoint _pos);
 	virtual void	OnLButtonDown(udword _flags, NPoint _pos);
 	virtual	void	OnLButtonDblClk(udword _flags, NPoint _point);
-	virtual	void	OnKillFocus(NWnd* _pNewWnd);
+	virtual	void	OnKillFocus(NGUIWnd* _pNewWnd);
 	virtual	void	OnKeyDown(udword _dwchar);
 	virtual	void	OnText(udword _unicode);
 	//Datas

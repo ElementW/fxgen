@@ -21,7 +21,7 @@
 #include "pch.h"
 #include "PropertiesCtrl.h"
 #include "PropertyItems.h"
-#include "Editor.h"
+#include "EditorApp.h"
 #include "Operator.h"
 
 //-----------------------------------------------------------------
@@ -50,7 +50,7 @@ NPropertyItem::NPropertyItem()
 //-----------------------------------------------------------------
 NPropertyItem::~NPropertyItem()
 {
-	if (m_pwNGraphicstrl)		NDELETE(m_pwNGraphicstrl, NWControl);
+	if (m_pwNGraphicstrl)		NDELETE(m_pwNGraphicstrl, NGUIWnd);
 }
 
 
@@ -63,7 +63,7 @@ NPropertyItem::~NPropertyItem()
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NUbyteProp, NPropertyItem);
 
-void NUbyteProp::DrawItem(NGraphics* pdc, NRect& rcItem)
+void NUbyteProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	m_strValue.Format("%d", m_pvarValue->byVal);
 	pdc->DrawText(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
@@ -142,7 +142,7 @@ void NUbyteProp::OnEscape(NEditCtrl* pEdit)
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NUwordProp, NPropertyItem);
 
-void NUwordProp::DrawItem(NGraphics* pdc, NRect& rcItem)
+void NUwordProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	m_strValue.Format("%d", m_pvarValue->wVal);
 	pdc->DrawText(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
@@ -221,7 +221,7 @@ void NUwordProp::OnEscape(NEditCtrl* pEdit)
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NFloatProp, NPropertyItem);
 
-void NFloatProp::DrawItem(NGraphics* pdc, NRect& rcItem)
+void NFloatProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	m_strValue.Format("%0.3f", m_pvarValue->fVal);
 	pdc->DrawText(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
@@ -296,7 +296,7 @@ void NFloatProp::OnEscape(NEditCtrl* pEdit)
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NUFloatProp, NPropertyItem);
 
-void NUFloatProp::DrawItem(NGraphics* pdc, NRect& rcItem)
+void NUFloatProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	m_strValue.Format("%0.3f", m_pvarValue->fVal);
 	pdc->DrawText(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
@@ -343,7 +343,7 @@ void NUFloatProp::OnEscape(NEditCtrl* pEdit)
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NColorProp, NPropertyItem);
 
-void NColorProp::DrawItem(NGraphics* pdc, NRect& rcItem)
+void NColorProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	NRGBA val;
 	val.dwCol = m_pvarValue->dwVal;
@@ -460,7 +460,7 @@ void NColorProp::OnColorClick(NObject* _psender)
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NUbyteComboProp, NPropertyItem);
 
-void NUbyteComboProp::DrawItem(NGraphics* pdc, NRect& rcItem)
+void NUbyteComboProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	//Init
 	if (m_carrayStringsList.Count()==0)
@@ -543,7 +543,7 @@ void NUbyteComboProp::OnMenuClick(NObject* _psender)
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NFileBrowserProp, NPropertyItem);
 
-void NFileBrowserProp::DrawItem(NGraphics* pdc, NRect& rcItem)
+void NFileBrowserProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	pdc->DrawText(m_pvarValue->szVal, rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 }
@@ -578,7 +578,7 @@ bool NFileBrowserProp::EndEdit(bool bSaveChanged)
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NUseStoredOpsProp, NPropertyItem);
 
-void NUseStoredOpsProp::DrawItem(NGraphics* pdc, NRect& rcItem)
+void NUseStoredOpsProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	NObject* pobj = m_pvarValue->pcRefObj;
 
@@ -681,7 +681,7 @@ void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NStringProp, NPropertyItem);
 
-void NStringProp::DrawItem(NGraphics* pdc, NRect& rcItem)
+void NStringProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	pdc->DrawText(m_pvarValue->szVal, rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 }
@@ -691,7 +691,7 @@ bool NStringProp::BeginEdit(NRect& rcItem)
 	assert(m_pParent!=null);
 
 	//Delete Old Control
-	if (m_pwNGraphicstrl)	NDELETE(m_pwNGraphicstrl, NWControl);
+	if (m_pwNGraphicstrl)	NDELETE(m_pwNGraphicstrl, NGUIWnd);
 
 	//Create edit
 	NRect rcCB(rcItem);
@@ -721,7 +721,7 @@ bool NStringProp::EndEdit(bool bSaveChanged)
 	}
 
 	//Destroy control
-	NDELETE(m_pwNGraphicstrl, NWControl);
+	NDELETE(m_pwNGraphicstrl, NGUIWnd);
 	m_pwNGraphicstrl=null;
 
 	return bSaveChanged;

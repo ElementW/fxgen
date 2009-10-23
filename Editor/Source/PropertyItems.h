@@ -50,7 +50,7 @@ public:
 	virtual ~NPropertyItem();
 
 	//Display
-	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem)	= 0;
+	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem)	= 0;
 	virtual bool		BeginEdit	(NRect& rcItem)										{ return false;	}
 	virtual bool		EndEdit		(bool bSaveChanged=true)					{ return false;	}
 	virtual	bool		AddValue(sdword dwDelta)										{ return false; }
@@ -61,14 +61,14 @@ public:
 
 protected:
 	NString			m_strValue;			//!< Value in string form
-	NWControl*	m_pwNGraphicstrl;			//!< Control used for item edition
+	NGUIWnd*	m_pwNGraphicstrl;			//!< Control used for item edition
 public:
 	NVarsBloc*			m_pvarBloc;			//!< Variable bloc
 	NVarsBlocDesc*	m_pvarBlocDesc;	//!< Variable Description
 	NVarValue*			m_pvarValue;		//!< Variable Value Ptr	//###TOREMOVE### see m_dwvarIdx
 	udword					m_dwvarIdx;			//!< Variable indice in bloc
 
-	NWnd*			m_pParent;				//!< Parent windows (ie CPropertiesCtrl)
+	NGUIWnd*			m_pParent;				//!< Parent windows (ie CPropertiesCtrl)
 };
 
 //-----------------------------------------------------------------
@@ -80,7 +80,7 @@ class NUbyteProp : public NPropertyItem
 public:
 	FDECLARE_CLASS();
 
-	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
+	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
@@ -98,7 +98,7 @@ class NUwordProp : public NPropertyItem
 public:
 	FDECLARE_CLASS();
 
-	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
+	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
@@ -126,7 +126,7 @@ class NFloatProp : public NPropertyItem
 {
 public:
 	FDECLARE_CLASS();
-	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
+	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
@@ -143,7 +143,7 @@ class NUFloatProp : public NPropertyItem
 {
 public:
 	FDECLARE_CLASS();
-	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
+	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
@@ -162,7 +162,7 @@ public:
 	FDECLARE_CLASS();
 
 	NColorProp()		{ m_dwRGBEditingIdx = 0; m_bFirst=true; }
-	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
+	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
@@ -186,7 +186,7 @@ class NUbyteComboProp : public NPropertyItem
 public:
 	FDECLARE_CLASS();
 
-	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
+	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 
@@ -207,7 +207,7 @@ class NFileBrowserProp : public NPropertyItem
 public:
 	FDECLARE_CLASS();
 
-	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
+	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 };
@@ -221,7 +221,7 @@ class NUseStoredOpsProp : public NPropertyItem
 public:
 	FDECLARE_CLASS();
 
-	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
+	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
 	//virtual void		Click(NPoint& pt, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
@@ -245,7 +245,7 @@ class NStringProp : public NPropertyItem
 public:
 	FDECLARE_CLASS();
 
-	virtual	void		DrawItem(NGraphics* pdc, NRect& rcItem);
+	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual void		OnEnter(NEditCtrl* pEdit);

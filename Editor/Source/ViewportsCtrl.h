@@ -25,7 +25,7 @@
 //!	\class		NViewportsCtrl
 //!	\brief		GUI control for viewport
 //-----------------------------------------------------------------
-class NViewportsCtrl : public NWControl
+class NViewportsCtrl : public NGUIWnd
 {
 
 public:
@@ -34,7 +34,7 @@ public:
 	virtual ~NViewportsCtrl();
 
 	// Methods
-	virtual	bool Create(const char* name, const NRect& rect, NWnd* parent);
+	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
 
 	void	Update();
 

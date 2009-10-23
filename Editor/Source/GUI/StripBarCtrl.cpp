@@ -49,7 +49,7 @@ NStripBarCtrl::~NStripBarCtrl()
 	for (udword i=0; i<m_carrayItems.Count(); i++)
 	{
 		NSBItemDesc* pst = &m_carrayItems[i];
-		NDELETE(pst->pwnd, NWnd);
+		NDELETE(pst->pwnd, NGUIWnd);
 	}
 	
 }
@@ -57,7 +57,7 @@ NStripBarCtrl::~NStripBarCtrl()
 //-----------------------------------------------------------------
 //!	\brief	Control creation
 //-----------------------------------------------------------------
-bool NStripBarCtrl::Create(const char* name, const NRect& rect, NWnd* parent)
+bool NStripBarCtrl::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 {
 	//Call Base class
 	NWNDCREATE			wc;
@@ -66,7 +66,7 @@ bool NStripBarCtrl::Create(const char* name, const NRect& rect, NWnd* parent)
 	wc.pwndParent		= parent;
 	wc.rcRect				= rect;
 	wc.dwStyle			= NWS_VISIBLE;
-	NWControl::Create(wc);
+	NGUIWnd::Create(wc);
 
 	return true;
 }
@@ -88,7 +88,7 @@ void NStripBarCtrl::OnPaint()
 {
 	NRect rc = GetClientRect();
 
-	NGraphics gfx(this);
+	N2DPainter gfx(this);
 
 	/////////////////////////////////////////////////
 	//Erase Background

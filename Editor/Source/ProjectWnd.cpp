@@ -57,7 +57,7 @@ NProjectWnd::~NProjectWnd(void)
 //-----------------------------------------------------------------
 //!	\brief	control Creation
 //-----------------------------------------------------------------
-bool NProjectWnd::Create(const char* name, const NRect& rect, NWnd* parent)
+bool NProjectWnd::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 {
 	NTreeNodeCtrl::Create(name, rect, parent);
 

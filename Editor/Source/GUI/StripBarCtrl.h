@@ -36,7 +36,7 @@
 //-----------------------------------------------------------------
 struct NSBItemDesc
 {
-	NWnd*	pwnd;
+	NGUIWnd*	pwnd;
 	udword dwWidth;
 	//Datas RT
 	NRect	rcItem;			//!< Windows Pos
@@ -47,7 +47,7 @@ struct NSBItemDesc
 //!	\class		NStripBarCtrl
 //!	\brief		GUI control for controls container as toolbar
 //-----------------------------------------------------------------
-class  NStripBarCtrl : public NWControl
+class  NStripBarCtrl : public NGUIWnd
 {
 public:
 	// Constructor-Destructor
@@ -55,7 +55,7 @@ public:
 	virtual ~NStripBarCtrl();
 
 	// Methods
-	virtual	bool Create(const char* name, const NRect& rect, NWnd* parent);
+	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
 
 	// Methods
 	void	Update();

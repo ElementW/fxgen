@@ -64,7 +64,7 @@ NMenuCtrl::~NMenuCtrl()
 //-----------------------------------------------------------------
 //!	\brief	Control creation
 //-----------------------------------------------------------------
-bool NMenuCtrl::Create(char* name, NWnd* parent)
+bool NMenuCtrl::Create(char* name, NGUIWnd* parent)
 {
 	//Call Base class
 	NWNDCREATE			wc;
@@ -73,7 +73,7 @@ bool NMenuCtrl::Create(char* name, NWnd* parent)
 	wc.pwndParent		= parent;
 	wc.rcRect				= NRect(0,0,0,0);
 	wc.dwStyle			= NWS_POPUP;
-	NWControl::Create(wc);
+	NGUIWnd::Create(wc);
 
 	return true;
 }
@@ -96,7 +96,7 @@ void NMenuCtrl::OnPaint()
 {
 	NRect rc = GetClientRect();
 
-	NGraphics dc(this);
+	N2DPainter dc(this);
 
 	ubyte byAlpha = 160;
 
@@ -525,7 +525,7 @@ NMenuCtrl* NMenuCtrl::GetPopupMenu(udword _idx)
 	return null;
 }
 
-void NMenuCtrl::OnKillFocus(NWnd* pNewWnd)
+void NMenuCtrl::OnKillFocus(NGUIWnd* pNewWnd)
 {
 	//TRACE("NMenuCtrl::OnKillFocus\n");
 	if ((pNewWnd==NULL || pNewWnd!=m_pcurPopupMenu))
