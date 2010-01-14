@@ -18,7 +18,6 @@
 //-----------------------------------------------------------------
 //			Includes
 //-----------------------------------------------------------------
-#include "pch.h"
 #include "PropertiesCtrl.h"
 
 #ifdef __GNUC__
@@ -149,7 +148,7 @@ void NPropertiesCtrl::OnPaint()
 				//rcRow.top-=(PC_ROWSHEIGHT/2)-2;
 				rcRow.left+=PC_ROWTEXTIDENT;
 
-				dc.DrawText(prd->strName.Buffer(), rcRow, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(192,192,192,255) );
+        dc.DrawString(prd->strName.Buffer(), rcRow, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(192,192,192,255) );
 				dwPosY+=PC_ROWSHEIGHT;
 
 				bDrawGroupEnd = true;
@@ -171,7 +170,7 @@ void NPropertiesCtrl::OnPaint()
 			else										dc.FillSolidRect(rcRow,	RGBA(255,141,15,255));
 
 			rcRow.left+=(prd->dwDepth*PC_ROWDEPTHIDENT);
-			dc.DrawText(prd->strName.Buffer(), rcRow, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+      dc.DrawString(prd->strName.Buffer(), rcRow, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 
 			//Check if value can be animated
 			bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc->bCanBeAnimate;
@@ -199,8 +198,8 @@ void NPropertiesCtrl::OnPaint()
 				rcABut.left=rcRow.right;		rcABut.top=rcRow.top;
 				rcABut.right=rc.right;			rcABut.bottom=rcRow.bottom;
 				dc.Draw3dRect(rcABut, RGBA(255,255,255,255), RGBA(255,0,0,0));
-				if (!bAnimated)		dc.DrawText("A", rcABut, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
-				else							dc.DrawText("R", rcABut, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+        if (!bAnimated)		dc.DrawString("A", rcABut, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+        else							dc.DrawString("R", rcABut, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 
 				prd->rcItemAnim=rcABut;
 			} else {

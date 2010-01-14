@@ -51,7 +51,13 @@
 //							NRectOp implementation
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void __stdcall NRectOp_Process(SEngineState* _state, NRGBA _color, vec4 _rect)
+struct SRectParams
+{
+  NRGBA color;
+  vec4  rect;
+};
+
+void  NRectOp_Process(SEngineState* _state, SRectParams* _p)
 {
 	SRessource* pRes = _state->apLayers[_state->pcurCall->byDepth];
 	udword w= pRes->dwWidth;
@@ -59,12 +65,12 @@ void __stdcall NRectOp_Process(SEngineState* _state, NRGBA _color, vec4 _rect)
 
 	//Init
 	uword x1, x2, y1, y2;
-	x1 = nmax(0, nmin(w, nmin(_rect.x1, _rect.x2) * w));
-	x2 = nmax(0, nmin(w, nmax(_rect.x1, _rect.x2) * w));
-	y1 = nmax(0, nmin(h, nmin(_rect.y1, _rect.y2) * h));
-	y2 = nmax(0, nmin(h, nmax(_rect.y1, _rect.y2) * h));
+  x1 = nmax(0, nmin(w, nmin(_p->rect.x1, _p->rect.x2) * w));
+  x2 = nmax(0, nmin(w, nmax(_p->rect.x1, _p->rect.x2) * w));
+  y1 = nmax(0, nmin(h, nmin(_p->rect.y1, _p->rect.y2) * h));
+  y2 = nmax(0, nmin(h, nmax(_p->rect.y1, _p->rect.y2) * h));
 
-	float alpha = _color.a / 255.f;
+  float alpha = _p->color.a / 255.f;
 
 	//Process operator
 	for (udword y=y1; y<y2; y++)
@@ -72,15 +78,30 @@ void __stdcall NRectOp_Process(SEngineState* _state, NRGBA _color, vec4 _rect)
 		NRGBA* pPixelsD = pRes->pbyPixels + (y*w) + x1;
 		for (udword x=x1; x<x2; x++)
 		{
-			pPixelsD->r = ubyte(pPixelsD->r * (1.0 - alpha) + _color.r * alpha);
-			pPixelsD->g = ubyte(pPixelsD->g * (1.0 - alpha) + _color.g * alpha);
-			pPixelsD->b = ubyte(pPixelsD->b * (1.0 - alpha) + _color.b * alpha);
+      pPixelsD->r = ubyte(pPixelsD->r * (1.0 - alpha) + _p->color.r * alpha);
+      pPixelsD->g = ubyte(pPixelsD->g * (1.0 - alpha) + _p->color.g * alpha);
+      pPixelsD->b = ubyte(pPixelsD->b * (1.0 - alpha) + _p->color.b * alpha);
 			// input alpha is preserved
 			++pPixelsD;
 		}
 	}
 
 }
+
+class NRectOpGUI
+{
+
+  SRectParams p;
+};
+
+static NVarsBlocDesc blocdescBlurOp[] =
+{
+    VAR(efloat,        true, "Width",        "0.01",        "NFloatProp")    //0
+    VAR(efloat,        true, "Height",        "0.01",        "NFloatProp")    //1
+    VAR(eubyte,        true, "Amplify",    "16",        "NUbyteProp")    //2
+    VAR(eubyte,        false, "Type",    "0,[Box,Gaussian]",    "NUbyteComboProp")    //3
+};
+
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -119,12 +140,17 @@ void __stdcall NRectOp_Process(SEngineState* _state, NRGBA _color, vec4 _rect)
 //							NAddOp implementation
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void __stdcall NAddOp_Process(SEngineState* _state, ubyte _bymode, NRGBA _colPercent)
+struct SAddParams
+{
+  ubyte bymode;
+  NRGBA colPercent;
+};
+
+void  NAddOp_Process(SEngineState* _state, SAddParams* _p)
 {
 	SRessource* pRes1 = _state->apLayers[_state->pcurCall->byDepth];
 	udword w= pRes1->dwWidth;
 	udword h= pRes1->dwHeight;
-
 	NRGBA *pPxSrc1, *pPxSrc2;
 
 	////Get input texture
@@ -139,9 +165,9 @@ void __stdcall NAddOp_Process(SEngineState* _state, ubyte _bymode, NRGBA _colPer
 	//NMemCopy(pDst->GetPixels(), pSrc->GetPixels(), w * h * sizeof(NRGBA));
 
 	//Get Variables Values
-	udword rcolPercent = _colPercent.r;
-	udword gcolPercent = _colPercent.g;
-	udword bcolPercent = _colPercent.b;
+  udword rcolPercent = _p->colPercent.r;
+  udword gcolPercent = _p->colPercent.g;
+  udword bcolPercent = _p->colPercent.b;
 //	udword acolPercent = 255;
 
 	///////////////////////////////////////////////////////////
@@ -161,7 +187,7 @@ void __stdcall NAddOp_Process(SEngineState* _state, ubyte _bymode, NRGBA _colPer
 
 		//////////////////////////////////////////////
 		//Add Clamp
-		if (_bymode==0)
+    if (_p->bymode==0)
 		{
 			for (udword y=0; y<hh; y++)
 			{
@@ -182,7 +208,7 @@ void __stdcall NAddOp_Process(SEngineState* _state, ubyte _bymode, NRGBA _colPer
 
 		//////////////////////////////////////////////
 		//Add Wrap
-		} else if (_bymode==1)	{
+    } else if (_p->bymode==1)	{
 
 			for (udword y=0; y<hh; y++)
 			{
@@ -203,7 +229,7 @@ void __stdcall NAddOp_Process(SEngineState* _state, ubyte _bymode, NRGBA _colPer
 
 		//////////////////////////////////////////////
 		//Sub Clamp
-		} else if (_bymode==2)	{
+    } else if (_p->bymode==2)	{
 
 			for (udword y=0; y<hh; y++)
 			{
@@ -224,7 +250,7 @@ void __stdcall NAddOp_Process(SEngineState* _state, ubyte _bymode, NRGBA _colPer
 
 		//////////////////////////////////////////////
 		//Sub Wrap
-		} else if (_bymode==3)	{
+    } else if (_p->bymode==3)	{
 
 			for (udword y=0; y<hh; y++)
 			{
@@ -245,7 +271,7 @@ void __stdcall NAddOp_Process(SEngineState* _state, ubyte _bymode, NRGBA _colPer
 
 		//////////////////////////////////////////////
 		//Multiply
-		} else if (_bymode==4)	{
+    } else if (_p->bymode==4)	{
 
 			for (udword y=0; y<hh; y++)
 			{
@@ -268,7 +294,7 @@ void __stdcall NAddOp_Process(SEngineState* _state, ubyte _bymode, NRGBA _colPer
 
 		//////////////////////////////////////////////
 		//Multiply X2
-		} else if (_bymode==5)	{
+    } else if (_p->bymode==5)	{
 
 			for (udword y=0; y<hh; y++)
 			{
@@ -292,7 +318,7 @@ void __stdcall NAddOp_Process(SEngineState* _state, ubyte _bymode, NRGBA _colPer
 
 		//////////////////////////////////////////////
 		//Blend
-		}	else if (_bymode==6)	{
+    }	else if (_p->bymode==6)	{
 
 			for (udword y=0; y<hh; y++)
 			{
@@ -316,7 +342,7 @@ void __stdcall NAddOp_Process(SEngineState* _state, ubyte _bymode, NRGBA _colPer
 
 		//////////////////////////////////////////////
 		//Alpha
-		}	else if (_bymode==7)	{
+    }	else if (_p->bymode==7)	{
 
 			for (udword y=0; y<hh; y++)
 			{
@@ -334,7 +360,7 @@ void __stdcall NAddOp_Process(SEngineState* _state, ubyte _bymode, NRGBA _colPer
 
 		//////////////////////////////////////////////
 		//Layer
-		} else if (_bymode==8) {
+    } else if (_p->bymode==8) {
 
 			for (udword y=0; y<hh; y++)
 			{
@@ -585,8 +611,8 @@ void NLerpOp_Process(SEngineState* _state)
 
 
 SOpFuncInterface IOpsCombine[] = {
-	"Rect",		5*4,  (fxOPFUNCTION*)&NRectOp_Process,
-	"Add",		2*4,  (fxOPFUNCTION*)&NAddOp_Process
+  "Rect",		sizeof(SRectParams),  (fxOPFUNCTION*)&NRectOp_Process,
+  "Add",		sizeof(SAddParams),   (fxOPFUNCTION*)&NAddOp_Process
 };
 
 udword dwCountOpsCombine = fgCreateOpEngine()->RegisterOpsInterfaces(2, IOpsCombine);

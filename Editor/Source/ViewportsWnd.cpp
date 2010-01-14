@@ -18,7 +18,6 @@
 //-----------------------------------------------------------------
 //                   Includes
 //-----------------------------------------------------------------
-#include "pch.h"
 #include "ViewportsWnd.h"
 //#include "TGAWriter.h"
 #include "FileChooserDialog.h"
@@ -394,10 +393,10 @@ void NViewportsWnd::OnPaint()
 	{
 		//Texte
 		//dc.FillSolidRect(rc, RGBA(255,115,115,115));
-		if (m_pcurOp==null)
-			dc.DrawText("Select an operator by double clicking on it", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(200,255,200,255) );
+    if (m_pcurOp==null)
+      dc.DrawString("Select an operator by double clicking on it", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(200,255,200,255) );
 		else
-			dc.DrawText("Invalid links !", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(200,255,200,255) );
+      dc.DrawString("Invalid links !", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(200,255,200,255) );
 
 	////////////////////////////////////////
 	//Display operator
@@ -464,13 +463,13 @@ void NViewportsWnd::DeleteTexture(udword _dwTextID)
 //!	\param	_h				Height
 //!	\param	_ppixels	Pixels
 //-----------------------------------------------------------------
-void NViewportsWnd::CopyPixelsToTexture(udword _dwtexid, udword _w, udword _h, NRGBA* _ppixels)
+/*void NViewportsWnd::CopyPixelsToTexture(udword _dwtexid, udword _w, udword _h, NRGBA* _ppixels)
 {
 	glBindTexture(GL_TEXTURE_2D, _dwtexid);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, _w, _h, GL_RGBA, GL_UNSIGNED_BYTE, (const GLvoid*)_ppixels);
 	//GLenum e = glGetError();
 	//GL_INVALID_ENUM
-}
+}*/
 
 //-----------------------------------------------------------------
 //!	\brief	Windows Message Command

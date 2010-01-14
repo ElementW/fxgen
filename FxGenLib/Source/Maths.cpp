@@ -19,7 +19,7 @@
 //                   Includes
 //-----------------------------------------------------------------
 #include "pch.h"
-#include "..\Include\FxGenLib.h"
+#include "../Include/FxGenLib.h"
 #include "Maths.h"
 
 //-----------------------------------------------------------------

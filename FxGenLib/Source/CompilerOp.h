@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------
 //                   Includes
 //-----------------------------------------------------------------
-#include "..\Include\FxGenLib.h"
+#include "../Include/FxGenLib.h"
 #include "Templates.h"
 #include "EngineOp.h"
 
