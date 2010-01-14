@@ -409,7 +409,7 @@ endcopy:
 //							NLoadOp implementation
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void __stdcall NLoadOp_Process(SEngineState* _state, SOpsSequence* _popToLoad)
+void NLoadOp_Process(SEngineState* _state, SOpsSequence* _popToLoad)
 {
 	SRessource* pDst = _state->apLayers[_state->pcurCall->byDepth];
 

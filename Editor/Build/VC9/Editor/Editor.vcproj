@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\Cle\Projects\SVN\Externals\FreeType\Include;&quot;C:\Cle\Projects\SVN\Externals\SFML-1.5\include&quot;"
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -213,118 +213,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Kernel"
-			>
-			<File
-				RelativePath="..\..\..\Source\Archive.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\Archive.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\Core.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\Core.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\MemoryMgr.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\MemoryMgr.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\Stream.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\Stream.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="GUI"
-			>
-			<File
-				RelativePath="..\..\..\Source\GUI\EventsMgr.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\GUI\EventsMgr.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\GUI\Font.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\GUI\Font.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\GUI\GUI.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\GUI\GUI.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\GUI\Keyboard.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\GUI\Layout.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\GUI\Layout.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\GUI\MenuCtrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\GUI\MenuCtrl.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\GUI\StandardsCtrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\GUI\StandardsCtrl.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\GUI\StripBarCtrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\GUI\StripBarCtrl.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\GUI\Templates.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\GUI\Types.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\GUI\Types.h"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="GUI Widgets"
 			>
 			<File
@@ -398,34 +286,6 @@
 			<File
 				RelativePath="..\..\..\Source\ViewportsWnd.h"
 				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Utils"
-			>
-			<File
-				RelativePath="..\..\..\Source\TGAWriter.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\TGAWriter.h"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<File

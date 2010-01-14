@@ -1,76 +1,72 @@
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-//! \file		Editor.cpp
-//! \brief	FxGen Editor application
-//!
-//!	\author	Johann Nadalutti (fxgen@free.fr)
-//!	\date		01-09-2008
-//!
-//!	\brief	This file applies the GNU GENERAL PUBLIC LICENSE
-//!					Version 2, read file COPYING.
-//!
-//!    			The original version of this library can be located at:
-//!    			http://sourceforge.net/projects/fxgen/
-//!
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
 #ifndef EDITOR_H
 #define EDITOR_H
 
-//-----------------------------------------------------------------
-//                   Includes
-//-----------------------------------------------------------------
-#include "MainFrm.h"
-#include "EventsList.h"
+/*#ifdef WIN32
 
-//-----------------------------------------------------------------
-//                   Defines
-//-----------------------------------------------------------------
-#ifdef __GNUC__
-#define CAPTION		"FxGen Editor v0.7 alpha (gcc) - "
-#else
-#define CAPTION		"FxGen Editor v0.7 alpha - "
-#endif
-#define WIDTH			800
-#define HEIGHT		600
+  // Modify the following defines if you have to target a platform prior to the ones specified below.
+  // Refer to MSDN for the latest info on corresponding values for different platforms.
+  #ifndef WINVER				// Allow use of features specific to Windows XP or later.
+  #define WINVER 0x0501		// Change this to the appropriate value to target other versions of Windows.
+  #endif
 
-//-----------------------------------------------------------------
-//                   Prototypes
-//-----------------------------------------------------------------
-class NEventsMgr;
+  #ifndef _WIN32_WINNT		// Allow use of features specific to Windows XP or later.
+  #define _WIN32_WINNT 0x0501	// Change this to the appropriate value to target other versions of Windows.
+  #endif
 
+  #ifndef _WIN32_WINDOWS		// Allow use of features specific to Windows 98 or later.
+  #define _WIN32_WINDOWS 0x0410 // Change this to the appropriate value to target Windows Me or later.
+  #endif
 
-//-----------------------------------------------------------------
-//!	\class		NFXGenApp
-//!	\brief		Application class declaration
-//-----------------------------------------------------------------
-class NFxGenApp
-{
-public:
-	//Constructor-Destructor
-					NFxGenApp();
-	virtual	~NFxGenApp();
+  #ifndef _WIN32_IE			// Allow use of features specific to IE 6.0 or later.
+  #define _WIN32_IE 0x0600	// Change this to the appropriate value to target other versions of IE.
+  #endif
 
-	//Methods
-	bool Init();
-	void Run();
-	bool Exit();
-	void Update();
+  #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+  // Windows Header Files:
+  //#include <windows.h>
+  //#include <windowsx.h>
+  //#include <commctrl.h>
+  //#include <commdlg.h>
+  //#include <richedit.h>
 
-	NMainFrm* GetMainWnd()		{ return (NMainFrm*)GetGUISubSystem()->GetMainWnd(); }
-
-	udword MessageBox(char* _pszText, udword _dwStyle);
-
-protected:
-	//Datas
-	sf::Window m_appWnd;
-	float m_fOldTime;
-};
+#endif*/
 
 
-//-----------------------------------------------------------------
-//                   Externs
-//-----------------------------------------------------------------
-extern NEventsMgr*	g_pceventsMgr;
-extern NFxGenApp*		GetApp();
-#endif //EDITOR_H
+// C RunTime Header Files
+#include <stdlib.h>
+#include <malloc.h>
+#include <memory.h>
+#include <math.h>
+#include <assert.h>
+#include <stdio.h>
+#include <time.h>
+#include <string.h>
+
+#define TCHAR char
+
+//SFML API
+#include <SFML/Window.hpp>
+
+//Editor
+/*#include "Core/Core.h"
+#include "GUI/GUI.h"
+
+#include "GUI/Layout.h"
+#include "GUI/MenuCtrl.h"
+#include "GUI/EventsMgr.h"
+//#include "EventsList.h"
+#include "GUI/StandardsCtrl.h"
+
+//FxgenLib
+#include "..\..\FxGenLib\Include\FxGenLib.h"
+#include "..\..\FxGenLib\Source\Maths.h"
+#include "..\..\FxGenLib\Source\Bitmap.h"
+*/
+
+//#include "MainOps.h"
+//#include "FilterOps.h"
+//#include "DistordOps.h"
+//#include "RenderOps.h"
+//#include "CombineOps.h"
+
+#endif //PCH_H

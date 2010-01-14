@@ -36,13 +36,9 @@ BEGIN_FG_NAMESPACE
 #ifndef _WIN32
 	typedef int32_t				    sdword;	// Signed 32 bit value
 	typedef u_int32_t			    udword;	// Unsigned 32 bit value
-	typedef int64_t		        sqword;	// Signed 64 bit value
-	typedef u_int64_t	        uqword; // Unsigned 64 bit value
 #else
 	typedef unsigned long			udword;	// Unsigned 32 bit value
 	typedef signed long				sdword;	// Signed 32 bit value
-	typedef signed __int64		sqword;	// Signed 64 bit value
-	typedef unsigned __int64	uqword; // Unsigned 64 bit value
 #endif
 
 //-----------------------------------------------------------------
@@ -60,7 +56,6 @@ BEGIN_FG_NAMESPACE
 //-----------------------------------------------------------------
 // Class Prototypes
 //-----------------------------------------------------------------
-	class NObjectGarbage;
 	class NErrors;
 	class NEngineOp;
 
@@ -70,7 +65,7 @@ BEGIN_FG_NAMESPACE
 //-----------------------------------------------------------------
 #define		MAX_NAMELEN					256
 #define		MAX_PATHLEN					256
-#define		ASM_INTEL						1
+
 
 //#ifndef max
 #define nmax(a,b)            (((a) > (b)) ? (a) : (b))
@@ -114,8 +109,6 @@ protected:
 	char* m_pszErrors;
 };
 extern FXGEN_API NErrors* gGetErrors();
-
-
 
 //-----------------------------------------------------------------
 //	Includes

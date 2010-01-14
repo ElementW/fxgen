@@ -18,7 +18,6 @@
 //-----------------------------------------------------------------
 //                   Includes
 //-----------------------------------------------------------------
-#include "pch.h"
 #include "OperatorsCtrl.h"
 #include "EditorApp.h"
 
@@ -116,7 +115,7 @@ void NOperatorsCtrl::OnPaint()
 		}
 
 	} else {
-		dc.DrawText("Please select a page !", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+    dc.DrawString("Please select a page !", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 	}
 
 	/////////////////////////////////////////////////
@@ -184,10 +183,10 @@ void NOperatorsCtrl::DisplayOperator(N2DPainter* _pdc, NOperatorNode* _pop)
 	else													_pdc->Draw3dRect(rcBloc,RGBA(255,255,255,255),RGBA(0,0,0,255));
 
 	//Operator's Name
-	const char* pszname = _pop->GetUserName();
+  const char* pszname = _pop->GetGUIName();
 	if (pszname==null || (strlen(pszname)==0))		pszname=_pop->GetName();
 
-	_pdc->DrawText(pszname, rcBloc, NDT_SINGLELINE|NDT_HCENTER|NDT_END_ELLIPSIS|NDT_VCENTER, RGBA(0,0,0,255) );
+  _pdc->DrawString(pszname, rcBloc, NDT_SINGLELINE|NDT_HCENTER|NDT_END_ELLIPSIS|NDT_VCENTER, RGBA(0,0,0,255) );
 
 	//Operator's Resize Zone
 	NRect rcResize(rcBloc);
@@ -244,9 +243,9 @@ void NOperatorsCtrl::DisplayCursor(N2DPainter* _pdc)
 			_pdc->FillSolidRect(rcCap, pop->GetColor());
 
 			//Operator's Name
-			const char* pszname = pop->GetUserName();
+      const char* pszname = pop->GetGUIName();
 			if (pszname==null || (strlen(pszname)==0))		pszname=pop->GetName();
-			_pdc->DrawText(pszname, rc, NDT_SINGLELINE|NDT_HCENTER|NDT_END_ELLIPSIS|NDT_VCENTER, RGBA(0,0,0,255) );
+      _pdc->DrawString(pszname, rc, NDT_SINGLELINE|NDT_HCENTER|NDT_END_ELLIPSIS|NDT_VCENTER, RGBA(0,0,0,255) );
 
 		}
 

@@ -19,7 +19,6 @@
 //-----------------------------------------------------------------
 //                   Includes
 //-----------------------------------------------------------------
-#include "pch.h"
 #include "TreeNodeCtrl.h"
 
 #ifdef __GNUC__
@@ -147,7 +146,7 @@ void NTreeNodeCtrl::OnPaint()
 		//Display Text
 		NRect rcText = item.rcItem;
 		rcText.left+=((item.dwDepth+1)*TN_ITEMIDENT);
-		dc.DrawText(item.pcobj->GetName(), rcText, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+    dc.DrawString(item.pcobj->GetName(), rcText, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 
 		//Symbol (+) or (-)
 		if (IsParentItem(i))

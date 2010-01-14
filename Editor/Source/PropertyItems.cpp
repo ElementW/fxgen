@@ -18,7 +18,6 @@
 //-----------------------------------------------------------------
 //			Includes
 //-----------------------------------------------------------------
-#include "pch.h"
 #include "PropertiesCtrl.h"
 #include "PropertyItems.h"
 #include "EditorApp.h"
@@ -66,7 +65,7 @@ FIMPLEMENT_CLASS(NUbyteProp, NPropertyItem);
 void NUbyteProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	m_strValue.Format("%d", m_pvarValue->byVal);
-	pdc->DrawText(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+  pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 }
 
 bool NUbyteProp::BeginEdit(NRect& rcItem)
@@ -145,7 +144,7 @@ FIMPLEMENT_CLASS(NUwordProp, NPropertyItem);
 void NUwordProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	m_strValue.Format("%d", m_pvarValue->wVal);
-	pdc->DrawText(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+  pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 }
 
 bool NUwordProp::BeginEdit(NRect& rcItem)
@@ -224,7 +223,7 @@ FIMPLEMENT_CLASS(NFloatProp, NPropertyItem);
 void NFloatProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	m_strValue.Format("%0.3f", m_pvarValue->fVal);
-	pdc->DrawText(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+  pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 }
 
 bool NFloatProp::BeginEdit(NRect& rcItem)
@@ -299,7 +298,7 @@ FIMPLEMENT_CLASS(NUFloatProp, NPropertyItem);
 void NUFloatProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	m_strValue.Format("%0.3f", m_pvarValue->fVal);
-	pdc->DrawText(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+  pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 }
 
 bool NUFloatProp::BeginEdit(NRect& rcItem)
@@ -357,22 +356,22 @@ void NColorProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 	//Red
 	rc.right = rc.left + w;
 	cstr.Format("%d", val.r);
-	pdc->DrawText(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+  pdc->DrawString(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 
 	//Green
 	rc.Move(w,0);
 	cstr.Format("%d",  val.g);
-	pdc->DrawText(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+  pdc->DrawString(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 
 	//Blue
 	rc.Move(w,0);
 	cstr.Format("%d",  val.b);
-	pdc->DrawText(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+  pdc->DrawString(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 
 	//Alpha
 	rc.Move(w,0);
 	cstr.Format("%d",  val.a);
-	pdc->DrawText(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+  pdc->DrawString(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 
 	///////////////////////////////////////
 	//Display Color Rect
@@ -491,7 +490,7 @@ void NUbyteComboProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 	else
 		m_strValue="?";
 
-	pdc->DrawText(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+  pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 }
 
 bool NUbyteComboProp::BeginEdit(NRect& rcItem)
@@ -545,7 +544,7 @@ FIMPLEMENT_CLASS(NFileBrowserProp, NPropertyItem);
 
 void NFileBrowserProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
-	pdc->DrawText(m_pvarValue->szVal, rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+  pdc->DrawString(m_pvarValue->szVal, rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 }
 
 bool NFileBrowserProp::BeginEdit(NRect& rcItem)
@@ -588,9 +587,9 @@ void NUseStoredOpsProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 		char* pszName;
 		NVarsBloc* pbloc = pobj->GetFirstVarsBloc();
 		pbloc->GetValue(0, 0.0f, pszName);
-		pdc->DrawText(pszName, rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+    pdc->DrawString(pszName, rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 	} else {
-		pdc->DrawText("", rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+    pdc->DrawString("", rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 	}
 
 }
@@ -683,7 +682,7 @@ FIMPLEMENT_CLASS(NStringProp, NPropertyItem);
 
 void NStringProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
-	pdc->DrawText(m_pvarValue->szVal, rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+  pdc->DrawString(m_pvarValue->szVal, rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 }
 
 bool NStringProp::BeginEdit(NRect& rcItem)

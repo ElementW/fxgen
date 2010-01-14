@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------
 //                   Includes
 //-----------------------------------------------------------------
-#include "..\Include\FxGenLib.h"
+#include "../Include/FxGenLib.h"
 
 //-----------------------------------------------------------------
 //                   Defines
@@ -179,13 +179,6 @@ protected:
 	udword						m_dwOpFuncInterfacesCount;
 	SOpFuncInterface	m_aOpFuncInterfaces[MAX_MAXOPINTERFACE];
 };
-
-
-//-----------------------------------------------------------------
-//!	\brief	
-//-----------------------------------------------------------------
-//#define REGISTER_OP(cmdname, classname, desc, auteur, ver)\
-//	static int classname##Temp = gRegisterCmd(cmdname, RUNTIME_CLASS(classname), desc, auteur, ver);
 
 
 #endif //ENGINEOP_H

@@ -32,11 +32,11 @@
 //							NBlurOp implementation
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void __stdcall NBlurOp_Process(SEngineState* _state, float _fWidth, float _fHeight, ubyte _byAmplify, ubyte _byType)
+void  NBlurOp_Process(SEngineState* _state, float _fWidth, float _fHeight, ubyte _byAmplify, ubyte _byType)
 {
 	SRessource* pRes = _state->apLayers[_state->pcurCall->byDepth];
-	udword w= pRes->dwWidth;
-	udword h= pRes->dwHeight;
+	sdword w= (sdword)pRes->dwWidth;
+	sdword h= (sdword)pRes->dwHeight;
 
 	// Do three passes if gaussian...
 	// Don't change the number of passes if you don't know what you're doing :)
@@ -245,7 +245,7 @@ void __stdcall NBlurOp_Process(SEngineState* _state, float _fWidth, float _fHeig
 //							NColorsOp implementation
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void __stdcall NColorsOp_Process(SEngineState* _state, NRGBA _colBase, NRGBA _colPerc, ubyte _byBrithness, ubyte _byContrast, ubyte _bySaturation, ubyte _byAlpha)
+void  NColorsOp_Process(SEngineState* _state, NRGBA _colBase, NRGBA _colPerc, ubyte _byBrithness, ubyte _byContrast, ubyte _bySaturation, ubyte _byAlpha)
 {
 	SRessource* pRes = _state->apLayers[_state->pcurCall->byDepth];
 	udword w= pRes->dwWidth;
@@ -322,12 +322,12 @@ void __stdcall NColorsOp_Process(SEngineState* _state, NRGBA _colBase, NRGBA _co
 //							NLightOp implementation
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void __stdcall NLightOp_Process(SEngineState* _state, NRGBA _colAmb, NRGBA _colDiff, NRGBA _colSpec, vec3 _light, ubyte _byspecPower, ubyte _bybumpPower)
+void  NLightOp_Process(SEngineState* _state, NRGBA _colAmb, NRGBA _colDiff, NRGBA _colSpec, vec3 _light, ubyte _byspecPower, ubyte _bybumpPower)
 {
 	SRessource* pRes			= _state->apLayers[_state->pcurCall->byDepth];
 	SRessource* pResNorm	= _state->apLayers[_state->pcurCall->byDepth+1];
-	udword w= pRes->dwWidth;
-	udword h= pRes->dwHeight;
+	sdword w= pRes->dwWidth;
+	sdword h= pRes->dwHeight;
 
 	//Two inputs (texture, normal)
 	//NBitmap* pSrc		= _state->apInputs[0];
@@ -402,7 +402,7 @@ void __stdcall NLightOp_Process(SEngineState* _state, NRGBA _colAmb, NRGBA _colD
 //							NNormalsOp implementation
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void __stdcall NNormalsOp_Process(SEngineState* _state, ubyte _byAmplify, ubyte _byFilter)
+void  NNormalsOp_Process(SEngineState* _state, ubyte _byAmplify, ubyte _byFilter)
 {
 	SRessource* pRes = _state->apLayers[_state->pcurCall->byDepth];
 	udword w= pRes->dwWidth;
@@ -957,7 +957,7 @@ udword NThresholdOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDe
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void __stdcall NAlphaOp_Process(SEngineState* _state)
+void  NAlphaOp_Process(SEngineState* _state)
 {
 	SRessource* pRes = _state->apLayers[_state->pcurCall->byDepth];
 	udword w= pRes->dwWidth;

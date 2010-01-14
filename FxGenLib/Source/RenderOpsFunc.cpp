@@ -32,7 +32,7 @@
 //							NFlatOp implementation
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void __stdcall NFlatOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _color)
+void  NFlatOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _color)
 {
 	SRessource* pDst = _state->apLayers[_state->pcurCall->byDepth];
 
@@ -225,7 +225,7 @@ void Normalize(udword w, udword h, sdword *pxls)
 	}
 }
 
-void __stdcall NCloudOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _color0, NRGBA _color1, ubyte _amp, uword _seed)
+void  NCloudOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _color0, NRGBA _color1, ubyte _amp, uword _seed)
 {
 	//Get Variables Values
 	SetSeedValue(_seed);
@@ -293,7 +293,7 @@ void __stdcall NCloudOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, 
 //							NGradientOp implementation
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void __stdcall NGradientOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _colA, NRGBA _colB, NRGBA _colC, NRGBA _colD)
+void  NGradientOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _colA, NRGBA _colB, NRGBA _colC, NRGBA _colD)
 {
 	SRessource* pDst = _state->apLayers[_state->pcurCall->byDepth];
 
@@ -341,7 +341,7 @@ void __stdcall NGradientOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpo
 //							NCellOp implementation
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void __stdcall NCellOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, ubyte _reg, ubyte _dens, NRGBA _color, uword _seed, ubyte _mode, ubyte _pat)
+void  NCellOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, ubyte _reg, ubyte _dens, NRGBA _color, uword _seed, ubyte _mode, ubyte _pat)
 {
 	SRessource* pDst = _state->apLayers[_state->pcurCall->byDepth];
 
@@ -457,7 +457,7 @@ void __stdcall NCellOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, u
 //							NNoiseOp implementation
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void __stdcall NNoiseOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _color, uword _seed)
+void NNoiseOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _color, uword _seed)
 {
 	SRessource* pDst = _state->apLayers[_state->pcurCall->byDepth];
 

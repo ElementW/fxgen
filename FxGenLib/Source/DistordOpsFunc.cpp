@@ -29,7 +29,7 @@
 //							NRotoZoomOp implementation
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void __stdcall NRotoZoomOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, vec2 _center, float _fRotate, vec2 _zoom, ubyte _byWrap)
+void  NRotoZoomOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, vec2 _center, float _fRotate, vec2 _zoom, ubyte _byWrap)
 {
 	SRessource* pRes = _state->apLayers[_state->pcurCall->byDepth];
 	udword tw= pRes->dwWidth;
