@@ -204,33 +204,25 @@ enum eVarType
 };
 
 
-//-----------------------------------------------------------------
-//!	\struct NVarValue
-//! \brief	A variable value desription
-//-----------------------------------------------------------------
-struct NVarValue
-{
-public:
-	//Value
-
-	//Anim control
-	NObject*	pcCtrlObj;	//!< different to null if animated
-};
 
 //-----------------------------------------------------------------
 //!	\struct NVarsBlocDesc
 //! \brief	One variable description for variables bloc
 //-----------------------------------------------------------------
+#define VAR_FLAG_CANBEANIMATED  1
+
 struct NVarsBlocDesc
 {
 	eVarType	eType;					//!< Type of variables (eubyte, euword ...)
   int       nFlags;         //!< ... later (animable, scriptable ...)
   int       nOffset;        //!< memory offset in bytes
+  NObject*	pcCtrlObj;	//!< different to null if animated
 
   //Variables for GUI Editing ...
   const char*			pszName;      //!< Variable display name
 	const char*			pszDefValue;	//!< One or more for combo-box edition
   float fMin, fMax, fStep;      //!< Min,max, step values
+
 };
 
 
@@ -254,7 +246,6 @@ public:
 
 	udword					Count()				{ return m_dwVarsCount;			}
 	NVarsBlocDesc*	GetBlocDesc()	{ return m_pcvarsblocDesc;	}
-	NVarValue*			GetValues()		{ return m_paVarsValues;		}
 
 	bool	IsAnimated();	//!< return true if one variable is animated
 
@@ -268,9 +259,10 @@ protected:
 	NObject*						m_powner;						//!< Object that contain this varsbloc
   NVarsBlocDesc*			m_pcvarsblocDesc;		//!< Variables Descriptions (name, def value, min, max ...)
 	udword							m_dwVarsCount;			//!< Values Count
-	NVarValue*					m_paVarsValues;			//!< Values array
 
 	NVarsBloc*					m_pcnextVarsBloc;		//!< Pointer on next variables bloc
+
+  ubyte               m_byVersion;
 
 	friend class NObject;
 };
