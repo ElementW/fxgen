@@ -173,7 +173,7 @@ void NPropertiesCtrl::OnPaint()
       dc.DrawString(prd->strName.Buffer(), rcRow, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 
 			//Check if value can be animated
-			bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc->bCanBeAnimate;
+      bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc->nFlags&VAR_FLAG_CANBEANIMATED;
 			bool bAnimated		 = prd->pItem->m_pvarValue->pcCtrlObj!=null;
 
 			//Display Right Part
@@ -501,7 +501,7 @@ udword NPropertiesCtrl::AddVarProperties(NVarsBloc* _pvarBloc, NVarsBlocDesc* _p
 
 	//pparentRow?rd.dwDepth = pparentRow->dwDepth+1:0;
 
-	rd.pItem = (NPropertyItem*)NRTClass::CreateByName(_pvarBlocDesc->pszCLASSGUI);
+  /*rd.pItem = (NPropertyItem*)NRTClass::CreateByName(_pvarBlocDesc->pszCLASSGUI);
 	if (rd.pItem)
 	{
 		rd.pItem->m_pParent				= this;
@@ -510,7 +510,7 @@ udword NPropertiesCtrl::AddVarProperties(NVarsBloc* _pvarBloc, NVarsBlocDesc* _p
 		rd.pItem->m_pvarBlocDesc	= _pvarBlocDesc;
 		rd.pItem->m_pvarValue			= _pvarValue;
 		rd.pItem->m_dwvarIdx			= _dwvarIdx;
-	}
+  }*/
 
 	return m_carrayRowsDesc.AddItem(rd);
 }

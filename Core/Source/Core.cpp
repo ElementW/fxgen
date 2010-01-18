@@ -66,11 +66,10 @@ NRTClassModule* NRTClassModule::m_pLastRTClassModule=null;
 //-----------------------------------------------------------------
 NVarsBloc::NVarsBloc()
 {
-	m_paVarsValues		= null;
 	m_pcnextVarsBloc	= null;
 	m_pcvarsblocDesc	= null;
 	m_dwVarsCount			= 0;
-	m_dwMapVarsCount	= 0;
+  m_byVersion       = 1;
 }
 
 //-----------------------------------------------------------------
@@ -78,7 +77,7 @@ NVarsBloc::NVarsBloc()
 //-----------------------------------------------------------------
 NVarsBloc::~NVarsBloc()
 {
-	if (m_paVarsValues!=null)		NDELETEARRAY(m_paVarsValues);
+  //if (m_paVarsValues!=null)		NDELETEARRAY(m_paVarsValues);
 }
 
 //-----------------------------------------------------------------
@@ -176,16 +175,15 @@ bool NVarsBloc::Load(NArchive* _l)
 //!	\param	_powner					Object for this variable bloc
 //!	\param	_byVersion			Version for serialization
 //-----------------------------------------------------------------
-void NVarsBloc::Init(udword _dwVarsCount, NVarsBlocDesc* _pvarsBlocDesc, NObject* _powner, ubyte _byVersion)
+void NVarsBloc::Init(udword _dwVarsCount, NVarsBlocDesc* _pvarsBlocDesc, NObject* _powner)
 {
 	//Store Values
 	m_dwVarsCount			= _dwVarsCount;
 	m_pcvarsblocDesc  = _pvarsBlocDesc;
 	m_powner					= _powner;
-	m_byVersion				= _byVersion;
 
 	//Create variables for this bloc
-	m_paVarsValues = (NVarValue*)NNEWARRAY(NVarValue, _dwVarsCount);
+  //m_paVarsValues = (NVarValue*)NNEWARRAY(NVarValue, _dwVarsCount);
 
 	//Init default values
 /*	for (udword i=0; i<m_dwVarsCount; i++)
@@ -233,260 +231,14 @@ bool NVarsBloc::IsAnimated()
 {
 	for (udword i=0; i<m_dwVarsCount; i++)
 	{
-		NVarValue* pval = m_paVarsValues + i;
+    NVarsBlocDesc* pval = m_pcvarsblocDesc + i;
 		if (pval->pcCtrlObj!=null)			return true;
 	}
 	return false;
 }
 
 
-//-----------------------------------------------------------------
-//!	\brief	Return variable's value by indice
-//!	\param	_idx		Indice of variable
-//!	\param	_fTime	Time for evaluation
-//!	\param	_val		Returned Value
-//-----------------------------------------------------------------
-void NVarsBloc::GetValue(udword _idx, float _fTime, ubyte& _val)
-{
-	//if (m_paVarsValues[_idx].pcCtrlObj)
-	//	_val = (ubyte)((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
-	//else
-		_val = m_paVarsValues[_idx].byVal;
-}
 
-void NVarsBloc::GetValue(udword _idx, float _fTime, uword&	_val)
-{
-	//if (m_paVarsValues[_idx].pcCtrlObj)
-	//	_val = (uword)((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
-	//else
-		_val = m_paVarsValues[_idx].wVal;
-
-}
-
-void NVarsBloc::GetValue(udword _idx, float _fTime, udword&	_val)
-{
-	//if (m_paVarsValues[_idx].pcCtrlObj)
-	//	_val = (udword)((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
-	//else
-		_val = m_paVarsValues[_idx].dwVal;
-}
-
-void NVarsBloc::GetValue(udword _idx, float _fTime, float& _val)
-{
-	//if (m_paVarsValues[_idx].pcCtrlObj)
-	//	_val = ((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
-	//else
-		_val = m_paVarsValues[_idx].fVal;
-}
-
-void NVarsBloc::GetValue(udword _idx, float /*_fTime*/, NObject*&	_val)
-{
-	_val = m_paVarsValues[_idx].pcRefObj;
-}
-
-void NVarsBloc::GetValue(udword _idx, float /*_fTime*/, char*& _val)
-{
-	_val = m_paVarsValues[_idx].szVal;
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Change a variable's value by indice
-//!	\param	_idx		Indice of variable
-//!	\param	_fTime	Time for changed
-//!	\param	_val		New Value
-//-----------------------------------------------------------------
-void NVarsBloc::SetValue(udword _idx, float /*_fTime*/, ubyte _val)
-{
-	m_paVarsValues[_idx].byVal = _val;
-}
-
-void NVarsBloc::SetValue(udword _idx, float /*_fTime*/, uword	_val)
-{
-	m_paVarsValues[_idx].wVal = _val;
-}
-
-void NVarsBloc::SetValue(udword _idx, float /*_fTime*/, udword	_val)
-{
-	m_paVarsValues[_idx].dwVal = _val;
-}
-
-void NVarsBloc::SetValue(udword _idx, float /*_fTime*/, float _val)
-{
-	m_paVarsValues[_idx].fVal = _val;
-}
-
-void NVarsBloc::SetValue(udword _idx, float /*_fTime*/, NObject* _val)
-{
-	//Remove old reference link
-	/*if (m_paVarsValues[_idx].pcRefObj != null)
-	{
-		m_powner->RemoveRef( m_paVarsValues[_idx].pcRefObj );
-	}*/
-
-	//Set New reference
-	m_paVarsValues[_idx].pcRefObj = _val;
-	//if (_val)	m_powner->AddRef(_val);
-}
-
-void NVarsBloc::SetValue(udword _idx, float /*_fTime*/, const char*	_val)
-{
-	strcpy(m_paVarsValues[_idx].szVal, _val);
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Set a mapping variable bloc to manage blocs versions
-//!	\param	_dwMapVarsCount		Mapped variables count
-//!	\param	_pmapVarsBlocDesc	Mapping variables bloc description
-//-----------------------------------------------------------------
-void NVarsBloc::SetMapVarBlocDesc(udword _dwMapVarsCount, NMapVarsBlocDesc* _pmapVarsBlocDesc)
-{
-	m_pcmapVarsBlocDesc = _pmapVarsBlocDesc;
-	m_dwMapVarsCount  = _dwMapVarsCount;
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Change a variable's value by indice
-//!	\param	_byVersion		File version (different to this)
-//-----------------------------------------------------------------
-void NVarsBloc::DoVarBlocVersion_Mapping(NArchive* _l, ubyte _byVersion)
-{
-	udword dwOldVarsCount;
-	*_l>>dwOldVarsCount;
-
-//	NMapVarsBlocDesc* pcmapvarsBloc = m_pcmapVarsBlocDesc;
-/*
-	for (udword i=0; i<m_dwMapVarsCount; i++)
-	{
-		NMapVarsBlocDesc* pmapdesc = m_pcmapVarsBlocDesc + i;
-		if (pmapdesc->byVersion==_byVersion)
-		{
-			const char* pszMapToIdx = pmapdesc->pszMapping;
-			sdword dwLen = strlen(pszMapToIdx);
-
-			NVarValue* pval			= null;
-			NVarValue* pvalPrev = null;
-			NVarValue arVal;
-
-			while (dwLen>0)
-			{
-				udword j = atol(pszMapToIdx);
-				pval = m_paVarsValues + j;
-
-				if (pvalPrev==null)
-				{
-					switch (pmapdesc->eType)
-					{
-						case eubyte:
-							*_l>>arVal.byVal;
-							MapValueTo((double)arVal.byVal, j, pmapdesc->pszExpression);
-						break;
-
-						case euword:
-							*_l>>arVal.wVal;
-							MapValueTo((double)arVal.wVal, j, pmapdesc->pszExpression);
-						break;
-
-						case eudword:
-							*_l>>arVal.dwVal;
-							MapValueTo((double)arVal.dwVal, j, pmapdesc->pszExpression);
-						break;
-
-						case efloat:
-							*_l>>arVal.fVal;
-							MapValueTo((double)arVal.fVal, j, pmapdesc->pszExpression);
-						break;
-
-						case erefobj:
-							arVal.pcRefObj = _l->GetMappedObj();
-							MapValueTo(arVal.pcRefObj, j);
-						break;
-
-						case estring:
-							*_l>>arVal.szVal;
-							MapValueTo(arVal.szVal, j);
-						break;
-
-						default:	assert(0);	break;
-					} //Switch
-
-					//Anim Control
-					if (_byVersion>=1)
-					{
-						ubyte byAniCtrl;
-						*_l>>byAniCtrl;
-
-						if (byAniCtrl)		pval->pcCtrlObj = _l->GetClass();
-						else							pval->pcCtrlObj = null;
-
-					} else {
-						pval->pcCtrlObj = null;
-					}
-
-					pvalPrev = pval;
-				} else {
-
-					NMemCopy(pval, pvalPrev, sizeof(NVarValue));
-
-				}
-
-				//Next Idx
-				for (; dwLen>0; --dwLen)
-				{
-					sbyte c = *pszMapToIdx++;
-					if (c==',')		 { dwLen--;  break;}
-				}
-
-			}//While
-
-		}//Version
-
-	}
-*/
-
-}
-
-void NVarsBloc::MapValueTo(double _fval, udword _idx, const char* _pszExpression)
-{
-/*
-	double fVal = _fval;
-
-	if (_pszExpression[0]=='*')		fVal*= atof(_pszExpression+1);
-	if (_pszExpression[0]=='+')		fVal+= atof(_pszExpression+1);
-
-	NVarValue* pval = m_paVarsValues + _idx;
-	NVarsBlocDesc* pdesc = m_pcvarsblocDesc + _idx;
-	switch (pdesc->eType)
-	{
-		case eubyte:	pval->byVal=(ubyte)fVal;	break;
-		case euword:	pval->wVal=(uword)fVal;		break;
-		case eudword:	pval->dwVal=(udword)fVal;	break;
-		case efloat:	pval->fVal=(float)fVal;		break;
-		default:	assert(0); break;
-	}
-*/
-}
-
-void NVarsBloc::MapValueTo(NObject* _val, udword _idx)
-{
-/*
-//	NVarValue* pval = m_paVarsValues + _idx;
-	NVarsBlocDesc* pdesc = m_pcvarsblocDesc + _idx;
-
-	assert(pdesc->eType==erefobj);
-	SetValue(_idx, 0.0f, _val);
-*/
-}
-
-void NVarsBloc::MapValueTo(const char* _val, udword _idx)
-{
-/*
-	NVarValue* pval = m_paVarsValues + _idx;
-	NVarsBlocDesc* pdesc = m_pcvarsblocDesc + _idx;
-
-	assert(pdesc->eType==estring);
-	strcpy(pval->szVal, _val);
-*/
-}
 
 
 //-----------------------------------------------------------------
@@ -599,7 +351,7 @@ NObject* NObject::Duplicate()
 		NVarsBloc* pcurvarblocClone = pobjClone->m_pcfirstVarsBloc;
 		while (pcurvarbloc)
 		{
-			NMemCopy(pcurvarblocClone->GetValues(), pcurvarbloc->GetValues(), pcurvarbloc->Count() * sizeof(NVarValue));
+      //NMemCopy(pcurvarblocClone->GetValues(), pcurvarbloc->GetValues(), pcurvarbloc->Count() * sizeof(NVarValue));
 			pcurvarbloc = m_pcfirstVarsBloc->m_pcnextVarsBloc;
 			pcurvarblocClone = pobjClone->m_pcfirstVarsBloc->m_pcnextVarsBloc;
 		}
@@ -617,11 +369,11 @@ NObject* NObject::Duplicate()
 //!	\param	_byVersion		Version for serialization
 //!	\return	Created variable bloc pointer from description
 //-----------------------------------------------------------------
-NVarsBloc* NObject::AddVarsBloc(udword _dwVarCount, NVarsBlocDesc* _pdesc, ubyte _byVersion)
+NVarsBloc* NObject::AddVarsBloc(udword _dwVarCount, NVarsBlocDesc* _pdesc)
 {
 	//Create bloc
 	NVarsBloc* pvarbloc = NNEW(NVarsBloc);
-	pvarbloc->Init(_dwVarCount, _pdesc, this, _byVersion);
+  pvarbloc->Init(_dwVarCount, _pdesc, this);
 
 	if (m_pcfirstVarsBloc==null)
 	{
