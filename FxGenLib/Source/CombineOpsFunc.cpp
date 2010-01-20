@@ -59,7 +59,7 @@ struct SRectParams
 
 void  NRectOp_Process(SEngineState* _state, SRectParams* _p)
 {
-	SRessource* pRes = _state->apLayers[_state->pcurCall->byDepth];
+	SResource* pRes = _state->apLayers[_state->pcurCall->byDepth];
 	udword w= pRes->dwWidth;
 	udword h= pRes->dwHeight;
 
@@ -88,19 +88,6 @@ void  NRectOp_Process(SEngineState* _state, SRectParams* _p)
 
 }
 
-class NRectOpGUI
-{
-
-  SRectParams p;
-};
-
-static NVarsBlocDesc blocdescBlurOp[] =
-{
-    VAR(efloat,        true, "Width",        "0.01",        "NFloatProp")    //0
-    VAR(efloat,        true, "Height",        "0.01",        "NFloatProp")    //1
-    VAR(eubyte,        true, "Amplify",    "16",        "NUbyteProp")    //2
-    VAR(eubyte,        false, "Type",    "0,[Box,Gaussian]",    "NUbyteComboProp")    //3
-};
 
 
 //-----------------------------------------------------------------
@@ -148,7 +135,7 @@ struct SAddParams
 
 void  NAddOp_Process(SEngineState* _state, SAddParams* _p)
 {
-	SRessource* pRes1 = _state->apLayers[_state->pcurCall->byDepth];
+	SResource* pRes1 = _state->apLayers[_state->pcurCall->byDepth];
 	udword w= pRes1->dwWidth;
 	udword h= pRes1->dwHeight;
 	NRGBA *pPxSrc1, *pPxSrc2;
@@ -174,7 +161,7 @@ void  NAddOp_Process(SEngineState* _state, SAddParams* _p)
 	//Add n Sources
 	for (udword i=_state->pcurCall->byDepth+1; i<(udword)_state->pcurCall->byDepth+(udword)_state->pcurCall->byInputsCount; i++)
 	{
-		SRessource* pRes2 = _state->apLayers[i];
+		SResource* pRes2 = _state->apLayers[i];
 		if (pRes2==null)		break;
 
 		//NRGBA* pPxSrc2 = pRes2->pbyPixels;

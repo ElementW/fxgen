@@ -97,16 +97,14 @@ void NMenuCtrl::OnPaint()
 
 	N2DPainter dc(this);
 
-	ubyte byAlpha = 160;
+  ubyte byAlpha = 128;
 
 	//NRect rcS = GetWindowRect();
 	//TRACE("Display: Menu %d %d - %d %d\n", rcS.left, rcS.top, rcS.right, rcS.bottom );
 
 	/////////////////////////////////////////////////
 	//Erase Background
-	//dc.FillSolidRect(rc, RGBA(115,115,115));
-	dc.FillSolidRect(rc, RGBA(255,255,255,byAlpha));
-	//dc.Draw3dRect(rc, RGBA(255,200,200,200), RGBA(255,0,0,0));
+  dc.FillSolidRect(rc, GetGUISubSystem()->GetMenuColor());
 
 	/////////////////////////////////////////////////
 	//Display Menu Title
@@ -119,10 +117,10 @@ void NMenuCtrl::OnPaint()
 		rcText.right-=1;
 		rcText.bottom = rc.top + ME_ITEMTEXTIDENT;
 
-		dc.FillSolidRect(rcText, RGBA(180,210,180,byAlpha));
+    dc.FillSolidRect(rcText, GetGUISubSystem()->GetMenuColor());
 
 		rcText.left+=2;
-    dc.DrawString(m_cstrText.Buffer() , rcText, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+    dc.DrawString(m_cstrText.Buffer() , rcText, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(255,128,0,byAlpha) );
 
 		y+=ME_ITEMHEIGHT;
 	}
@@ -146,13 +144,13 @@ void NMenuCtrl::OnPaint()
 			NRect rcHL;
 			rcHL = pitem->rcItem;
 			rcHL.left+=1;	rcHL.right-=1;
-			dc.FillSolidRect(rcHL,	RGBA(255,141,15,byAlpha));
+      dc.FillSolidRect(rcHL,	RGBA(0,128,255,byAlpha));
 		}
 
 		//Display Text
 		rcText = pitem->rcItem;
 		rcText.left+=ME_ITEMTEXTIDENT;
-    dc.DrawString(pitem->strName.Buffer(), rcText, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+    dc.DrawString(pitem->strName.Buffer(), rcText, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(255,255,255,255) );
 
 		//TRACE("Display: Menu Item %s\n", pitem->strName.Buffer());
 

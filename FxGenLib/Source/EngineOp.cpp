@@ -200,7 +200,7 @@ void NEngineOp::GetChannelValue(ubyte _byChannel, float& _outValue)
 //!	\param	
 //!	\return Generated ressource
 //-----------------------------------------------------------------
-SRessource* NEngineOp::ProcessSequence(SOpsSequence* _psequence, float _ftime, float _fDetailFactor/*=1.0f*/)
+SResource* NEngineOp::ProcessSequence(SOpsSequence* _psequence, float _ftime, float _fDetailFactor/*=1.0f*/)
 {
 	//Flag operators that need process calls
 	//ComputeInvaliddOps(popFinal);
@@ -220,15 +220,15 @@ SRessource* NEngineOp::ProcessSequence(SOpsSequence* _psequence, float _ftime, f
 
 		for (udword j=0; j<MAX_DEPTH; j++)
 		{
-			m_astates[i].apLayers[j] = NNEW(SRessource);
-			NMemFill(m_astates[i].apLayers[j], 0, sizeof(SRessource));
+			m_astates[i].apLayers[j] = NNEW(SResource);
+			NMemFill(m_astates[i].apLayers[j], 0, sizeof(SResource));
 		}
 	}
 
 	//Process
 	_ProcessSequence(_ftime, _psequence, _fDetailFactor);
 
-	return _psequence->pResult;
+	return _psequence->pResourceResult;
 }
 
 //-----------------------------------------------------------------
@@ -295,8 +295,8 @@ void NEngineOp::_ProcessSequence(float _ftime, SOpsSequence* _psequence, float _
 	}
 	
 	//Store sequence result
-	_psequence->pResult = new SRessource();
-	Res_CopyBmp(m_astates[m_nCurContext].apLayers[0], _psequence->pResult);
+	_psequence->pResourceResult = new SResource();
+	Res_CopyBmp(m_astates[m_nCurContext].apLayers[0], _psequence->pResourceResult);
 
 }
 
@@ -411,12 +411,12 @@ endcopy:
 //-----------------------------------------------------------------
 void NLoadOp_Process(SEngineState* _state, SOpsSequence* _popToLoad)
 {
-	SRessource* pDst = _state->apLayers[_state->pcurCall->byDepth];
+	SResource* pDst = _state->apLayers[_state->pcurCall->byDepth];
 
 	//loaded sequences as been already processed at this sequence start :-)
 
 	//Copy Bitmap
-	SRessource* pRef = _popToLoad->pResult;
+	SResource* pRef = _popToLoad->pResourceResult;
 	if (pRef==null)
 		pRef=null;	//Debug
 

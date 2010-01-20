@@ -64,8 +64,8 @@ typedef void (*fxOPFUNCTION)();
 struct SOpFuncInterface
 {
 	char					szName[MAX_NAMELEN];	//!< Function Name
-	udword				dwParamsSize;	//!< Parameters size in bytes
-	fxOPFUNCTION*	pfnc;	//!< C function to call
+	udword				dwParamsSize;					//!< Parameters size in bytes
+	fxOPFUNCTION*	pfnc;									//!< C function to call
 };
 
 //-----------------------------------------------------------------
@@ -75,18 +75,19 @@ struct SOpFuncInterface
 struct SOpCallDesc
 {
 	//ubyte byResType //!< Ressource Type ###TOADD### later...
-	ubyte			byInputsCount;							//!< Input Operators numbers
+	ubyte			byInputsCount;							//!< Input Operators count
 	ubyte			byDepth;										//!< Depth in tree
-	udword		adwParams[MAX_PARAMS];			//!< Parameters
-	ubyte			byParamsCount;
-	SOpFuncInterface* pfncI;	//!< Operator function to call
+	ubyte			byParamsCount;							//!< Parameters count
+	udword		adwParams[MAX_PARAMS];			//!< Parameters datas
+	SOpFuncInterface* pfncI;							//!< Operator function to call
 };
 
 //-----------------------------------------------------------------
-//!	\class		NRessource
-//!	\brief		Ressource
+//!	\class		NResource
+//!	\brief		Resource
+//!	\note			###TODO### mesh... see SOpCallDesc::byResType
 //-----------------------------------------------------------------
-struct SRessource
+struct SResource
 {
 	//Bitmap
 	NRGBA*		pbyPixels;
@@ -115,7 +116,7 @@ struct SOpsSequence
 	SOpsSequence*		pnextOpsSeq;	//!< Link toward next sequence
 
 	//Cache
-	SRessource*			pResult;	//!< Sequence Result
+	SResource*			pResourceResult;	//!< Sequence ressource Result
 };
 
 //-----------------------------------------------------------------
@@ -135,7 +136,7 @@ struct SCompiledOp
 struct SEngineState
 {
 	float					fDetailFactor;
-	SRessource*		apLayers[MAX_DEPTH];
+	SResource*		apResourcesLayers[MAX_DEPTH];
 	SOpCallDesc*	pcurCall;
 };
 
@@ -151,7 +152,7 @@ public:
 	virtual ~NEngineOp();
 
 	//API Methods
-	SRessource* ProcessSequence(SOpsSequence* _psequence, float _ftime, float _fDetailFactor=1.0f);
+	SResource* ProcessSequence(SOpsSequence* _psequence, float _ftime, float _fDetailFactor=1.0f);
 
 	//Operators Registration
 	udword RegisterOpsInterfaces(udword _dwCount, SOpFuncInterface* _parray);

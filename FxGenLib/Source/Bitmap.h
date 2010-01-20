@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------
 //                   Prototypes
 //-----------------------------------------------------------------
-struct SRessource;
+struct SResource;
 
 //-----------------------------------------------------------------
 //!	\struct	NRGBA
@@ -100,8 +100,8 @@ struct NRGBAI
 //-----------------------------------------------------------------
 //										Functions
 //-----------------------------------------------------------------
-void Res_SetBmpSize(SRessource* _pres, udword _w, udword _h);
-void Res_CopyBmp(SRessource* _pres1, SRessource* _pres2);
+void Res_SetBmpSize(SResource* _pres, udword _w, udword _h);
+void Res_CopyBmp(SResource* _pres1, SResource* _pres2);
 
 //-----------------------------------------------------------------
 //!	\class	NBitmap

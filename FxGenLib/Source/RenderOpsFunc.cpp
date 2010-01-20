@@ -34,7 +34,7 @@
 //-----------------------------------------------------------------
 void  NFlatOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _color)
 {
-	SRessource* pDst = _state->apLayers[_state->pcurCall->byDepth];
+	SResource* pDst = _state->apLayers[_state->pcurCall->byDepth];
 
 	//Set Bitmap Size
 	udword w=(udword) (((float)(1<<((udword)_wpow)))* _state->fDetailFactor);
@@ -236,7 +236,7 @@ void  NCloudOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _co
 	w=(udword) ((float)w * _state->fDetailFactor);
 	h=(udword) ((float)h * _state->fDetailFactor);
 
-	SRessource* pDst = _state->apLayers[_state->pcurCall->byDepth];
+	SResource* pDst = _state->apLayers[_state->pcurCall->byDepth];
 	Res_SetBmpSize(pDst,w,h);
 
 	//Used TPSLAYER as temporary buffer
@@ -295,7 +295,7 @@ void  NCloudOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _co
 //-----------------------------------------------------------------
 void  NGradientOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _colA, NRGBA _colB, NRGBA _colC, NRGBA _colD)
 {
-	SRessource* pDst = _state->apLayers[_state->pcurCall->byDepth];
+	SResource* pDst = _state->apLayers[_state->pcurCall->byDepth];
 
 	//Set Bitmap Size
 	sdword w=(sdword) (((float)(1<<((udword)_wpow)))* _state->fDetailFactor);
@@ -343,7 +343,7 @@ void  NGradientOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA 
 //-----------------------------------------------------------------
 void  NCellOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, ubyte _reg, ubyte _dens, NRGBA _color, uword _seed, ubyte _mode, ubyte _pat)
 {
-	SRessource* pDst = _state->apLayers[_state->pcurCall->byDepth];
+	SResource* pDst = _state->apLayers[_state->pcurCall->byDepth];
 
 	//Set Bitmap Size
 	udword w=(udword) (((float)(1<<((udword)_wpow)))* _state->fDetailFactor);
@@ -459,7 +459,7 @@ void  NCellOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, ubyte _reg
 //-----------------------------------------------------------------
 void NNoiseOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _color, uword _seed)
 {
-	SRessource* pDst = _state->apLayers[_state->pcurCall->byDepth];
+	SResource* pDst = _state->apLayers[_state->pcurCall->byDepth];
 
 	//Set Bitmap Size
 	udword w=(udword) (((float)(1<<((udword)_wpow)))* _state->fDetailFactor);

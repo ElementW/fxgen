@@ -26,7 +26,7 @@
 //!	\func	Bitmap_SetSize
 //!	\brief	Change Bitmap Size
 //-----------------------------------------------------------------
-void Res_SetBmpSize(SRessource* _pres, udword _w, udword _h)
+void Res_SetBmpSize(SResource* _pres, udword _w, udword _h)
 {
 	if (_w!=_pres->dwWidth || _h!=_pres->dwHeight)
 	{
@@ -63,7 +63,7 @@ void Res_SetBmpSize(SRessource* _pres, udword _w, udword _h)
 
 }
 
-void Res_CopyBmp(SRessource* _pres1, SRessource* _pres2)
+void Res_CopyBmp(SResource* _pres1, SResource* _pres2)
 {
 	udword w = _pres1->dwWidth;
 	udword h = _pres1->dwHeight;
