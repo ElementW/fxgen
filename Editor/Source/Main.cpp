@@ -43,8 +43,8 @@ class NRotoZoom_OperatorUI : NObject
   //A serialiser (nom, type)
   void OnUIProperties_Init()
   {
-    //Add("fRotate",  eFloat, sparams.fRotate, "0.0", -180.0, 180.0, 0.01); //pszDefValue, min ,max, step
-    //Add("v2Center", eVec2f, sparams.v2Center, "0.0,0.0", -1.0, 1.0, 0.01);
+    VAR("fRotate",  eFloat, sparams.fRotate, "0.0", -180.0, 180.0, 0.01); //pszDefValue, min ,max, step
+    VAR("v2Center", eVec2f, sparams.v2Center, "0.0,0.0", -1.0, 1.0, 0.01);
     //La valeur par defaut est-elle maintenant necessaire => peut etre a deplacer dans le constructeur ?
   }
 

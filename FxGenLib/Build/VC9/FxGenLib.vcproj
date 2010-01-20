@@ -415,6 +415,10 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\ClassDiagram1.cd"
+			>
+		</File>
+		<File
 			RelativePath="..\..\Include\FxGenLib.h"
 			>
 		</File>

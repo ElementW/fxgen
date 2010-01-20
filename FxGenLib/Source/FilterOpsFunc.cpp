@@ -34,7 +34,7 @@
 //-----------------------------------------------------------------
 void  NBlurOp_Process(SEngineState* _state, float _fWidth, float _fHeight, ubyte _byAmplify, ubyte _byType)
 {
-	SRessource* pRes = _state->apLayers[_state->pcurCall->byDepth];
+	SResource* pRes = _state->apLayers[_state->pcurCall->byDepth];
 	sdword w= (sdword)pRes->dwWidth;
 	sdword h= (sdword)pRes->dwHeight;
 
@@ -247,7 +247,7 @@ void  NBlurOp_Process(SEngineState* _state, float _fWidth, float _fHeight, ubyte
 //-----------------------------------------------------------------
 void  NColorsOp_Process(SEngineState* _state, NRGBA _colBase, NRGBA _colPerc, ubyte _byBrithness, ubyte _byContrast, ubyte _bySaturation, ubyte _byAlpha)
 {
-	SRessource* pRes = _state->apLayers[_state->pcurCall->byDepth];
+	SResource* pRes = _state->apLayers[_state->pcurCall->byDepth];
 	udword w= pRes->dwWidth;
 	udword h= pRes->dwHeight;
 
@@ -324,8 +324,8 @@ void  NColorsOp_Process(SEngineState* _state, NRGBA _colBase, NRGBA _colPerc, ub
 //-----------------------------------------------------------------
 void  NLightOp_Process(SEngineState* _state, NRGBA _colAmb, NRGBA _colDiff, NRGBA _colSpec, vec3 _light, ubyte _byspecPower, ubyte _bybumpPower)
 {
-	SRessource* pRes			= _state->apLayers[_state->pcurCall->byDepth];
-	SRessource* pResNorm	= _state->apLayers[_state->pcurCall->byDepth+1];
+	SResource* pRes			= _state->apLayers[_state->pcurCall->byDepth];
+	SResource* pResNorm	= _state->apLayers[_state->pcurCall->byDepth+1];
 	sdword w= pRes->dwWidth;
 	sdword h= pRes->dwHeight;
 
@@ -404,14 +404,14 @@ void  NLightOp_Process(SEngineState* _state, NRGBA _colAmb, NRGBA _colDiff, NRGB
 //-----------------------------------------------------------------
 void  NNormalsOp_Process(SEngineState* _state, ubyte _byAmplify, ubyte _byFilter)
 {
-	SRessource* pRes = _state->apLayers[_state->pcurCall->byDepth];
+	SResource* pRes = _state->apLayers[_state->pcurCall->byDepth];
 	udword w= pRes->dwWidth;
 	udword h= pRes->dwHeight;
 
 	float fAmp = (float)_byAmplify*_state->fDetailFactor / 64.0f; //[0<->4]
 
 	//Copy Input to Temps Layer used as texture
-	SRessource* pResTexture = _state->apLayers[TPS_LAYER];
+	SResource* pResTexture = _state->apLayers[TPS_LAYER];
 	Res_CopyBmp(pRes, pResTexture);
 
 	//////////////////////////////////////////
@@ -959,7 +959,7 @@ udword NThresholdOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDe
 //-----------------------------------------------------------------
 void  NAlphaOp_Process(SEngineState* _state)
 {
-	SRessource* pRes = _state->apLayers[_state->pcurCall->byDepth];
+	SResource* pRes = _state->apLayers[_state->pcurCall->byDepth];
 	udword w= pRes->dwWidth;
 	udword h= pRes->dwHeight;
 

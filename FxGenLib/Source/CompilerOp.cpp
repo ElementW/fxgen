@@ -285,7 +285,7 @@ void NCompilerOp::ComputeOpsSequences(SCompiledOp* _inoutCompOps)
 		SOpsSequence *pstSeq = new SOpsSequence();
 		pstSeq->dwOpsCount				= 0;
 		pstSeq->dwSeqsToLoadCount	= 0;
-		pstSeq->pResult						= null;
+		pstSeq->pResourceResult	= null;
 
 		SOperatorDesc* pop = (SOperatorDesc*)m_arrayOpsUnlinked[0];
 		//Search Start

@@ -357,7 +357,7 @@ void CompilerTest2()
 		popsSequence = popsSequence->pnextOpsSeq;	//Grid2
 		popsSequence = popsSequence->pnextOpsSeq;	//Grid3
 		popsSequence = popsSequence->pnextOpsSeq; //Metal
-		SRessource* pres = peng->ProcessSequence(popsSequence, 0.0f, 1.0f);
+		SResource* pres = peng->ProcessSequence(popsSequence, 0.0f, 1.0f);
 
 		//Save Generated sequence
 		BMP bmp(pres->dwWidth, pres->dwHeight);

@@ -150,8 +150,8 @@ public:
 
 
 //Variables
-#define		VAR(v, type,	nFlags, pszDispName,	pszDefValue, min ,max, step) \
-        { type,	nFlags, (int)&v - __base, pszName,	pszDefValue, min ,max, step },
+/*#define		VAR(v, type,	nFlags, pszDispName,	pszDefValue, min ,max, step) \
+        { type,	nFlags, (int)&v - __base, pszName,	pszDefValue, min ,max, step },*/
 
 
 //-----------------------------------------------------------------
@@ -211,25 +211,30 @@ enum eVarType
 //-----------------------------------------------------------------
 #define VAR_FLAG_CANBEANIMATED  1
 
-struct NVarsBlocDesc
+struct NVarsBlocDesc  //<<<Static table per class
 {
 	eVarType	eType;					//!< Type of variables (eubyte, euword ...)
-  int       nFlags;         //!< ... later (animable, scriptable ...)
-  int       nOffset;        //!< memory offset in bytes
-  NObject*	pcCtrlObj;	//!< different to null if animated
+  int       nFlags;         //!< Animable, Scriptable ...
 
   //Variables for GUI Editing ...
   const char*			pszName;      //!< Variable display name
 	const char*			pszDefValue;	//!< One or more for combo-box edition
   float fMin, fMax, fStep;      //!< Min,max, step values
-
 };
 
+struct NVars
+{
+  //RT
+  int       nOffset;        //!< memory offset in bytes from base class pointer
+  NObject*	pcCtrlObj;      //!< different to null if animation controler attached
+
+};
 
 
 //-----------------------------------------------------------------
 //!	\class	NVarsBloc Core.h
 //!	\brief	Bloc of variables
+//! ###TOREMOVE### ????
 //-----------------------------------------------------------------
 class  NVarsBloc
 {
@@ -262,7 +267,7 @@ protected:
 
 	NVarsBloc*					m_pcnextVarsBloc;		//!< Pointer on next variables bloc
 
-  ubyte               m_byVersion;
+  ubyte               m_byVersion;  //###TOREMOVE###
 
 	friend class NObject;
 };

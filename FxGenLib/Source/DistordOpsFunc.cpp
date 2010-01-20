@@ -31,14 +31,14 @@
 //-----------------------------------------------------------------
 void  NRotoZoomOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, vec2 _center, float _fRotate, vec2 _zoom, ubyte _byWrap)
 {
-	SRessource* pRes = _state->apLayers[_state->pcurCall->byDepth];
+	SResource* pRes = _state->apLayers[_state->pcurCall->byDepth];
 	udword tw= pRes->dwWidth;
 	udword th= pRes->dwHeight;
 	udword w = tw;
 	udword h = th;
 
 	//Copy Input to Temps Layer used as texture
-	SRessource* pResTexture = _state->apLayers[TPS_LAYER];
+	SResource* pResTexture = _state->apLayers[TPS_LAYER];
 	Res_CopyBmp(pRes, pResTexture);
 
 	if (_wpow!=0)
