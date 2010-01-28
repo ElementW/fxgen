@@ -34,7 +34,7 @@ typedef int( *CompareFnc) (const void *elem1, const void *elem2);
 //!			> 0		if elem1 greater than elem2
 //-----------------------------------------------------------------
 //template < class T >  class __declspec(dllexport) NArray
-template < class T >  class NArray
+template < class T >  class FXGEN_API NArray
 {
 public:
 

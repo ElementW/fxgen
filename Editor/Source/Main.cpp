@@ -22,7 +22,7 @@
 
 #include "EditorApp.h"
 
-//Structure partage avec le moteur d'operateurs
+/*//Structure partage avec le moteur d'operateurs
 struct SRotoParam
 {
   ubyte wpow;
@@ -48,7 +48,7 @@ class NRotoZoom_OperatorUI : NObject
     //La valeur par defaut est-elle maintenant necessaire => peut etre a deplacer dans le constructeur ?
   }
 
-/*  void OnUIProperties_Show(/*layout as Layout, NVarBlock* pblock  )
+  void OnUIProperties_Show(/*layout as Layout, NVarBlock* pblock  )
   {
     //float frot = pblock->Get("fRotate");
     //l = layout.Split("Parametres")
@@ -60,7 +60,7 @@ class NRotoZoom_OperatorUI : NObject
     //Etend la possibilitee
     //  - d'afficher des parametres differents en fonction des modes ...
     //  - de cache/afficher des parametres en fonction des coches
-  }*/
+  }
 
   //Gestion de l'edition
   //...
@@ -69,7 +69,7 @@ class NRotoZoom_OperatorUI : NObject
   SRotoParam sparams;
 
 };
-
+*/
 
 
 //-----------------------------------------------------------------
@@ -78,11 +78,11 @@ class NRotoZoom_OperatorUI : NObject
 int main(int argc, char *argv[])
 {
   //###TEST###
-  NRotoZoom_OperatorUI class1;
-  class1.OnUIProperties_Init();
+  //NRotoZoom_OperatorUI class1;
+  //class1.OnUIProperties_Init();
 
   //int nOffset = (int)&SRotoParam::hpow - &SRotoParam;
-  int noffset = offsetof(struct SRotoParam, fRotate);
+  //int noffset = offsetof(struct SRotoParam, fRotate);
 
 	// Application
 	NFxGenApp* pApp = new NFxGenApp();

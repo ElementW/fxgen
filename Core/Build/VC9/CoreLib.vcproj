@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="..\..\..\W32Bin"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\Cle\Projects\SVN\Externals\FreeType\Include;&quot;C:\Cle\Projects\SVN\Externals\SFML-1.5\include&quot;"
+				AdditionalIncludeDirectories="..\..\..\Externals\FreeType\Include;&quot;..\..\..\Externals\SFML-1.5\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;CORELIB_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="opengl32.lib libfreetype.lib sfml-system-d.lib sfml-window-d.lib sfml-main-d.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Cle\Projects\SVN\Externals\SFML-1.5\lib\vc2008&quot;;C:\Cle\Projects\SVN\Externals\FreeType\Lib"
+				AdditionalLibraryDirectories="&quot;..\..\..\Externals\SFML-1.5\lib\vc2008&quot;;..\..\..\Externals\FreeType\Lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -169,7 +169,7 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Fichiers sources"
+			Name="System"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
@@ -218,10 +218,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Source\Templates.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\Source\Types.cpp"
 				>
 			</File>
@@ -266,10 +262,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Source\LinuxMain.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\Source\MenuCtrl.cpp"
 				>
 			</File>
@@ -294,7 +286,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Source\WinMain.h"
+				RelativePath="..\..\Source\Templates.h"
 				>
 			</File>
 		</Filter>

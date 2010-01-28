@@ -229,11 +229,12 @@ void NVarsBloc::RemoveVarsRef(NObject* _pobj)
 //-----------------------------------------------------------------
 bool NVarsBloc::IsAnimated()
 {
-	for (udword i=0; i<m_dwVarsCount; i++)
+/*	for (udword i=0; i<m_dwVarsCount; i++)
 	{
     NVarsBlocDesc* pval = m_pcvarsblocDesc + i;
 		if (pval->pcCtrlObj!=null)			return true;
 	}
+*/
 	return false;
 }
 

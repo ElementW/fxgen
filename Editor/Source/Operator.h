@@ -20,7 +20,8 @@
 //-----------------------------------------------------------------
 //                   Includes
 //-----------------------------------------------------------------
-#include "CoreLib.h"
+//#include "CoreLib.h"
+#include "CoreLibPkg.h"
 
 #ifdef GetUserName
 #undef GetUserName

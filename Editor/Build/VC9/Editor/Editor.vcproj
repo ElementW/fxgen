@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\..\..\W32Bin"
+			OutputDirectory="..\..\..\W32Bin"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="2"
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="C:\Cle\Projects\FxGen\Core;C:\Cle\Projects\FxGen\Externals\FreeType\Include;&quot;C:\Cle\Projects\FxGen\Externals\SFML-1.5\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="opengl32.lib libfreetype.lib sfml-system-d.lib sfml-window-d.lib sfml-main-d.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Cle\Projects\SVN\Externals\SFML-1.5\lib\vc2008&quot;;C:\Cle\Projects\SVN\Externals\FreeType\Lib"
+				AdditionalLibraryDirectories="&quot;..\..\..\Externals\SFML-1.5\lib\vc2008&quot;;..\..\..\Externals\FreeType\Lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -213,7 +213,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="GUI Widgets"
+			Name="UI Widgets"
 			>
 			<File
 				RelativePath="..\..\..\Source\OperatorsCtrl.cpp"
@@ -289,11 +289,7 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\..\..\Source\pch.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\Source\pch.h"
+			RelativePath="..\..\..\Source\CoreLibPkg.h"
 			>
 		</File>
 	</Files>

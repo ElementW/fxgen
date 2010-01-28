@@ -18,6 +18,21 @@
 #include <unistd.h>
 #endif
 
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#include "windows.h"
+#endif
+
+// OpenGL
+#include <GL/gl.h>	/* Header File For The OpenGL Library */
+
+// FreeType Headers
+#include "ft2build.h"
+#include "freetype/freetype.h"
+#include "freetype/ftglyph.h"
+#include "freetype/ftoutln.h"
+#include "freetype/fttrigon.h"
+
 //#ifndef __GNUC__
 //#define NOMINMAX
 //#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
