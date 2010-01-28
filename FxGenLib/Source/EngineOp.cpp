@@ -216,12 +216,12 @@ SResource* NEngineOp::ProcessSequence(SOpsSequence* _psequence, float _ftime, fl
 	{
 		m_astates[i].fDetailFactor = _fDetailFactor;
 		m_astates[i].pcurCall			 = null;
-		NMemFill(m_astates[i].apLayers, 0, sizeof(m_astates[i].apLayers));
+		NMemFill(m_astates[i].apResourcesLayers, 0, sizeof(m_astates[i].apResourcesLayers));
 
 		for (udword j=0; j<MAX_DEPTH; j++)
 		{
-			m_astates[i].apLayers[j] = NNEW(SResource);
-			NMemFill(m_astates[i].apLayers[j], 0, sizeof(SResource));
+			m_astates[i].apResourcesLayers[j] = NNEW(SResource);
+			NMemFill(m_astates[i].apResourcesLayers[j], 0, sizeof(SResource));
 		}
 	}
 
@@ -296,7 +296,7 @@ void NEngineOp::_ProcessSequence(float _ftime, SOpsSequence* _psequence, float _
 	
 	//Store sequence result
 	_psequence->pResourceResult = new SResource();
-	Res_CopyBmp(m_astates[m_nCurContext].apLayers[0], _psequence->pResourceResult);
+	Res_CopyBmp(m_astates[m_nCurContext].apResourcesLayers[0], _psequence->pResourceResult);
 
 }
 
@@ -411,7 +411,7 @@ endcopy:
 //-----------------------------------------------------------------
 void NLoadOp_Process(SEngineState* _state, SOpsSequence* _popToLoad)
 {
-	SResource* pDst = _state->apLayers[_state->pcurCall->byDepth];
+	SResource* pDst = _state->apResourcesLayers[_state->pcurCall->byDepth];
 
 	//loaded sequences as been already processed at this sequence start :-)
 

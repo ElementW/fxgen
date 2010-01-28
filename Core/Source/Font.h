@@ -1,14 +1,6 @@
 #ifndef FONT_H
 #define FONT_H
 
-#include <GL/gl.h>	/* Header File For The OpenGL Library */
-
-// FreeType Headers
-#include "ft2build.h"
-#include "freetype/freetype.h"
-#include "freetype/ftglyph.h"
-#include "freetype/ftoutln.h"
-#include "freetype/fttrigon.h"
 
 
 // This Holds All Of The Information Related To Any FreeType Font That We Want To Create.

@@ -236,7 +236,7 @@ void  NCloudOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _co
 	w=(udword) ((float)w * _state->fDetailFactor);
 	h=(udword) ((float)h * _state->fDetailFactor);
 
-	SResource* pDst = _state->apLayers[_state->pcurCall->byDepth];
+	SResource* pDst = _state->apResourcesLayers[_state->pcurCall->byDepth];
 	Res_SetBmpSize(pDst,w,h);
 
 	//Used TPSLAYER as temporary buffer

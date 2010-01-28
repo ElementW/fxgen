@@ -20,10 +20,11 @@
 //-----------------------------------------------------------------
 //		Includes
 //-----------------------------------------------------------------
-#include "CoreLib.h"
-#include "../Source/GUI.h"
-#include "../Source/Layout.h"
-#include "../Source/MenuCtrl.h"
+//#include "CoreLib.h"
+#include "CoreLibPkg.h"
+//#include "../Source/GUI.h"
+//#include "../Source/Layout.h"
+//#include "../Source/MenuCtrl.h"
 
 //-----------------------------------------------------------------
 //		Prototypes

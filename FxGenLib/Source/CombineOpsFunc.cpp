@@ -59,7 +59,7 @@ struct SRectParams
 
 void  NRectOp_Process(SEngineState* _state, SRectParams* _p)
 {
-	SResource* pRes = _state->apLayers[_state->pcurCall->byDepth];
+	SResource* pRes = _state->apResourcesLayers[_state->pcurCall->byDepth];
 	udword w= pRes->dwWidth;
 	udword h= pRes->dwHeight;
 
@@ -135,7 +135,7 @@ struct SAddParams
 
 void  NAddOp_Process(SEngineState* _state, SAddParams* _p)
 {
-	SResource* pRes1 = _state->apLayers[_state->pcurCall->byDepth];
+	SResource* pRes1 = _state->apResourcesLayers[_state->pcurCall->byDepth];
 	udword w= pRes1->dwWidth;
 	udword h= pRes1->dwHeight;
 	NRGBA *pPxSrc1, *pPxSrc2;
@@ -161,7 +161,7 @@ void  NAddOp_Process(SEngineState* _state, SAddParams* _p)
 	//Add n Sources
 	for (udword i=_state->pcurCall->byDepth+1; i<(udword)_state->pcurCall->byDepth+(udword)_state->pcurCall->byInputsCount; i++)
 	{
-		SResource* pRes2 = _state->apLayers[i];
+		SResource* pRes2 = _state->apResourcesLayers[i];
 		if (pRes2==null)		break;
 
 		//NRGBA* pPxSrc2 = pRes2->pbyPixels;
