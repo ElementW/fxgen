@@ -75,7 +75,7 @@ struct  NSPLITBOX
 //!	\class	NGUILayout
 //!	\brief	Layout window Class Definition
 //-----------------------------------------------------------------
-class	 NGUILayout : public NGUIWnd
+class	CORELIB_API NGUILayout : public NGUIWnd
 {
 public:
 	//Constructor, destructor

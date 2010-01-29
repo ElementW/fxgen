@@ -4,7 +4,7 @@
 
 
 // This Holds All Of The Information Related To Any FreeType Font That We Want To Create.
-class NGUIFont
+class CORELIB_API NGUIFont
 {
 public:
 	float m_h; // Holds The Height Of The Font.

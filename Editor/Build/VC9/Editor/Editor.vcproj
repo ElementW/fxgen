@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="opengl32.lib libfreetype.lib sfml-system-d.lib sfml-window-d.lib sfml-main-d.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;..\..\..\Externals\SFML-1.5\lib\vc2008&quot;;..\..\..\Externals\FreeType\Lib"
+				AdditionalLibraryDirectories="&quot;..\..\..\..\Externals\SFML-1.5\lib\vc2008&quot;;..\..\..\..\Externals\FreeType\Lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -242,26 +242,74 @@
 			<File
 				RelativePath="..\..\..\Source\PropertiesCtrl.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\Source\PropertiesCtrl.h"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\Source\PropertiesWnd.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\Source\PropertiesWnd.h"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\Source\PropertyItems.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\Source\PropertyItems.h"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\Source\TreeNodeCtrl.cpp"

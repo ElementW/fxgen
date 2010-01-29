@@ -47,7 +47,7 @@ struct NSBItemDesc
 //!	\class		NStripBarCtrl
 //!	\brief		GUI control for controls container as toolbar
 //-----------------------------------------------------------------
-class  NStripBarCtrl : public NGUIWnd
+class CORELIB_API NStripBarCtrl : public NGUIWnd
 {
 public:
 	// Constructor-Destructor

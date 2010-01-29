@@ -27,7 +27,7 @@
 //!	\class	NString
 //!	\brief	String class
 //-----------------------------------------------------------------
-class  NString
+class CORELIB_API NString
 {
 public:
 	//Constructors-Destructor
@@ -108,7 +108,7 @@ protected:
 //!	\class	NPoint
 //!	\brief	Point class
 //-----------------------------------------------------------------
-class  NPoint
+class CORELIB_API NPoint
 {
 public:
 	//Constructor-Destructor
@@ -146,7 +146,7 @@ public:
 //!	\class	NRect
 //!	\brief	Point class
 //-----------------------------------------------------------------
-class  NRect
+class CORELIB_API NRect
 {
 public:
 	//Constructors
@@ -196,7 +196,7 @@ public:
 //!	\struct	NRGBA
 //!	\brief	8Bits composants
 //-----------------------------------------------------------------
-struct NRGBA
+struct CORELIB_API NRGBA
 {
   NRGBA() {}
   NRGBA(ubyte R, ubyte G, ubyte B, ubyte A): r(R), g(G), b(B), a(A) {}
@@ -260,7 +260,7 @@ struct NRGBA
 #endif
 #define RGBA(r,g,b,a)          ((udword)((a<<24)|(b<<16)|(g<<8)|r ))
 
-class  NColor
+class CORELIB_API NColor
 {
 public:
 	//Constructors

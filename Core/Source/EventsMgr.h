@@ -32,7 +32,7 @@ typedef udword (NObject::*EVENTFNC)(udword dwParam1, udword dwParam2);
 //!	\class	NEventsMgr
 //!	\brief	Events manager
 //-----------------------------------------------------------------
-class  NEventsMgr
+class CORELIB_API NEventsMgr
 {
 	//Structs
 	struct ST_EVENTHANDLERINFO

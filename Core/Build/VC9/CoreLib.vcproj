@@ -18,10 +18,10 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\..\W32Bin"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="..\..\Lib"
+			IntermediateDirectory="Debug"
 			ConfigurationType="2"
-			CharacterSet="1"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\Externals\FreeType\Include;&quot;..\..\..\Externals\SFML-1.5\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;CORELIB_EXPORTS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;CORELIB_EXPORT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -62,10 +62,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="opengl32.lib libfreetype.lib sfml-system-d.lib sfml-window-d.lib sfml-main-d.lib"
-				LinkIncremental="2"
+				OutputFile="$(OutDir)\$(ProjectName)_D.dll"
+				LinkIncremental="0"
 				AdditionalLibraryDirectories="&quot;..\..\..\Externals\SFML-1.5\lib\vc2008&quot;;..\..\..\Externals\FreeType\Lib"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="0"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				ImportLibrary="$(TargetDir)$(TargetName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -88,6 +92,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="XCopy /S /Y $(OutDir)\*.dll ..\..\..\W32Bin\"
 			/>
 		</Configuration>
 		<Configuration

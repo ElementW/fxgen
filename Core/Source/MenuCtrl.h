@@ -61,7 +61,7 @@ struct NMEItemDesc
 //!	\class		NMenuCtrl
 //!	\brief		GUI control for menu
 //-----------------------------------------------------------------
-class  NMenuCtrl : public NGUIWnd
+class CORELIB_API NMenuCtrl : public NGUIWnd
 {
 
 public:

@@ -74,7 +74,7 @@ class NMemoryStream;
 //!	\class	NArchive
 //!	\brief	Serializer for data loading and saving
 //-----------------------------------------------------------------
-class NArchive
+class CORELIB_API NArchive
 {
 public:
 	//Constructor-Destructor

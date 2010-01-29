@@ -39,7 +39,7 @@
 //!	\class		NTextCtrl
 //!	\brief		GUI control for text
 //-----------------------------------------------------------------
-class  NTextCtrl : public NGUIWnd
+class CORELIB_API NTextCtrl : public NGUIWnd
 {
 public:
 	// Constructor-Destructor
@@ -72,7 +72,7 @@ protected:
 #define NBUT_STYLE_PUSH		0
 #define NBUT_STYLE_MENU		1
 
-class  NButtonCtrl : public NGUIWnd
+class CORELIB_API NButtonCtrl : public NGUIWnd
 {
 public:
 	// Constructor-Destructor
@@ -116,7 +116,7 @@ protected:
 //!	\class		NColorPickerCtrl
 //!	\brief		GUI control for color picker
 //-----------------------------------------------------------------
-class  NColorPickerCtrl : public NGUIWnd
+class CORELIB_API NColorPickerCtrl : public NGUIWnd
 {
 
 public:
@@ -166,7 +166,7 @@ protected:
 //!	\class	NEditCtrl
 //!	\brief	Edit Control Class Definition
 //-----------------------------------------------------------------
-class   NEditCtrl : public NGUIWnd
+class CORELIB_API NEditCtrl : public NGUIWnd
 {
 public:
 	//Constructor-Destructor

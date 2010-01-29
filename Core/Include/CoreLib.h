@@ -95,17 +95,17 @@ BEGIN_CORE_NAMESPACE
 //-----------------------------------------------------------------
 // Macros
 //-----------------------------------------------------------------
-#ifdef CORE_EXPORT
-	#define CORE_EXPORT __declspec(dllexport)
-#elif defined CORE_EXPORT_DLL_LIBRARY_IMPORT
-	#define CORE_EXPORT __declspec(dllimport)
+#ifdef CORELIB_EXPORT
+	#define CORELIB_API __declspec(dllexport)
+#elif defined CORELIB_EXPORT_DLL_LIBRARY_IMPORT
+	#define CORELIB_API __declspec(dllimport)
 #else // STATIC_BUILD
-	#define CORE_EXPORT
+	#define CORELIB_API
 #endif // STATIC_BUILD
 
 #ifdef _DEBUG
 	#define TRACE	gDebugLog
-	void CORE_EXPORT gDebugLog(const char* fmt, ... );
+	void CORELIB_API gDebugLog(const char* fmt, ... );
 #else
 	#define TRACE
 #endif
@@ -118,7 +118,7 @@ BEGIN_CORE_NAMESPACE
 //!	\class	NErrors Core.h
 //!	\brief	Errors manager
 //-----------------------------------------------------------------
-class CORE_EXPORT NErrors
+class CORELIB_API NErrors
 {
 public:
 	NErrors();
@@ -132,7 +132,7 @@ protected:
 	udword m_dwStringPos;
 	char* m_pszErrors;
 };
-extern CORE_EXPORT NErrors* gGetErrors();
+extern CORELIB_API NErrors* gGetErrors();
 
 //-----------------------------------------------------------------
 //	Includes
