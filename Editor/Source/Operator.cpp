@@ -42,7 +42,6 @@
 //-----------------------------------------------------------------
 NOperatorNode::NOperatorNode()
 {
-	m_pcvarsBloc = null;
 }
 
 //-----------------------------------------------------------------
@@ -418,11 +417,11 @@ void NOperatorsProject::GetBitmap(NObject** _ppobj, ubyte _byObjType)
 //!	\param	_etype			type of value
 //!	\param	_value			value
 //-----------------------------------------------------------------
-void NOperatorsProject::SetChannelValue(ubyte _byChannel, NVarValue& _value)
+/*void NOperatorsProject::SetChannelValue(ubyte _byChannel, NVarValue& _value)
 {
 //	if (_byChannel<MAX_CHANNELS)
 //		memcpy(&m_achannels[_byChannel], &_value, sizeof(NVarValue));
-}
+}*/
 
 //-----------------------------------------------------------------
 //!	\brief	Return a Channel value
@@ -430,11 +429,11 @@ void NOperatorsProject::SetChannelValue(ubyte _byChannel, NVarValue& _value)
 //!	\param	_etype			type of value
 //!	\param	_value			value
 //-----------------------------------------------------------------
-void NOperatorsProject::GetChannelValue(ubyte _byChannel, NVarValue& _outValue)
+/*void NOperatorsProject::GetChannelValue(ubyte _byChannel, NVarValue& _outValue)
 {
 //	if (_byChannel<MAX_CHANNELS)
 //		memcpy(&_outValue, &m_achannels[_byChannel], sizeof(NVarValue));
-}
+}*/
 
 
 //-----------------------------------------------------------------

@@ -34,7 +34,7 @@
 	//!	\class		NDebugMemoryMgr
 	//!	\brief		Memory manager for debug
 	//-----------------------------------------------------------------
-	class  NDebugMemoryMgr
+	class CORELIB_API NDebugMemoryMgr
 	{
 	public:
 		//Constructor-Destructor
@@ -67,7 +67,7 @@
 	};
 
 
-	extern  NDebugMemoryMgr gMemMgr;
+	extern CORELIB_API NDebugMemoryMgr gMemMgr;
 
 	//#define NEW(x)        new(((asALLOCFUNCDEBUG_t)(userAlloc))(sizeof(x), __FILE__, __LINE__)) x
 	//#define DELETE(ptr,x) {void *tmp = ptr; (ptr)->~x(); userFree(tmp);}

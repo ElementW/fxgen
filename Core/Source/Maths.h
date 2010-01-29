@@ -66,7 +66,7 @@ long _declspec () _ftol ();*/
 //! \struct vec3
 //! \brief	vector 3 dimensions
 //-----------------------------------------------------------------
-struct CORE_EXPORT vec3
+struct CORELIB_API vec3
 {
 	vec3() { }
 	vec3(float X, float Y, float Z):x(X),y(Y),z(Z) { }
@@ -151,7 +151,7 @@ struct CORE_EXPORT vec3
 //! \struct vec4
 //! \brief	vector 4 dimensions
 //-----------------------------------------------------------------
-struct CORE_EXPORT vec4
+struct CORELIB_API vec4
 {
 	vec4() { }
 	vec4(float X, float Y, float Z, float W):x(X),y(Y),z(Z),w(W) { }
@@ -172,7 +172,7 @@ struct CORE_EXPORT vec4
 //! \struct vec2
 //! \brief	vector 2 dimensions
 //-----------------------------------------------------------------
-struct CORE_EXPORT vec2
+struct CORELIB_API vec2
 {
 	vec2() { }
 	vec2(float X, float Y):x(X),y(Y) { }
@@ -194,7 +194,7 @@ struct CORE_EXPORT vec2
 //! \struct mat4
 //! \brief	matrix 4x4
 //-----------------------------------------------------------------
-struct CORE_EXPORT mat4
+struct CORELIB_API mat4
 {
   mat4()	{ }
 
@@ -254,7 +254,7 @@ struct CORE_EXPORT mat4
 //! \struct quat
 //! \brief	quaternion
 //-----------------------------------------------------------------
-struct CORE_EXPORT quat
+struct CORELIB_API quat
 {
 public:
 	quat();
@@ -380,7 +380,7 @@ const mat4      mat4_scale_bias(array16_scale_bias);*/
 //	Vector
 
 // normalizes a vector and return a reference of itself
-extern CORE_EXPORT vec3 & normalize(vec3 & u);
+extern CORELIB_API vec3 & normalize(vec3 & u);
 
 // Computes the squared magnitude
 inline float nv_sq_norm(const vec3 & n)
@@ -399,11 +399,11 @@ inline vec3 & lerp(vec3 & w, const float & t, const vec3 & u, const vec3 & v)
 
 // computes the cross product ( v cross w) and stores the result in u
 // i.e.     u = v cross w
-extern CORE_EXPORT vec3 & cross(vec3 & u, const vec3 & v, const vec3 & w);
+extern CORELIB_API vec3 & cross(vec3 & u, const vec3 & v, const vec3 & w);
 
 // computes the dot product ( v dot w) and stores the result in u
 // i.e.     u = v dot w
-extern CORE_EXPORT float & dot(float & u, const vec3 & v, const vec3 & w);
+extern CORELIB_API float & dot(float & u, const vec3 & v, const vec3 & w);
 
 // compute the reflected vector R of L w.r.t N - vectors need to be
 // normalized
@@ -415,26 +415,26 @@ extern CORE_EXPORT float & dot(float & u, const vec3 & v, const vec3 & w);
 //                    \ | /
 //                     \|/
 //                      +
-extern CORE_EXPORT vec3 & reflect(vec3 & r, const vec3 & n, const vec3 & l);
+extern CORELIB_API vec3 & reflect(vec3 & r, const vec3 & n, const vec3 & l);
 
 // Computes u = v * lambda + u
-extern CORE_EXPORT vec3 & madd(vec3 & u, const vec3 & v, const float & lambda);
+extern CORELIB_API vec3 & madd(vec3 & u, const vec3 & v, const float & lambda);
 // Computes u = v * lambda
-extern CORE_EXPORT vec3 & mult(vec3 & u, const vec3 & v, const float & lambda);
+extern CORELIB_API vec3 & mult(vec3 & u, const vec3 & v, const float & lambda);
 // Computes u = v * w
-extern CORE_EXPORT vec3 & mult(vec3 & u, const vec3 & v, const vec3 & w);
+extern CORELIB_API vec3 & mult(vec3 & u, const vec3 & v, const vec3 & w);
 // Computes u = v + w
-extern CORE_EXPORT vec3 & add(vec3 & u, const vec3 & v, const vec3 & w);
+extern CORELIB_API vec3 & add(vec3 & u, const vec3 & v, const vec3 & w);
 // Computes u = v - w
-extern CORE_EXPORT vec3 & sub(vec3 & u, const vec3 & v, const vec3 & w);
+extern CORELIB_API vec3 & sub(vec3 & u, const vec3 & v, const vec3 & w);
 
 // Computes u = u * s
-extern CORE_EXPORT vec3 & scale(vec3 & u, const float s);
+extern CORELIB_API vec3 & scale(vec3 & u, const float s);
 
 // Computes u = M(4x4) * v and devides by w
-extern CORE_EXPORT vec3 & mult_pos(vec3 & u, const mat4 & M, const vec3 & v);
+extern CORELIB_API vec3 & mult_pos(vec3 & u, const mat4 & M, const vec3 & v);
 // Computes u = M(4x4) * v
-extern CORE_EXPORT vec3 & mult_dir(vec3 & u, const mat4 & M, const vec3 & v);
+extern CORELIB_API vec3 & mult_dir(vec3 & u, const mat4 & M, const vec3 & v);
 
 
 
@@ -442,47 +442,47 @@ extern CORE_EXPORT vec3 & mult_dir(vec3 & u, const mat4 & M, const vec3 & v);
 //	Matrix
 
 // Computes A += B
-extern CORE_EXPORT mat4 & add(mat4 & A, const mat4 & B);
+extern CORELIB_API mat4 & add(mat4 & A, const mat4 & B);
 
 // Computes C = A * B
-extern CORE_EXPORT mat4 & mult(mat4 & C, const mat4 & A, const mat4 & B);
+extern CORELIB_API mat4 & mult(mat4 & C, const mat4 & A, const mat4 & B);
 
 // Computes B = Transpose(A)
 //       T
 //  B = A
-extern CORE_EXPORT mat4 & transpose(mat4 & B, const mat4 & A);
-extern CORE_EXPORT mat4 & transpose(mat4 & B);
+extern CORELIB_API mat4 & transpose(mat4 & B, const mat4 & A);
+extern CORELIB_API mat4 & transpose(mat4 & B);
 
 // Computes B = inverse(A)
 //       -1
 //  B = A
-extern CORE_EXPORT mat4 & invert(mat4 & B, const mat4 & A);
+extern CORELIB_API mat4 & invert(mat4 & B, const mat4 & A);
 
 // Computes B = inverse(A)
 //                                       T  T
 //                   (R t)             (R -R t)
 // assuming that A = (0 1) so that B = (0    1)
 //  B = A
-extern CORE_EXPORT mat4 & invert_rot_trans(mat4 & B, const mat4 & A);
+extern CORELIB_API mat4 & invert_rot_trans(mat4 & B, const mat4 & A);
 
-extern CORE_EXPORT mat4 & look_at(mat4 & M, const vec3 & eye, const vec3 & center, const vec3 & up);
-extern CORE_EXPORT mat4 & frustum(mat4 & M, const float l, const float r, const float b,
+extern CORELIB_API mat4 & look_at(mat4 & M, const vec3 & eye, const vec3 & center, const vec3 & up);
+extern CORELIB_API mat4 & frustum(mat4 & M, const float l, const float r, const float b,
                const float t, const float n, const float f);
 
-extern CORE_EXPORT mat4 & perspective(mat4 & M, const float fovy, const float aspect, const float n, const float f);
+extern CORELIB_API mat4 & perspective(mat4 & M, const float fovy, const float aspect, const float n, const float f);
 
-extern CORE_EXPORT mat4	& ortho2D(mat4 & M, const float left, const float right, const float bottom, const float top);
+extern CORELIB_API mat4	& ortho2D(mat4 & M, const float left, const float right, const float bottom, const float top);
 
-extern CORE_EXPORT bool	unproject(vec3& out, vec3& v, mat4& proj, mat4& view, mat4& world, int w, int h);
+extern CORELIB_API bool	unproject(vec3& out, vec3& v, mat4& proj, mat4& view, mat4& world, int w, int h);
 
 ///////////////////////////////////////////////////////////
 // quaternion
-extern CORE_EXPORT quat & normalize(quat & p);
-extern CORE_EXPORT quat & conj(quat & p);
-extern CORE_EXPORT quat & conj(quat & p, const quat & q);
-extern CORE_EXPORT quat & add_quats(quat & p, const quat & q1, const quat & q2);
-extern CORE_EXPORT quat & axis_to_quat(quat & q, const vec3 & a, const float phi);
-extern CORE_EXPORT quat & mat_2_quat(quat &q,const mat4 &M);
+extern CORELIB_API quat & normalize(quat & p);
+extern CORELIB_API quat & conj(quat & p);
+extern CORELIB_API quat & conj(quat & p, const quat & q);
+extern CORELIB_API quat & add_quats(quat & p, const quat & q1, const quat & q2);
+extern CORELIB_API quat & axis_to_quat(quat & q, const vec3 & a, const float phi);
+extern CORELIB_API quat & mat_2_quat(quat &q,const mat4 &M);
 
 ///////////////////////////////////////////////////////////
 // Utilities
@@ -501,11 +501,11 @@ inline float nv_max(const float & lambda, const float & n)
 inline float nv_clamp(float u, const float min, const float max)
 { u = (u < min) ? min : u; u = (u > max) ? max : u; return u; }
 
-extern CORE_EXPORT float nv_random();
+extern CORELIB_API float nv_random();
 
 // fast cosine functions
-extern CORE_EXPORT float fast_cos(const float x);
-extern CORE_EXPORT float ffast_cos(const float x);
+extern CORELIB_API float fast_cos(const float x);
+extern CORELIB_API float ffast_cos(const float x);
 
 
 // At the assembly level the recommended workaround for the second FIST bug is the same for the first;
@@ -522,7 +522,7 @@ extern CORE_EXPORT float ffast_cos(const float x);
 #endif
 }*/
 
-extern CORE_EXPORT void SetSeedValue(unsigned int dwSeedValue);
-extern CORE_EXPORT unsigned int  myRandom(int=0);
+extern CORELIB_API void SetSeedValue(unsigned int dwSeedValue);
+extern CORELIB_API unsigned int  myRandom(int=0);
 
 #endif //MATHS_H

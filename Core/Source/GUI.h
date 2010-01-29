@@ -201,7 +201,7 @@ namespace NKey
 //!	\class	NCmdTarget
 //!	\brief	Command Target
 //-----------------------------------------------------------------
-class   NCmdTarget : public NObject
+class CORELIB_API NCmdTarget : public NObject
 {
 public:
 	virtual void Unused() {}
@@ -229,7 +229,7 @@ struct  FDelegate
 //!	\class	NGUISubSystem
 //!	\brief	GUI SubSystem Class Definition
 //-----------------------------------------------------------------
-class  NGUISubSystem
+class CORELIB_API NGUISubSystem
 {
 public:
 	//Constructor-Destructor
@@ -311,7 +311,7 @@ extern		NGUISubSystem*			GetGUISubSystem();
 //!	\class	N2DPainter
 //!	\brief	Graphics 2D
 //-----------------------------------------------------------------
-class  N2DPainter
+class CORELIB_API N2DPainter
 {
 public:
 	//Constructor-Destructor
@@ -350,7 +350,7 @@ protected:
 //!	\class	NGUIWnd
 //!	\brief	Windows Class Definition
 //-----------------------------------------------------------------
-class  NGUIWnd : public NCmdTarget
+class CORELIB_API NGUIWnd : public NCmdTarget
 {
 public:
 	//Constructor-Destructor

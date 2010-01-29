@@ -71,6 +71,8 @@
 				GenerateDebugInformation="true"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
+				TargetMachine="1"
+				DelaySign="false"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -329,6 +331,14 @@
 			<File
 				RelativePath="..\..\Source\EngineOp.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\Source\EngineOp.h"
@@ -341,6 +351,14 @@
 			<File
 				RelativePath="..\..\Source\Maths.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\Source\Maths.h"
@@ -349,6 +367,14 @@
 			<File
 				RelativePath="..\..\Source\MemoryMgr.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\Source\MemoryMgr.h"
@@ -365,6 +391,14 @@
 			<File
 				RelativePath="..\..\Source\Bitmap.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\Source\Bitmap.h"
@@ -390,6 +424,7 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
 			</File>
@@ -402,6 +437,7 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
 			</File>
@@ -414,6 +450,7 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
 			</File>
@@ -426,6 +463,7 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
 			</File>
@@ -436,6 +474,14 @@
 			<File
 				RelativePath="..\..\Source\CompilerOp.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\Source\CompilerOp.h"
@@ -452,46 +498,6 @@
 		</File>
 		<File
 			RelativePath="..\..\Include\FxGenLib.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\Source\pch.cpp"
-			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					UsePrecompiledHeader="1"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					UsePrecompiledHeader="1"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Tiny Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					UsePrecompiledHeader="1"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release DLL|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					UsePrecompiledHeader="1"
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="..\..\Source\pch.h"
 			>
 		</File>
 	</Files>

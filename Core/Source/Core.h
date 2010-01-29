@@ -49,7 +49,7 @@
 //!	\class		NRTClassModule
 //!	\brief		RuntimeClass Module description
 //-----------------------------------------------------------------
-class  NRTClassModule
+class CORELIB_API NRTClassModule
 {
 public:
   NRTClassModule();
@@ -78,7 +78,7 @@ extern const char* GetModuleName();  //!< Must had been defined in application a
 //!	\class		NRTClass
 //!	\brief		RuntimeClass description
 //-----------------------------------------------------------------
-class  NRTClass
+class CORELIB_API NRTClass
 {
 public:
 
@@ -236,7 +236,7 @@ struct NVars
 //!	\brief	Bloc of variables
 //! ###TOREMOVE### ????
 //-----------------------------------------------------------------
-class  NVarsBloc
+class CORELIB_API NVarsBloc
 {
 public:
 	NVarsBloc();
@@ -286,7 +286,7 @@ protected:
 typedef int(*CompareFnc) (const void *_elem1, const void *_elem2);
 
 
-class  NObjectArray
+class CORELIB_API NObjectArray
 {
 public:
 	NObjectArray();
@@ -335,7 +335,7 @@ protected:
 //!		.Automatic variables serialisation
 //!		.References management
 //-----------------------------------------------------------------
-class  NObject
+class CORELIB_API NObject
 {
 public:
 	//Constructor-Destructor
@@ -397,7 +397,7 @@ public:
 //	+Son/Brother idx0
 //	+Son/Brother idx1
 
-class  NTreeNode : public NObject
+class CORELIB_API NTreeNode : public NObject
 {
 public:
 	NTreeNode();
@@ -445,7 +445,7 @@ struct NObjGarbageDesc
 	ubyte			byType;
 };
 
-class  NObjectGarbage
+class CORELIB_API NObjectGarbage
 {
 public:
 	NObjectGarbage();

@@ -21,7 +21,7 @@
 #include "EditorGUI.h"
 
 #include "OperatorsWnd.h"
-#include "PropertiesWnd.h"
+//#include "PropertiesWnd.h"
 #include "ViewportsWnd.h"
 #include "ProjectWnd.h"
 #include "FileChooserDialog.h"
@@ -98,8 +98,8 @@ bool NEditorGUI::Create(char* name, const NRect& rect)
 	m_opswnd->Create("Operators", GetClientRect(), this);
 
 	//Create properties window
-	NPropertiesWnd* propswnd = NNEW(NPropertiesWnd);
-	propswnd->Create("Properties", GetClientRect(), this);
+//	NPropertiesWnd* propswnd = NNEW(NPropertiesWnd);
+//	propswnd->Create("Properties", GetClientRect(), this);
 
 	//Create Viewport window
 	NViewportsWnd* viewportswnd = NNEW(NViewportsWnd);
@@ -117,7 +117,7 @@ bool NEditorGUI::Create(char* name, const NRect& rect)
 	udword dwOperatorsPaneID	= SplitColumn(dwProjectPaneID, 20);
 	SetPaneWnd("Viewport", dwViewportsPaneID,	viewportswnd);
 	SetPaneWnd("Operators", dwOperatorsPaneID,	m_opswnd);
-	SetPaneWnd("Properties", dwPropertiesPaneID,	propswnd);
+//	SetPaneWnd("Properties", dwPropertiesPaneID,	propswnd);
 	SetPaneWnd("Project", dwProjectPaneID,	m_pprojectwnd);
 
 	//Init StripBar
@@ -129,8 +129,8 @@ bool NEditorGUI::Create(char* name, const NRect& rect)
 	pinfo = GetPaneInfo(dwOperatorsPaneID);
 	pinfo->pstripBar->InsertItemText("Operators", 9*8);
 
-	pinfo = GetPaneInfo(dwPropertiesPaneID);
-	pinfo->pstripBar->InsertItemText("Properties", 10*8);
+//	pinfo = GetPaneInfo(dwPropertiesPaneID);
+//	pinfo->pstripBar->InsertItemText("Properties", 10*8);
 
 	pinfo = GetPaneInfo(dwProjectPaneID);
 	pinfo->pstripBar->InsertItemText("Project", 7*8);

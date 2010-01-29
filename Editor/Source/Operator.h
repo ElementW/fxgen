@@ -75,8 +75,6 @@ public:
 	float m_fProcessedTime;
 	NObject *m_pObj;	//!< Ressource
 
-	// Variables Bloc
-	NVarsBloc* m_pcvarsBloc;
 };
 
 //-----------------------------------------------------------------
@@ -142,8 +140,8 @@ public:
 	void Execute(float _ftime, NOperatorNode* _popFinal, float _fDetailFactor=1.0f/*, FXGEN_OPSPROCESSCB* _cbProcess=NULL*/);
 
 	//Editor Channels methods
-	void SetChannelValue(ubyte _byChannel, NVarValue& _value);
-	void GetChannelValue(ubyte _byChannel, NVarValue& _outValue);
+//	void SetChannelValue(ubyte _byChannel, NVarValue& _value);
+//	void GetChannelValue(ubyte _byChannel, NVarValue& _outValue);
 
 	//Editor Membres access
 	NTreeNode*			GetRootGroup()				{ return m_pRootGroup;		}
