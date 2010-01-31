@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\Cle\Projects\FxGen\Core;C:\Cle\Projects\FxGen\Externals\FreeType\Include;&quot;C:\Cle\Projects\FxGen\Externals\SFML-1.5\include&quot;"
+				AdditionalIncludeDirectories="..\..\..\..\Core;..\..\..\..\Externals\FreeType\Include;&quot;..\..\..\..\Externals\SFML-1.5\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

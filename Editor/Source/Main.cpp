@@ -71,6 +71,7 @@ class NRotoZoom_OperatorUI : NObject
 };
 */
 
+NDebugMemoryMgr gMemMgr;
 
 //-----------------------------------------------------------------
 //!\func	Export WinMain to force linkage to this module
