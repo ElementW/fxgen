@@ -211,7 +211,7 @@ public:
 typedef void(NObject::*TDelegate)(NObject* _psender);
 
 // Simple bindings to an object and a member function of that object.
-struct  FDelegate
+struct  CORELIB_API FDelegate
 {
 	NObject* TargetObject;
 	void (NObject::*TargetInvoke)(NObject* _psender);
@@ -304,7 +304,7 @@ protected:
 	NPoint		m_ptCursor;
 };
 
-extern		NGUISubSystem*			GetGUISubSystem();
+extern CORELIB_API	NGUISubSystem*	GetGUISubSystem();
 
 
 //-----------------------------------------------------------------

@@ -167,7 +167,7 @@ void NGUIFont::init(const char * fname, unsigned int h)
 	// Allocate Some Memory To Store The Texture Ids.
 	textures = NNEWARRAY(GLuint, 128);
 
-	m_h=h;
+	m_h=(float)h;
 
 	// Create And Initilize A FreeType Font Library.
 	FT_Library library;

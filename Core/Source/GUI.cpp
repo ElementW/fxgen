@@ -534,8 +534,8 @@ void N2DPainter::GradientVRect(NRect& rc, NColor clrStart, NColor clrEnd)
 void N2DPainter::RoundRect(ubyte _roundboxtype, NRect& _rc, float _rad, NColor _clr)
 {
 	//Code From Blender :-)
-	float vec[7][2]= {{0.195, 0.02}, {0.383, 0.067}, {0.55, 0.169}, {0.707, 0.293},
-	                  {0.831, 0.45}, {0.924, 0.617}, {0.98, 0.805}};
+	float vec[7][2]= {{0.195f, 0.02f}, {0.383f, 0.067f}, {0.55f, 0.169f}, {0.707f, 0.293f},
+	                  {0.831f, 0.45f}, {0.924f, 0.617f}, {0.98f, 0.805f}};
 	int a;
 	int i=0;
 	NPoint pts[256];
