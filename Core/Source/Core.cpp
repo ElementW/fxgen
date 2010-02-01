@@ -56,207 +56,20 @@ NRTClassModule* NRTClassModule::m_pLastRTClassModule=null;
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
-//									NVarsBloc class implementation
-//
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-
-//-----------------------------------------------------------------
-//!	\brief	Constructor
-//-----------------------------------------------------------------
-NVarsBloc::NVarsBloc()
-{
-	m_pcnextVarsBloc	= null;
-	m_pcvarsblocDesc	= null;
-	m_dwVarsCount			= 0;
-  m_byVersion       = 1;
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Destructor
-//-----------------------------------------------------------------
-NVarsBloc::~NVarsBloc()
-{
-  //if (m_paVarsValues!=null)		NDELETEARRAY(m_paVarsValues);
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Serialize Variable bloc for saving
-//!	\param	_s	archive container
-//!	\return	True if success
-//-----------------------------------------------------------------
-bool NVarsBloc::Save(NArchive* _s)
-{
-	*_s<<m_byVersion;
-	*_s<<m_dwVarsCount;
-/*
-	for (udword i=0; i<m_dwVarsCount; i++)
-	{
-		NVarValue* pval = m_paVarsValues + i;
-		NVarsBlocDesc* pdesc = m_pcvarsblocDesc + i;
-		switch (pdesc->eType)
-		{
-			case eubyte:	*_s<<pval->byVal;									break;
-			case euword:	*_s<<pval->wVal;									break;
-			case eudword:	*_s<<pval->dwVal;									break;
-			case efloat:	*_s<<pval->fVal;									break;
-			case erefobj:	_s->PutMappedObj(pval->pcRefObj);	break;
-			default:	assert(0);														break;
-		}
-
-		//Anim Control
-		ubyte byAniCtrl = pval->pcCtrlObj!=null?1:0;
-		*_s<<byAniCtrl;
-
-		if (byAniCtrl)		_s->PutClass(pval->pcCtrlObj);
-
-	}
-*/
-	return true;
-}
-
-
-//-----------------------------------------------------------------
-//!	\brief	Serialize Variable bloc for loading
-//!	\param	_l	archive container
-//!	\return	True if success
-//-----------------------------------------------------------------
-bool NVarsBloc::Load(NArchive* _l)
-{
-	ubyte byFileVersion=0;
-	*_l>>byFileVersion;
-
-/*
-	if (m_byVersion!=byFileVersion && byFileVersion!=0)
-	{
-		DoVarBlocVersion_Mapping(_l, byFileVersion);
-	} else {
-		*_l>>m_dwVarsCount;
-		for (udword i=0; i<m_dwVarsCount; i++)
-		{
-			NVarValue* pval = m_paVarsValues + i;
-			NVarsBlocDesc* pdesc = m_pcvarsblocDesc + i;
-			switch (pdesc->eType)
-			{
-				case eubyte:	*_l>>pval->byVal;										break;
-				case euword:	*_l>>pval->wVal;										break;
-				case eudword:	*_l>>pval->dwVal;										break;
-				case efloat:	*_l>>pval->fVal;										break;
-				case erefobj:	SetValue(i, 0, _l->GetMappedObj());	break;
-				case estring:	*_l>>pval->szVal;					break;
-				default:	assert(0);															break;
-			}
-
-			//Anim Control
-			if (byFileVersion>=1)
-			{
-				ubyte byAniCtrl;
-				*_l>>byAniCtrl;
-
-				if (byAniCtrl)		pval->pcCtrlObj = _l->GetClass();
-				else							pval->pcCtrlObj = null;
-			} else {
-				pval->pcCtrlObj = null;
-			}
-
-		}
-
-	}
-*/
-
-	return true;
-}
-
-
-//-----------------------------------------------------------------
-//!	\brief	Initialize a variable bloc
-//!	\param	_dwVarsCount		Variables count
-//!	\param	_pvarsBlocDesc	Variables bloc description
-//!	\param	_powner					Object for this variable bloc
-//!	\param	_byVersion			Version for serialization
-//-----------------------------------------------------------------
-void NVarsBloc::Init(udword _dwVarsCount, NVarsBlocDesc* _pvarsBlocDesc, NObject* _powner)
-{
-	//Store Values
-	m_dwVarsCount			= _dwVarsCount;
-	m_pcvarsblocDesc  = _pvarsBlocDesc;
-	m_powner					= _powner;
-
-	//Create variables for this bloc
-  //m_paVarsValues = (NVarValue*)NNEWARRAY(NVarValue, _dwVarsCount);
-
-	//Init default values
-/*	for (udword i=0; i<m_dwVarsCount; i++)
-	{
-		NVarValue* pval = m_paVarsValues + i;
-		NVarsBlocDesc* pdesc = m_pcvarsblocDesc + i;
-		switch (pdesc->eType)
-		{
-			case eubyte:	pval->byVal=(ubyte)atol(pdesc->pszDefValue);	break;
-			case euword:	pval->wVal=(uword)atol(pdesc->pszDefValue);		break;
-			case eudword:	pval->dwVal=(udword)atof(pdesc->pszDefValue);	break;
-			case efloat:	pval->fVal=(float)my_atof(pdesc->pszDefValue);		break;
-			case erefobj:	pval->pcRefObj=null;	break;
-			case estring:	strcpy(pval->szVal, pdesc->pszDefValue);			break;
-			default:	assert(0);																				break;
-		}
-
-		pval->pcCtrlObj = null;
-	}
-*/
-
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Remove a referenced object from variables (see erefobj)
-//!	\param	_pobj	Object referenced by erefobj vars
-//-----------------------------------------------------------------
-void NVarsBloc::RemoveVarsRef(NObject* _pobj)
-{
-/*	for (udword i=0; i<m_dwVarsCount; i++)
-	{
-		NVarValue* pval = m_paVarsValues + i;
-		NVarsBlocDesc* pdesc = m_pcvarsblocDesc + i;
-		if (pdesc->eType==erefobj && pval->pcRefObj==_pobj)
-			SetValue(i, 0, (NObject*)null);
-	}
-*/
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Return true if one variable is animated
-//!	\return	True if one variable is animated
-//-----------------------------------------------------------------
-bool NVarsBloc::IsAnimated()
-{
-/*	for (udword i=0; i<m_dwVarsCount; i++)
-	{
-    NVarsBlocDesc* pval = m_pcvarsblocDesc + i;
-		if (pval->pcCtrlObj!=null)			return true;
-	}
-*/
-	return false;
-}
-
-
-
-
-
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-//
 //									NObject class implementation
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NObject, NObject);
 
+FBEGIN_FIELDS_CLASS(NObject)
+FEND_FIELDS()
+
 //-----------------------------------------------------------------
 //!	\brief	Constructor
 //-----------------------------------------------------------------
 NObject::NObject()
 {
-	m_pcfirstVarsBloc = null;
 	m_dwLastUsedTime	= 0;
 	m_szName[0]				= 0;
 }
@@ -274,14 +87,6 @@ NObject::~NObject()
 	while (m_carrayRefTargets.Count())
 		RemoveRef( m_carrayRefTargets[0] );
 
-	//Delete Variables Blocs
-	NVarsBloc* pcur = m_pcfirstVarsBloc;
-	while (pcur)
-	{
-		NVarsBloc* ptoDel = pcur;
-		pcur = pcur->m_pcnextVarsBloc;
-		NDELETE(ptoDel, NVarsBloc);
-	}
 
 }
 
@@ -296,14 +101,6 @@ bool NObject::Save(NArchive* _s)
 	ubyte len = (ubyte)strlen(m_szName);
 	*_s<<len;
 	_s->PutData(&m_szName, len);
-
-	//Save Variables Bloc's Values
-	NVarsBloc* pcurvarbloc = m_pcfirstVarsBloc;
-	while (pcurvarbloc)
-	{
-		pcurvarbloc->Save(_s);
-		pcurvarbloc = m_pcfirstVarsBloc->m_pcnextVarsBloc;
-	}
 
 	return true;
 }
@@ -322,14 +119,6 @@ bool NObject::Load(NArchive* _l)
 	_l->GetData(&m_szName, len);
 	m_szName[len]=0;
 
-	//Load Variables Bloc's Values
-	NVarsBloc* pcurvarbloc = m_pcfirstVarsBloc;
-	while (pcurvarbloc)
-	{
-		pcurvarbloc->Load(_l);
-		pcurvarbloc = m_pcfirstVarsBloc->m_pcnextVarsBloc;
-	}
-
 	return true;
 }
 
@@ -337,8 +126,6 @@ bool NObject::Load(NArchive* _l)
 //!	\brief	Duplicate this object
 //!	\return	Object duplicated pointer
 //-----------------------------------------------------------------
-
-
 NObject* NObject::Duplicate()
 {
 	NObject* pobjClone = NRTClass::CreateByID( GetRTClass()->CLASSID );
@@ -346,68 +133,12 @@ NObject* NObject::Duplicate()
 	{
 		//Duplicate object name
 		pobjClone->SetName( GetName() );
-
-		//Duplicate Variables Bloc's Values
-		NVarsBloc* pcurvarbloc			= m_pcfirstVarsBloc;
-		NVarsBloc* pcurvarblocClone = pobjClone->m_pcfirstVarsBloc;
-		while (pcurvarbloc)
-		{
-      //NMemCopy(pcurvarblocClone->GetValues(), pcurvarbloc->GetValues(), pcurvarbloc->Count() * sizeof(NVarValue));
-			pcurvarbloc = m_pcfirstVarsBloc->m_pcnextVarsBloc;
-			pcurvarblocClone = pobjClone->m_pcfirstVarsBloc->m_pcnextVarsBloc;
-		}
-
 	}
 
 	return pobjClone;
 }
 
 
-//-----------------------------------------------------------------
-//!	\brief	Add a variable bloc to this object
-//!	\param	_dwVarCount		Variables count
-//!	\param	_pdesc				Variables bloc description
-//!	\param	_byVersion		Version for serialization
-//!	\return	Created variable bloc pointer from description
-//-----------------------------------------------------------------
-NVarsBloc* NObject::AddVarsBloc(udword _dwVarCount, NVarsBlocDesc* _pdesc)
-{
-	//Create bloc
-	NVarsBloc* pvarbloc = NNEW(NVarsBloc);
-  pvarbloc->Init(_dwVarCount, _pdesc, this);
-
-	if (m_pcfirstVarsBloc==null)
-	{
-		m_pcfirstVarsBloc = pvarbloc;
-
-	} else {
-
-		//Add at end
-		NVarsBloc* plastvarbloc = m_pcfirstVarsBloc;
-		while (m_pcfirstVarsBloc->m_pcnextVarsBloc)
-			plastvarbloc = m_pcfirstVarsBloc->m_pcnextVarsBloc;
-
-		plastvarbloc->m_pcnextVarsBloc = pvarbloc;
-
-	}
-
-	return pvarbloc;
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Update erefobj Variables
-//!	\param
-//-----------------------------------------------------------------
-void NObject::RemoveVarsRef(NObject* _pobj)
-{
-	NVarsBloc* pcurvarbloc = m_pcfirstVarsBloc;
-	while (pcurvarbloc)
-	{
-		pcurvarbloc->RemoveVarsRef(_pobj);
-		pcurvarbloc = m_pcfirstVarsBloc->m_pcnextVarsBloc;
-	}
-
-}
 
 //-----------------------------------------------------------------
 //!	\brief	Add an object to reference by this
@@ -459,7 +190,6 @@ void NObject::RemoveRefToMe(NObject* _pobj)
 		{
 			m_carrayRefMakers.RemoveItem(i);
 			_pobj->RemoveRef(this);
-			_pobj->RemoveVarsRef(this);		//###NEW###
 			break;
 		}
 	}
@@ -1459,51 +1189,3 @@ void NRTClassModule::UnRegisterAllModules()
 
 }
 
-//-----------------------------------------------------------------
-/// NMutexLock methods
-///\author Sebastian Olter (qduaty@gmail.com)
-//-----------------------------------------------------------------
-/*void NMutexLock::lock()
-{
-#ifdef __GNUC__ // there are no such __PRETTY_FUNCTION__'s anywhere else so don't remove this line
-	if(_debug) printf("%d %s\n", this, __PRETTY_FUNCTION__);
-#endif
-	while(!myfault && _mutex)
-	{
-		#ifdef _WIN32
-		Sleep(10);
-		#else
-		usleep(10);
-		#endif
-	}
-	myfault = _mutex = true;
-}
-
-bool NMutexLock::trylock()
-{
-	if(!myfault && _mutex)
-		return false;
-	return myfault = _mutex = true;
-}
-
-void NMutexLock::release()
-{
-	if(myfault)
-	{
-		myfault = _mutex = false;
-#ifdef __GNUC__
-		if(_debug) printf("%d %s\n", this, __PRETTY_FUNCTION__);
-#endif
-	}
-#ifdef __GNUC__
-	else if(_debug)
-		printf("%d %s - %s\n", this, "Not my fault", __PRETTY_FUNCTION__);
-#endif
-}
-
-NMutexLock::~NMutexLock()
-{
-	release();
-}
-
-*/
