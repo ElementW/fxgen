@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\..\Core;..\..\..\..\Externals\FreeType\Include;&quot;..\..\..\..\Externals\SFML-1.5\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;CORELIB_EXPORT_DLL_LIBRARY_IMPORT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -335,6 +335,10 @@
 				RelativePath="..\..\..\Source\ViewportsWnd.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="OperatorsNodes"
+			>
 		</Filter>
 		<File
 			RelativePath="..\..\..\Source\CoreLibPkg.h"

@@ -103,7 +103,7 @@ public:
 	void			PutMappedObj(NObject* _c);
 	NObject*	GetMappedObj();
 
-	NStream* GetStream()					{ return m_pStream;					}
+	NStream* GetStream()								{ return m_pStream;					}
 	NMemoryStream* GetBufferedStream()	{ return m_pBufferedStream; }
 
 protected:
@@ -115,13 +115,13 @@ protected:
 	void		PutObj(NObject* _c);									//!< Write class datas to archive
 
 	//Datas
-	NStream*				m_pStream;
-	NMemoryStream*  m_pBufferedStream;
+	NStream*				m_pStream;				//!< Stream used for storage (memory or file)
+	NMemoryStream*  m_pBufferedStream;//!< internal datas
 	bool						m_bWriting;
 
 	uword					m_wRTClassCount;		//!< Unique Guids count
 	uword					m_wRTClassesSize;		//!< Unique Guids array size
-	NRTClass**		m_pRTClassesArray;	//!< Unique GUIDs array
+	NRTClass**		m_pRTClassesArray;	//!< Unique RTClass array
 
 	NObjectArray	m_carrayMappedObjs;	//!< Unique Mapped objects
 };

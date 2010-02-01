@@ -71,6 +71,36 @@ class NRotoZoom_OperatorUI : NObject
 };
 */
 
+struct SRotoParam
+{
+  ubyte wpow;
+  ubyte hpow;
+  vec2  v2Center;
+  float fRotate;
+  vec2  v2Zoom;
+  ubyte byWrap;
+};
+
+class NTestReflexion : public NObject
+{
+public:
+	FDECLARE_FIELDS();
+
+	NTestReflexion()	{dwSeed=1234; fAngle = 3.14f; }
+
+	SRotoParam st;
+
+	float fAngle;
+	udword dwSeed;
+};
+
+FBEGIN_FIELDS_SUBCLASS(NTestReflexion, NObject)
+	NEWFIELD(eFloat, "angle", NTestReflexion, fAngle, NULL),
+	NEWFIELD(eInteger, "seed", NTestReflexion, dwSeed, NULL),
+//Struct
+	NEWFIELD(eInteger, "wpow", NTestReflexion, st.wpow, NULL),
+FEND_FIELDS()
+
 NDebugMemoryMgr gMemMgr;
 
 //-----------------------------------------------------------------
@@ -78,12 +108,24 @@ NDebugMemoryMgr gMemMgr;
 //-----------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-  //###TEST###
-  //NRotoZoom_OperatorUI class1;
-  //class1.OnUIProperties_Init();
+  //###TEST### Debut
+	NTestReflexion class1;
+	FIELDS_LIST* fields = class1.GetFields();
 
-  //int nOffset = (int)&SRotoParam::hpow - &SRotoParam;
-  //int noffset = offsetof(struct SRotoParam, fRotate);
+	FIELD_DESC*	fdesc = fields->lpFields;
+	float fAngle = * ((float*) (((ubyte*)&class1) + fdesc->DataOffset));
+
+	fdesc = fields->lpFields+1;
+	udword dwSeed = * ((udword*) (((ubyte*)&class1) + fdesc->DataOffset));
+
+	//Serialization
+	NMemoryStream *stream = new NMemoryStream();
+
+	NArchive ar(stream);
+	ar.PutClass(&class1);
+
+
+	//###TEST### Fin
 
 	// Application
 	NFxGenApp* pApp = new NFxGenApp();

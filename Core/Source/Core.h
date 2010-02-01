@@ -107,6 +107,27 @@ public:
 };
 
 
+//-----------------------------------------------------------------
+//!	\struct		NRTClass
+//!	\brief		RuntimeClass description
+//-----------------------------------------------------------------
+
+//Fields structures
+
+	//field description struct
+	typedef struct {
+		sbyte			Type;
+		char*			Name;
+		udword		DataOffset;
+		void*			pContext;
+	} FIELD_DESC;
+
+	//fields List
+	typedef struct _FIELDS_LIST {
+		_FIELDS_LIST*	lpbaseClassFields;
+		FIELD_DESC*		lpFields;
+	} FIELDS_LIST;
+
 
 //-----------------------------------------------------------------
 // Defines
@@ -127,12 +148,12 @@ public:
 // Macros
 //-----------------------------------------------------------------
 
-#ifdef _DEBUG
+/*#ifdef _DEBUG
 	#define TRACE	gDebugLog
 	void  gDebugLog(const char* fmt, ... );
 #else
 	#define TRACE
-#endif
+#endif*/
 
 //Error ###TODO### Error management
 				//TRACE("Code:%d Msg:%s\n", errcode, msg);
@@ -144,14 +165,31 @@ public:
 	static NRTClass	m_RTClass;\
 	virtual NRTClass* GetRTClass()		{ return &m_RTClass; }
 
+
 #define FIMPLEMENT_CLASS(class_name, superclass_name) \
 	extern NObject* class_name##CB()	{ return NNEW(class_name); }\
 	NRTClass	class_name::m_RTClass((RTCLASS_HANDLER*)&class_name##CB, #class_name, #superclass_name, GetModuleName() );
 
 
-//Variables
-/*#define		VAR(v, type,	nFlags, pszDispName,	pszDefValue, min ,max, step) \
-        { type,	nFlags, (int)&v - __base, pszName,	pszDefValue, min ,max, step },*/
+//Fields Macros
+#define		FBEGIN_FIELDS_CLASS(class_name) \
+				FIELDS_LIST	class_name::m_FielsList = { NULL, class_name::m_Table }; \
+				FIELD_DESC class_name::m_Table[] = {
+
+#define		FBEGIN_FIELDS_SUBCLASS(class_name, base_class_name) \
+				FIELDS_LIST	class_name::m_FielsList = { &base_class_name::m_FielsList, class_name::m_Table }; \
+				FIELD_DESC class_name::m_Table[] = {
+
+#define		FEND_FIELDS() \
+			{ -1, "end", 0 } };
+
+#define		FDECLARE_FIELDS() \
+				static FIELD_DESC	m_Table[]; \
+				static FIELDS_LIST	m_FielsList; \
+				virtual FIELDS_LIST* GetFields()	{ return &m_FielsList; }
+
+#define		OFFSET(c,m)	(size_t)&(((c *)0)->m)
+#define		NEWFIELD(type, name, classname, classmember, context)	{ type, name, OFFSET(classname, classmember), context	}
 
 
 //-----------------------------------------------------------------
@@ -204,73 +242,6 @@ enum eVarType
 };
 
 
-
-//-----------------------------------------------------------------
-//!	\struct NVarsBlocDesc
-//! \brief	One variable description for variables bloc
-//-----------------------------------------------------------------
-#define VAR_FLAG_CANBEANIMATED  1
-
-struct NVarsBlocDesc  //<<<Static table per class
-{
-	eVarType	eType;					//!< Type of variables (eubyte, euword ...)
-  int       nFlags;         //!< Animable, Scriptable ...
-
-  //Variables for GUI Editing ...
-  const char*			pszName;      //!< Variable display name
-	const char*			pszDefValue;	//!< One or more for combo-box edition
-  float fMin, fMax, fStep;      //!< Min,max, step values
-};
-
-struct NVars
-{
-  //RT
-  int       nOffset;        //!< memory offset in bytes from base class pointer
-  NObject*	pcCtrlObj;      //!< different to null if animation controler attached
-
-};
-
-
-//-----------------------------------------------------------------
-//!	\class	NVarsBloc Core.h
-//!	\brief	Bloc of variables
-//! ###TOREMOVE### ????
-//-----------------------------------------------------------------
-class CORELIB_API NVarsBloc
-{
-public:
-	NVarsBloc();
-	~NVarsBloc();
-
-	//Serialization
-	bool Save(NArchive* _s);	//!< Save Object
-	bool Load(NArchive* _l);	//!< Load Object
-
-	//Methods
-  void	Init(udword _dwVarsCount, NVarsBlocDesc* _pvarsBlocDesc, NObject* _powner);
-
-	udword					Count()				{ return m_dwVarsCount;			}
-	NVarsBlocDesc*	GetBlocDesc()	{ return m_pcvarsblocDesc;	}
-
-	bool	IsAnimated();	//!< return true if one variable is animated
-
-	void	RemoveVarsRef(NObject* _pobj);	//!< Remove a referenced object from variables (erefobj)
-
-	NObject *GetOwner() { return m_powner; }
-
-protected:
-
-	//Datas
-	NObject*						m_powner;						//!< Object that contain this varsbloc
-  NVarsBlocDesc*			m_pcvarsblocDesc;		//!< Variables Descriptions (name, def value, min, max ...)
-	udword							m_dwVarsCount;			//!< Values Count
-
-	NVarsBloc*					m_pcnextVarsBloc;		//!< Pointer on next variables bloc
-
-  ubyte               m_byVersion;  //###TOREMOVE###
-
-	friend class NObject;
-};
 
 
 //-----------------------------------------------------------------
@@ -343,6 +314,7 @@ public:
 	virtual	~NObject();
 
 	FDECLARE_CLASS();
+	FDECLARE_FIELDS()
 
 	//Methods
 	virtual void	SetName(const char* _pszName)	{ strncpy(m_szName, _pszName, sizeof(m_szName)); }	//!< Affecte le nom de l'objet
@@ -350,14 +322,10 @@ public:
 
 	virtual NObject* Duplicate();
 
+
 	//Serialization
 	virtual bool Save(NArchive* _s);
 	virtual	bool Load(NArchive* _l);
-
-	//Variables methods
-  NVarsBloc* AddVarsBloc(udword _dwVarCount, NVarsBlocDesc* _pdesc);
-	NVarsBloc* GetFirstVarsBloc()		{ return m_pcfirstVarsBloc; }
-	void			 RemoveVarsRef(NObject* _pobj);
 
 	//A reference creates a record of the dependency between a Reference Master and a Reference Target
 	//rk. The system automatically takes care of loading and saving references when an object is saved to disk.
@@ -381,7 +349,6 @@ protected:
 	char							m_szName[MAX_NAMELEN+1];	//!< Objet's name
 	NObjectArray			m_carrayRefTargets;				//!< Objects referenced by this object
 	NObjectArray			m_carrayRefMakers;				//!< Objects that reference this object
-	NVarsBloc*				m_pcfirstVarsBloc;				//!< Pointer on first variables bloc
 
 public:
 	udword						m_dwLastUsedTime;					//!< See garbage

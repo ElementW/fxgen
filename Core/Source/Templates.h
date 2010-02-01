@@ -38,7 +38,7 @@ typedef int(*CompareFnc) (const void *elem1, const void *elem2);
 //!			> 0		if elem1 greater than elem2
 //-----------------------------------------------------------------
 //template < class T >  class __declspec(dllexport) GArray
-template < class T >  class CORELIB_API GArray
+template < class T >  class __declspec(dllexport) GArray
 {
 public:
 
