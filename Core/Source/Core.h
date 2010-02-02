@@ -86,47 +86,51 @@ public:
 	NRTClass(RTCLASS_HANDLER*	_pcreateCB, const char* _pszClassName, const char* _pszSuperClassName, const char* _pszModuleName);
 
 //Methods
-	static NObject*		CreateByID(ID _CLASSID);    // ###JN### will be removed
 	static NObject*		CreateByName(const char* _pszClassName);
 	static NRTClass*	GetRTClassByName(const char* _pszClassName);
-	static NRTClass*	GetRTClassByID(ID _CLASSID);// ###JN### will be removed
 
-	static ID					MakeClassID(const char* _pszClassName); // ###JN### will be removed
 	static NRTClass*  GetFirstClassBySuperClass(const char* _pszSuperClassName);
 	static NRTClass*  GetNextClassBySuperClass(const char* _pszSuperClassName, NRTClass* _prtclass);
 
 //Datas
-	RTCLASS_HANDLER*	m_pCreateCB;		//!< CallBack for class creation
+	RTCLASS_HANDLER*	m_pCreateCB;					//!< CallBack for class creation
 	const char*				m_pszClassName;				//!< Class's name
 	const char*				m_pszSuperClassName;	//!< Super class's name
 
-	NRTClass*		m_pNextRTC;						//!< Next Run-Time class belong to one module
-	ID					CLASSID;							//!< Class ID (Generate from name)// ###JN### will be removed
-	ID					SUPERCLASSID;					//!< Super class ID (Generate from name)// ###JN### will be removed
+	NRTClass*				m_pNextRTC;					//!< Next Run-Time class belong to one module
 	NRTClassModule* m_pRTClassModule;   //!< Run-Time class Module for this Class
 };
 
 
 //-----------------------------------------------------------------
-//!	\struct		NRTClass
-//!	\brief		RuntimeClass description
+//!	\struct		NFieldDesc
+//!	\brief		field description struct
 //-----------------------------------------------------------------
+struct NFieldDesc
+{
+	sbyte			sbyType;
+	char*			pszName;
+	udword		dwDataOffset;
+	float			fMin;
+	float			fMax;
+	float			fStep;
+	char*			pszDef;
+};
 
-//Fields structures
+//-----------------------------------------------------------------
+//!	\class		NRTClassFields
+//!	\brief		RuntimeClass Fields description
+//-----------------------------------------------------------------
+class CORELIB_API NRTClassFields
+{
+public:
+//Methods
+	NFieldDesc* GetFieldDescByName(const char* _pszFieldName);	//!< Parse bases classes too
 
-	//field description struct
-	typedef struct {
-		sbyte			Type;
-		char*			Name;
-		udword		DataOffset;
-		void*			pContext;
-	} FIELD_DESC;
-
-	//fields List
-	typedef struct _FIELDS_LIST {
-		_FIELDS_LIST*	lpbaseClassFields;
-		FIELD_DESC*		lpFields;
-	} FIELDS_LIST;
+//Datas
+	NRTClassFields*			m_pSuperClassRTField;	//!< Super class's RTField
+	NFieldDesc*		m_paFieldsDesc;				//!< Fields description array
+};
 
 
 //-----------------------------------------------------------------
@@ -148,16 +152,6 @@ public:
 // Macros
 //-----------------------------------------------------------------
 
-/*#ifdef _DEBUG
-	#define TRACE	gDebugLog
-	void  gDebugLog(const char* fmt, ... );
-#else
-	#define TRACE
-#endif*/
-
-//Error ###TODO### Error management
-				//TRACE("Code:%d Msg:%s\n", errcode, msg);
-//#define ERR		gGetErrors()->AddError
 #define ERR		printf
 
 //Runtime class
@@ -173,51 +167,29 @@ public:
 
 //Fields Macros
 #define		FBEGIN_FIELDS_CLASS(class_name) \
-				FIELDS_LIST	class_name::m_FielsList = { NULL, class_name::m_Table }; \
-				FIELD_DESC class_name::m_Table[] = {
+				NRTClassFields		class_name::m_RTField = { NULL, class_name::m_Table }; \
+				NFieldDesc	class_name::m_Table[] = {
 
-#define		FBEGIN_FIELDS_SUBCLASS(class_name, base_class_name) \
-				FIELDS_LIST	class_name::m_FielsList = { &base_class_name::m_FielsList, class_name::m_Table }; \
-				FIELD_DESC class_name::m_Table[] = {
+#define		FBEGIN_FIELDS_SUBCLASS(class_name, superclass_name) \
+				NRTClassFields		class_name::m_RTField = { &superclass_name::m_RTField, class_name::m_Table }; \
+				NFieldDesc	class_name::m_Table[] = {
 
 #define		FEND_FIELDS() \
 			{ -1, "end", 0 } };
 
 #define		FDECLARE_FIELDS() \
-				static FIELD_DESC	m_Table[]; \
-				static FIELDS_LIST	m_FielsList; \
-				virtual FIELDS_LIST* GetFields()	{ return &m_FielsList; }
+				static NFieldDesc	m_Table[]; \
+				static NRTClassFields		m_RTField; \
+				virtual NRTClassFields* GetRTField()	{ return &m_RTField; }
 
 #define		OFFSET(c,m)	(size_t)&(((c *)0)->m)
-#define		NEWFIELD(type, name, classname, classmember, context)	{ type, name, OFFSET(classname, classmember), context	}
-
-
-//-----------------------------------------------------------------
-//!	\class	NErrors Core.h
-//!	\brief	Errors manager
-//-----------------------------------------------------------------
-/*class  NErrors
-{
-public:
-	NErrors();
-	~NErrors();
-
-	void	AddError(udword _code, const char* _fmt, ... );
-	char* GetErrors();	//!< Errors are clear after this call
-
-protected:
-	udword m_dwStringSize;
-	udword m_dwStringPos;
-	char* m_pszErrors;
-};
-extern  NErrors* gGetErrors();
-*/
+#define		NEWFIELD(type, name, classname, classmember, min, max, step, def)	{ type, name, OFFSET(classname, classmember), min, max, step, def	}
 
 //-----------------------------------------------------------------
-//!	\enum		eVarType
-//!	\brief	variable types
+//!	\enum		eFieldType
+//!	\brief	field types
 //-----------------------------------------------------------------
-enum eVarType
+enum eFieldType
 {
 	eInteger = 0,		//"Def,Min,Max,Step"
 	eFloat,					//"Def,Min,Max,Step"
@@ -317,11 +289,8 @@ public:
 	FDECLARE_FIELDS()
 
 	//Methods
-	virtual void	SetName(const char* _pszName)	{ strncpy(m_szName, _pszName, sizeof(m_szName)); }	//!< Affecte le nom de l'objet
-	virtual const char*	GetName()								{ return m_szName;}	//!< Return object name
-
 	virtual NObject* Duplicate();
-
+	virtual const char*	GetName()	{ return null;}	//!< Return object name
 
 	//Serialization
 	virtual bool Save(NArchive* _s);
@@ -346,7 +315,6 @@ public:
 
 protected:
 	//Datas
-	char							m_szName[MAX_NAMELEN+1];	//!< Objet's name
 	NObjectArray			m_carrayRefTargets;				//!< Objects referenced by this object
 	NObjectArray			m_carrayRefMakers;				//!< Objects that reference this object
 
@@ -382,6 +350,9 @@ public:
 	NTreeNode*	GetSon()			{ return m_pFirstSon;		}
 	NTreeNode*	GetBrother()	{ return m_pBrother;		}
 
+	void	SetName(const char* _pszName)	{ strncpy(m_szName, _pszName, sizeof(m_szName)); }	//!< Affecte le nom de l'objet
+	virtual const char*	GetName()								{ return m_szName;}	//!< Return object name
+
 	NTreeNode*	GetSonFromName(const char* _pszNodeName);
 
 	udword GetSonsCount();
@@ -399,7 +370,7 @@ protected:
 	NTreeNode*		m_pBrother;
 	NTreeNode*		m_pFirstSon;
 	NTreeNode**		m_ppLastSon;
-
+	char					m_szName[MAX_NAMELEN+1];	//!< Node's name
 };
 
 //-----------------------------------------------------------------
@@ -418,7 +389,7 @@ public:
 	NObjectGarbage();
 	~NObjectGarbage();
 
-	void SetManagedClassID(ID _CLASSID);
+	void SetManagedClass(const char* _pszClassName);
 	void Compact(ubyte _byTypeMask, udword _dwTimevalidityMs);
 	void GetInstance(NObject** _ppobj, ubyte _byAsType=1);	//!< Return an instance
 	void RemoveEntry(NObject** _ppobj);
@@ -432,7 +403,7 @@ protected:
 	NObjGarbageDesc*	m_aobjects;
 	udword						m_dwCount;
 	udword						m_dwSize;
-	ID								m_CLASSID;
+	const char*				m_pszClassName;
 };
 
 

@@ -97,7 +97,7 @@ void NOperatorsWnd::InitCtxMenu()
 		}
 
 		//Add new operator
-		popMenu->AddItem(pop->GetName(), prtc->CLASSID, 0);
+		popMenu->AddItem(pop->GetName(), (udword)prtc, 0);	//###TOFIX### 64bits ptr
 
 		//Delete operator
 		NDELETE(pop, NOperatorNode);
@@ -124,8 +124,8 @@ void NOperatorsWnd::OnRButtonDown(NPoint pos)
 void NOperatorsWnd::OnMenuItemClick(NObject* _psender)
 {
 	NMenuCtrl* pmenu = (NMenuCtrl*)_psender;
-	ID classid = (ID)pmenu->GetClickedCmdID();
-	PlaceOperator(classid);
+	NRTClass* rtclass = (NRTClass*)pmenu->GetClickedCmdID();
+	PlaceOperator(rtclass->m_pszClassName);
 	SetFocus();
 	Update();
 }

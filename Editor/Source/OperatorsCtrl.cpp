@@ -627,7 +627,7 @@ void NOperatorsCtrl::DisplayOperatorsPage(NOperatorsPage* popsPage)
 
 
 
-void NOperatorsCtrl::PlaceOperator(ID CLASSID)
+void NOperatorsCtrl::PlaceOperator(const char* _pszClassName)
 {
 	udword dwWidth = 4;
 
@@ -643,7 +643,7 @@ void NOperatorsCtrl::PlaceOperator(ID CLASSID)
 	if(!IsOpRectCollide(rcItemAdd, false))
 	{
 		//Place New Operator
-		NOperatorNode* pop = AddOperator((sword)m_dwCursorX,(sword)m_dwCursorY,dwWidth,CLASSID);
+		NOperatorNode* pop = AddOperator((sword)m_dwCursorX,(sword)m_dwCursorY,dwWidth,_pszClassName);
 
 		//clear selection
 		SelectOperator(null);
@@ -655,12 +655,12 @@ void NOperatorsCtrl::PlaceOperator(ID CLASSID)
 }
 
 
-NOperatorNode* NOperatorsCtrl::AddOperator(sword x, sword y, sword w, ID CLASSID)
+NOperatorNode* NOperatorsCtrl::AddOperator(sword x, sword y, sword w, const char* _pszClassName)
 {
 	if (m_popsPage==null)		return null;
 
 	//Create operator
-	NOperatorNode* pop = (NOperatorNode*)NRTClass::CreateByID(CLASSID);
+	NOperatorNode* pop = (NOperatorNode*)NRTClass::CreateByName(_pszClassName);
 	if (pop)
 	{
 		//Init

@@ -118,7 +118,7 @@ bool NArchive::FinalizeSave()
 		*m_pStream<<m_pRTClassesArray[j]->m_pszClassName;
 	}
 
-   //###TODO#### write properties struct declares
+  //###TODO#### write fields schema
 
 	//Update Header
 	udword dwEndOfRTClasses = m_pStream->Tell();
@@ -184,41 +184,21 @@ bool NArchive::Read()
 	}
 
 
-	//For old Version 1.0.0.0 Classes are saved by ID	###TOREMOVE### after alpha version
-	if (h.Version==0x1000)
+	//Read Class's Names Table and make RTClass Table
+	char szModuleName[256];
+	char szClassName[256];
+	for (i=0; i<m_wRTClassCount; i++)
 	{
-		m_pStream->Seek(sizeof(h) - sizeof(h.DatasOffset));
-
-		for (i=0; i<m_wRTClassCount; i++)
+		*m_pStream>>szModuleName;
+		//###TODO### control if module is loaded...
+		*m_pStream>>szClassName;
+		m_pRTClassesArray[i] = NRTClass::GetRTClassByName(szClassName);
+		if (m_pRTClassesArray[i]==null)
 		{
-			ID id;
-			m_pStream->GetData(&id, sizeof(ID));
-			m_pRTClassesArray[i] = NRTClass::GetRTClassByID(id);
+			ERR(0, "RTClass Mod<%s> Name<%s> not found\n", szModuleName, szClassName);
+			return false;
 		}
-
-	} else {
-
-		//Read Class's Names Table and make RTClass Table
-		char szModuleName[256];
-		char szClassName[256];
-		for (i=0; i<m_wRTClassCount; i++)
-		{
-			*m_pStream>>szModuleName;
-			//###TODO### control if module is loaded...
-			*m_pStream>>szClassName;
-			m_pRTClassesArray[i] = NRTClass::GetRTClassByName(szClassName);
-			if (m_pRTClassesArray[i]==null)
-			{
-				ERR(0, "RTClass Mod<%s> Name<%s> not found\n", szModuleName, szClassName);
-				return false;
-			}
-		}
-
 	}
-
-	// Save current file pos then jump to Mapped Objects ...
-	if (h.Version==0x1000)
-		h.DatasOffset = m_pStream->Tell();
 
 	m_pStream->Seek(h.MappedObjsOffset);
 
@@ -326,13 +306,14 @@ NArchive &NArchive::operator >>(char *_val)
 void NArchive::PutClass(NObject* _c)
 {
 	//Not referenced Class
-	//if (_c->GetRefToMeCount()==0)
+	if (_c->GetRefToMeCount()==0)
 	{
 		PutObj(_c);
 	//Referenced Class
-	}// else {
-		//PutMappedObj(_c);
-	//}
+	} else {
+		PutMappedObj(_c);
+	}
+
 }
 
 

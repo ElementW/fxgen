@@ -287,7 +287,7 @@ NOperatorsProject::NOperatorsProject()
 	m_pRootGroup		= new NTreeNode;
 	m_pRootGroup->SetName("Root");
 
-	m_bitmapsAlloc.SetManagedClassID( NRTClass::MakeClassID("NBitmap") );
+	m_bitmapsAlloc.SetManagedClass( "NBitmap" );
 }
 
 //-----------------------------------------------------------------
