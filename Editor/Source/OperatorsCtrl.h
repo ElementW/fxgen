@@ -48,7 +48,7 @@ public:
 
 	void DisplayOperatorsPage(NOperatorsPage* popsPage);
 
-	void	PlaceOperator(ID CLASSID);
+	void	PlaceOperator(const char* _pszClassName);
 
 	void	SelectOperator(NOperatorNode* pop);
 	void	DeleteOperatorsSelected();
@@ -65,7 +65,7 @@ public:
 
 protected:
 	// Internal methods
-	NOperatorNode*	AddOperator(sword x, sword y, sword w, ID CLASSID);
+	NOperatorNode*	AddOperator(sword x, sword y, sword w, const char* _pszClassName);
 	void				DeleteOperator(NOperatorNode* pop);
 	void				Reset();
 

@@ -53,7 +53,7 @@ struct NSFHeader
 {
 	uword				NSFId;
 	uword				Version;
-	uword				RTClassesCount;		//###NOTE### GUID count for 1.0.0.0 version
+	uword				RTClassesCount;
 	uword				MappedObjsCount;
 	udword			MappedObjsOffset;	//From Start File
 	udword			DatasOffset;			//From Start File //###ADDED### from 1.0.0.1 version
@@ -61,6 +61,16 @@ struct NSFHeader
   //###TODO#### write properties struct declares
 	//Then Datas ...
 	//Then Mapped Objects ...
+};
+
+//-----------------------------------------------------------------
+//! \struct NSFFieldSchema
+//! \brief	Field schema
+//-----------------------------------------------------------------
+struct NSFFieldSchema
+{
+	sbyte			sbyType;
+	char*			pszName;
 };
 
 //-----------------------------------------------------------------
@@ -89,14 +99,18 @@ public:
 
 	//Writing Methods
 	void	PutClass(NObject* _c);
+
   NArchive &operator<<( const char* _val ); // Needed since the template tends to choose wrong overload on const char*
   template <class T> NArchive &operator<<( const T &_val ) { *(m_pBufferedStream == null ? static_cast<NMemoryStream*>(m_pStream) : m_pBufferedStream) << _val; return *this; }
+
   bool	PutData(void* _buf, udword _length);
 
 	//Reading Methods
 	NObject*	GetClass();
+
   NArchive &operator>>( char* _val ); // Needed since the template tends to choose wrong overload on const char*
   template <class T> NArchive &operator>>( T &_val ) { *(m_pBufferedStream == null ? static_cast<NMemoryStream*>(m_pStream) : m_pBufferedStream) >> _val; return *this; }
+
   bool	GetData(void* _buf, udword _length);
 
 	//Mapped object Methods
@@ -111,6 +125,8 @@ protected:
 	uword			AddUniqueRTClass(NRTClass* _pRTClass);//!< Return ID index into m_pRTClassesArray
 	NRTClass*	GetRTClassFromIdx(uword _idx);				//!< Return ID* from an m_pRTClassesArray's index
 	uword			AddUniqueMappedObjs(NObject* _pobj);	//!< Return Nobject index into m_carrayMappedObjs
+
+//	uword		AddUniqueRTFields(NRTClassFiels);
 
 	void		PutObj(NObject* _c);									//!< Write class datas to archive
 

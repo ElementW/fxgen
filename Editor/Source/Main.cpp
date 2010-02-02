@@ -95,10 +95,10 @@ public:
 };
 
 FBEGIN_FIELDS_SUBCLASS(NTestReflexion, NObject)
-	NEWFIELD(eFloat, "angle", NTestReflexion, fAngle, NULL),
-	NEWFIELD(eInteger, "seed", NTestReflexion, dwSeed, NULL),
+	NEWFIELD(eFloat, "angle", NTestReflexion, fAngle, -3.14f, 1.14f, 0.01f, ""),
+	NEWFIELD(eInteger, "seed", NTestReflexion, dwSeed, 0, 65536, 1, ""),
 //Struct
-	NEWFIELD(eInteger, "wpow", NTestReflexion, st.wpow, NULL),
+	NEWFIELD(eInteger, "wpow", NTestReflexion, st.wpow, 0, 65536, 1, ""),
 FEND_FIELDS()
 
 NDebugMemoryMgr gMemMgr;
@@ -110,12 +110,14 @@ int main(int argc, char *argv[])
 {
   //###TEST### Debut
 	NTestReflexion class1;
-	FIELDS_LIST* fields = class1.GetFields();
+	NRTClassFields* fields = class1.GetRTField();
 
-	FIELD_DESC*	fdesc = fields->lpFields;
+	NFieldDesc* pdesc = fields->GetFieldDescByName("angle");
+
+	/*NFieldDesc*	fdesc = fields->m_paFieldsDesc;
 	float fAngle = * ((float*) (((ubyte*)&class1) + fdesc->DataOffset));
 
-	fdesc = fields->lpFields+1;
+	fdesc = fields->m_paFieldsDesc+1;
 	udword dwSeed = * ((udword*) (((ubyte*)&class1) + fdesc->DataOffset));
 
 	//Serialization
@@ -123,7 +125,7 @@ int main(int argc, char *argv[])
 
 	NArchive ar(stream);
 	ar.PutClass(&class1);
-
+*/
 
 	//###TEST### Fin
 

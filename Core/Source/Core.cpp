@@ -71,7 +71,6 @@ FEND_FIELDS()
 NObject::NObject()
 {
 	m_dwLastUsedTime	= 0;
-	m_szName[0]				= 0;
 }
 
 //-----------------------------------------------------------------
@@ -91,33 +90,36 @@ NObject::~NObject()
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Serialize Variable bloc for saving
+//!	\brief	Serialize object for saving
 //!	\param	_s	archive container
 //!	\return	True if success
 //-----------------------------------------------------------------
 bool NObject::Save(NArchive* _s)
 {
-	//Save object's name
-	ubyte len = (ubyte)strlen(m_szName);
-	*_s<<len;
-	_s->PutData(&m_szName, len);
+	//###TODO###
+
+	//Save Fields
+
 
 	return true;
 }
 
-
 //-----------------------------------------------------------------
-//!	\brief	Serialize Variable bloc for loading
+//!	\brief	Serialize object for loading
 //!	\param	_l	archive container
 //!	\return	True if success
 //-----------------------------------------------------------------
 bool NObject::Load(NArchive* _l)
 {
-	//Load object's name
-	ubyte len;
-	*_l>>len;
-	_l->GetData(&m_szName, len);
-	m_szName[len]=0;
+	//###TODO###
+
+	//Load Fields
+	// if fields doesn't exist into current reflexion schema => we forget it
+
+	//NRTClassFields::GetFieldDescByName("nom du champ");
+
+	//Control un-initialised fields (fields that not exist in previous reflexion schema)
+	// if not initialised set default value
 
 	return true;
 }
@@ -128,11 +130,11 @@ bool NObject::Load(NArchive* _l)
 //-----------------------------------------------------------------
 NObject* NObject::Duplicate()
 {
-	NObject* pobjClone = NRTClass::CreateByID( GetRTClass()->CLASSID );
+	NObject* pobjClone = NRTClass::CreateByName( GetRTClass()->m_pszClassName );
 	if (pobjClone)
 	{
 		//Duplicate object name
-		pobjClone->SetName( GetName() );
+		//pobjClone->SetName( GetName() );
 	}
 
 	return pobjClone;
@@ -475,25 +477,7 @@ NRTClass::NRTClass(RTCLASS_HANDLER*	_pcreateCB, const char* _pszClassName, const
 	m_pNextRTC					= null;
   m_pRTClassModule    = pmod;
 
-	CLASSID						= MakeClassID(_pszClassName);   //###JN### will be removed
-	SUPERCLASSID			= MakeClassID(_pszSuperClassName); //###JN### will be removed
-
 	pmod->m_pLastRTClass = this;
-}
-
-
-//-----------------------------------------------------------------
-//!	\brief	Create an object from class ID
-//!	\param	_CLASSID	Class ID
-//!	\return	Created object
-//-----------------------------------------------------------------
-NObject* NRTClass::CreateByID(ID _CLASSID)
-{
-	NRTClass*	prt = NRTClass::GetRTClassByID(_CLASSID);
-	if (prt)
-		return prt->m_pCreateCB();
-
-	return null;
 }
 
 
@@ -535,48 +519,6 @@ NRTClass*	NRTClass::GetRTClassByName(const char* _pszClassName)
   }
 
 	return null;
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Return RTClass* from class ID
-//!	\param	_CLASSID	Class ID
-//!	\return	NRTClass*
-//-----------------------------------------------------------------
-NRTClass*	NRTClass::GetRTClassByID(ID _CLASSID)
-{
-  NRTClassModule* pmod = NRTClassModule::m_pFirstRTClassModule;
-  while (pmod)
-  {
-    NRTClass* pcurRTC = pmod->m_pFirstRTClass;
-    while (pcurRTC!=null)
-    {
-      if (pcurRTC->CLASSID == _CLASSID)
-        return pcurRTC;
-
-      pcurRTC = pcurRTC->m_pNextRTC;
-    }
-
-    pmod=pmod->m_pNextRTClassModule;
-  }
-
-	return null;
-}
-
-
-//-----------------------------------------------------------------
-//!	\brief	Create a class ID from class Name
-//!	\param	_pszClassName	Class name
-//!	\return	generated class ID
-//-----------------------------------------------------------------
-ID NRTClass::MakeClassID(const char* _pszClassName)
-{
-	udword dwLen = (udword)strlen(_pszClassName);
-	const char* pStr = _pszClassName;
-	udword dwKey = 0;
-	for (udword i = 0; i < dwLen; ++i, ++pStr)
-		dwKey = (dwKey << 2) + *pStr;
-
-	return (ID)dwKey;	//(dwKey % m_dwMapSize);
 }
 
 //-----------------------------------------------------------------
@@ -634,6 +576,39 @@ NRTClass* NRTClass::GetNextClassBySuperClass(const char* _pszSuperClassName, NRT
 }
 
 //-----------------------------------------------------------------
+//
+//									NRTClassFields class implementation
+//
+//-----------------------------------------------------------------
+
+//-----------------------------------------------------------------
+//!	\brief	Return NFieldDesc* from field name
+//!	\param	_pszFieldName field name
+//!	\return	NFieldDesc*
+//-----------------------------------------------------------------
+NFieldDesc* NRTClassFields::GetFieldDescByName(const char* _pszFieldName)
+{
+	NRTClassFields*	prtfield = this;
+	NFieldDesc* pafieldDesc = prtfield->m_paFieldsDesc;
+	while (prtfield)
+	{
+		int idx = 0;
+		while (pafieldDesc[idx].sbyType!=-1)
+		{
+			if (strcmp(_pszFieldName, pafieldDesc[idx].pszName)==0)
+			{
+				return &pafieldDesc[idx];
+			}
+		}
+		prtfield = m_pSuperClassRTField;
+		pafieldDesc = prtfield->m_paFieldsDesc;
+	}
+
+	return null;
+}
+
+
+//-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
 //							NTreeNode class implementation
@@ -650,6 +625,7 @@ NTreeNode::NTreeNode()
 	m_pFirstSon	= null;
 	m_ppLastSon	= &m_pFirstSon;
 	m_pBrother	= null;
+	m_szName[0]	= 0;
 	m_carrayObjects.SetManageDelete(true);
 }
 
@@ -668,21 +644,26 @@ NTreeNode::~NTreeNode()
 //!	\return True if success
 //-----------------------------------------------------------------
 
-bool NTreeNode::Save(NArchive* s)
+bool NTreeNode::Save(NArchive* _s)
 {
-	NObject::Save(s);
+	NObject::Save(_s);
+
+	//Save name
+	ubyte len = (ubyte)strlen(m_szName);
+	*_s<<len;
+	_s->PutData(&m_szName, len);
 
 	//Save objects
-	m_carrayObjects.Save(s);
+	m_carrayObjects.Save(_s);
 
 	//Save hierarchie
 	udword dwCount = GetSonsCount();
-	*s<<dwCount;
+	*_s<<dwCount;
 
 	NTreeNode* pcurnode = m_pFirstSon;
 	while (pcurnode)
 	{
-		pcurnode->Save(s);
+		pcurnode->Save(_s);
 		pcurnode = pcurnode->m_pBrother;
 	}
 
@@ -699,6 +680,12 @@ bool NTreeNode::Load(NArchive* _l)
 {
 	if (!NObject::Load(_l))
 		return false;
+
+	//Load object's name
+	ubyte len;
+	*_l>>len;
+	_l->GetData(&m_szName, len);
+	m_szName[len]=0;
 
 	//Load objects
 	if (!m_carrayObjects.Load(_l))
@@ -898,7 +885,7 @@ NObject* NTreeNode::_FindNodeFromClassName(NTreeNode* _pParent, char* _pszClassN
 //-----------------------------------------------------------------
 NObjectGarbage::NObjectGarbage()
 {
-	m_CLASSID=0;
+	m_pszClassName=null;
 	m_dwCount=0;
 	m_dwSize=0;
 	m_aobjects=null;
@@ -917,9 +904,9 @@ NObjectGarbage::~NObjectGarbage()
 //!	\brief	Set ClassID Object managed by this class
 //!	\param	_CLASSID	class identifier
 //-----------------------------------------------------------------
-void NObjectGarbage::SetManagedClassID(ID _CLASSID)
+void NObjectGarbage::SetManagedClass(const char* _pszClassName)
 {
-	m_CLASSID = _CLASSID;
+	m_pszClassName = _pszClassName;
 
 	m_dwSize		= 256;	//!< 256 objects managed by default
 	m_aobjects = (NObjGarbageDesc*)NNEWARRAY(NObjGarbageDesc, m_dwSize);
@@ -988,7 +975,7 @@ void NObjectGarbage::GetInstance(NObject** _ppobj, ubyte _byAsType)
 		//Create a new object and update _ppobj pointer
 		if (*_ppobj==null)
 		{
-			*_ppobj = NRTClass::CreateByID(m_CLASSID);
+			*_ppobj = NRTClass::CreateByName(m_pszClassName);
 			if (*_ppobj!=null)
 			{
 				m_aobjects[m_dwCount].ppobj		= _ppobj;

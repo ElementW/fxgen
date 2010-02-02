@@ -202,7 +202,7 @@ void NProjectWnd::AddPage()
 	NObjectArray& array = pnodeGroup->GetObjsArray();
 
 	NOperatorsPage* ppage = NNEW(NOperatorsPage);
-	ppage->SetName("Page");
+	//ppage->SetName("Page");
 	array.AddItem(ppage);
 
 	DisplayOperatorsProject(m_popsProject);

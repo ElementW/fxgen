@@ -93,6 +93,8 @@ public:
 	virtual	bool Save(NArchive* _s);	//!< Save object
 	virtual	bool Load(NArchive* _l);	//!< Load object
 
+	virtual const char*	GetName()								{ return "Page";}	//!< Return object name
+
 	udword			GetOpsCount()							{ return m_arrayOps.Count();					}
 	NOperatorNode*	GetOpFromIdx(udword _idx)	{ return (NOperatorNode*)m_arrayOps[_idx];}
 
