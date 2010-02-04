@@ -60,10 +60,9 @@ NRTClassModule* NRTClassModule::m_pLastRTClassModule=null;
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NObject, NObject);
+FIMPLEMENT_CLASS(NObject, NObject)
+FIMPLEMENT_CLASS_END()
 
-FBEGIN_FIELDS_CLASS(NObject)
-FEND_FIELDS()
 
 //-----------------------------------------------------------------
 //!	\brief	Constructor
@@ -463,8 +462,9 @@ NRTClassModule::NRTClassModule()
 //!	\param	_pszClassName				Class name for object
 //!	\param	_pszSuperClassName	Super-Class name for object
 //!	\param	_pmod               RTClass's Module
+//!	\param	_paFieldsDesc				Fields for reflexion
 //-----------------------------------------------------------------
-NRTClass::NRTClass(RTCLASS_HANDLER*	_pcreateCB, const char* _pszClassName, const char* _pszSuperClassName, const char* _pszModuleName)
+NRTClass::NRTClass(RTCLASS_HANDLER*	_pcreateCB, const char* _pszClassName, const char* _pszSuperClassName, const char* _pszModuleName, NFieldDesc* _paFieldsDesc)
 {
   NRTClassModule* pmod = NRTClassModule::RegisterModule(_pszModuleName);
 
@@ -476,6 +476,7 @@ NRTClass::NRTClass(RTCLASS_HANDLER*	_pcreateCB, const char* _pszClassName, const
 	m_pszSuperClassName	= _pszSuperClassName;
 	m_pNextRTC					= null;
   m_pRTClassModule    = pmod;
+	m_paFieldsDesc			= _paFieldsDesc;
 
 	pmod->m_pLastRTClass = this;
 }
@@ -524,7 +525,7 @@ NRTClass*	NRTClass::GetRTClassByName(const char* _pszClassName)
 //-----------------------------------------------------------------
 //!	\brief	Return First RTClass from a super class name
 //-----------------------------------------------------------------
-NRTClass* NRTClass::GetFirstClassBySuperClass(const char* _pszSuperClassName)
+NRTClass* NRTClass::GetFirstClassDerivedFrom(const char* _pszSuperClassName)
 {
 	NRTClassModule* pmod = NRTClassModule::m_pFirstRTClassModule;
 	while (pmod)
@@ -547,7 +548,7 @@ NRTClass* NRTClass::GetFirstClassBySuperClass(const char* _pszSuperClassName)
 //-----------------------------------------------------------------
 //!	\brief	Return Next RTClass from a super class name
 //-----------------------------------------------------------------
-NRTClass* NRTClass::GetNextClassBySuperClass(const char* _pszSuperClassName, NRTClass* _prtclass)
+NRTClass* NRTClass::GetNextClassDerivedFrom(const char* _pszSuperClassName, NRTClass* _prtclass)
 {
 	NRTClassModule* pmod = _prtclass->m_pRTClassModule;
 	bool bFirst = false;
@@ -586,7 +587,7 @@ NRTClass* NRTClass::GetNextClassBySuperClass(const char* _pszSuperClassName, NRT
 //!	\param	_pszFieldName field name
 //!	\return	NFieldDesc*
 //-----------------------------------------------------------------
-NFieldDesc* NRTClassFields::GetFieldDescByName(const char* _pszFieldName)
+/*NFieldDesc* NRTClassFields::GetFieldDescByName(const char* _pszFieldName)
 {
 	NRTClassFields*	prtfield = this;
 	NFieldDesc* pafieldDesc = prtfield->m_paFieldsDesc;
@@ -605,7 +606,7 @@ NFieldDesc* NRTClassFields::GetFieldDescByName(const char* _pszFieldName)
 	}
 
 	return null;
-}
+}*/
 
 
 //-----------------------------------------------------------------
@@ -615,7 +616,8 @@ NFieldDesc* NRTClassFields::GetFieldDescByName(const char* _pszFieldName)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NTreeNode, NObject);
+FIMPLEMENT_CLASS(NTreeNode, NObject)
+FIMPLEMENT_CLASS_END()
 
 //-----------------------------------------------------------------
 //!	\brief	Constructor

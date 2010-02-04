@@ -61,6 +61,7 @@ NPropertyItem::~NPropertyItem()
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NUbyteProp, NPropertyItem);
+FIMPLEMENT_CLASS_END();
 
 void NUbyteProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
@@ -140,6 +141,7 @@ void NUbyteProp::OnEscape(NEditCtrl* pEdit)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NUwordProp, NPropertyItem);
+FIMPLEMENT_CLASS_END();
 
 void NUwordProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
@@ -219,6 +221,7 @@ void NUwordProp::OnEscape(NEditCtrl* pEdit)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NFloatProp, NPropertyItem);
+FIMPLEMENT_CLASS_END();
 
 void NFloatProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
@@ -294,6 +297,7 @@ void NFloatProp::OnEscape(NEditCtrl* pEdit)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NUFloatProp, NPropertyItem);
+FIMPLEMENT_CLASS_END();
 
 void NUFloatProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
@@ -341,6 +345,7 @@ void NUFloatProp::OnEscape(NEditCtrl* pEdit)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NColorProp, NPropertyItem);
+FIMPLEMENT_CLASS_END();
 
 void NColorProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
@@ -458,6 +463,7 @@ void NColorProp::OnColorClick(NObject* _psender)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NUbyteComboProp, NPropertyItem);
+FIMPLEMENT_CLASS_END();
 
 void NUbyteComboProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
@@ -541,6 +547,7 @@ void NUbyteComboProp::OnMenuClick(NObject* _psender)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NFileBrowserProp, NPropertyItem);
+FIMPLEMENT_CLASS_END();
 
 void NFileBrowserProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
@@ -576,6 +583,7 @@ bool NFileBrowserProp::EndEdit(bool bSaveChanged)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NUseStoredOpsProp, NPropertyItem);
+FIMPLEMENT_CLASS_END();
 
 void NUseStoredOpsProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
@@ -679,6 +687,7 @@ void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NStringProp, NPropertyItem);
+FIMPLEMENT_CLASS_END();
 
 void NStringProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {

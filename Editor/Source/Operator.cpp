@@ -102,7 +102,8 @@ bool NOperatorNode::Load(NArchive* _l)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NOperatorsPage, NObject);
+FIMPLEMENT_CLASS(NOperatorsPage, NObject)
+FIMPLEMENT_CLASS_END()
 
 //-----------------------------------------------------------------
 // Constructor

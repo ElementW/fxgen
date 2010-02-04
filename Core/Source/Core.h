@@ -39,10 +39,25 @@
 // Types
 //-----------------------------------------------------------------
 
-	typedef udword						ID;			// Identifier	// ###JN### will be removed
+	//typedef udword						ID;			// Identifier	// ###JN### will be removed
 
 	//Runtime class
 	typedef	NObject* (RTCLASS_HANDLER)(void);	//Callback for class creation
+
+//-----------------------------------------------------------------
+//!	\struct		NFieldDesc
+//!	\brief		field description struct
+//-----------------------------------------------------------------
+struct NFieldDesc
+{
+	sbyte			sbyType;
+	char*			pszName;
+	udword		dwDataOffset;
+	float			fMin;
+	float			fMax;
+	float			fStep;
+	char*			pszDef;
+};
 
 
 //-----------------------------------------------------------------
@@ -83,54 +98,45 @@ class CORELIB_API NRTClass
 public:
 
 //Constructor
-	NRTClass(RTCLASS_HANDLER*	_pcreateCB, const char* _pszClassName, const char* _pszSuperClassName, const char* _pszModuleName);
+	NRTClass(RTCLASS_HANDLER*	_pcreateCB, const char* _pszClassName, const char* _pszSuperClassName, const char* _pszModuleName, NFieldDesc* _paFieldsDesc);
 
 //Methods
 	static NObject*		CreateByName(const char* _pszClassName);
 	static NRTClass*	GetRTClassByName(const char* _pszClassName);
 
-	static NRTClass*  GetFirstClassBySuperClass(const char* _pszSuperClassName);
-	static NRTClass*  GetNextClassBySuperClass(const char* _pszSuperClassName, NRTClass* _prtclass);
+	static NRTClass*  GetFirstClassDerivedFrom(const char* _pszSuperClassName);
+	static NRTClass*  GetNextClassDerivedFrom(const char* _pszSuperClassName, NRTClass* _prtclass);
 
 //Datas
 	RTCLASS_HANDLER*	m_pCreateCB;					//!< CallBack for class creation
 	const char*				m_pszClassName;				//!< Class's name
 	const char*				m_pszSuperClassName;	//!< Super class's name
 
+	NFieldDesc*				m_paFieldsDesc;				//!< Fields description array for this class level
+
 	NRTClass*				m_pNextRTC;					//!< Next Run-Time class belong to one module
 	NRTClassModule* m_pRTClassModule;   //!< Run-Time class Module for this Class
 };
 
 
-//-----------------------------------------------------------------
-//!	\struct		NFieldDesc
-//!	\brief		field description struct
-//-----------------------------------------------------------------
-struct NFieldDesc
-{
-	sbyte			sbyType;
-	char*			pszName;
-	udword		dwDataOffset;
-	float			fMin;
-	float			fMax;
-	float			fStep;
-	char*			pszDef;
-};
 
 //-----------------------------------------------------------------
 //!	\class		NRTClassFields
 //!	\brief		RuntimeClass Fields description
 //-----------------------------------------------------------------
-class CORELIB_API NRTClassFields
+/*class CORELIB_API NRTClassFields
 {
 public:
 //Methods
 	NFieldDesc* GetFieldDescByName(const char* _pszFieldName);	//!< Parse bases classes too
 
+	static NRTClassFields*	GetRTFieldsByName(const char* _pszClassName);
+
 //Datas
-	NRTClassFields*			m_pSuperClassRTField;	//!< Super class's RTField
-	NFieldDesc*		m_paFieldsDesc;				//!< Fields description array
-};
+	const char*				m_pszClassName;				//!< Class's name
+	NRTClassFields*		m_pSuperClassRTField;	//!< Super class's RTField
+	NFieldDesc*				m_paFieldsDesc;				//!< Fields description array for this class level
+};*/
 
 
 //-----------------------------------------------------------------
@@ -157,30 +163,33 @@ public:
 //Runtime class
 #define FDECLARE_CLASS() \
 	static NRTClass	m_RTClass;\
-	virtual NRTClass* GetRTClass()		{ return &m_RTClass; }
-
+	virtual NRTClass* GetRTClass()		{ return &m_RTClass; } \
+	static NFieldDesc	m_Table[];
 
 #define FIMPLEMENT_CLASS(class_name, superclass_name) \
 	extern NObject* class_name##CB()	{ return NNEW(class_name); }\
-	NRTClass	class_name::m_RTClass((RTCLASS_HANDLER*)&class_name##CB, #class_name, #superclass_name, GetModuleName() );
+	NRTClass	class_name::m_RTClass((RTCLASS_HANDLER*)&class_name##CB, #class_name, #superclass_name, GetModuleName(), class_name::m_Table );\
+	NFieldDesc	class_name::m_Table[] = { 
 
+#define FIMPLEMENT_CLASS_END() \
+	{ -1, "end", 0, 0.0,0.0,0.0, "" } };
 
 //Fields Macros
-#define		FBEGIN_FIELDS_CLASS(class_name) \
+/*#define		FBEGIN_FIELDS_CLASS(class_name) \
 				NRTClassFields		class_name::m_RTField = { NULL, class_name::m_Table }; \
 				NFieldDesc	class_name::m_Table[] = {
 
 #define		FBEGIN_FIELDS_SUBCLASS(class_name, superclass_name) \
 				NRTClassFields		class_name::m_RTField = { &superclass_name::m_RTField, class_name::m_Table }; \
 				NFieldDesc	class_name::m_Table[] = {
+*/
+//#define		FEND_FIELDS() \
+//			{ -1, "end", 0 } };
 
-#define		FEND_FIELDS() \
-			{ -1, "end", 0 } };
-
-#define		FDECLARE_FIELDS() \
+/*#define		FDECLARE_FIELDS() \
 				static NFieldDesc	m_Table[]; \
 				static NRTClassFields		m_RTField; \
-				virtual NRTClassFields* GetRTField()	{ return &m_RTField; }
+				virtual NRTClassFields* GetRTField()	{ return &m_RTField; }*/
 
 #define		OFFSET(c,m)	(size_t)&(((c *)0)->m)
 #define		NEWFIELD(type, name, classname, classmember, min, max, step, def)	{ type, name, OFFSET(classname, classmember), min, max, step, def	}
@@ -212,9 +221,6 @@ enum eFieldType
   //eTexture ...
 	//...
 };
-
-
-
 
 //-----------------------------------------------------------------
 //!	\class	NObjectArray Core.h
@@ -286,7 +292,6 @@ public:
 	virtual	~NObject();
 
 	FDECLARE_CLASS();
-	FDECLARE_FIELDS()
 
 	//Methods
 	virtual NObject* Duplicate();

@@ -55,8 +55,8 @@ struct NSFHeader
 	uword				Version;
 	uword				RTClassesCount;
 	uword				MappedObjsCount;
-	udword			MappedObjsOffset;	//From Start File
-	udword			DatasOffset;			//From Start File //###ADDED### from 1.0.0.1 version
+	udword			MappedObjsOffset;	//Offset from Start File
+	udword			DatasOffset;			//Offset from Start File
 	//Then RTClasses's Names ...
   //###TODO#### write properties struct declares
 	//Then Datas ...
@@ -67,11 +67,11 @@ struct NSFHeader
 //! \struct NSFFieldSchema
 //! \brief	Field schema
 //-----------------------------------------------------------------
-struct NSFFieldSchema
+/*struct NSFFieldSchema
 {
 	sbyte			sbyType;
 	char*			pszName;
-};
+};*/
 
 //-----------------------------------------------------------------
 //	Prototypes
