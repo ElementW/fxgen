@@ -70,7 +70,7 @@ void NOperatorsWnd::InitCtxMenu()
 	m_wndMenu.OnItemClick=FDelegate(this, (TDelegate)&NOperatorsWnd::OnMenuItemClick);
 
 	//Create Operators list sorted by category
-	NRTClass* prtc = NRTClass::GetFirstClassBySuperClass("NOperatorNode");
+	NRTClass* prtc = NRTClass::GetFirstClassDerivedFrom("NOperatorNode");
 	while (prtc)
 	{
 		//Create operator in order to get operator name and categorie
@@ -103,7 +103,7 @@ void NOperatorsWnd::InitCtxMenu()
 		NDELETE(pop, NOperatorNode);
 
 		//Next RTC
-		prtc = NRTClass::GetNextClassBySuperClass("NOperatorNode", prtc);
+		prtc = NRTClass::GetNextClassDerivedFrom("NOperatorNode", prtc);
 	}
 
 }
@@ -166,7 +166,7 @@ void NOperatorsWnd::OnDeletedOperator(NOperatorNode* pop)
 //-----------------------------------------------------------------
 //!	\brief	Return First RTClass from a super class name
 //-----------------------------------------------------------------
-/*NRTClass* NOperatorsWnd::GetFirstClassBySuperClass(char* _pszSuperClassName)
+/*NRTClass* NOperatorsWnd::GetFirstClassDerivedFrom(char* _pszSuperClassName)
 {
 	NRTClass* pcurRTC = NRTClass::m_pFirstRTClass;
 	while (pcurRTC!=null)
@@ -182,7 +182,7 @@ void NOperatorsWnd::OnDeletedOperator(NOperatorNode* pop)
 //-----------------------------------------------------------------
 //!	\brief	Return Next RTClass from a super class name
 //-----------------------------------------------------------------
-/*NRTClass* NOperatorsWnd::GetNextClassBySuperClass(char* _pszSuperClassName, NRTClass* _prtclass)
+/*NRTClass* NOperatorsWnd::GetNextClassDerivedFrom(char* _pszSuperClassName, NRTClass* _prtclass)
 {
 	_prtclass = _prtclass->m_pNextRTC;
 

@@ -84,7 +84,7 @@ struct SRotoParam
 class NTestReflexion : public NObject
 {
 public:
-	FDECLARE_FIELDS();
+	FDECLARE_CLASS();
 
 	NTestReflexion()	{dwSeed=1234; fAngle = 3.14f; }
 
@@ -94,12 +94,13 @@ public:
 	udword dwSeed;
 };
 
-FBEGIN_FIELDS_SUBCLASS(NTestReflexion, NObject)
+FIMPLEMENT_CLASS(NTestReflexion, NObject)
 	NEWFIELD(eFloat, "angle", NTestReflexion, fAngle, -3.14f, 1.14f, 0.01f, ""),
 	NEWFIELD(eInteger, "seed", NTestReflexion, dwSeed, 0, 65536, 1, ""),
 //Struct
 	NEWFIELD(eInteger, "wpow", NTestReflexion, st.wpow, 0, 65536, 1, ""),
-FEND_FIELDS()
+FIMPLEMENT_CLASS_END()
+
 
 NDebugMemoryMgr gMemMgr;
 
@@ -110,9 +111,8 @@ int main(int argc, char *argv[])
 {
   //###TEST### Debut
 	NTestReflexion class1;
-	NRTClassFields* fields = class1.GetRTField();
 
-	NFieldDesc* pdesc = fields->GetFieldDescByName("angle");
+	NFieldDesc* pdesc = class1.m_RTClass.m_paFieldsDesc;
 
 	/*NFieldDesc*	fdesc = fields->m_paFieldsDesc;
 	float fAngle = * ((float*) (((ubyte*)&class1) + fdesc->DataOffset));

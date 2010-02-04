@@ -104,7 +104,7 @@ bool NArchive::FinalizeSave()
 	NSFHeader						h;
 	h.NSFId							= NSF_HEADERID;
 	h.Version						= NSF_VERSION;
-	h.RTClassesCount			= m_wRTClassCount;
+	h.RTClassesCount		= m_wRTClassCount;
 	h.MappedObjsCount		= (uword)m_carrayMappedObjs.Count();
 	//h.RTClassesOffset Updated later...
 	//h.MappedObjsOffset	Updated later...
@@ -112,13 +112,23 @@ bool NArchive::FinalizeSave()
 	m_pStream->PutData(&h, sizeof(NSFHeader));	//Just for seeking
 
 	//Write RTClasses Module + class Names
+	// classes are serialized with indice(smaller than RTClass's name) to this table
 	for (j=0; j<(udword)m_wRTClassCount; j++)
 	{
-		*m_pStream<<m_pRTClassesArray[j]->m_pRTClassModule->m_pszModuleName;
-		*m_pStream<<m_pRTClassesArray[j]->m_pszClassName;
-	}
+		NRTClass* prtc = m_pRTClassesArray[j];
+		*m_pStream<<prtc->m_pRTClassModule->m_pszModuleName;
+		*m_pStream<<prtc->m_pszClassName;
 
-  //###TODO#### write fields schema
+		//prtc->m_paFieldsDesc
+
+		//Write fields schema
+			//Fields count for this RTClass
+			//Fields type
+			//Fields name
+		//Comment faire le lien entre une RTClass et une RTField
+		//m_pRTClassesArray[j]->
+
+	}
 
 	//Update Header
 	udword dwEndOfRTClasses = m_pStream->Tell();
@@ -130,7 +140,7 @@ bool NArchive::FinalizeSave()
 	m_pStream->PutData(&h, sizeof(NSFHeader));
 	m_pStream->Seek(dwEndOfRTClasses);
 
-	//Save Datas block
+	//Save user Datas block
 	m_pStream->PutData(m_pBufferedStream->GetBuffer(), m_pBufferedStream->Tell());
 
 	NDELETE(m_pBufferedStream, NMemoryStream);
@@ -185,6 +195,7 @@ bool NArchive::Read()
 
 
 	//Read Class's Names Table and make RTClass Table
+	// classes are serialized with indice(smaller than RTClass's name) to this table
 	char szModuleName[256];
 	char szClassName[256];
 	for (i=0; i<m_wRTClassCount; i++)
