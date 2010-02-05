@@ -50,13 +50,13 @@
 //-----------------------------------------------------------------
 struct NFieldDesc
 {
-	sbyte			sbyType;
-	char*			pszName;
-	udword		dwDataOffset;
-	float			fMin;
-	float			fMax;
-	float			fStep;
-	char*			pszDef;
+	ubyte				byType;
+	const char*	pszName;
+	udword			dwDataOffset;
+	float				fMin;
+	float				fMax;
+	float				fStep;
+	const char*	pszDef;
 };
 
 

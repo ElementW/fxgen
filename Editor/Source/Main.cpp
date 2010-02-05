@@ -102,7 +102,7 @@ FIMPLEMENT_CLASS(NTestReflexion, NObject)
 FIMPLEMENT_CLASS_END()
 
 
-NDebugMemoryMgr gMemMgr;
+//NDebugMemoryMgr gMemMgr;
 
 //-----------------------------------------------------------------
 //!\func	Export WinMain to force linkage to this module
@@ -114,20 +114,32 @@ int main(int argc, char *argv[])
 
 	NFieldDesc* pdesc = class1.m_RTClass.m_paFieldsDesc;
 
-	/*NFieldDesc*	fdesc = fields->m_paFieldsDesc;
-	float fAngle = * ((float*) (((ubyte*)&class1) + fdesc->DataOffset));
+	//NFieldDesc*	fdesc = fields->m_paFieldsDesc;
+	//float fAngle = * ((float*) (((ubyte*)&class1) + fdesc->DataOffset));
 
-	fdesc = fields->m_paFieldsDesc+1;
-	udword dwSeed = * ((udword*) (((ubyte*)&class1) + fdesc->DataOffset));
+	//fdesc = fields->m_paFieldsDesc+1;
+	//udword dwSeed = * ((udword*) (((ubyte*)&class1) + fdesc->DataOffset));
 
 	//Serialization
-	NMemoryStream *stream = new NMemoryStream();
+	NFileStream *stream = new NFileStream();
+	stream->Open("c:\\temp\\test.ar", true);
 
 	NArchive ar(stream);
+	ar.PrepareSave();
 	ar.PutClass(&class1);
-*/
+	ar.FinalizeSave();
+
+	//Deserialization
+	NFileStream *streamr = new NFileStream();
+	streamr->Open("c:\\temp\\test.ar", false);
+
+	NArchive arr(streamr);
+	arr.Read();
+	NObject* pobj = arr.GetClass();
+	
 
 	//###TEST### Fin
+
 
 	// Application
 	NFxGenApp* pApp = new NFxGenApp();

@@ -130,6 +130,9 @@ protected:
 
 	void		PutObj(NObject* _c);									//!< Write class datas to archive
 
+	void		WriteRTClassesSchema();
+	bool		ReadRTClassesSchema();
+
 	//Datas
 	NStream*				m_pStream;				//!< Stream used for storage (memory or file)
 	NMemoryStream*  m_pBufferedStream;//!< internal datas
