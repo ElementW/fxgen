@@ -112,23 +112,8 @@ bool NArchive::FinalizeSave()
 	m_pStream->PutData(&h, sizeof(NSFHeader));	//Just for seeking
 
 	//Write RTClasses Module + class Names
-	// classes are serialized with indice(smaller than RTClass's name) to this table
-	for (j=0; j<(udword)m_wRTClassCount; j++)
-	{
-		NRTClass* prtc = m_pRTClassesArray[j];
-		*m_pStream<<prtc->m_pRTClassModule->m_pszModuleName;
-		*m_pStream<<prtc->m_pszClassName;
-
-		//prtc->m_paFieldsDesc
-
-		//Write fields schema
-			//Fields count for this RTClass
-			//Fields type
-			//Fields name
-		//Comment faire le lien entre une RTClass et une RTField
-		//m_pRTClassesArray[j]->
-
-	}
+	// because classes are serialized with an indice(smaller than RTClass's name) to this table
+	WriteRTClassesSchema();
 
 	//Update Header
 	udword dwEndOfRTClasses = m_pStream->Tell();
@@ -145,6 +130,89 @@ bool NArchive::FinalizeSave()
 
 	NDELETE(m_pBufferedStream, NMemoryStream);
 	m_pBufferedStream = null;
+
+	return true;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Write RTClass schema
+//-----------------------------------------------------------------
+void NArchive::WriteRTClassesSchema()
+{
+	udword j, k;
+
+	for (j=0; j<(udword)m_wRTClassCount; j++)
+	{
+		NRTClass* prtc = m_pRTClassesArray[j];
+		*m_pStream<<prtc->m_pRTClassModule->m_pszModuleName;
+		*m_pStream<<prtc->m_pszClassName;
+
+		//Count Fields ###TODO### bases class
+		uword wCount=0;
+		NFieldDesc* pfd = prtc->m_paFieldsDesc;
+		while (pfd[wCount].byType!=0xFF)
+			wCount++;
+
+		*m_pStream<<wCount;
+
+		for (k=0; k<wCount; k++)
+		{
+			*m_pStream<<pfd[k].byType;	//Fields type
+			*m_pStream<<pfd[k].pszName;	//Fields name
+		}
+
+	}
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Read RTClass schema
+//-----------------------------------------------------------------
+bool NArchive::ReadRTClassesSchema()
+{
+	udword i, k;
+
+	//Alloc Class's Names Table
+	if (m_wRTClassCount>=m_wRTClassesSize)
+	{
+	  //Reallocate Array
+	  uword wnewSize = m_wRTClassCount+NSF_RTCLASSESGROWSIZE;
+    NRTClass** pnew = (NRTClass**)NNEWARRAY(NRTClass*, wnewSize);
+    NMemCopy(pnew, m_pRTClassesArray, sizeof(NRTClass*) * m_wRTClassesSize);
+    NDELETEARRAY(m_pRTClassesArray);
+
+    m_pRTClassesArray=pnew;
+		m_wRTClassesSize=wnewSize;
+	}
+
+	//Read Class's Names Table and make RTClass Table
+	// classes are serialized with indice(smaller than RTClass's name) to this table
+	char szModuleName[256];
+	char szClassName[256];
+	char szFieldName[256];
+	for (i=0; i<(udword)m_wRTClassCount; i++)
+	{
+		*m_pStream>>szModuleName;
+		//###TODO### control if module is loaded...
+		*m_pStream>>szClassName;
+		m_pRTClassesArray[i] = NRTClass::GetRTClassByName(szClassName);
+		if (m_pRTClassesArray[i]==null)
+		{
+			ERR(0, "RTClass Mod<%s> Name<%s> not found\n", szModuleName, szClassName);
+			return false;
+		}
+
+		//Read Fields
+		uword wcount = 0;
+		*m_pStream>>wcount;
+		ubyte byType=0;
+
+		for (k=0; k<(udword)wcount; k++)
+		{
+			*m_pStream>>byType;				//Fields type
+			*m_pStream>>szFieldName;	//Fields name
+		}
+
+	}
 
 	return true;
 }
@@ -178,42 +246,13 @@ bool NArchive::Read()
 		return false;
 	}
 
-	//Alloc Class's Names Table
 	m_wRTClassCount = h.RTClassesCount;
 
-	if (m_wRTClassCount>=m_wRTClassesSize)
-	{
-	  //Reallocate Array
-	  uword wnewSize = m_wRTClassCount+NSF_RTCLASSESGROWSIZE;
-    NRTClass** pnew = (NRTClass**)NNEWARRAY(NRTClass*, wnewSize);
-    NMemCopy(pnew, m_pRTClassesArray, sizeof(NRTClass*) * m_wRTClassesSize);
-    NDELETEARRAY(m_pRTClassesArray);
-
-    m_pRTClassesArray=pnew;
-		m_wRTClassesSize=wnewSize;
-	}
-
-
-	//Read Class's Names Table and make RTClass Table
-	// classes are serialized with indice(smaller than RTClass's name) to this table
-	char szModuleName[256];
-	char szClassName[256];
-	for (i=0; i<m_wRTClassCount; i++)
-	{
-		*m_pStream>>szModuleName;
-		//###TODO### control if module is loaded...
-		*m_pStream>>szClassName;
-		m_pRTClassesArray[i] = NRTClass::GetRTClassByName(szClassName);
-		if (m_pRTClassesArray[i]==null)
-		{
-			ERR(0, "RTClass Mod<%s> Name<%s> not found\n", szModuleName, szClassName);
-			return false;
-		}
-	}
-
-	m_pStream->Seek(h.MappedObjsOffset);
+	ReadRTClassesSchema();
 
 	//Read Mapped Objects Table
+	m_pStream->Seek(h.MappedObjsOffset);
+
 	m_carrayMappedObjs.SetSize(h.MappedObjsCount);
 	for (i=1; i<h.MappedObjsCount; i++)	//from 1 because indice 0 = null object reference
 	{

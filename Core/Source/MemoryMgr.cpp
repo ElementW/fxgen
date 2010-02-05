@@ -25,7 +25,7 @@
 //                   Variables
 //-----------------------------------------------------------------
 
-#ifdef _DEBUG
+#ifdef TOTO
 NDebugMemoryMgr gMemMgr;
 
 
