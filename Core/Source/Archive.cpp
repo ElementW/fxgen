@@ -117,9 +117,9 @@ bool NArchive::FinalizeSave()
 
 	//Update Header
 	udword dwEndOfRTClasses = m_pStream->Tell();
-	udword dwRTClassesNameSize = dwEndOfRTClasses - sizeof(NSFHeader);
-	h.DatasOffset				= sizeof(NSFHeader) + dwRTClassesNameSize;
-	h.MappedObjsOffset	= sizeof(NSFHeader) + dwRTClassesNameSize + dwUserDatasEndPos;
+	udword dwRTClassesSize = dwEndOfRTClasses - sizeof(NSFHeader);
+	h.DatasOffset				= sizeof(NSFHeader) + dwRTClassesSize;
+	h.MappedObjsOffset	= sizeof(NSFHeader) + dwRTClassesSize + dwUserDatasEndPos;
 
 	m_pStream->Seek(0);
 	m_pStream->PutData(&h, sizeof(NSFHeader));

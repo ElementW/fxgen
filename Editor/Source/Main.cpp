@@ -129,6 +129,9 @@ int main(int argc, char *argv[])
 	ar.PutClass(&class1);
 	ar.FinalizeSave();
 
+	stream->Close();
+
+
 	//Deserialization
 	NFileStream *streamr = new NFileStream();
 	streamr->Open("c:\\temp\\test.ar", false);
