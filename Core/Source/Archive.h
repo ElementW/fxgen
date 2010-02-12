@@ -67,11 +67,12 @@ struct NSFHeader
 //! \struct NSFFieldSchema
 //! \brief	Field schema
 //-----------------------------------------------------------------
-/*struct NSFFieldSchema
+struct NSFFieldSchema
 {
 	sbyte			sbyType;
 	char*			pszName;
-};*/
+	//value??
+};
 
 //-----------------------------------------------------------------
 //	Prototypes
@@ -120,13 +121,13 @@ public:
 	NStream* GetStream()								{ return m_pStream;					}
 	NMemoryStream* GetBufferedStream()	{ return m_pBufferedStream; }
 
+	//GetRTClassFieldFromName(const char* pszClassName, 
+
 protected:
 	//Methods
 	uword			AddUniqueRTClass(NRTClass* _pRTClass);//!< Return ID index into m_pRTClassesArray
 	NRTClass*	GetRTClassFromIdx(uword _idx);				//!< Return ID* from an m_pRTClassesArray's index
 	uword			AddUniqueMappedObjs(NObject* _pobj);	//!< Return Nobject index into m_carrayMappedObjs
-
-//	uword		AddUniqueRTFields(NRTClassFiels);
 
 	void		PutObj(NObject* _c);									//!< Write class datas to archive
 

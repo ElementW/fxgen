@@ -95,9 +95,59 @@ NObject::~NObject()
 //-----------------------------------------------------------------
 bool NObject::Save(NArchive* _s)
 {
-	//###TODO###
+	udword k;
 
 	//Save Fields
+	NRTClass* prtc = GetRTClass();
+
+	//Count Fields ###TODO### bases class
+	udword dwCount=0;
+	NFieldDesc* pfd = prtc->m_paFieldsDesc;
+	while (pfd[dwCount].byType!=0xFF)
+		dwCount++;
+
+	*_s<<dwCount;
+
+	for (k=0; k<dwCount; k++)
+	{
+		ubyte* byPtr = (((ubyte*)this) + pfd[k].dwDataOffset);
+		//Data size from type
+		byPtr = byPtr;
+		switch(pfd[k].byType)
+		{
+			case	eBool:
+				_s->PutData(byPtr ,1);
+				break;
+
+			case	eInteger:
+			case	eFloat:
+			case	eRgba:
+			case	eRefObj:	//###TOFIX#### 64 bits ptr
+				_s->PutData(byPtr ,4);
+				break;
+
+			case	eString:
+				break;
+
+			case	eIVec2:	//4*2
+			case	eFVec2:	//4*2
+				_s->PutData(byPtr ,4*2);
+				break;
+
+			case	eIVec3:	//4*3
+			case	eFVec3:	//4*3
+				_s->PutData(byPtr ,4*3);
+				break;
+
+			case	eIRect:	//4*4
+			case	eFRect:	//4*4
+				_s->PutData(byPtr ,4*4);
+				break;
+		}
+
+		
+	}
+
 
 
 	return true;
@@ -112,8 +162,22 @@ bool NObject::Load(NArchive* _l)
 {
 	//###TODO###
 
-	//Load Fields
+	//Load Fields from current schema
 	// if fields doesn't exist into current reflexion schema => we forget it
+
+	udword dwCount=0;
+	NFieldDesc* pfd = prtc->m_paFieldsDesc;
+	while (pfd[dwCount].byType!=0xFF)
+		dwCount++;
+
+	for (k=0; k<dwCount; k++)
+	{
+		//ubyte* byPtr = (((ubyte*)this) + pfd[k].dwDataOffset);
+		char* pszFieldName = pfd[k].pszName;
+
+
+
+	}
 
 	//NRTClassFields::GetFieldDescByName("nom du champ");
 
