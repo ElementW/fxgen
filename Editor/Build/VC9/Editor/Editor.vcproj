@@ -339,6 +339,14 @@
 		<Filter
 			Name="OperatorsNodes"
 			>
+			<File
+				RelativePath="..\..\..\Source\RenderOpsUI.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Source\RenderOpsUI.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\..\..\Source\CoreLibPkg.h"
