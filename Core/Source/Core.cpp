@@ -165,7 +165,7 @@ bool NObject::Load(NArchive* _l)
 	//Load Fields from current schema
 	// if fields doesn't exist into current reflexion schema => we forget it
 
-	udword dwCount=0;
+/*	udword dwCount=0;
 	NFieldDesc* pfd = prtc->m_paFieldsDesc;
 	while (pfd[dwCount].byType!=0xFF)
 		dwCount++;
@@ -174,10 +174,7 @@ bool NObject::Load(NArchive* _l)
 	{
 		//ubyte* byPtr = (((ubyte*)this) + pfd[k].dwDataOffset);
 		char* pszFieldName = pfd[k].pszName;
-
-
-
-	}
+	}*/
 
 	//NRTClassFields::GetFieldDescByName("nom du champ");
 
