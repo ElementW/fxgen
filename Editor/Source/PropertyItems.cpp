@@ -618,7 +618,7 @@ bool NUseStoredOpsProp::BeginEdit(NRect& rcItem)
 	}
 
 	//Insert Menu Items
-//	NTreeNode* pnode = NEngineOp::GetEngine()->GetRootGroup();
+//	NTreeNode* pnode = NEngineOp::GetProject()->GetRootGroup();
 //	BuildMenu(pnode);
 
 	//Display  menu

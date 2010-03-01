@@ -152,6 +152,8 @@ bool NOperatorsPage::Load(NArchive* _l)
 	//Links
 	//ComputeLinks();
 
+	//###TODO### compilation
+
 	return true;
 }
 
@@ -171,6 +173,8 @@ udword NOperatorsPage::AddOp(NOperatorNode* _pop)
 	//Recomputing links
 	//ComputeLinks();
 
+	//###TODO### compilation
+
 	return idx;
 }
 
@@ -183,10 +187,10 @@ udword NOperatorsPage::AddOp(NOperatorNode* _pop)
 //-----------------------------------------------------------------
 udword NOperatorsPage::DeleteOp(NOperatorNode* _pop)
 {
-	udword idx = 0;
-/*
+	udword idx;
+
 	//Invalidate linked operators
-	NObjectArray	carray;
+/*	NObjectArray	carray;
 	GetNextOperators(_pop, carray);
 
 	for ( udword i=0; i<carray.Count(); i++)
@@ -194,10 +198,10 @@ udword NOperatorsPage::DeleteOp(NOperatorNode* _pop)
 		NOperatorNode* pop = (NOperatorNode*)carray[i];
 		pop->m_bInvalided = true;
 		pop->m_pprevOpToProcess = null;
-	}
+	}*/
 
 	//Remove From Array
-	udword idx = m_arrayOps.Find(_pop);
+	idx = m_arrayOps.Find(_pop);
 	if (idx!=(udword)-1)
 	{
 		m_arrayOps.RemoveItem(idx);
@@ -206,7 +210,9 @@ udword NOperatorsPage::DeleteOp(NOperatorNode* _pop)
 
 	//Recomputing links
 	//ComputeLinks();
-*/
+
+	//###TODO### compilation
+
 	return idx;
 }
 
@@ -230,12 +236,12 @@ void NOperatorsPage::DeleteAllOps()
 //-----------------------------------------------------------------
 void NOperatorsPage::MoveOp(NOperatorNode* _pop, sword _x, sword _y)
 {
-/*
+
 	//Invalidate moved operator
-	_pop->m_bInvalided				= true;
+	//_pop->m_bInvalided				= true;
 
 	//Invalidate linked operators
-	NObjectArray	carray;
+	/*NObjectArray	carray;
 	GetNextOperators(_pop, carray);
 
 	for ( udword i=0; i<carray.Count(); i++)
@@ -243,15 +249,17 @@ void NOperatorsPage::MoveOp(NOperatorNode* _pop, sword _x, sword _y)
 		NOperatorNode* pop = (NOperatorNode*)carray[i];
 		pop->m_pprevOpToProcess = null;
 		pop->m_bInvalided				= true;
-	}
+	}*/
 
 	//Move Operator
 	_pop->m_wPosX = _x;
 	_pop->m_wPosY = _y;
 
+	//###TODO### compilation
+
 	//Recomputing links
-	ComputeLinks();
-*/
+	//ComputeLinks();
+
 }
 
 
@@ -301,7 +309,7 @@ NOperatorsProject::~NOperatorsProject()
 //-----------------------------------------------------------------
 //!	\brief	Static Methods that return an unique Engine Instance
 //-----------------------------------------------------------------
-NOperatorsProject*	NOperatorsProject::GetEngine()
+NOperatorsProject*	NOperatorsProject::GetProject()
 {
 /*	if (gpengineOp==null)
 		gpengineOp = new NOperatorsProject;
@@ -316,11 +324,20 @@ NOperatorsProject*	NOperatorsProject::GetEngine()
 //-----------------------------------------------------------------
 void NOperatorsProject::Clear()
 {
-	m_bitmapsAlloc.Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+//	m_bitmapsAlloc.Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
 
 	if (m_pRootGroup)		delete m_pRootGroup;
 	m_pRootGroup = new NTreeNode;
 	m_pRootGroup->SetName("Root");
+
+	NTreeNode* pNewGrpNode = NNEW(NTreeNode);
+	pNewGrpNode->SetName("Group");
+	m_pRootGroup->AddSon(pNewGrpNode);
+
+	NOperatorsPage* ppage = NNEW(NOperatorsPage);
+	//ppage->SetName("Page");
+	pNewGrpNode->GetObjsArray().AddItem(ppage);
+
 }
 
 
@@ -381,7 +398,6 @@ void NOperatorsProject::_InvalidateAllOps(NTreeNode* _pnode)
 
 }
 
-
 //-----------------------------------------------------------------
 //!	\brief	Return root operator from an operator
 //!	\param	_pop operator
@@ -411,31 +427,6 @@ void NOperatorsProject::GetBitmap(NObject** _ppobj, ubyte _byObjType)
 {
 	m_bitmapsAlloc.GetInstance(_ppobj, _byObjType);
 }
-
-//-----------------------------------------------------------------
-//!	\brief	Change a Channel value
-//!	\param	_byChannel	channel idx
-//!	\param	_etype			type of value
-//!	\param	_value			value
-//-----------------------------------------------------------------
-/*void NOperatorsProject::SetChannelValue(ubyte _byChannel, NVarValue& _value)
-{
-//	if (_byChannel<MAX_CHANNELS)
-//		memcpy(&m_achannels[_byChannel], &_value, sizeof(NVarValue));
-}*/
-
-//-----------------------------------------------------------------
-//!	\brief	Return a Channel value
-//!	\param	_byChannel	channel idx
-//!	\param	_etype			type of value
-//!	\param	_value			value
-//-----------------------------------------------------------------
-/*void NOperatorsProject::GetChannelValue(ubyte _byChannel, NVarValue& _outValue)
-{
-//	if (_byChannel<MAX_CHANNELS)
-//		memcpy(&_outValue, &m_achannels[_byChannel], sizeof(NVarValue));
-}*/
-
 
 //-----------------------------------------------------------------
 //!	\brief	Load a project from a file

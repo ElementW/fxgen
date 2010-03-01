@@ -176,7 +176,7 @@ bool NEditorGUI::AnnoyUserProjectMayBeLost()
 		return true;
 	}
 
-	NTreeNode* prootNode = NEngineOp::GetEngine()->GetRootGroup();
+	NTreeNode* prootNode = NEngineOp::GetProject()->GetRootGroup();
 
 	udword dwCount = prootNode->GetSonsCount();
 
@@ -195,32 +195,37 @@ bool NEditorGUI::AnnoyUserProjectMayBeLost()
 //-----------------------------------------------------------------
 void NEditorGUI::OnNewProject()
 {
-/*
-	NTreeNode* prootNode = NEngineOp::GetEngine()->GetRootGroup();
-	if(!AnnoyUserProjectMayBeLost())
-		return;
+//	NTreeNode* prootNode = NEngineOp::GetProject()->GetRootGroup();
+//	if(!AnnoyUserProjectMayBeLost())
+//		return;
 
 	m_popMarkedShow = null;
 	m_bExecuteLocked = true;
 	projectname = "";
 
 	//New project
-	NEngineOp::GetEngine()->Clear();
+//	NEngineOp::GetProject()->Clear();
 
 	//Create empty project
-	prootNode = NEngineOp::GetEngine()->GetRootGroup();
+	//prootNode = NEngineOp::GetProject()->GetRootGroup();
 
-	NTreeNode* pNewGrpNode = NNEW(NTreeNode);
+/*	NTreeNode* pNewGrpNode = NNEW(NTreeNode);
 	pNewGrpNode->SetName("Group");
 	prootNode->AddSon(pNewGrpNode);
 
 	NOperatorsPage* ppage = NNEW(NOperatorsPage);
 	ppage->SetName("Page");
-	pNewGrpNode->GetObjsArray().AddItem(ppage);
+	pNewGrpNode->GetObjsArray().AddItem(ppage);*/
 
+
+	//Clear project
+	if (m_pcurProject==null)
+		m_pcurProject = new NOperatorsProject();
+
+	m_pcurProject->Clear();
 
 	//Display Projects's Pages
-	m_pprojectwnd->DisplayOperatorsProject(NEngineOp::GetEngine());
+	m_pprojectwnd->DisplayOperatorsProject(m_pcurProject);
 	m_pprojectwnd->SelectFirstPage();
 
 	//m_opswnd->DisplayOperatorsPage(null);
@@ -231,7 +236,7 @@ void NEditorGUI::OnNewProject()
 	SetText(strTitle.Buffer());
 
 	m_bExecuteLocked = false;
-*/
+
 }
 
 void NEditorGUI::LoadProject(NString str)
@@ -252,12 +257,12 @@ void NEditorGUI::LoadProject(NString str)
 	m_popMarkedShow = null;
 	m_bExecuteLocked = true;
 
-	NEngineOp::GetEngine()->Clear();
+	NEngineOp::GetProject()->Clear();
 
-	m_pprojectwnd->DisplayOperatorsProject(NEngineOp::GetEngine());
+	m_pprojectwnd->DisplayOperatorsProject(NEngineOp::GetProject());
 	m_pprojectwnd->SelectFirstPage();
 
-	if (NEngineOp::GetEngine()->LoadProject(str.Buffer()))
+	if (NEngineOp::GetProject()->LoadProject(str.Buffer()))
 	{
 		projectname = str;
 		NString strTitle(CAPTION);
@@ -265,7 +270,7 @@ void NEditorGUI::LoadProject(NString str)
 		SetText(strTitle.Buffer());
 
 		//###TEST###
-		//NEngineOp::GetEngine()->ProcessOperators(0.0, staticProcess);
+		//NEngineOp::GetProject()->ProcessOperators(0.0, staticProcess);
 
 	} else {
 		//Error Message
@@ -275,7 +280,7 @@ void NEditorGUI::LoadProject(NString str)
 	}
 
 	//Display Projects's Pages
-	m_pprojectwnd->DisplayOperatorsProject(NEngineOp::GetEngine());
+	m_pprojectwnd->DisplayOperatorsProject(NEngineOp::GetProject());
 	m_pprojectwnd->SelectFirstPage();
 
 	m_bExecuteLocked = false;
@@ -312,7 +317,7 @@ void NEditorGUI::SaveProject(NString path)
 
 	m_bExecuteLocked = true;
 
-	if (NEngineOp::GetEngine()->SaveProject(path.Buffer()))
+	if (NEngineOp::GetProject()->SaveProject(path.Buffer()))
 	{
 		projectname = path;
 		NString strTitle(CAPTION);
@@ -353,7 +358,7 @@ NOperatorNode* NEditorGUI::Execute(float _ftime)
 		//m_wndProgress.TrackPopup(NPoint(256,256), RGBA(240,100,0,190));
 
 		//Process operators
-		NEngineOp::GetEngine()->Execute(_ftime, m_popMarkedShow, m_fDetailFactor, staticOperatorsProcessCB);
+		NEngineOp::GetProject()->Execute(_ftime, m_popMarkedShow, m_fDetailFactor, staticOperatorsProcessCB);
 
 		//Rendering
 		EVT_EXECUTE(EVT_RENDER, (udword)m_popMarkedShow, (udword)&_ftime);
@@ -480,48 +485,48 @@ void NEditorGUI::OnOptionMenuClick(NObject* _psender)
 	{
 		case MENU_DETAILLOW:
 			m_bExecuteLocked = true;
-			NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-			NEngineOp::GetEngine()->InvalidateAllOps();
+			NEngineOp::GetProject()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			NEngineOp::GetProject()->InvalidateAllOps();
 			m_fDetailFactor = 0.5f;
 			m_bExecuteLocked = false;
 			break;
 
 		case MENU_DETAILNORMAL:
 			m_bExecuteLocked = true;
-			NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-			NEngineOp::GetEngine()->InvalidateAllOps();
+			NEngineOp::GetProject()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			NEngineOp::GetProject()->InvalidateAllOps();
 			m_fDetailFactor = 1.0f;
 			m_bExecuteLocked = false;
 			break;
 
 		case MENU_DETAILHIGH:
 			m_bExecuteLocked = true;
-			NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-			NEngineOp::GetEngine()->InvalidateAllOps();
+			NEngineOp::GetProject()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			NEngineOp::GetProject()->InvalidateAllOps();
 			m_fDetailFactor = 2.0f;
 			m_bExecuteLocked = false;
 			break;
 
 		//case MENU_DETAILFINE:
 		//	m_bExecuteLocked = true;
-		//	NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-		//	NEngineOp::GetEngine()->InvalidateAllOps();
+		//	NEngineOp::GetProject()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+		//	NEngineOp::GetProject()->InvalidateAllOps();
 		//	m_fDetailFactor = 4.0f;
 		//	m_bExecuteLocked = false;
 		//	break;
 
 		//case MENU_DETAILREALISTIC:
 		//	m_bExecuteLocked = true;
-		//	NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-		//	NEngineOp::GetEngine()->InvalidateAllOps();
+		//	NEngineOp::GetProject()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+		//	NEngineOp::GetProject()->InvalidateAllOps();
 		//	m_fDetailFactor = 8.0f;
 		//	m_bExecuteLocked = false;
 		//	break;
 
 		//case MENU_DETAILULTRA:
 		//	m_bExecuteLocked = true;
-		//	NEngineOp::GetEngine()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-		//	NEngineOp::GetEngine()->InvalidateAllOps();
+		//	NEngineOp::GetProject()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+		//	NEngineOp::GetProject()->InvalidateAllOps();
 		//	m_fDetailFactor = 16.0f;
 		//	m_bExecuteLocked = false;
 		//	break;
