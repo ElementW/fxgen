@@ -38,7 +38,7 @@
 //!	\class		NFlatOp
 //!	\brief		Flat rendering
 //-----------------------------------------------------------------
-class FXGEN_API NFlatOp : public NOperatorNode
+class  NFlatOp : public NOperatorNode
 {
 public:
 	FDECLARE_CLASS();
@@ -56,7 +56,7 @@ public:
 //!	\class		NCloudOp
 //!	\brief		Render clouds
 //-----------------------------------------------------------------
-class FXGEN_API NCloudOp : public NOperatorNode
+class  NCloudOp : public NOperatorNode
 {
 public:
 	FDECLARE_CLASS();
@@ -74,7 +74,7 @@ public:
 //!	\class		NGradientOp
 //!	\brief		Four corners gradient rendering
 //-----------------------------------------------------------------
-class FXGEN_API NGradientOp : public NOperatorNode
+class  NGradientOp : public NOperatorNode
 {
 public:
 	FDECLARE_CLASS();
@@ -92,7 +92,7 @@ public:
 //!	\class		NCellOp
 //!	\brief		Render cells
 //-----------------------------------------------------------------
-class FXGEN_API NCellOp : public NOperatorNode
+class  NCellOp : public NOperatorNode
 {
 public:
 	FDECLARE_CLASS();
@@ -110,7 +110,7 @@ public:
 //!	\class		NNoiseOp
 //!	\brief		Render noise
 //-----------------------------------------------------------------
-class FXGEN_API NNoiseOp : public NOperatorNode
+class  NNoiseOp : public NOperatorNode
 {
 public:
 	FDECLARE_CLASS();

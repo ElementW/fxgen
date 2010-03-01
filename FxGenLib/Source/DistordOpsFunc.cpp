@@ -283,7 +283,7 @@ udword NVortexOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDetai
 	if (m_byInputs!=1)              return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetProject()->GetBitmap(&m_pObj);
 
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -427,7 +427,7 @@ udword NLookupOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDetai
 	float scaleH = th / 256.0f;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetProject()->GetBitmap(&m_pObj);
 
 	//Set Texture size
 	NBitmap* pDst = (NBitmap*)m_pObj;

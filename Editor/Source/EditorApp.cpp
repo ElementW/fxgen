@@ -88,6 +88,7 @@ bool NFxGenApp::Init()
 //-----------------------------------------------------------------
 //!	\brief	Run application
 //!	\return	True if success
+//!	\note	Using SFML
 //-----------------------------------------------------------------
 void NFxGenApp::Run()
 {
@@ -143,7 +144,7 @@ void NFxGenApp::Run()
 				pt.y=m_appWnd.GetInput().GetMouseY();
 
 				float Time = clock.GetElapsedTime() * 1000.0f;
-				if (Time<250.0f)	//ms ###TODO## Get system Pref
+				if (Time<250.0f)	//ms ###TODO## Get system Pref DoubleClick
 				{
 					pgui->ProcessMsgs_MouseButtonDblClick(pt, dwBut);
 
@@ -195,25 +196,6 @@ void NFxGenApp::Run()
 				pgui->ProcessMsgs_OnSize(Event.Size.Width, Event.Size.Height);
 
     }
-
-		//Double Click TimeOut
-		/*if (bDblClickStarted)
-		{
-			float Time = clock.GetElapsedTime() * 1000.0f;
-			if (Time>150.0f)	//50ms
-			{
-				pgui->ProcessMsgs_MouseButtonDown(ptDblClick, dwDblClickButton);
-
-				bDblClickStarted = false;
-
-				if (bMouseReleased)
-				{
-					pgui->ProcessMsgs_MouseButtonUp(ptDblClick, dwDblClickButton);
-				}
-			}
-
-		}*/
-
 
 		//Update Windows drawing
 		pgui->Update();

@@ -93,11 +93,12 @@ public:
 	virtual	bool Save(NArchive* _s);	//!< Save object
 	virtual	bool Load(NArchive* _l);	//!< Load object
 
-	virtual const char*	GetName()								{ return "Page";}	//!< Return object name
+	virtual const char*	GetName()							{ return "Page";}	//!< Return object name
 
-	udword			GetOpsCount()							{ return m_arrayOps.Count();					}
+	udword					GetOpsCount()							{ return m_arrayOps.Count();					}
 	NOperatorNode*	GetOpFromIdx(udword _idx)	{ return (NOperatorNode*)m_arrayOps[_idx];}
 
+	//Operators Methods
 	udword			AddOp(NOperatorNode* _pop);
 	void				DeleteAllOps();
 	udword			DeleteOp(NOperatorNode* _pop);
@@ -106,9 +107,9 @@ public:
 
 	//Methodes de recherche
 	//void GetOpsFromClassName(const char* _pszClassName, NObjectArray& _carray);
-
 	NOperatorNode* GetFinalOpFrom(NOperatorNode* _pop);
 
+protected:
 	//Datas	GUI
 	NObjectArray	m_arrayOps;						//!< Operators array
 };
@@ -125,9 +126,9 @@ public:
 	virtual ~NOperatorsProject();
 
 	//Get unique Engine Instance
-	static	NOperatorsProject* GetEngine();
+	static	NOperatorsProject* GetProject();
 
-	//API Methods
+	//Methods
 	void	Clear();
 	bool	LoadProject(const char* _pszFullFileName);
 
