@@ -21,8 +21,6 @@
 //                   Includes
 //-----------------------------------------------------------------
 #include "CoreLibPkg.h"
-
-#include "ViewportsCtrl.h"
 #include "EditorApp.h"
 
 //-----------------------------------------------------------------
@@ -34,7 +32,7 @@ class NOperatorNode;
 //!	\class		NViewportsWnd
 //!	\brief		Window for viewport
 //-----------------------------------------------------------------
-class NViewportsWnd :	public NViewportsCtrl
+class NViewportsWnd :	public NGUIWnd
 {
 public:
 	NViewportsWnd(void);
@@ -53,15 +51,17 @@ protected:
 	virtual void	OnLButtonDown(NPoint pos);
 	virtual void	OnLButtonUp	(NPoint pos);
 	virtual void	OnRButtonDown(NPoint pos);
+	virtual void	OnSize();
 
 	//Events
 	EVT_DECLARE_HANDLER(OnOPDeleting);
 	EVT_DECLARE_HANDLER(OnRender);
 
 	//Methods
-	void DisplayTexture(NObject* pobj);
+	void	Update();
+	void	DisplayTexture(NObject* pobj);
 	udword CreateTexture(udword _w, udword _h);
-	void DeleteTexture(udword _dwTextID);
+	void	DeleteTexture(udword _dwTextID);
   //void CopyPixelsToTexture(udword _dwtexid, udword _w, udword _h, NRGBA* _ppixels);
 
 	// Messages Notify

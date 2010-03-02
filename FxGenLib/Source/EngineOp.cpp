@@ -254,7 +254,7 @@ void NEngineOp::_ProcessSequence(float _ftime, SOpsSequence* _psequence, float _
 		//NOperatorNode* prefop = pseq->popStart;
 		if (pseq->byEtat==0)	//Invalid	//###TODO### wait if Compute in progress
 		{
-			//m_nCurContext++;	//###TODO### MultiThread here :-) see openML ...
+			//m_nCurContext++;	//###TODO### MultiThread here :-) see openCL ...
 			_ProcessSequence(_ftime, pseq, _fDetailFactor);
 			pseq->byEtat = 3;	//Computed
 			//m_nCurContext--;

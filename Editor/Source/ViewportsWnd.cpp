@@ -70,7 +70,14 @@ NViewportsWnd::~NViewportsWnd(void)
 //-----------------------------------------------------------------
 bool NViewportsWnd::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 {
-	NViewportsCtrl::Create(name, rect, parent);
+	//Call Base class
+	NWNDCREATE			wc;
+	wc.dwId					= 1;
+	wc.pszText			= const_cast<char*>(name);
+	wc.pwndParent		= parent;
+	wc.rcRect				= rect;
+	wc.dwStyle			= NWS_VISIBLE;
+	NGUIWnd::Create(wc);
 
 	//Create context menu
 	m_wndMenu.Create("Viewport:", this);
@@ -522,4 +529,21 @@ void NViewportsWnd::OnMenuItemClick(NObject* _psender)
 		}*/
 	}
 
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Update viewport
+//-----------------------------------------------------------------
+void NViewportsWnd::Update()
+{
+	RedrawWindow();
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Resize viewport
+//-----------------------------------------------------------------
+void NViewportsWnd::OnSize()
+{
+	//Redraw
+	Update();
 }

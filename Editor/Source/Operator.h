@@ -20,8 +20,8 @@
 //-----------------------------------------------------------------
 //                   Includes
 //-----------------------------------------------------------------
-//#include "CoreLib.h"
 #include "CoreLibPkg.h"
+#include "FxGenLibPkg.h"
 
 #ifdef GetUserName
 #undef GetUserName
@@ -34,7 +34,6 @@
 //-----------------------------------------------------------------
 //                   Defines
 //-----------------------------------------------------------------
-
 #define	OBJRES_TYPE_INTERMEDIATE	1		//!< Intermediate allocated bitmaps
 #define	OBJRES_TYPE_STORED				2		//!< Stored bitmaps
 #define	OBJRES_TYPE_FINALSTORED		4		//!< Final Stored bitmaps
@@ -63,13 +62,18 @@ public:
 	virtual const char* GetCategory()		{ return "Misc"; }	//!< Operator's Category
   virtual const char* GetGUIName()		{ return null; }		//!< Operator's User Name
 
+	//Editing
+	//###TODO###
+	//	MouseEvent
+	//	KeyEvent
+
 	//Serialization
 	virtual	bool Save(NArchive* _s);	//!< Save object
 	virtual	bool Load(NArchive* _l);	//!< Load object
 
 	//Datas GUI
-	sword	m_wPosX, m_wPosY;			//!< Position (grid unit)
-	sword	m_wWidth;							//!< Width (grid unit)
+	udword	m_dwPosX, m_dwPosY;			//!< Position (grid unit)
+	udword	m_dwWidth;							//!< Width (grid unit)
 	bool m_bError;
 	bool m_bInvalided;
 	float m_fProcessedTime;
@@ -110,6 +114,9 @@ public:
 	NOperatorNode* GetFinalOpFrom(NOperatorNode* _pop);
 
 protected:
+	//Methods
+	void Compile();
+
 	//Datas	GUI
 	NObjectArray	m_arrayOps;						//!< Operators array
 };
