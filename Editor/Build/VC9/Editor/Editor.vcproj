@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\Core;..\..\..\..\Externals\FreeType\Include;&quot;..\..\..\..\Externals\SFML-1.5\include&quot;"
+				AdditionalIncludeDirectories="..\..\..\..\Core;..\..\..\..\Externals\FreeType\Include;&quot;..\..\..\..\Externals\SFML-1.5\include&quot;;..\..\..\..\FxGenLib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;CORELIB_EXPORT_DLL_LIBRARY_IMPORT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -213,16 +213,8 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="UI Widgets"
+			Name="Editor UI Widgets"
 			>
-			<File
-				RelativePath="..\..\..\Source\OperatorsCtrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\OperatorsCtrl.h"
-				>
-			</File>
 			<File
 				RelativePath="..\..\..\Source\OperatorsWnd.cpp"
 				>
@@ -239,6 +231,30 @@
 				RelativePath="..\..\..\Source\ProjectWnd.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\Source\ViewportsWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Source\ViewportsWnd.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="OperatorsNodes"
+			>
+			<File
+				RelativePath="..\..\..\Source\RenderOpsUI.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Source\RenderOpsUI.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Base UI Widgets"
+			>
 			<File
 				RelativePath="..\..\..\Source\PropertiesCtrl.cpp"
 				>
@@ -319,37 +335,13 @@
 				RelativePath="..\..\..\Source\TreeNodeCtrl.h"
 				>
 			</File>
-			<File
-				RelativePath="..\..\..\Source\ViewportsCtrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\ViewportsCtrl.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\ViewportsWnd.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\ViewportsWnd.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="OperatorsNodes"
-			>
-			<File
-				RelativePath="..\..\..\Source\RenderOpsUI.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Source\RenderOpsUI.h"
-				>
-			</File>
 		</Filter>
 		<File
 			RelativePath="..\..\..\Source\CoreLibPkg.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\Source\FxGenLibPkg.h"
 			>
 		</File>
 	</Files>

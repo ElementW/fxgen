@@ -58,10 +58,10 @@ NOperatorNode::~NOperatorNode()
 //-----------------------------------------------------------------
 NObject* NOperatorNode::Duplicate()
 {
-	NOperatorNode* pobj			= (NOperatorNode*)NObject::Duplicate();
-	pobj->m_wPosX				= m_wPosX;
-	pobj->m_wPosY				= m_wPosY;
-	pobj->m_wWidth			= m_wWidth;
+	NOperatorNode* pobj	= (NOperatorNode*)NObject::Duplicate();
+	pobj->m_dwPosX			= m_dwPosX;
+	pobj->m_dwPosY			= m_dwPosY;
+	pobj->m_dwWidth			= m_dwWidth;
 	return pobj;
 }
 
@@ -74,9 +74,9 @@ NObject* NOperatorNode::Duplicate()
 bool NOperatorNode::Save(NArchive* _s)
 {
 	NObject::Save(_s);
-	*_s<<m_wPosX;
-	*_s<<m_wPosY;
-	*_s<<m_wWidth;
+	*_s<<m_dwPosX;
+	*_s<<m_dwPosY;
+	*_s<<m_dwWidth;
 	return true;
 }
 
@@ -88,9 +88,9 @@ bool NOperatorNode::Save(NArchive* _s)
 bool NOperatorNode::Load(NArchive* _l)
 {
 	NObject::Load(_l);
-	*_l>>m_wPosX;
-	*_l>>m_wPosY;
-	*_l>>m_wWidth;
+	*_l>>m_dwPosX;
+	*_l>>m_dwPosY;
+	*_l>>m_dwWidth;
 	return true;
 }
 
@@ -149,10 +149,8 @@ bool NOperatorsPage::Load(NArchive* _l)
 	if (!m_arrayOps.Load(_l))
 		return false;
 
-	//Links
-	//ComputeLinks();
-
-	//###TODO### compilation
+	//Compilation
+	Compile();
 
 	return true;
 }
@@ -170,10 +168,8 @@ udword NOperatorsPage::AddOp(NOperatorNode* _pop)
 
 	//_pop->m_bInvalided = true;
 
-	//Recomputing links
-	//ComputeLinks();
-
-	//###TODO### compilation
+	//Compilation
+	Compile();
 
 	return idx;
 }
@@ -208,10 +204,8 @@ udword NOperatorsPage::DeleteOp(NOperatorNode* _pop)
 		delete _pop;
 	}
 
-	//Recomputing links
-	//ComputeLinks();
-
-	//###TODO### compilation
+	//Compilation
+	Compile();
 
 	return idx;
 }
@@ -252,17 +246,13 @@ void NOperatorsPage::MoveOp(NOperatorNode* _pop, sword _x, sword _y)
 	}*/
 
 	//Move Operator
-	_pop->m_wPosX = _x;
-	_pop->m_wPosY = _y;
+	_pop->m_dwPosX = _x;
+	_pop->m_dwPosY = _y;
 
-	//###TODO### compilation
-
-	//Recomputing links
-	//ComputeLinks();
+	//Compilation
+	Compile();
 
 }
-
-
 
 //-----------------------------------------------------------------
 //!	\brief	Invalidate all operators to force re-processing
@@ -277,6 +267,40 @@ void NOperatorsPage::InvalidateAllOps()
 	}*/
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Page compilation
+//-----------------------------------------------------------------
+void NOperatorsPage::Compile()
+{
+	udword dwCount = m_arrayOps.Count();
+	bool bIncremential=false;
+
+	//Make operators desc
+	SOperatorDesc* paopsDesc = (SOperatorDesc*)NNEWARRAY(SOperatorDesc, dwCount);
+
+/*	for (udword i=0; i<dwCount; i++)
+	{
+		NOperatorNode* pccurOP = (NOperatorNode*)m_arrayOps[i];
+		paopsDesc[i]->
+
+	udword	x, y, w;			//!< Position x and y in the graph and width
+	char*		pszGroup;			//!< Group name used for incremental compilation (could be texture name)
+	char*		pszIFnc;			//!< Operator fonction interface name
+	char*		pszToLoad;		//!< Operator to Load name
+	char*		pszStoredName;//!< Operator store name
+	udword	adwParams[MAX_PARAMS];	//!< Operator parameters
+	ubyte		byParamsCount;
+
+
+	}
+
+	//Start graph compilation
+	SCompiledOp stCompiled;
+
+	NCompilerOp comp;
+	comp.Compile(&stCompiled, paopsDesc, dwCount, bIncremential);
+*/
+}
 
 
 
