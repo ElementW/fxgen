@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib libfreetype.lib sfml-system-d.lib sfml-window-d.lib sfml-main-d.lib"
+				AdditionalDependencies="opengl32.lib freetype2312.lib sfml-system-d.lib sfml-window-d.lib sfml-main-d.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_D.dll"
 				LinkIncremental="0"
 				AdditionalLibraryDirectories="&quot;..\..\..\Externals\SFML-1.5\lib\vc2008&quot;;..\..\..\Externals\FreeType\Lib"

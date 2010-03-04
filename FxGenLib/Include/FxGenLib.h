@@ -94,7 +94,7 @@ BEGIN_FG_NAMESPACE
 //!	\class	NErrors Core.h
 //!	\brief	Errors manager
 //-----------------------------------------------------------------
-class FXGEN_API NErrors
+/*class FXGEN_API NErrors
 {
 public:
 	NErrors();
@@ -109,7 +109,7 @@ protected:
 	char* m_pszErrors;
 };
 extern FXGEN_API NErrors* gGetErrors();
-
+*/
 //-----------------------------------------------------------------
 //	Includes
 //-----------------------------------------------------------------
