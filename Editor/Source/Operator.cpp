@@ -276,7 +276,7 @@ void NOperatorsPage::Compile()
 	bool bIncremential=false;
 
 	//Make operators desc
-	SOperatorDesc* paopsDesc = (SOperatorDesc*)NNEWARRAY(SOperatorDesc, dwCount);
+//	SOperatorDesc* paopsDesc = (SOperatorDesc*)NNEWARRAY(SOperatorDesc, dwCount);
 
 /*	for (udword i=0; i<dwCount; i++)
 	{
