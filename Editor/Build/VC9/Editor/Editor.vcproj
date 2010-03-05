@@ -200,10 +200,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Source\Main.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\Source\Operator.cpp"
 				>
 			</File>
@@ -342,6 +338,10 @@
 		</File>
 		<File
 			RelativePath="..\..\..\Source\FxGenLibPkg.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\Source\Main.cpp"
 			>
 		</File>
 	</Files>
