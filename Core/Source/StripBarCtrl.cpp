@@ -95,7 +95,8 @@ void NStripBarCtrl::OnPaint()
   rc.Deflate(1,1);
   gfx.Draw3dRect(rc, GetGUISubSystem()->GetLightColor(), GetGUISubSystem()->GetDarkColor());
   rc.Deflate(1,1);
-  gfx.FillSolidRect(rc, GetGUISubSystem()->GetBarColor());
+//  gfx.FillSolidRect(rc, GetGUISubSystem()->GetBarColor());
+	gfx.GradientVRect(rc, GetGUISubSystem()->GetBarColor(), GetGUISubSystem()->GetDarkColor());
 
 	//TRACE("%s %dx%d-%dx%d %d\n", m_cstrText, m_rcWnd.left, m_rcWnd.top, m_rcWnd.right, m_rcWnd.bottom, m_dwStyle);
 }

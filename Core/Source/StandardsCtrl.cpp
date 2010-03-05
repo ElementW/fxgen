@@ -82,7 +82,7 @@ void NTextCtrl::OnPaint()
 	NRect rc = GetClientRect();
 
 	N2DPainter dc(this);
-  dc.FillSolidRect(rc, GetGUISubSystem()->GetBarColor());
+  //dc.FillSolidRect(rc, GetGUISubSystem()->GetBarColor());
   dc.DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
 
 }

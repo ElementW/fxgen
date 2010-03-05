@@ -66,7 +66,7 @@ NGUISubSystem::NGUISubSystem()
 //-----------------------------------------------------------------
 NGUISubSystem::~NGUISubSystem()
 {
-	//if (m_pMainWnd)	NDELETE(m_pMainWnd, NGUIWnd);
+	if (m_pMainWnd)	NDELETE(m_pMainWnd, NGUIWnd);
 }
 
 //-----------------------------------------------------------------

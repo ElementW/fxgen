@@ -53,13 +53,11 @@ NFxGenApp::NFxGenApp()
 //-----------------------------------------------------------------
 NFxGenApp::~NFxGenApp()
 {
-	NGUIWnd* pwnd = GetGUISubSystem()->GetMainWnd();
-	if (pwnd)
-		NDELETE(pwnd, NGUIWnd);
-
 	if (g_pceventsMgr)
+	{
 		NDELETE(g_pceventsMgr, NEventsMgr);
-
+		g_pceventsMgr = null;
+	}
 
 }
 
@@ -79,6 +77,8 @@ bool NFxGenApp::Init()
 	//Create Main Frame Window
 	NEditorGUI* frame = NNEW( NEditorGUI );
 	pgui->SetMainWnd(frame);
+
+	NGUIWnd* pwnd = GetGUISubSystem()->GetMainWnd();
 
 	frame->Create(CAPTION, NRect(0,0,WIDTH,HEIGHT));	//###TOFIX### not reel client size (see wnd caption...)
 
@@ -216,6 +216,10 @@ void NFxGenApp::Run()
 //-----------------------------------------------------------------
 bool NFxGenApp::Exit()
 {
+	NGUIWnd* pwnd = GetGUISubSystem()->GetMainWnd();
+	if (pwnd)
+		NDELETE(pwnd, NGUIWnd);
+
 	GetGUISubSystem()->ShutDown();
 	m_appWnd.Close();
 

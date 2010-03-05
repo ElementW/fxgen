@@ -276,7 +276,7 @@ public:
 	void NotifyWindowDeletion(NGUIWnd* _pWnd);
 
   //Colors
-  NColor GetBarColor()    { return 0xFF686868; }
+  NColor GetBarColor()    { return 0xFF58717A; }	//0xFF686868
   NColor GetFaceColor()   { return 0xFF727272; }
   NColor GetDarkColor()   { return 0xFF474747; }
   NColor GetLightColor()  { return 0xFF8b8b8b; }
