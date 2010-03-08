@@ -19,6 +19,7 @@
 //                   Includes
 //-----------------------------------------------------------------
 #include "Operator.h"
+#include "FxGenLibPkg.h"
 
 #ifdef __GNUC__
 //#include "gcccompat/gcccompat.h"
@@ -276,20 +277,29 @@ void NOperatorsPage::Compile()
 	bool bIncremential=false;
 
 	//Make operators desc
-//	SOperatorDesc* paopsDesc = (SOperatorDesc*)NNEWARRAY(SOperatorDesc, dwCount);
+	SOperatorDesc* paopsDesc = (SOperatorDesc*)NNEWARRAY(SOperatorDesc, dwCount);
+	NMemFill(paopsDesc, 0, sizeof(SOperatorDesc*) * dwCount);
 
-/*	for (udword i=0; i<dwCount; i++)
+	for (udword i=0; i<dwCount; i++)
 	{
 		NOperatorNode* pccurOP = (NOperatorNode*)m_arrayOps[i];
-		paopsDesc[i]->
+		paopsDesc[i].x = pccurOP->m_dwPosX;
+		paopsDesc[i].y = pccurOP->m_dwPosY;
+		paopsDesc[i].w = pccurOP->m_dwWidth;
 
-	udword	x, y, w;			//!< Position x and y in the graph and width
+		paopsDesc[i].pszGroup = GetName();					//Page name
+		paopsDesc[i].pszIFnc	= pccurOP->GetName();	//Function Handler
+
+		paopsDesc[i].pszToLoad			= "";
+		paopsDesc[i].pszStoredName	= "";
+
+	/*udword	x, y, w;			//!< Position x and y in the graph and width
 	char*		pszGroup;			//!< Group name used for incremental compilation (could be texture name)
 	char*		pszIFnc;			//!< Operator fonction interface name
 	char*		pszToLoad;		//!< Operator to Load name
 	char*		pszStoredName;//!< Operator store name
 	udword	adwParams[MAX_PARAMS];	//!< Operator parameters
-	ubyte		byParamsCount;
+	ubyte		byParamsCount;*/
 
 
 	}
@@ -299,7 +309,7 @@ void NOperatorsPage::Compile()
 
 	NCompilerOp comp;
 	comp.Compile(&stCompiled, paopsDesc, dwCount, bIncremential);
-*/
+
 }
 
 

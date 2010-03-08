@@ -38,6 +38,13 @@
 //!	\class		NFlatOp
 //!	\brief		Flat rendering
 //-----------------------------------------------------------------
+/*struct SFlatParams
+{
+	ubyte wpow;
+	ubyte hpow;
+	NRGBA color;
+};*/
+
 class  NFlatOp : public NOperatorNode
 {
 public:
@@ -47,9 +54,11 @@ public:
 
 	//Methods
 	virtual	udword	GetColor()		{ return 0x009696c0;	}
-	virtual const char*		GetName()			{ return "Flat"; }			//!< Operator's Name
-	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
+	virtual const char*		GetName()				{ return "Flat"; }			//!< Operator's Name
+	virtual const char*		GetCategory()		{ return "Render"; }	//!< Operator's Category
 
+	//Params
+	//SFlatParams m_params;
 };
 
 //-----------------------------------------------------------------
@@ -68,6 +77,8 @@ public:
 	virtual const char*		GetName()			{ return "Cloud"; }		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
+	//Params
+	//SCloudParams	m_params;
 };
 
 //-----------------------------------------------------------------
@@ -86,6 +97,8 @@ public:
 	virtual const char*		GetName()			{ return "Gradient"; }	//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Render"; }		//!< Operator's Category
 
+	//Params
+	//SGradientParams	m_params;
 };
 
 //-----------------------------------------------------------------
@@ -104,6 +117,8 @@ public:
 	virtual const char*		GetName()			{ return "Cell"; }		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
+	//Params
+	//SCellParams	m_params;
 };
 
 //-----------------------------------------------------------------
@@ -122,6 +137,8 @@ public:
 	virtual const char*		GetName()			{ return "Noise"; }		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
+	//Params
+	//SNoiseParams	m_params;
 };
 
 #endif //RENDEROPSUI_H

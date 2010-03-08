@@ -401,9 +401,9 @@ void NViewportsWnd::OnPaint()
 		//Texte
 		//dc.FillSolidRect(rc, RGBA(255,115,115,115));
     if (m_pcurOp==null)
-      dc.DrawString("Select an operator by double clicking on it", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(200,255,200,255) );
+      dc.DrawString("Select an operator by double clicking on it", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 		else
-      dc.DrawString("Invalid links !", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(200,255,200,255) );
+      dc.DrawString("Invalid links !", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 
 	////////////////////////////////////////
 	//Display operator
