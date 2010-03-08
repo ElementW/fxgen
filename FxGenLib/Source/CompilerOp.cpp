@@ -310,10 +310,10 @@ void NCompilerOp::ComputeOpsSequences(SCompiledOp* _inoutCompOps)
 
 				break;
 			}
-		} while (pEndOP->m_pnextOpToProcess);
+		} while (pEndOP && pEndOP->m_pnextOpToProcess);
 
 		//Set Sequence Name For Debug
-		if (pEndOP->pszStoredName && strlen(pEndOP->pszStoredName)!=0)
+		if (pEndOP && pEndOP->pszStoredName && strlen(pEndOP->pszStoredName)!=0)
 			strcpy(pstSeq->szName, pEndOP->pszStoredName);
 		else
 			strcpy(pstSeq->szName, "Not Stored!");

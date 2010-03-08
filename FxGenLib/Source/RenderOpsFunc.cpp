@@ -32,20 +32,29 @@
 //							NFlatOp implementation
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void  NFlatOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _color)
+struct SFlatParams
 {
-	SResource* pDst = _state->apLayers[_state->pcurCall->byDepth];
+	ubyte wpow;
+	ubyte hpow;
+	NRGBA color;
+};
+
+void  NFlatOp_Process(SEngineState* _state, void* _params)
+{
+	SFlatParams* p = (SFlatParams*)_params;
+
+	SResource* pDst = _state->apResourcesLayers[_state->pcurCall->byDepth];
 
 	//Set Bitmap Size
-	udword w=(udword) (((float)(1<<((udword)_wpow)))* _state->fDetailFactor);
-	udword h=(udword) (((float)(1<<((udword)_hpow)))* _state->fDetailFactor);
+	udword w=(udword) (((float)(1<<((udword)p->wpow)))* _state->fDetailFactor);
+	udword h=(udword) (((float)(1<<((udword)p->hpow)))* _state->fDetailFactor);
 	Res_SetBmpSize(pDst,w,h);
 
 	//Process operator
 	NRGBA* pPxDst = pDst->pbyPixels;
 	for (udword y=0; y<w; y++)
 		for (udword x=0; x<h; x++)
-			*pPxDst++ = _color;
+			*pPxDst++ = p->color;
 
 }
 
@@ -225,13 +234,25 @@ void Normalize(udword w, udword h, sdword *pxls)
 	}
 }
 
-void  NCloudOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _color0, NRGBA _color1, ubyte _amp, uword _seed)
+struct SCloudParams
 {
-	//Get Variables Values
-	SetSeedValue(_seed);
+	ubyte wpow;
+	ubyte hpow;
+	NRGBA color0;
+	NRGBA color1;
+	ubyte amp;
+	uword seed;
+};
 
-	udword w=1<<((udword)_wpow);
-	udword h=1<<((udword)_hpow);
+void NCloudOp_Process(SEngineState* _state, void* _params)
+{
+	SCloudParams* p = (SCloudParams*)_params;
+
+	//Get Variables Values
+	SetSeedValue(p->seed);
+
+	udword w=1<<((udword)p->wpow);
+	udword h=1<<((udword)p->hpow);
 
 	w=(udword) ((float)w * _state->fDetailFactor);
 	h=(udword) ((float)h * _state->fDetailFactor);
@@ -240,8 +261,8 @@ void  NCloudOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _co
 	Res_SetBmpSize(pDst,w,h);
 
 	//Used TPSLAYER as temporary buffer
-	Res_SetBmpSize(_state->apLayers[TPS_LAYER], w,h*2);
-	sdword* m_pbyPxTps	= (sdword*)_state->apLayers[TPS_LAYER]->pbyPixels;
+	Res_SetBmpSize(_state->apResourcesLayers[TPS_LAYER], w,h*2);
+	sdword* m_pbyPxTps	= (sdword*)_state->apResourcesLayers[TPS_LAYER]->pbyPixels;
 	sdword* m_pbyPxTps1 = m_pbyPxTps;
 	sdword* m_pbyPxTps2 = m_pbyPxTps1 + (w*h);
 
@@ -253,7 +274,7 @@ void  NCloudOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _co
 	udword h2	= h >> octaves;
 
   //Process operator
-	sdword* pbyPxSrc = Cloud((ubyte)octaves, (float)_amp/256.0f, w2, h2, m_pbyPxTps1, m_pbyPxTps2);
+	sdword* pbyPxSrc = Cloud((ubyte)octaves, (float)p->amp/256.0f, w2, h2, m_pbyPxTps1, m_pbyPxTps2);
 
 	Normalize(w,h,pbyPxSrc);
 
@@ -264,10 +285,10 @@ void  NCloudOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _co
 		for (udword x=0; x<w; x++)
 		{
 			//Cal color
-			udword r = (udword)_color0.r + ((*pbyPxSrc * (_color1.r - _color0.r))>>23);
-			udword g = (udword)_color0.g + ((*pbyPxSrc * (_color1.g - _color0.g))>>23);
-			udword b = (udword)_color0.b + ((*pbyPxSrc * (_color1.b - _color0.b))>>23);
-			udword a = (udword)_color0.a + ((*pbyPxSrc * (_color1.a - _color0.a))>>23);
+			udword r = (udword)p->color0.r + ((*pbyPxSrc * (p->color1.r - p->color0.r))>>23);
+			udword g = (udword)p->color0.g + ((*pbyPxSrc * (p->color1.g - p->color0.g))>>23);
+			udword b = (udword)p->color0.b + ((*pbyPxSrc * (p->color1.b - p->color0.b))>>23);
+			udword a = (udword)p->color0.a + ((*pbyPxSrc * (p->color1.a - p->color0.a))>>23);
 
 			//Set pixel
 			r = (r<255)?r:255;				r = (r>0)?r:0;
@@ -293,19 +314,31 @@ void  NCloudOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _co
 //							NGradientOp implementation
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void  NGradientOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _colA, NRGBA _colB, NRGBA _colC, NRGBA _colD)
+struct SGradientParams
 {
-	SResource* pDst = _state->apLayers[_state->pcurCall->byDepth];
+	ubyte wpow;
+	ubyte hpow;
+	NRGBA colA;
+	NRGBA colB;
+	NRGBA colC;
+	NRGBA colD;
+};
+
+void  NGradientOp_Process(SEngineState* _state, void* _params)
+{
+	SGradientParams* p = (SGradientParams*)_params;
+
+	SResource* pDst = _state->apResourcesLayers[_state->pcurCall->byDepth];
 
 	//Set Bitmap Size
-	sdword w=(sdword) (((float)(1<<((udword)_wpow)))* _state->fDetailFactor);
-	sdword h=(sdword) (((float)(1<<((udword)_hpow)))* _state->fDetailFactor);
+	sdword w=(sdword) (((float)(1<<((udword)p->wpow)))* _state->fDetailFactor);
+	sdword h=(sdword) (((float)(1<<((udword)p->hpow)))* _state->fDetailFactor);
 	Res_SetBmpSize(pDst,w,h);
 
 	//Init
 	//A B
 	//C D
-	NRGBAI _color;
+	NRGBAI color;
 	float finv_WH = 1.0f / (float)(w*h);
 
 	//Process operator
@@ -320,15 +353,15 @@ void  NGradientOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA 
 			float c = (float)((w-x)	* (y))	 * finv_WH;
 			float d = (float)((x)		* (y))	 * finv_WH;
 
-			_color.r= (sdword)((_colA.r*a) + (_colB.r*b) + (_colC.r*c) + (_colD.r*d));
-			_color.g= (sdword)((_colA.g*a) + (_colB.g*b) + (_colC.g*c) + (_colD.g*d));
-			_color.b= (sdword)((_colA.b*a) + (_colB.b*b) + (_colC.b*c) + (_colD.b*d));
-			_color.a= (sdword)((_colA.a*a) + (_colB.a*b) + (_colC.a*c) + (_colD.a*d));
+			color.r= (sdword)((p->colA.r*a) + (p->colB.r*b) + (p->colC.r*c) + (p->colD.r*d));
+			color.g= (sdword)((p->colA.g*a) + (p->colB.g*b) + (p->colC.g*c) + (p->colD.g*d));
+			color.b= (sdword)((p->colA.b*a) + (p->colB.b*b) + (p->colC.b*c) + (p->colD.b*d));
+			color.a= (sdword)((p->colA.a*a) + (p->colB.a*b) + (p->colC.a*c) + (p->colD.a*d));
 
-			pPxDst->r = (ubyte)_color.r;
-			pPxDst->g = (ubyte)_color.g;
-			pPxDst->b = (ubyte)_color.b;
-			pPxDst->a = (ubyte)_color.a;
+			pPxDst->r = (ubyte)color.r;
+			pPxDst->g = (ubyte)color.g;
+			pPxDst->b = (ubyte)color.b;
+			pPxDst->a = (ubyte)color.a;
 			pPxDst++;
 		}
 	}
@@ -341,36 +374,49 @@ void  NGradientOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA 
 //							NCellOp implementation
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void  NCellOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, ubyte _reg, ubyte _dens, NRGBA _color, uword _seed, ubyte _mode, ubyte _pat)
+struct SCellParams
 {
-	SResource* pDst = _state->apLayers[_state->pcurCall->byDepth];
+	ubyte wpow;
+	ubyte hpow;
+	ubyte reg;
+	ubyte dens;
+	NRGBA color;
+	uword seed;
+	ubyte mode;
+	ubyte pat;
+};
+
+void  NCellOp_Process(SEngineState* _state, void* _params)
+{
+	SCellParams* p = (SCellParams*)_params;
+	SResource* pDst = _state->apResourcesLayers[_state->pcurCall->byDepth];
 
 	//Set Bitmap Size
-	udword w=(udword) (((float)(1<<((udword)_wpow)))* _state->fDetailFactor);
-	udword h=(udword) (((float)(1<<((udword)_hpow)))* _state->fDetailFactor);
+	udword w=(udword) (((float)(1<<((udword)p->wpow)))* _state->fDetailFactor);
+	udword h=(udword) (((float)(1<<((udword)p->hpow)))* _state->fDetailFactor);
 	Res_SetBmpSize(pDst,w,h);
 
-	SetSeedValue(_seed);
+	SetSeedValue(p->seed);
 
-  _dens = _dens>1?_dens:1;
+  udword dens = p->dens>1?p->dens:1;
 
 	NRGBA* pPxDst = pDst->pbyPixels;
 	NRGBAArray arrDst(pPxDst,w,h);
 
 	//Init
-	const float regularity = _reg / 255.0f;
-	vec3 *cellPoints = (vec3*)NNEWARRAY(vec3,_dens*_dens);	//###TOFIX### JN: Alloc
+	const float regularity = p->reg / 255.0f;
+	vec3 *cellPoints = (vec3*)NNEWARRAY(vec3,dens*dens);	//###TOFIX### JN: Alloc
 
 	//Render
-	for (udword y=0; y<_dens; ++y)
+	for (udword y=0; y<dens; ++y)
 	{
-		for (udword x=0; x<_dens; ++x)
+		for (udword x=0; x<dens; ++x)
 		{
 			float rand1 = (float)myRandom() / 65536.0f;
 			float rand2 = (float)myRandom() / 65536.0f;
-			cellPoints[x+y*_dens].x = (x+0.5f+(rand1-0.5f)*(1-regularity))/_dens - 1.f/w;
-			cellPoints[x+y*_dens].y = (y+0.5f+(rand2-0.5f)*(1-regularity))/_dens - 1.f/h;
-			cellPoints[x+y*_dens].z = 0;
+			cellPoints[x+y*dens].x = (x+0.5f+(rand1-0.5f)*(1-regularity))/dens - 1.f/w;
+			cellPoints[x+y*dens].y = (y+0.5f+(rand2-0.5f)*(1-regularity))/dens - 1.f/h;
+			cellPoints[x+y*dens].z = 0;
 		}
 	}
 
@@ -387,18 +433,18 @@ void  NCellOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, ubyte _reg
 
 			float minDist = 10;
 			float nextMinDist = minDist;
-			int xo = x*_dens/w;
-			int yo = y*_dens/h;
+			int xo = x*dens/w;
+			int yo = y*dens/h;
 			for (sdword v=-1; v<2; ++v)
 			{
-				int vo = ((yo+_dens+v)%_dens)*_dens;
+				int vo = ((yo+dens+v)%dens)*dens;
 				for (sdword u=-1; u<2; ++u)
 				{
-					vec3 cellPos = cellPoints[((xo+_dens+u)%_dens) + vo];
-					if (u==-1 && x*_dens<w) cellPos.x-=1;
-					if (v==-1 && y*_dens<h) cellPos.y-=1;
-					if (u==1 && x*_dens>=w*(_dens-1)) cellPos.x+=1;
-					if (v==1 && y*_dens>=h*(_dens-1)) cellPos.y+=1;
+					vec3 cellPos = cellPoints[((xo+dens+u)%dens) + vo];
+					if (u==-1 && x*dens<w) cellPos.x-=1;
+					if (v==-1 && y*dens<h) cellPos.y-=1;
+					if (u==1 && x*dens>=w*(dens-1)) cellPos.x+=1;
+					if (v==1 && y*dens>=h*(dens-1)) cellPos.y+=1;
 					vec3 tmp;
 					float dist = sub(tmp, pixelPos, cellPos).norm ();
 					if (dist<minDist)
@@ -413,38 +459,38 @@ void  NCellOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, ubyte _reg
 				}
 			}
 
-			switch(_pat)
+			switch(p->pat)
 			{
 				case 0:default:
-					minDist = (nextMinDist - minDist) * _dens;
+					minDist = (nextMinDist - minDist) * dens;
 				break;
 				case 1:
-					minDist = 2 * nextMinDist * _dens - 1;
+					minDist = 2 * nextMinDist * dens - 1;
 				break;
 				case 2:
-					minDist = 1 - minDist * _dens;
+					minDist = 1 - minDist * dens;
 				break;
 			}
 
 			if (minDist<0) minDist = 0;
 			if (minDist>1) minDist = 1;
 
-			if(_mode==1)	//Chessboard
+			if(p->mode==1)	//Chessboard
 			{
 				bool cfc = (xo&1)^(yo&1);
 				float coeff = (1 - 2 * cfc) / 2.5f;
-				pPxDst->r = (ubyte)((cfc + coeff * minDist)*_color.r);
-				pPxDst->g = (ubyte)((cfc + coeff * minDist)*_color.g);
-				pPxDst->b = (ubyte)((cfc + coeff * minDist)*_color.b);
+				pPxDst->r = (ubyte)((cfc + coeff * minDist)*p->color.r);
+				pPxDst->g = (ubyte)((cfc + coeff * minDist)*p->color.g);
+				pPxDst->b = (ubyte)((cfc + coeff * minDist)*p->color.b);
 			}
 			else
 			{
-				pPxDst->r = (ubyte)(minDist*_color.r);
-				pPxDst->g = (ubyte)(minDist*_color.g);
-				pPxDst->b = (ubyte)(minDist*_color.b);
+				pPxDst->r = (ubyte)(minDist*p->color.r);
+				pPxDst->g = (ubyte)(minDist*p->color.g);
+				pPxDst->b = (ubyte)(minDist*p->color.b);
 			}
 
-			pPxDst->a = (ubyte)(_color.a);
+			pPxDst->a = (ubyte)(p->color.a);
 			pPxDst++;
 		}
 	}
@@ -457,16 +503,26 @@ void  NCellOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, ubyte _reg
 //							NNoiseOp implementation
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void NNoiseOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _color, uword _seed)
+struct SNoiseParams
 {
-	SResource* pDst = _state->apLayers[_state->pcurCall->byDepth];
+	ubyte wpow;
+	ubyte hpow;
+	NRGBA color;
+	uword seed;
+};
+
+void NNoiseOp_Process(SEngineState* _state, void* _params)
+{
+	SNoiseParams* p = (SNoiseParams*)_params;
+
+	SResource* pDst = _state->apResourcesLayers[_state->pcurCall->byDepth];
 
 	//Set Bitmap Size
-	udword w=(udword) (((float)(1<<((udword)_wpow)))* _state->fDetailFactor);
-	udword h=(udword) (((float)(1<<((udword)_hpow)))* _state->fDetailFactor);
+	udword w=(udword) (((float)(1<<((udword)p->wpow)))* _state->fDetailFactor);
+	udword h=(udword) (((float)(1<<((udword)p->hpow)))* _state->fDetailFactor);
 	Res_SetBmpSize(pDst,w,h);
 
-	SetSeedValue(_seed);
+	SetSeedValue(p->seed);
 
 	//Process operator
 	NRGBA* pPxDst = pDst->pbyPixels;
@@ -475,10 +531,10 @@ void NNoiseOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _col
 		for (udword x=0; x<h; x++)
 		{
 			udword noiseVal = myRandom(1)%256;
-			pPxDst->r = (ubyte)((noiseVal*_color.r)>>8);
-			pPxDst->g = (ubyte)((noiseVal*_color.g)>>8);
-			pPxDst->b = (ubyte)((noiseVal*_color.b)>>8);
-			pPxDst->a = _color.a;
+			pPxDst->r = (ubyte)((noiseVal*p->color.r)>>8);
+			pPxDst->g = (ubyte)((noiseVal*p->color.g)>>8);
+			pPxDst->b = (ubyte)((noiseVal*p->color.b)>>8);
+			pPxDst->a = p->color.a;
 			*pPxDst++;
 		}
 	}
@@ -486,9 +542,9 @@ void NNoiseOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, NRGBA _col
 
 
 SOpFuncInterface IOpsRender[] = {
-	"Flat",			3*4,  (fxOPFUNCTION*)&NFlatOp_Process,
-	"Gradient",	8*4,  (fxOPFUNCTION*)&NGradientOp_Process,
-	"Cloud",		6*4,  (fxOPFUNCTION*)&NCloudOp_Process
+	"Flat",			sizeof(SFlatParams),			(fxOPFUNCTION*)&NFlatOp_Process,
+	"Gradient",	sizeof(SGradientParams),  (fxOPFUNCTION*)&NGradientOp_Process,
+	"Cloud",		sizeof(SCloudParams),			(fxOPFUNCTION*)&NCloudOp_Process
 };
 
 udword dwCountOpsRender = fgCreateOpEngine()->RegisterOpsInterfaces(3, IOpsRender);

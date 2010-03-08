@@ -162,9 +162,9 @@ void NOperatorsWnd::DisplayOperator(N2DPainter* _pdc, NOperatorNode* _pop)
 		m_rcAllOperators.bottom=rcBloc.bottom;
 
 	//Shadow
-	//NRect rcShadow(rcBloc);
-	//rcShadow.Move(2,2);
-	//_pdc->FillSolidRect(rcShadow, RGBA(0,0,0) );
+	NRect rcShadow(rcBloc);
+	rcShadow.Move(2,2);
+	_pdc->FillSolidRect(rcShadow, RGBA(0,0,0,128) );
 
 	//Background color
 	_pdc->GradientVRect(rcBloc, RGBA(220, 220, 220,255), _pop->GetColor());

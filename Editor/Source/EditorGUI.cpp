@@ -116,8 +116,8 @@ bool NEditorGUI::Create(char* name, const NRect& rect)
 	udword dwProjectPaneID		= SplitRow(dwViewportsPaneID, 50);
 	udword dwPropertiesPaneID = SplitColumn(dwViewportsPaneID, 70);
 	udword dwOperatorsPaneID	= SplitColumn(dwProjectPaneID, 20);
-	SetPaneWnd("Viewport", dwViewportsPaneID,	viewportswnd);
-	SetPaneWnd("Operators", dwOperatorsPaneID,	m_opswnd);
+	SetPaneWnd("View", dwViewportsPaneID,	viewportswnd);
+	SetPaneWnd("Stacked Operators", dwOperatorsPaneID,	m_opswnd);
 //	SetPaneWnd("Properties", dwPropertiesPaneID,	propswnd);
 	SetPaneWnd("Project", dwProjectPaneID,	m_pprojectwnd);
 
@@ -128,7 +128,7 @@ bool NEditorGUI::Create(char* name, const NRect& rect)
 	pinfo->pstripBar->InsertItemText("Synthesis Texture Generator", 256);
 
 	pinfo = GetPaneInfo(dwOperatorsPaneID);
-	pinfo->pstripBar->InsertItemText("Operators", 9*8);
+	pinfo->pstripBar->InsertItemText("Stacked Operators", 17*8);
 
 //	pinfo = GetPaneInfo(dwPropertiesPaneID);
 //	pinfo->pstripBar->InsertItemText("Properties", 10*8);

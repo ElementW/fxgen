@@ -50,10 +50,10 @@ struct SOpFuncInterface;
 struct SOperatorDesc
 {
 	udword	x, y, w;			//!< Position x and y in the graph and width
-	char*		pszGroup;			//!< Group name used for incremental compilation (could be texture name)
-	char*		pszIFnc;			//!< Operator fonction interface name
-	char*		pszToLoad;		//!< Operator to Load name
-	char*		pszStoredName;//!< Operator store name
+	const char*		pszGroup;			//!< Group name used for incremental compilation (could be texture name)
+	const char*		pszIFnc;			//!< Operator fonction interface name
+	const char*		pszToLoad;		//!< Operator to Load name
+	const char*		pszStoredName;//!< Operator store name
 	udword	adwParams[MAX_PARAMS];	//!< Operator parameters
 	ubyte		byParamsCount;
 	//Reserved Datas for Compiler
@@ -69,7 +69,7 @@ struct SOperatorDesc
 //-----------------------------------------------------------------
 struct SLoadOpToSeqPtr
 {
-	char*	pszName;	//!< To Load store operator's name
+	const char*	pszName;	//!< To Load store operator's name
 	//SOpsSequence** ppToLoadStoredSeq;	//!< Ref Target, ptr on	SOpsSequence::apSeqsToLoad
 	SOpsSequence*		pLoaderSeq;	//!< Ref Maker
 	udword dwLoaderCallDescIdx;

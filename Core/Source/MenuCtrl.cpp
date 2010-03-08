@@ -120,7 +120,7 @@ void NMenuCtrl::OnPaint()
     dc.FillSolidRect(rcText, GetGUISubSystem()->GetMenuColor());
 
 		rcText.left+=2;
-    dc.DrawString(m_cstrText.Buffer() , rcText, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(255,128,0,byAlpha) );
+    dc.DrawString(m_cstrText.Buffer() , rcText, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,byAlpha) );
 
 		y+=ME_ITEMHEIGHT;
 	}
@@ -150,7 +150,7 @@ void NMenuCtrl::OnPaint()
 		//Display Text
 		rcText = pitem->rcItem;
 		rcText.left+=ME_ITEMTEXTIDENT;
-    dc.DrawString(pitem->strName.Buffer(), rcText, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(255,255,255,255) );
+    dc.DrawString(pitem->strName.Buffer(), rcText, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 
 		//TRACE("Display: Menu Item %s\n", pitem->strName.Buffer());
 

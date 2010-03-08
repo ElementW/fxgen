@@ -280,7 +280,7 @@ public:
   NColor GetFaceColor()   { return 0xFF727272; }
   NColor GetDarkColor()   { return 0xFF474747; }
   NColor GetLightColor()  { return 0xFF8b8b8b; }
-  NColor GetMenuColor()   { return 0x801f1f1f; }
+  NColor GetMenuColor()   { return 0x80c8c8c8; }
 
 protected:
 
