@@ -293,22 +293,28 @@ void NOperatorsPage::Compile()
 		paopsDesc[i].pszToLoad			= "";
 		paopsDesc[i].pszStoredName	= "";
 
-	/*udword	x, y, w;			//!< Position x and y in the graph and width
-	char*		pszGroup;			//!< Group name used for incremental compilation (could be texture name)
-	char*		pszIFnc;			//!< Operator fonction interface name
-	char*		pszToLoad;		//!< Operator to Load name
-	char*		pszStoredName;//!< Operator store name
-	udword	adwParams[MAX_PARAMS];	//!< Operator parameters
-	ubyte		byParamsCount;*/
+		paopsDesc[i].dwTag	= (udword)pccurOP;	//###TOFIX### 64bits ptr
 
+		/*
+		udword	adwParams[MAX_PARAMS];	//!< Operator parameters
+		ubyte		byParamsCount;*/
 
 	}
 
 	//Start graph compilation
-	SCompiledOp stCompiled;
+	if (m_comp.Compile(&m_stCompiled, paopsDesc, dwCount, bIncremential))
+	{
+		SOpsSequence* pseq = m_stCompiled.pfirstOpsSeq;
 
-	NCompilerOp comp;
-	comp.Compile(&stCompiled, paopsDesc, dwCount, bIncremential);
+		//Execute
+		//NEngineOp* peng = fgCreateOpEngine();
+		//SResource* pres = peng->ProcessSequence(pseq, 0.0, 1.0);
+
+		//Rendering
+		//EVT_EXECUTE(EVT_RENDER, (udword)m_popMarkedShow, (udword)&_ftime);
+
+	}
+
 
 }
 

@@ -80,6 +80,7 @@ struct SOpCallDesc
 	ubyte			byParamsCount;							//!< Parameters count
 	udword		adwParams[MAX_PARAMS];			//!< Parameters datas
 	SOpFuncInterface* pfncI;							//!< Operator function to call
+	udword		dwTag;
 };
 
 //-----------------------------------------------------------------
