@@ -56,6 +56,7 @@ struct SOperatorDesc
 	const char*		pszStoredName;//!< Operator store name
 	udword	adwParams[MAX_PARAMS];	//!< Operator parameters
 	ubyte		byParamsCount;
+	udword	dwTag;
 	//Reserved Datas for Compiler
 	SOperatorDesc*	m_pnextOpToProcess;
 	SOperatorDesc*	m_pprevOpToProcess;
@@ -97,8 +98,9 @@ public:
 	bool Compile(SCompiledOp* _inoutCompOps, SOperatorDesc* _paops, udword _dwCount, bool _bIncremential);
 	//Si mode _bIncremential on garde les operateurs compiles sur les groupes differentes
 	//  sinon on nettoie tout avant
-	SOpCallDesc* GetOpCallDesc(char* _pszGroup, udword x, udword y);
-	
+	//SOpCallDesc* GetOpCallDesc(char* _pszGroup, udword x, udword y);
+	bool GetOpCallDescFromTag(SCompiledOp* _pcompOps, udword _dwTag, SOpCallDesc* _opCD, SOpsSequence* _opSeq);
+
 	bool SaveCompiledForm(const char* _pszFullFileName);
 
 protected:

@@ -381,8 +381,11 @@ void NEditorGUI::MarkShowOperator(NOperatorNode* _pop)
 {
 	m_popMarkedShow = _pop;
 
+	//Get Sequence from operator
+
+
 	//###DEBUG###
-	//float ftime = (float)GetTickCount() * 60.0f / 1000.0f;
+	float ftime = (float)GetTickCount() * 60.0f / 1000.0f;
 	//NOperatorNode* pop = Execute(ftime);
 
 }

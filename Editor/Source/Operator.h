@@ -114,8 +114,11 @@ public:
 	NOperatorNode* GetFinalOpFrom(NOperatorNode* _pop);
 
 protected:
-	//Methods
+	//Methods Compiler
 	void Compile();
+
+	NCompilerOp m_comp;
+	SCompiledOp m_stCompiled;
 
 	//Datas	GUI
 	NObjectArray	m_arrayOps;						//!< Operators array
