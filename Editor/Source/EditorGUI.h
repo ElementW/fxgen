@@ -21,6 +21,7 @@
 //		Includes
 //-----------------------------------------------------------------
 #include "CoreLibPkg.h"
+#include "LayoutDock.h"
 
 //-----------------------------------------------------------------
 //		Prototypes
@@ -35,7 +36,7 @@ class NOperatorsProject;
 //!	\class		NEditorGUI
 //!	\brief		Main frame
 //-----------------------------------------------------------------
-class NEditorGUI :	public NGUILayout
+class NEditorGUI :	public NLayoutDock
 {
 public:
 	NEditorGUI(void);

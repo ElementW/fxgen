@@ -89,14 +89,14 @@ NEditorGUI::~NEditorGUI(void)
 //-----------------------------------------------------------------
 bool NEditorGUI::Create(char* name, const NRect& rect)
 {
-	NGUILayout::Create("wks", rect, null);
+	NLayoutDock::Create("wks", rect, null);
 
 	///////////////////////////////////////////////
 	// Create panes
 
 	//Create Operators window
   m_opswnd = NNEW(NOperatorsWnd);
-	m_opswnd->Create("Operators", GetClientRect(), this);
+	m_opswnd->Create("Stacked Operators", GetClientRect(), this);
 
 	//Create properties window
 //	NPropertiesWnd* propswnd = NNEW(NPropertiesWnd);
@@ -104,7 +104,7 @@ bool NEditorGUI::Create(char* name, const NRect& rect)
 
 	//Create Viewport window
 	NViewportsWnd* viewportswnd = NNEW(NViewportsWnd);
-	viewportswnd->Create("Viewport", GetClientRect(), this);
+	viewportswnd->Create("View", GetClientRect(), this);
 
 	//Create Project window
 	m_pprojectwnd = NNEW(NProjectWnd);
@@ -112,7 +112,19 @@ bool NEditorGUI::Create(char* name, const NRect& rect)
 
 	///////////////////////////////////////////////
 	// Mainframe's Split
-	udword dwViewportsPaneID	= SPLITPANE_DEFAULT_ID;
+	udword dwViewportsPaneID	= 0;
+	udword dwProjectPaneID		= SplitH(dwViewportsPaneID, 50);
+	udword dwPropertiesPaneID = SplitV(dwViewportsPaneID, 70);
+	udword dwOperatorsPaneID	= SplitV(dwProjectPaneID, 20);
+
+	AddWndToLayout(dwViewportsPaneID,	viewportswnd);
+	AddWndToLayout(dwOperatorsPaneID,	m_opswnd);
+//	SetPaneWnd("Properties", dwPropertiesPaneID,	propswnd);
+	AddWndToLayout(dwProjectPaneID,	m_pprojectwnd);
+
+	RecalLayout();
+
+	/*udword dwViewportsPaneID	= SPLITPANE_DEFAULT_ID;
 	udword dwProjectPaneID		= SplitRow(dwViewportsPaneID, 50);
 	udword dwPropertiesPaneID = SplitColumn(dwViewportsPaneID, 70);
 	udword dwOperatorsPaneID	= SplitColumn(dwProjectPaneID, 20);
@@ -155,6 +167,9 @@ bool NEditorGUI::Create(char* name, const NRect& rect)
 	//Events
 	pbuttonFile->OnClick=FDelegate(this, (TDelegate)&NEditorGUI::OnFile);
 	pbuttonOption->OnClick=FDelegate(this, (TDelegate)&NEditorGUI::OnOption);
+*/
+
+
 
 	///////////////////////////////////////////////
 	// Create Start project

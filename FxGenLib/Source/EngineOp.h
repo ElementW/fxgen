@@ -45,6 +45,7 @@
 //-----------------------------------------------------------------
 class NEngineOp;
 struct NRGBA;
+struct SEngineState;
 
 //-----------------------------------------------------------------
 //                   Functions
@@ -55,7 +56,7 @@ FXGEN_API NEngineOp * fgCreateOpEngine();
 //                   TypesDef
 //-----------------------------------------------------------------
 typedef	void (FXGEN_OPSPROCESSCB)(udword _dwCurrentOp, udword _dwTotalOps);
-typedef void (*fxOPFUNCTION)();
+typedef void (fxOPFUNCTION)(SEngineState* _state, void* _params);
 
 //-----------------------------------------------------------------
 //!	\class		SOpFuncInterface

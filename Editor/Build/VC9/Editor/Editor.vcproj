@@ -252,6 +252,14 @@
 			Name="Base UI Widgets"
 			>
 			<File
+				RelativePath="..\..\..\Source\LayoutDock.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Source\LayoutDock.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Source\PropertiesCtrl.cpp"
 				>
 				<FileConfiguration

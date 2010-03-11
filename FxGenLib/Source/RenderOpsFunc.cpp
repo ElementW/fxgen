@@ -544,8 +544,11 @@ void NNoiseOp_Process(SEngineState* _state, void* _params)
 SOpFuncInterface IOpsRender[] = {
 	"Flat",			sizeof(SFlatParams),			(fxOPFUNCTION*)&NFlatOp_Process,
 	"Gradient",	sizeof(SGradientParams),  (fxOPFUNCTION*)&NGradientOp_Process,
-	"Cloud",		sizeof(SCloudParams),			(fxOPFUNCTION*)&NCloudOp_Process
+	"Cloud",		sizeof(SCloudParams),			(fxOPFUNCTION*)&NCloudOp_Process,
+	"Gradient",	sizeof(SGradientParams),	(fxOPFUNCTION*)&NGradientOp_Process,
+	"Cell",			sizeof(SCellParams),			(fxOPFUNCTION*)&NCellOp_Process,
+	"Noise",		sizeof(SNoiseParams),			(fxOPFUNCTION*)&NNoiseOp_Process
 };
 
-udword dwCountOpsRender = fgCreateOpEngine()->RegisterOpsInterfaces(3, IOpsRender);
+udword dwCountOpsRender = fgCreateOpEngine()->RegisterOpsInterfaces(6, IOpsRender);
 

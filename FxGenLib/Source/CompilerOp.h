@@ -99,7 +99,7 @@ public:
 	//Si mode _bIncremential on garde les operateurs compiles sur les groupes differentes
 	//  sinon on nettoie tout avant
 	//SOpCallDesc* GetOpCallDesc(char* _pszGroup, udword x, udword y);
-	bool GetOpCallDescFromTag(SCompiledOp* _pcompOps, udword _dwTag, SOpCallDesc* _opCD, SOpsSequence* _opSeq);
+	bool GetOpCallDescFromTag(SCompiledOp* _pcompOps, udword _dwTag, SOpCallDesc** _opCD, SOpsSequence** _opSeq);
 
 	bool SaveCompiledForm(const char* _pszFullFileName);
 

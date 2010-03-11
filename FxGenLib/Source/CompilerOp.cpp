@@ -77,9 +77,10 @@ bool NCompilerOp::Compile(SCompiledOp* _inoutCompOps, SOperatorDesc* _paops, udw
 	_inoutCompOps->plastOpsSeq			= null;
 
 	//Make Array of to compile operators
+	m_arrayOps.Clear();
 	m_arrayOps.SetSize(_dwCount);
 	for (udword i=0; i<_dwCount; i++)
-		m_arrayOps[i] = &_paops[i];
+		m_arrayOps.AddItem( &_paops[i] );
 
 	//Compute Graphical links between operators
 	ComputeLinks();
@@ -378,7 +379,7 @@ void NCompilerOp::CompileOperator(SOpsSequence *_pstSeq, SOperatorDesc* _pop)
 	pcd->byInputsCount	= _pop->m_byInputs;
 	pcd->pfncI					= GetOpsInterfaceFromName(_pop->pszIFnc);
 	if (pcd->pfncI==null)
-		pcd->pfncI=null;	//Debug ##TODO## add error management
+		pcd->pfncI=null;	//Just For Debug ##TODO## add error management
 
 	//Copy Parameters
 	pcd->byParamsCount	= _pop->byParamsCount;
@@ -428,22 +429,21 @@ SOpFuncInterface* NCompilerOp::GetOpsInterfaceFromName(const char* _pszName)
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Return SOpCallDesc* and it's SOpsSequence* from SOperatorDesc tag
+//!	\brief	Return SOpCallDesc* and it's SOpsSequence* from SOperatorDesc:dwTag
 //-----------------------------------------------------------------
-bool NCompilerOp::GetOpCallDescFromTag(SCompiledOp* _pcompOps, udword _dwTag, SOpCallDesc* _opCD, SOpsSequence* _opSeq)
+bool NCompilerOp::GetOpCallDescFromTag(SCompiledOp* _pcompOps, udword _dwTag, SOpCallDesc** _opCD, SOpsSequence** _opSeq)
 {
-	_opSeq = _pcompOps->pfirstOpsSeq;
-	while (_opSeq)
+	*_opSeq = _pcompOps->pfirstOpsSeq;
+	while (*_opSeq)
 	{
-		uword dwOpsCount = _opSeq->dwOpsCount;
-		while (dwOpsCount--)
+		for (udword i=0; i<(*_opSeq)->dwOpsCount; i++)
 		{
-			_opCD = &_opSeq->apopCallDesc[dwOpsCount-1];
-			if (_opCD->dwTag==_dwTag)
+			*_opCD = &(*_opSeq)->apopCallDesc[i];
+			if ((*_opCD)->dwTag==_dwTag)
 				return true;
 		}
 		//Next sequence
-		_opSeq = _opSeq->pnextOpsSeq;
+		*_opSeq = (*_opSeq)->pnextOpsSeq;
 	};
 
 	return false;

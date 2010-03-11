@@ -29,10 +29,6 @@ NEngineOp* gpengineOp = null;
 //udword NEngineOp::m_dwOpFuncInterfacesCount;
 //SOpFuncInterface	NEngineOp::m_aOpFuncInterfaces[MAX_MAXOPINTERFACE];
 
-//-----------------------------------------------------------------
-//                   Functions
-//-----------------------------------------------------------------
-void CallSTDCallFunction(SEngineState* _pstate, const udword *args, int paramSize, fxOPFUNCTION* func);
 
 //-----------------------------------------------------------------
 //!	\func	return an unique Engine Instance
@@ -276,7 +272,8 @@ void NEngineOp::_ProcessSequence(float _ftime, SOpsSequence* _psequence, float _
 				//if (m_cbOpsProcess)		(*m_cbOpsProcess)(m_dwCurProcessOpsCount, m_dwTotalProcessOpsCount);
 
 				//pccurOP->Process(_ftime, pOpsIns, _fDetailFactor);
-				CallSTDCallFunction(&m_astates[m_nCurContext], pcurCall->adwParams, pcurCall->pfncI->dwParamsSize, pcurCall->pfncI->pfnc);
+				//CallSTDCallFunction(&m_astates[m_nCurContext], pcurCall->adwParams, pcurCall->pfncI->dwParamsSize, pcurCall->pfncI->pfnc);
+				(*pcurCall->pfncI->pfnc)(&m_astates[m_nCurContext], &pcurCall->adwParams);
 
 				m_dwCurProcessOpsCount++;
 
@@ -326,83 +323,6 @@ SOpFuncInterface* NEngineOp::GetOpsInterfaceFromIdx(udword _idx)
 }
 
 
-//-----------------------------------------------------------------
-//!	\brief	Call C function
-//-----------------------------------------------------------------
-void CallSTDCallFunction(SEngineState* _pstate, const udword *args, int paramSize, fxOPFUNCTION* func)
-{
-#if defined ASM_INTEL
-
-	// Copy the data to the real stack. If we fail to do
-	// this we may run into trouble in case of exceptions.
-	__asm
-	{
-		// We must save registers that are used
-	    push ecx
-
-		// Copy arguments from script
-		// stack to application stack
-        mov  ecx, paramSize
-		mov  eax, args
-		add  eax, ecx
-		cmp  ecx, 0
-		je   endcopy
-copyloop:
-		sub  eax, 4
-		push dword ptr [eax]
-		sub  ecx, 4
-		jne  copyloop
-endcopy:
-
-		push dword ptr _pstate
-
-		// Call function
-		call [func]
-
-		// The callee already removed parameters from the stack
-
-		// Restore registers
-		pop  ecx
-
-		// return value in EAX or EAX:EDX
-	}
-
-#elif defined ASM_AT_N_T
-
-	asm("pushl %ecx           \n"
-	
-		// Need to align the stack pointer so that it is aligned to 16 bytes when making the function call.
-		// It is assumed that when entering this function, the stack pointer is already aligned, so we need
-		// to calculate how much we will put on the stack during this call.
-		"movl  12(%ebp), %eax \n" // paramSize
-		"addl  $4, %eax       \n" // counting esp that we will push on the stack
-		"movl  %esp, %ecx     \n"
-		"subl  %eax, %ecx     \n"
-		"andl  $15, %ecx      \n"
-		"movl  %esp, %eax     \n"
-		"subl  %ecx, %esp     \n"
-		"pushl %eax           \n" // Store the original stack pointer
-	
-		"movl  12(%ebp), %ecx \n" // paramSize
-		"movl  8(%ebp), %eax  \n" // args
-		"addl  %ecx, %eax     \n" // push arguments on the stack
-		"cmp   $0, %ecx       \n"
-		"je    endcopy2       \n"
-		"copyloop2:           \n"
-		"subl  $4, %eax       \n"
-		"pushl (%eax)         \n"
-		"subl  $4, %ecx       \n"
-		"jne   copyloop2      \n"
-		"endcopy2:            \n"
-		"call  *16(%ebp)      \n" // callee pops the arguments
-		
-		// Pop the alignment bytes
-		"popl  %esp           \n" 
-		
-		"popl  %ecx           \n");
-
-#endif
-}
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------

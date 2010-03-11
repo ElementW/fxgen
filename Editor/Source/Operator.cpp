@@ -304,15 +304,21 @@ void NOperatorsPage::Compile()
 	//Start graph compilation
 	if (m_comp.Compile(&m_stCompiled, paopsDesc, dwCount, bIncremential))
 	{
-		SOpsSequence* pseq = m_stCompiled.pfirstOpsSeq;
+		//SOpsSequence* pseq = m_stCompiled.pfirstOpsSeq;
+
+		SOpCallDesc* opCD = null;
+		SOpsSequence* opSeq = null;
+		udword dwTag = (udword)m_arrayOps[m_arrayOps.Count()-1];
+		bool bRet = m_comp.GetOpCallDescFromTag(&m_stCompiled, dwTag, &opCD, &opSeq);
 
 		//Execute
 		//NEngineOp* peng = fgCreateOpEngine();
-		//SResource* pres = peng->ProcessSequence(pseq, 0.0, 1.0);
+		//SResource* pres = peng->ProcessSequence(&*opSeq, 0.0, 1.0);
 
 		//Rendering
 		//EVT_EXECUTE(EVT_RENDER, (udword)m_popMarkedShow, (udword)&_ftime);
 
+		bRet=bRet;
 	}
 
 

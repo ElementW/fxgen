@@ -184,6 +184,8 @@ public:
 
 	bool IsEmpty()		{ return (left==right || top==bottom); }
 
+	void SetEmpty() {left = top = right = bottom = 0; }
+
 	//Comparison operators
 	inline	bool	operator==(NRect& R);
 	inline	bool	operator!=(NRect& R);
