@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-//! \file		PropertiesWnd.h
-//! \brief	Window for properties editing
+//! \file		AssetsWnd.h
+//! \brief	Assets's windows
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
-//!	\date		12-02-2007
+//!	\date		13-03-2010
 //!
 //!	\brief	This file applies the GNU GENERAL PUBLIC LICENSE
 //!					Version 2, read file COPYING.
@@ -14,41 +14,49 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#ifndef PROPERTIESWND_H
-#define PROPERTIESWND_H
-
+#ifndef ASSETSWND_H
+#define ASSETSWND_H
 
 //-----------------------------------------------------------------
-//                   Includes
+//			Includes
 //-----------------------------------------------------------------
-#include "PropertiesCtrl.h"
 #include "EditorApp.h"
+#include "TreeNodeCtrl.h"
 
 //-----------------------------------------------------------------
-//!	\class		NPropertiesWnd
-//!	\brief		Object's Properties windows viewer
+//			Prototypes
 //-----------------------------------------------------------------
-class NPropertiesWnd :	public NPropertiesCtrl
+class NOperatorsPage;
+
+//-----------------------------------------------------------------
+//!	\class		NAssetsWnd
+//!	\brief		Assets's windows
+//-----------------------------------------------------------------
+class NAssetsWnd :	public NTreeNodeCtrl
 {
 public:
-	NPropertiesWnd(void);
-	virtual ~NPropertiesWnd(void);
+	NAssetsWnd(void);
+	virtual ~NAssetsWnd(void);
 
 	//Methods
 	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
 
 
 protected:
-	//Events
-	EVT_DECLARE_HANDLER(OnOPSelChanged);
-	EVT_DECLARE_HANDLER(OnOPDeleting);
-	EVT_DECLARE_HANDLER(OnPageSelected);
+	//Methods
 
 	// Messages Notify
-	virtual void OnPropertiesChanged();
+	void OnTreeSelChange(NObject* _psender);
+
+	//Messages Dispatching
+	virtual void OnRButtonDown(NPoint pos);
+	void OnMenuClick(NObject* _psender);
+
+	//Methods
+	void InitCtxMenu();
 
 	//Datas
-	NOperatorNode* m_pcurOp;	//!< current viewed operator
+	NMenuCtrl		m_wndMenu;
 };
 
-#endif //PROPERTIESWND_H
+#endif //ASSETSWND_H

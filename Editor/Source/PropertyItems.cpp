@@ -37,11 +37,9 @@
 NPropertyItem::NPropertyItem()
 {
 	m_pwNGraphicstrl= null;
-	m_pvarBloc			= null;
-	m_pvarBlocDesc	= null;
-	m_pvarValue			= null;
 	m_pParent				= null;
-	m_dwvarIdx			= 0;
+	m_pObject				= null;
+	m_dwFieldIdx		= -1;
 }
 
 //-----------------------------------------------------------------
@@ -60,12 +58,14 @@ NPropertyItem::~NPropertyItem()
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NUbyteProp, NPropertyItem);
-FIMPLEMENT_CLASS_END();
+FIMPLEMENT_CLASS(NUbyteProp, NPropertyItem)
+FIMPLEMENT_CLASS_END()
 
 void NUbyteProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
-	m_strValue.Format("%d", m_pvarValue->byVal);
+	ubyte* paddr = m_pObject->GetFieldVarAddr(m_dwFieldIdx);
+
+	m_strValue.Format("%d", *paddr);
   pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 }
 
@@ -73,7 +73,7 @@ bool NUbyteProp::BeginEdit(NRect& rcItem)
 {
 	if (m_pwNGraphicstrl)	delete m_pwNGraphicstrl;
 
-	NRect rcCB(rcItem);
+/*	NRect rcCB(rcItem);
 
 	NEditCtrl* pwNGraphicsB = new NEditCtrl;
 	pwNGraphicsB->Create("", rcCB, m_pParent);
@@ -87,14 +87,14 @@ bool NUbyteProp::BeginEdit(NRect& rcItem)
 
 	pwNGraphicsB->OnEnter = FDelegate(this, (TDelegate)&NUbyteProp::OnEnter);
 	pwNGraphicsB->OnEscape = FDelegate(this, (TDelegate)&NUbyteProp::OnEscape);
-
+*/
 	return false;
 }
 
 bool NUbyteProp::EndEdit(bool bSaveChanged)
 {
 	if (m_pwNGraphicstrl==null)		return false;
-
+/*
 	//Save changed
 	if (bSaveChanged)
 	{
@@ -103,22 +103,24 @@ bool NUbyteProp::EndEdit(bool bSaveChanged)
 		if (dwVal>255)		dwVal = 255;
 		if (dwVal<0)		dwVal = 0;
 		m_pvarValue->byVal = (ubyte)dwVal;
-		//strcpy(m_pvarValue->szVal, str.Buffer());*/
+		//strcpy(m_pvarValue->szVal, str.Buffer());
 	}
 
 	//Destroy control
 	delete m_pwNGraphicstrl;
 	m_pwNGraphicstrl=null;
-
+*/
 	return bSaveChanged;
 }
 
 bool NUbyteProp::AddValue(sdword dwDelta)
 {
+/*
 	sdword dwVal = (sdword)m_pvarValue->byVal + (sdword)dwDelta;
 	if (dwVal>255)		dwVal = 255;
 	if (dwVal<0)			dwVal = 0;
 	m_pvarValue->byVal = (ubyte)dwVal;
+*/
 	return true;
 }
 
@@ -132,7 +134,7 @@ void NUbyteProp::OnEscape(NEditCtrl* pEdit)
 	((NPropertiesCtrl*)m_pParent)->EndRowEditing(false);
 }
 
-
+/*
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
@@ -183,7 +185,7 @@ bool NUwordProp::EndEdit(bool bSaveChanged)
 		if (dwVal>65535)	dwVal = 65535;
 		if (dwVal<0)		dwVal = 0;
 		m_pvarValue->wVal = (uword)dwVal;
-		//strcpy(m_pvarValue->szVal, str.Buffer());*/
+		//strcpy(m_pvarValue->szVal, str.Buffer());
 	}
 
 	//Destroy control
@@ -260,7 +262,7 @@ bool NFloatProp::EndEdit(bool bSaveChanged)
 	{
 		NString str = ((NEditCtrl*)m_pwNGraphicstrl)->GetText();
 		m_pvarValue->fVal = atof(str.Buffer());
-		//strcpy(m_pvarValue->szVal, str.Buffer());*/
+		//strcpy(m_pvarValue->szVal, str.Buffer());
 	}
 
 	//Destroy control
@@ -557,15 +559,15 @@ void NFileBrowserProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 bool NFileBrowserProp::BeginEdit(NRect& rcItem)
 {
 	assert(m_pParent!=null);
-/*
-	NFileDialog dlg;
-	dlg.Create("Choose a File to Load", m_pParent);
-	if (1==dlg.DoModal())
-	{
-		NString str = dlg.GetPathName(0);
-		strcpy(m_pvarValue->szVal, str.Buffer());
-	}
-*/
+
+	//NFileDialog dlg;
+	//dlg.Create("Choose a File to Load", m_pParent);
+	//if (1==dlg.DoModal())
+	//{
+	//	NString str = dlg.GetPathName(0);
+	//	strcpy(m_pvarValue->szVal, str.Buffer());
+	//}
+
 	return true;	//End of Edition
 }
 
@@ -648,34 +650,34 @@ void NUseStoredOpsProp::OnMenuClick(NObject* _psender)
 
 void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 {
-/*
-	//Parse Alls Pages to add 'NStoreOp'
-	NObjectArray& arrayObjs = _pnode->GetObjsArray();
-	udword dwCount = arrayObjs.Count();
-	udword idx=0;
-	while (dwCount--)
-	{
-		NOperatorsPage* ppage = (NOperatorsPage*)arrayObjs[idx++];
-
-		NMenuCtrl* popMenu = m_wndMenu.CreatePopupMenu(ppage->GetName(), -1);
-
-		NObjectArray storedOp;
-		storedOp.SetManageDelete(false);
-		ppage->GetOpsFromClassName("NStoreOp", storedOp);
-
-		for (udword i=0; i<storedOp.Count(); i++)
-		{
-			NOperatorNode* pop = (NOperatorNode*)storedOp[i];
-			if (strlen(pop->GetUserName())!=0)
-				popMenu->AddItem(pop->GetUserName(), (udword)pop, 0);
-		}
-	}
-
-	//Childs
-	_pnode = _pnode->GetSon();
-	if (_pnode)
-		BuildMenu(_pnode);
-*/
+//
+//	//Parse Alls Pages to add 'NStoreOp'
+//	NObjectArray& arrayObjs = _pnode->GetObjsArray();
+//	udword dwCount = arrayObjs.Count();
+//	udword idx=0;
+//	while (dwCount--)
+//	{
+//		NOperatorsPage* ppage = (NOperatorsPage*)arrayObjs[idx++];
+//
+//		NMenuCtrl* popMenu = m_wndMenu.CreatePopupMenu(ppage->GetName(), -1);
+//
+//		NObjectArray storedOp;
+//		storedOp.SetManageDelete(false);
+//		ppage->GetOpsFromClassName("NStoreOp", storedOp);
+//
+//		for (udword i=0; i<storedOp.Count(); i++)
+//		{
+//			NOperatorNode* pop = (NOperatorNode*)storedOp[i];
+//			if (strlen(pop->GetUserName())!=0)
+//				popMenu->AddItem(pop->GetUserName(), (udword)pop, 0);
+//		}
+//	}
+//
+//	//Childs
+//	_pnode = _pnode->GetSon();
+//	if (_pnode)
+//		BuildMenu(_pnode);
+//
 }
 
 
@@ -744,3 +746,4 @@ void NStringProp::OnEscape(NEditCtrl* pEdit)
 {
 	((NPropertiesCtrl*)m_pParent)->EndRowEditing(false);
 }
+*/

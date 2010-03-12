@@ -60,13 +60,11 @@ public:
 	char* GetValue()	{ return m_strValue.Buffer(); }
 
 protected:
-	NString			m_strValue;			//!< Value in string form
-	NGUIWnd*	m_pwNGraphicstrl;			//!< Control used for item edition
+	NString			m_strValue;					//!< Value in string form
+	NGUIWnd*		m_pwNGraphicstrl;		//!< Control used for item edition
 public:
-	NVarsBloc*			m_pvarBloc;			//!< Variable bloc
-	NVarsBlocDesc*	m_pvarBlocDesc;	//!< Variable Description
-	NVarValue*			m_pvarValue;		//!< Variable Value Ptr	//###TOREMOVE### see m_dwvarIdx
-	udword					m_dwvarIdx;			//!< Variable indice in bloc
+	NObject*		m_pObject;			//!< Object that contain field
+	udword			m_dwFieldIdx;		//!< Field to edit
 
 	NGUIWnd*			m_pParent;				//!< Parent windows (ie CPropertiesCtrl)
 };
@@ -89,6 +87,7 @@ public:
 	virtual void		OnEscape(NEditCtrl* pEdit);
 };
 
+/*
 //-----------------------------------------------------------------
 //!	\class	NUwordProp
 //! \brief	Uword Property Item
@@ -251,5 +250,6 @@ public:
 	virtual void		OnEnter(NEditCtrl* pEdit);
 	virtual void		OnEscape(NEditCtrl* pEdit);
 };
+*/
 
 #endif //PROPERTYITEMS_H

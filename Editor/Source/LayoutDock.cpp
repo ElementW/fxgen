@@ -92,7 +92,7 @@ void NLayoutDock::OnPaint()
 
 	/////////////////////////////////////////////////
 	//Erase Background
-	dc.FillSolidRect(rc, RGBA(115,115,115,255));
+	//dc.FillSolidRect(rc, RGBA(115,115,115,255));
 
 	/////////////////////////////////////////////////
 	//Display Tabs
@@ -102,26 +102,33 @@ void NLayoutDock::OnPaint()
 		SLayoutItem* pLayout = m_arrayItems[i];
 
 		//Childs Wnd
-		udword nCount = pLayout->arrayWnds.Count();
+		udword nCount = pLayout->arrayTabs.Count();
 		if (nCount==0)	continue;
 
 		lrc = pLayout->rc;
 		lrc.bottom=lrc.top+dwTabHeight;
 
 		//if (pLayout->dwIdxWndSelected!=-1)
-		for (uword j=0; j<pLayout->arrayWnds.Count(); j++)
+		//Display tabs
+		for (uword j=0; j<pLayout->arrayTabs.Count(); j++)
 		{
-			NGUIWnd* pwnd = pLayout->arrayWnds[j];
+			NGUIWnd* pwnd = pLayout->arrayTabs[j].pwnd;
 			udword len = pwnd->GetText().Length();
 			lrc.right=lrc.left+(len*8);	//###TOFIX### text len
-			//dc.FillSolidRect(lrc, NColor(128,128,128,255));
+
 			dc.GradientVRect(lrc, GetGUISubSystem()->GetFaceColor(), GetGUISubSystem()->GetDarkColor());
+			if (pLayout->dwIdxWndSelected==j)
+				dc.FillSolidRect(lrc, NColor(255,255,255,128));
+
 			dc.DrawLine(lrc.left, lrc.top, lrc.right, lrc.top, GetGUISubSystem()->GetDarkColor(), 1);
 			dc.DrawLine(lrc.left, lrc.top, lrc.left, lrc.bottom, GetGUISubSystem()->GetDarkColor(), 1);
 			dc.DrawLine(lrc.right, lrc.top, lrc.right, lrc.bottom, GetGUISubSystem()->GetDarkColor(), 1);
 
 			dc.DrawString(pwnd->GetText().Buffer(), lrc, NDT_END_ELLIPSIS|NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, NColor(0,0,0,255));
+			pLayout->arrayTabs[j].rc = lrc;
+
 			lrc.left+=lrc.Width();
+
 		}
 	}
 
@@ -147,8 +154,20 @@ void NLayoutDock::OnLButtonDown(NPoint _point)
 
 }
 
-void NLayoutDock::OnLButtonUp(NPoint point)
+void NLayoutDock::OnLButtonUp(NPoint _point)
 {
+	SLayoutItem* playout = GetLayoutAt(_point);
+	if (playout)
+	{
+		udword idx = GetLayoutTabAt(playout, _point);
+		if (idx!=0xFFFFFFFF)
+		{
+			SelectTab(playout, idx);
+			RecalLayout();
+			Update();
+		}
+	}
+
 }
 
 
@@ -257,7 +276,7 @@ void NLayoutDock::RecalLayout()
 		pLayout = m_arrayItems[i];
 
 		//Childs Wnd
-		udword nCount = pLayout->arrayWnds.Count();
+		udword nCount = pLayout->arrayTabs.Count();
 		if (nCount==0)	continue;
 
 		lrc = pLayout->rc;
@@ -265,14 +284,14 @@ void NLayoutDock::RecalLayout()
 
 		if (pLayout->dwIdxWndSelected!=-1)
 		{
-			NGUIWnd* pwnd = pLayout->arrayWnds[pLayout->dwIdxWndSelected];
+			NGUIWnd* pwnd = pLayout->arrayTabs[pLayout->dwIdxWndSelected].pwnd;
 			pwnd->ShowWindow(true);
 			pwnd->SetWindowRect(lrc);
 		}
 
-		for (j=0; j<pLayout->arrayWnds.Count(); j++)
+		for (j=0; j<pLayout->arrayTabs.Count(); j++)
 		{
-			NGUIWnd* pwnd = pLayout->arrayWnds[j];
+			NGUIWnd* pwnd = pLayout->arrayTabs[j].pwnd;
 			if (pLayout->dwIdxWndSelected!=j)
 				pwnd->ShowWindow(false);
 		}
@@ -284,7 +303,6 @@ void NLayoutDock::RecalLayout()
 
 udword NLayoutDock::SplitH(udword _dwID, udword _dwPercent)
 {
-	//Structure
 	SLayoutItem*		pst = new SLayoutItem();
 	pst->dwIdxToSplit		= _dwID;
 	pst->dwSplitAt			= _dwPercent;
@@ -296,7 +314,6 @@ udword NLayoutDock::SplitH(udword _dwID, udword _dwPercent)
 
 udword NLayoutDock::SplitV(udword _dwID, udword _dwPercent)
 {
-	//Structure
 	SLayoutItem*		pst = new SLayoutItem();
 	pst->dwIdxToSplit		= _dwID;
 	pst->dwSplitAt			= _dwPercent;
@@ -318,5 +335,38 @@ void NLayoutDock::DeleteAllLayouts()
 void NLayoutDock::AddWndToLayout(udword _dwID, NGUIWnd* _pwnd)
 {
 	SLayoutItem* pLayoutToSplit = m_arrayItems[_dwID];
-	pLayoutToSplit->dwIdxWndSelected = pLayoutToSplit->arrayWnds.AddItem(_pwnd);
+
+	SLayoutTabItem st;
+	st.rc.SetEmpty();
+	st.pwnd = _pwnd;
+	pLayoutToSplit->arrayTabs.AddItem(st);
+
+	pLayoutToSplit->dwIdxWndSelected = 0;
+}
+
+SLayoutItem* NLayoutDock::GetLayoutAt(NPoint point)
+{
+	for (udword i=0; i<m_arrayItems.Count(); i++)
+	{
+		SLayoutItem* pLayout = m_arrayItems[i];
+		if (pLayout->rc.Contain(point))
+			return pLayout;
+	}	
+	return null;
+}
+
+udword NLayoutDock::GetLayoutTabAt(SLayoutItem* _pLayout, NPoint _point)
+{
+	for (udword j=0; j<_pLayout->arrayTabs.Count(); j++)
+	{
+		if (_pLayout->arrayTabs[j].rc.Contain(_point))
+			return j;
+	}
+
+	return 0xFFFFFFFF;
+}
+
+void NLayoutDock::SelectTab(SLayoutItem* _playout, udword _idx)
+{
+	_playout->dwIdxWndSelected = _idx;
 }
