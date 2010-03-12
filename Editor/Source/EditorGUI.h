@@ -28,7 +28,7 @@
 //-----------------------------------------------------------------
 class NOperatorsWnd;
 class NProjectWnd;
-class NStoredWnd;
+class NAssetsWnd;
 class NOperatorNode;
 class NOperatorsProject;
 
@@ -78,7 +78,7 @@ protected:
 	bool							m_bExecuteLocked;	//!< Lock-Unlock operators execution
 	NOperatorsWnd*		m_opswnd;					//!< Operators Window
 	NProjectWnd*			m_pprojectwnd;		//!< Pages Window
-	NStoredWnd*				m_pstoredwnd;			//!< Stored Window
+	NAssetsWnd*				m_passetswnd;			//!< Assets window
 	NOperatorNode*		m_popMarkedShow;	//!< Operator marked show for final result
 	NString						projectname;
 	float							m_fDetailFactor;

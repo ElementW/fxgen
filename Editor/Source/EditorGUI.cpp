@@ -21,10 +21,11 @@
 #include "EditorGUI.h"
 
 #include "OperatorsWnd.h"
-//#include "PropertiesWnd.h"
+#include "PropertiesWnd.h"
 #include "ViewportsWnd.h"
 #include "ProjectWnd.h"
 #include "FileChooserDialog.h"
+#include "AssetsWnd.h"
 
 //-----------------------------------------------------------------
 //                   Defines
@@ -99,8 +100,8 @@ bool NEditorGUI::Create(char* name, const NRect& rect)
 	m_opswnd->Create("Stacked Operators", GetClientRect(), this);
 
 	//Create properties window
-//	NPropertiesWnd* propswnd = NNEW(NPropertiesWnd);
-//	propswnd->Create("Properties", GetClientRect(), this);
+	NPropertiesWnd* propswnd = NNEW(NPropertiesWnd);
+	propswnd->Create("Properties", GetClientRect(), this);
 
 	//Create Viewport window
 	NViewportsWnd* viewportswnd = NNEW(NViewportsWnd);
@@ -109,6 +110,10 @@ bool NEditorGUI::Create(char* name, const NRect& rect)
 	//Create Project window
 	m_pprojectwnd = NNEW(NProjectWnd);
 	m_pprojectwnd->Create("Project", GetClientRect(), this);
+
+	//Create Assets window
+	m_passetswnd = NNEW(NAssetsWnd);
+	m_passetswnd->Create("Assets", GetClientRect(), this);
 
 	///////////////////////////////////////////////
 	// Mainframe's Split
@@ -119,8 +124,9 @@ bool NEditorGUI::Create(char* name, const NRect& rect)
 
 	AddWndToLayout(dwViewportsPaneID,	viewportswnd);
 	AddWndToLayout(dwOperatorsPaneID,	m_opswnd);
-//	SetPaneWnd("Properties", dwPropertiesPaneID,	propswnd);
+	AddWndToLayout(dwPropertiesPaneID,	propswnd);
 	AddWndToLayout(dwProjectPaneID,	m_pprojectwnd);
+	AddWndToLayout(dwProjectPaneID,	m_passetswnd);
 
 	RecalLayout();
 

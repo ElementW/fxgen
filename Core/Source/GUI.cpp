@@ -283,9 +283,21 @@ void NGUISubSystem::NotifyWindowDeletion(NGUIWnd* _pWnd)
 //-----------------------------------------------------------------
 NGUIWnd* NGUISubSystem::GetWndUnderMouse(sdword _x, sdword _y)
 {
+	//Childs
 	NGUIWnd* pwnd = _GetPopupWndUnderMouse(_x, _y, m_pMainWnd);
 	if (pwnd==null)
 		pwnd=_GetWndUnderMouse(_x, _y, m_pMainWnd);
+
+	//Main
+	if (pwnd==null)
+	{
+		NRect rc = m_pMainWnd->GetScreenRect();
+		NPoint pt(_x, _y);
+		if (rc.Contain(pt))
+		{
+			pwnd=m_pMainWnd;
+		}
+	}
 
 	return pwnd;
 }

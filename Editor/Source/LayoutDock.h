@@ -37,6 +37,16 @@ enum ETypeSplit
 };
 
 //-----------------------------------------------------------------
+//! \struct SLayoutTabItem
+//! \brief	Layout Tab description
+//-----------------------------------------------------------------
+struct SLayoutTabItem
+{
+	NGUIWnd*	pwnd;
+	NRect			rc;
+};
+
+//-----------------------------------------------------------------
 //! \struct SLayoutItem
 //! \brief	Layout description
 //-----------------------------------------------------------------
@@ -47,10 +57,11 @@ struct SLayoutItem
 	ETypeSplit	eTypeSplit;
 	udword			dwIdxWndSelected;
 
-	GArray<NGUIWnd*>	arrayWnds;	//!< Windows list for this layout
+	GArray<SLayoutTabItem>	arrayTabs;	//!< tabs list for this layout
 
 	//RunTime
-	NRect rc;
+	NRect rc;			//!< Layout's rect
+
 };
 
 //-----------------------------------------------------------------
@@ -81,6 +92,8 @@ public:
 
 protected:
 	// Internal methods
+	SLayoutItem*		GetLayoutAt(NPoint point);
+	udword GetLayoutTabAt(SLayoutItem* _pLayout, NPoint _point);
 
 	// Datas
 	NPoint	m_ptStartMouse, m_ptCursor;
@@ -89,6 +102,7 @@ protected:
 	void RecalLayout();
 	void _RecalLayout(SLayoutItem* _pitem);
 	void DeleteAllLayouts();
+	void SelectTab(SLayoutItem* _playout, udword _idx);
 
 	//Datas
 	GArray<SLayoutItem*>	m_arrayItems;

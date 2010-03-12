@@ -318,6 +318,9 @@ public:
 	void			AddRefToMe(NObject* _pobj);
 	void			RemoveRefToMe(NObject* _pobj);
 
+	//Fields (reflexion)
+	ubyte* GetFieldVarAddr(udword _idx)	{ return (((ubyte*)this) + m_Table[_idx].dwDataOffset); }
+
 protected:
 	//Datas
 	NObjectArray			m_carrayRefTargets;				//!< Objects referenced by this object
