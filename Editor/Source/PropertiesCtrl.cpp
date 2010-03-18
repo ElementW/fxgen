@@ -408,6 +408,16 @@ void NPropertiesCtrl::DisplayObjectProperties(NObject* _pobj)
 //-----------------------------------------------------------------
 void NPropertiesCtrl::_DisplayObjectProperties(NObject* _pobj, udword _dwDepth)
 {
+	//Parse Object Fields
+	udword idx=0;
+	NFieldDesc* pfd = _pobj->GetRTClass()->m_paFieldsDesc;
+	while (pfd->byType!=255)
+	{
+		AddVarProperties(_pobj, idx, pfd, _dwDepth);
+		pfd++;
+		idx++;
+	}
+
 	//Get First Object var bloc
 /*	NVarsBloc* pbloc = _pobj->GetFirstVarsBloc();
 
@@ -490,7 +500,7 @@ udword NPropertiesCtrl::AddGroup(const char* pszName, udword _dwDepth)
 //-----------------------------------------------------------------
 //!	\brief	Add a var property
 //-----------------------------------------------------------------
-udword NPropertiesCtrl::AddVarProperties(NFieldDesc* pfd, udword _dwDepth)
+udword NPropertiesCtrl::AddVarProperties(NObject* _pobj, udword _idx, NFieldDesc* pfd, udword _dwDepth)
 {
 	NRowDesc				rd;
 	rd.strName			= pfd->pszName;
@@ -502,16 +512,14 @@ udword NPropertiesCtrl::AddVarProperties(NFieldDesc* pfd, udword _dwDepth)
 
 	//pparentRow?rd.dwDepth = pparentRow->dwDepth+1:0;
 
-  /*rd.pItem = (NPropertyItem*)NRTClass::CreateByName(_pvarBlocDesc->pszCLASSGUI);
+	rd.pItem = (NPropertyItem*)NRTClass::CreateByName(pfd->pszUI);
 	if (rd.pItem)
 	{
 		rd.pItem->m_pParent				= this;
 
-		rd.pItem->m_pvarBloc			= _pvarBloc;
-		rd.pItem->m_pvarBlocDesc	= _pvarBlocDesc;
-		rd.pItem->m_pvarValue			= _pvarValue;
-		rd.pItem->m_dwvarIdx			= _dwvarIdx;
-  }*/
+		rd.pItem->m_pObject				= _pobj;
+		rd.pItem->m_dwFieldIdx		= _idx;
+  }
 
 	return m_carrayRowsDesc.AddItem(rd);
 }

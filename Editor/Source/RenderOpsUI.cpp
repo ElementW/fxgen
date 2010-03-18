@@ -29,7 +29,7 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NFlatOp, NOperatorNode)
-
+	NEWFIELD(eInteger, "width", NFlatOp, wpow, 1, 255, 1, "", "NUbyteProp"),
 FIMPLEMENT_CLASS_END()
 
 NFlatOp::NFlatOp()

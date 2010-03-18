@@ -59,6 +59,10 @@ public:
 
 	//Params
 	//SFlatParams m_params;
+	ubyte wpow;
+	ubyte hpow;
+	NRGBA color;
+
 };
 
 //-----------------------------------------------------------------

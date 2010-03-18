@@ -95,7 +95,7 @@ public:
 };
 
 FIMPLEMENT_CLASS(NTestReflexion, NObject)
-	NEWFIELD(eFloat, "angle", NTestReflexion, fAngle, -3.14f, 1.14f, 0.01f, ""),
+	//NEWFIELD(eFloat, "angle", NTestReflexion, fAngle, -3.14f, 1.14f, 0.01f, "", "NUbyteProp"),
 	NEWFIELD(eInteger, "seed", NTestReflexion, dwSeed, 0, 65536, 1, ""),
 //Struct
 	NEWFIELD(eInteger, "wpow", NTestReflexion, st.wpow, 0, 65536, 1, ""),

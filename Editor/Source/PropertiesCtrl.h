@@ -76,7 +76,7 @@ protected:
 
 
 	udword		AddGroup(const char* pszName, udword _dwDepth);
-	udword		AddVarProperties(NFieldDesc* pfd, udword _dwDepth);
+	udword		AddVarProperties(NObject* _pobj, udword _idx, NFieldDesc* pfd, udword _dwDepth);
 
 	void			DeleteAllProperties();	//!< Reset
 	NRowDesc* GetRowAtIdx(udword idx);
