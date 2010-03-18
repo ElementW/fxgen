@@ -57,6 +57,7 @@ struct NFieldDesc
 	float				fMax;
 	float				fStep;
 	const char*	pszDef;
+	const char*	pszUI;
 };
 
 
@@ -172,7 +173,7 @@ public:
 	NFieldDesc	class_name::m_Table[] = { 
 
 #define FIMPLEMENT_CLASS_END() \
-	{ -1, "end", 0, 0.0,0.0,0.0, "" } };
+	{ -1, "end", 0, 0.0,0.0,0.0, "", "" } };
 
 //Fields Macros
 /*#define		FBEGIN_FIELDS_CLASS(class_name) \
@@ -192,7 +193,7 @@ public:
 				virtual NRTClassFields* GetRTField()	{ return &m_RTField; }*/
 
 #define		OFFSET(c,m)	(size_t)&(((c *)0)->m)
-#define		NEWFIELD(type, name, classname, classmember, min, max, step, def)	{ type, name, OFFSET(classname, classmember), min, max, step, def	}
+#define		NEWFIELD(type, name, classname, classmember, min, max, step, def, ui)	{ type, name, OFFSET(classname, classmember), min, max, step, def, ui	}
 
 //-----------------------------------------------------------------
 //!	\enum		eFieldType

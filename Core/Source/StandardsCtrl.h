@@ -30,6 +30,7 @@
 		class NButtonCtrl;
 		class NColorPickerCtrl;
 		class NEditCtrl;
+		class NSlideCtrl;
 
 //-----------------------------------------------------------------
 //                   Defines
@@ -197,6 +198,37 @@ protected:
 	virtual	void	OnText(udword _unicode);
 	//Datas
 	udword m_dwCursorPos, m_dwSelectionTail;
+};
+
+
+
+//-----------------------------------------------------------------
+//!	\class		NSlideCtrl
+//!	\brief		GUI control for slider
+//-----------------------------------------------------------------
+class CORELIB_API NSlideCtrl : public NGUIWnd
+{
+public:
+	// Constructor-Destructor
+	NSlideCtrl();
+	virtual ~NSlideCtrl();
+
+	// Methods
+	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
+
+	void	Update();
+
+	void	SetPos(float _fPos);
+	void	SetStep(float _fStep);
+	void	SetRange(float _fMin, float _fMax);
+
+protected:
+	// Datas
+	float m_fPos, m_fMin, m_fMax, m_fStep;
+
+	//Delegates
+	virtual	void	OnPaint();
+	virtual void	OnSize();
 };
 
 #endif  //STANDARDSCTRL_H

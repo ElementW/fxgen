@@ -26,9 +26,14 @@
 #endif
 
 //-----------------------------------------------------------------
+//                   Defines
+//-----------------------------------------------------------------
+#define LD_SPLITBOX		4
+
+//-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
-//										NGLRenderer Class Implementation
+//										NLayoutDock Class Implementation
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -223,7 +228,6 @@ void NLayoutDock::RecalLayout()
 	pLayout->rc.right			= x+w;
 	pLayout->rc.bottom		= y+h;
 
-
 	//Recalcul de la dimension des layouts
 	for (i=0; i<m_arrayItems.Count(); i++)
 	{
@@ -243,9 +247,9 @@ void NLayoutDock::RecalLayout()
 
 			//On recalcule la taille du layout courant
 			pLayout->rc.left		= pLayoutToSplit->rc.left;
-			pLayout->rc.top			=	pLayoutToSplit->rc.top + dwSplitAt;
+			pLayout->rc.top			=	pLayoutToSplit->rc.top + dwSplitAt + LD_SPLITBOX;
 			pLayout->rc.right		= pLayoutToSplit->rc.right;
-			pLayout->rc.bottom	= pLayoutToSplit->rc.bottom;
+			pLayout->rc.bottom	= pLayoutToSplit->rc.bottom - LD_SPLITBOX;
 
 			//MAJ du parent
 			pLayoutToSplit->rc.bottom = pLayoutToSplit->rc.top + dwSplitAt;
@@ -257,7 +261,7 @@ void NLayoutDock::RecalLayout()
 			udword dwSplitAt = pLayout->dwSplitAt * pLayoutToSplit->rc.Width() / 100;
 
 			//On recalcule la taille du layout courant
-			pLayout->rc.left		= pLayoutToSplit->rc.left + dwSplitAt;
+			pLayout->rc.left		= pLayoutToSplit->rc.left + dwSplitAt + LD_SPLITBOX;
 			pLayout->rc.top			=	pLayoutToSplit->rc.top;
 			pLayout->rc.right		= pLayoutToSplit->rc.right;
 			pLayout->rc.bottom	= pLayoutToSplit->rc.bottom;

@@ -126,12 +126,12 @@ bool NUbyteProp::AddValue(sdword dwDelta)
 
 void NUbyteProp::OnEnter(NEditCtrl* pEdit)
 {
-	((NPropertiesCtrl*)m_pParent)->EndRowEditing();
+	//((NPropertiesCtrl*)m_pParent)->EndRowEditing();
 }
 
 void NUbyteProp::OnEscape(NEditCtrl* pEdit)
 {
-	((NPropertiesCtrl*)m_pParent)->EndRowEditing(false);
+	//((NPropertiesCtrl*)m_pParent)->EndRowEditing(false);
 }
 
 /*
