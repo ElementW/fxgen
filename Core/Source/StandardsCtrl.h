@@ -201,7 +201,6 @@ protected:
 };
 
 
-
 //-----------------------------------------------------------------
 //!	\class		NSlideCtrl
 //!	\brief		GUI control for slider
@@ -220,7 +219,7 @@ public:
 
 	void	SetPos(float _fPos);
 	void	SetStep(float _fStep);
-	void	SetRange(float _fMin, float _fMax);
+	void	SetRange(float _fMin, float _fMax);	//If _fMin<_fMax => Slide value ranged
 
 protected:
 	// Datas
