@@ -81,9 +81,9 @@ void NTextCtrl::OnPaint()
 {
 	NRect rc = GetClientRect();
 
-	N2DPainter dc(this);
-  //dc.FillSolidRect(rc, GetGUISubSystem()->GetBarColor());
-  dc.DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
+	N2DPainter painter(this);
+  //painter.FillSolidRect(rc, GetGUISubSystem()->GetBarColor());
+  painter.DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
 
 }
 
@@ -160,7 +160,7 @@ void NButtonCtrl::OnPaint()
 {
 	NRect rc = GetClientRect();
 
-	N2DPainter dc(this);
+	N2DPainter painter(this);
 
 	///////////////////////////////////////////////////////////
 	//Normal Button
@@ -168,29 +168,29 @@ void NButtonCtrl::OnPaint()
 	{
 		if (!m_bClicked)
 		{
-			dc.GradientVRect(rc, RGBA(255, 220, 220, 220), RGBA(120, 120, 120,255));
+			painter.GradientVRect(rc, RGBA(255, 220, 220, 220), RGBA(120, 120, 120,255));
 
-			if (m_bMouseOver)			dc.Draw3dRect(rc, RGBA(205,194,14,255), RGBA(205,194,14,255));
-			else									dc.Draw3dRect(rc, RGBA(255,255,255,255), RGBA(0,0,0,255));
+			if (m_bMouseOver)			painter.Draw3dRect(rc, RGBA(205,194,14,255), RGBA(205,194,14,255));
+			else									painter.Draw3dRect(rc, RGBA(255,255,255,255), RGBA(0,0,0,255));
 
-      dc.DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
+      painter.DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
 		} else {
-			dc.GradientVRect(rc, RGBA(120, 120, 120,255), RGBA(220, 220, 220,255));
+			painter.GradientVRect(rc, RGBA(120, 120, 120,255), RGBA(220, 220, 220,255));
 
-			if (m_bMouseOver)			dc.Draw3dRect(rc, RGBA(205,194,14,255), RGBA(205,194,14,255));
-			else									dc.Draw3dRect(rc, RGBA(0,0,0,255), RGBA(255,255,255,255));
+			if (m_bMouseOver)			painter.Draw3dRect(rc, RGBA(205,194,14,255), RGBA(205,194,14,255));
+			else									painter.Draw3dRect(rc, RGBA(0,0,0,255), RGBA(255,255,255,255));
 
 			rc.Move(1,1);
-      dc.DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
+      painter.DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
 		}
 
 	///////////////////////////////////////////////////////////
 	//Menu Button
 	} else if (m_dwStyle==NBUT_STYLE_MENU) {
 		NColor clr;
-    if (m_bMouseOver)			{ /*dc.RoundRect(0xF, rc, 0, RGBA(64,64,64,255));*/ clr=0xFFFFFFFF; }
+    if (m_bMouseOver)			{ /*painter.RoundRect(0xF, rc, 0, RGBA(64,64,64,255));*/ clr=0xFFFFFFFF; }
 		else									{ clr=0xFF000000; }
-    dc.DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, clr );
+    painter.DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, clr );
 	}
 
 
@@ -599,19 +599,19 @@ void NEditCtrl::OnPaint()
 {
 	NRect rc = GetClientRect();
 
-	N2DPainter dc(this);
-	dc.FillSolidRect(rc, RGBA(255,255,255,255));
-  dc.DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+	N2DPainter painter(this);
+	painter.FillSolidRect(rc, RGBA(255,255,255,255));
+  painter.DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 	//Cursor
 	if( m_dwSelectionTail == m_dwCursorPos )
 	{
 		udword px = m_dwCursorPos*(GetGUISubSystem()->GetFont()->m_h-1);
-		dc.DrawLine(px,0,px, rc.Height(), RGBA(255,141,15,255), 1);
+		painter.DrawLine(px,0,px, rc.Height(), RGBA(255,141,15,255), 1);
 	} else {
 		udword pxs = nmin(m_dwCursorPos, m_dwSelectionTail)*(GetGUISubSystem()->GetFont()->m_h-1);
 		udword pxe = nmax(m_dwCursorPos, m_dwSelectionTail)*(GetGUISubSystem()->GetFont()->m_h-1);
 		NRect rc2(pxs, 0, pxe, rc.Height());
-		dc.FillSolidRect(rc2, NColor(255,141,15,128));
+		painter.FillSolidRect(rc2, NColor(255,141,15,128));
 	}
 
 }
@@ -712,4 +712,141 @@ void NEditCtrl::OnKeyDown(udword _dwchar)
 		OnEscape(this);
 	}
 	RedrawWindow();
+}
+
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//										NSlideCtrl Class Implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+
+//-----------------------------------------------------------------
+//										Constructor
+//-----------------------------------------------------------------
+NSlideCtrl::NSlideCtrl()
+{
+	m_fPos=m_fMin=0.0f;
+	m_fStep=0.01f;
+	m_fMax=1.0f;
+}
+
+//-----------------------------------------------------------------
+//										Destructor
+//-----------------------------------------------------------------
+NSlideCtrl::~NSlideCtrl()
+{
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Control creation
+//-----------------------------------------------------------------
+bool NSlideCtrl::Create(const char* name, const NRect& rect, NGUIWnd* parent)
+{
+	//Call Base class
+	NWNDCREATE			wc;
+	wc.dwId					= 1;
+	wc.pszText			= (char*)name;
+	wc.pwndParent		= parent;
+	wc.rcRect				= rect;
+	wc.dwStyle			= NWS_VISIBLE;
+	NGUIWnd::Create(wc);
+
+	return true;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Update control
+//-----------------------------------------------------------------
+void NSlideCtrl::Update()
+{
+	RedrawWindow();
+	//OnPaint();
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Paint
+//-----------------------------------------------------------------
+void NSlideCtrl::OnPaint()
+{
+	NRect rc = GetClientRect();
+
+	N2DPainter painter(this);
+
+	//Background
+  painter.FillSolidRect(rc, GetGUISubSystem()->GetBarColor());
+
+	//Mode Ranged
+	if (m_fMin<m_fMax)
+	{
+		NRect rcRange(rc);
+		rcRange.right = (sdword)((m_fPos * (float)rcRange.Width()) / (m_fMax-m_fMin));
+		//Display cursor to drag value
+		painter.FillSolidRect(rcRange, GetGUISubSystem()->GetBarColor());
+
+	//Mode unlimited
+	} else {
+
+		int w=rc.Height();
+		NColor black(0,0,0,255);
+		NPoint pts[3];
+
+		//Display arrow left
+		pts[0].x=4;		pts[0].y=w/2;
+		pts[1].x=4+w;	pts[1].y=4;
+		pts[2].x=4+w;	pts[2].y=w-4;
+		painter.Polygon(pts, 3, black);
+
+		//Display arrow right
+		pts[0].x=4;		pts[0].y=w/2;
+		pts[1].x=4+w;	pts[1].y=4;
+		pts[2].x=4+w;	pts[2].y=w-4;
+		painter.Polygon(pts, 3, black);
+
+
+
+	}
+
+	//Value
+	NString str;
+	str.Format("%s: %f", m_cstrText, m_fPos);
+  painter.DrawString(str.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
+
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Sizing
+//-----------------------------------------------------------------
+void NSlideCtrl::OnSize()
+{
+	//Redraw
+	Update();
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Change pos
+//-----------------------------------------------------------------
+void NSlideCtrl::SetPos(float _fPos)
+{
+	m_fPos=_fPos;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Change step
+//-----------------------------------------------------------------
+void NSlideCtrl::SetStep(float _fStep)
+{
+	m_fStep=_fStep;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Change range
+//-----------------------------------------------------------------
+void NSlideCtrl::SetRange(float _fMin, float _fMax)
+{
+	m_fMin=_fMin;
+	m_fMax=_fMax;
 }
