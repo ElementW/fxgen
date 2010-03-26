@@ -100,7 +100,7 @@ protected:
 	udword	m_dwLastUpdate;
 
 protected:
-	//Win32 Messages Dispatching
+	//Win32 Events
 	virtual	void	OnPaint();
 	virtual void	OnSize();
 	virtual void	OnMouseMove(NPoint pos );

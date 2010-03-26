@@ -39,7 +39,7 @@ public:
 
 
 protected:
-	//Events
+	//m_dwWidth
 	EVT_DECLARE_HANDLER(OnOPSelChanged);
 	EVT_DECLARE_HANDLER(OnOPDeleting);
 	EVT_DECLARE_HANDLER(OnPageSelected);

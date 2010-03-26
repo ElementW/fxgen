@@ -53,7 +53,7 @@ protected:
 	virtual void	OnRButtonDown(NPoint pos);
 	virtual void	OnSize();
 
-	//Events
+	//m_dwWidth
 	EVT_DECLARE_HANDLER(OnOPDeleting);
 	EVT_DECLARE_HANDLER(OnRender);
 

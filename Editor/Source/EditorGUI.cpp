@@ -170,7 +170,7 @@ bool NEditorGUI::Create(char* name, const NRect& rect)
 	m_wndOptionMenu.AddItem("High x2.0",		MENU_DETAILHIGH, 0);
 	m_wndOptionMenu.OnItemClick=FDelegate(this, (TDelegate)&NEditorGUI::OnOptionMenuClick);
 
-	//Events
+	//m_dwWidth
 	pbuttonFile->OnClick=FDelegate(this, (TDelegate)&NEditorGUI::OnFile);
 	pbuttonOption->OnClick=FDelegate(this, (TDelegate)&NEditorGUI::OnOption);
 */

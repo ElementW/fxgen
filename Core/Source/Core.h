@@ -165,7 +165,8 @@ public:
 #define FDECLARE_CLASS() \
 	static NRTClass	m_RTClass;\
 	virtual NRTClass* GetRTClass()		{ return &m_RTClass; } \
-	static NFieldDesc	m_Table[];
+	static NFieldDesc	m_Table[]; \
+	virtual NFieldDesc* GetFieldDesc()		{ return m_Table; }
 
 #define FIMPLEMENT_CLASS(class_name, superclass_name) \
 	extern NObject* class_name##CB()	{ return NNEW(class_name); }\
@@ -320,7 +321,7 @@ public:
 	void			RemoveRefToMe(NObject* _pobj);
 
 	//Fields (reflexion)
-	ubyte* GetFieldVarAddr(udword _idx)	{ return (((ubyte*)this) + m_Table[_idx].dwDataOffset); }
+	ubyte* GetFieldVarAddr(udword _idx)	{ return (((ubyte*)this) + GetFieldDesc()[_idx].dwDataOffset); }
 
 protected:
 	//Datas

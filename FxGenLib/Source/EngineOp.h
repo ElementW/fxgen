@@ -87,7 +87,7 @@ struct SOpCallDesc
 //-----------------------------------------------------------------
 //!	\class		NResource
 //!	\brief		Resource
-//!	\note			###TODO### mesh... see SOpCallDesc::byResType
+//!	\note			###TODO### mesh, voxel... see SOpCallDesc::byResType
 //-----------------------------------------------------------------
 struct SResource
 {

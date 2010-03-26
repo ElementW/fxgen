@@ -90,7 +90,7 @@ void NPropertiesCtrl::OnPaint()
 
 	/////////////////////////////////////////////////
 	//Erase Background
-	m_dwHeaderWidth = rc.Width()/2;
+	m_dwHeaderWidth = rc.Width()/4;
 	dc.FillSolidRect(rc, RGBA(115,115,115,255));
 
 	/////////////////////////////////////////////////
@@ -161,10 +161,12 @@ void NPropertiesCtrl::OnPaint()
 		// Draw Variable Properties
 		} else if (prd->pItem!=null && prd->dwDepth<=dwMaxDepth) {
 
+			udword dwItemH = prd->pItem->GetHeight();
+
 			//Display Left Part
 			NRect rcRow;
 			rcRow.left = rc.left;		rcRow.top = dwPosY;
-			rcRow.right = m_dwHeaderWidth;	rcRow.bottom = rcRow.top + PC_ROWSHEIGHT - 1;
+			rcRow.right = m_dwHeaderWidth;	rcRow.bottom = rcRow.top + dwItemH - 1;
 
 			if (m_dwCurSelRow!=i)		dc.FillSolidRect(rcRow,	RGBA(200,200,200,255));
 			else										dc.FillSolidRect(rcRow,	RGBA(255,141,15,255));
@@ -206,7 +208,7 @@ void NPropertiesCtrl::OnPaint()
 				prd->rcItemAnim.left=prd->rcItemAnim.right=0;
 			}
 
-			dwPosY+=PC_ROWSHEIGHT;
+			dwPosY+=dwItemH;
 		}
 
 		//depth
@@ -343,7 +345,7 @@ void NPropertiesCtrl::OnLButtonDblClk(NPoint point)
 void NPropertiesCtrl::OnMouseMove(NPoint point )
 {
 	//Value sliding
-	if (m_bAddValue)
+	/*if (m_bAddValue)
 	{
 		sdword dwOffset =	point.x - m_ptStartMouse.x;
 		//TRACE("dwOffset <%d> point<%d> ptStartMouse<%d> ptCursor<%d,%d>\n", dwOffset, point.x, m_ptStartMouse.x, m_ptCursor.x, m_ptCursor.y);
@@ -354,7 +356,7 @@ void NPropertiesCtrl::OnMouseMove(NPoint point )
 			OffsetRowValue(dwOffset);
 			Update();
 		}
-	}
+	}*/
 
 }
 
@@ -519,6 +521,8 @@ udword NPropertiesCtrl::AddVarProperties(NObject* _pobj, udword _idx, NFieldDesc
 
 		rd.pItem->m_pObject				= _pobj;
 		rd.pItem->m_dwFieldIdx		= _idx;
+
+		rd.pItem->Init();
   }
 
 	return m_carrayRowsDesc.AddItem(rd);
@@ -567,7 +571,7 @@ udword NPropertiesCtrl::GetRowUnderPoint(NPoint& pt)
 //-----------------------------------------------------------------
 //!	\brief	Add property's row Value
 //-----------------------------------------------------------------
-void NPropertiesCtrl::OffsetRowValue(sdword dwOffset)
+/*void NPropertiesCtrl::OffsetRowValue(sdword dwOffset)
 {
 	if (m_dwCurSelRow==-1 || !m_bAddValue)		return;
 
@@ -579,7 +583,7 @@ void NPropertiesCtrl::OffsetRowValue(sdword dwOffset)
 		OnPropertiesChanged();
 	}
 
-}
+}*/
 
 //-----------------------------------------------------------------
 //!	\brief	Select a row from an index

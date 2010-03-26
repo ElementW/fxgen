@@ -48,7 +48,7 @@ protected:
 	// Messages Notify
 	void OnTreeSelChange(NObject* _psender);
 
-	//Messages Dispatching
+	//Events
 	virtual void OnRButtonDown(NPoint pos);
 	void OnMenuClick(NObject* _psender);
 

@@ -119,12 +119,12 @@ protected:
 	//Datas cursor
 	sdword	m_dwCursorX, m_dwCursorY;
 
-	//Events
+	//m_dwWidth
 	EVT_DECLARE_HANDLER(OnPageSelected);
 	EVT_DECLARE_HANDLER(OnRendering);
 
 protected:
-	//Messages Dispatching
+	//Events
 	virtual	void	OnPaint();
 	virtual void	OnSize();
 

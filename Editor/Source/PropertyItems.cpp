@@ -39,7 +39,7 @@ NPropertyItem::NPropertyItem()
 	m_pwNGraphicstrl= null;
 	m_pParent				= null;
 	m_pObject				= null;
-	m_dwFieldIdx		= -1;
+	m_dwFieldIdx		= 0;
 }
 
 //-----------------------------------------------------------------
@@ -61,78 +61,53 @@ NPropertyItem::~NPropertyItem()
 FIMPLEMENT_CLASS(NUbyteProp, NPropertyItem)
 FIMPLEMENT_CLASS_END()
 
-void NUbyteProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
+
+void NUbyteProp::Init()
 {
+	NFieldDesc* pfd = &m_pObject->GetRTClass()->m_paFieldsDesc[m_dwFieldIdx];
 	ubyte* paddr = m_pObject->GetFieldVarAddr(m_dwFieldIdx);
 
-	m_strValue.Format("%d", *paddr);
-  pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+	m_slider.Create(pfd->pszName, NRect(0,0,0,0), m_pParent);
+	m_slider.SetRange(pfd->fMin, pfd->fMax);
+	m_slider.SetPos(*(ubyte*)paddr);
+	m_slider.SetStep(pfd->fStep);
+	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NUbyteProp::OnValueChanged);
 }
 
-bool NUbyteProp::BeginEdit(NRect& rcItem)
+void NUbyteProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
-	if (m_pwNGraphicstrl)	delete m_pwNGraphicstrl;
-
-/*	NRect rcCB(rcItem);
-
-	NEditCtrl* pwNGraphicsB = new NEditCtrl;
-	pwNGraphicsB->Create("", rcCB, m_pParent);
-	m_pwNGraphicstrl = pwNGraphicsB;
-
-	NString text;
-	text.Format("%u", (udword)m_pvarValue->byVal);
-	pwNGraphicsB->SetText(text.Buffer());
-	pwNGraphicsB->SelectAll();
-	pwNGraphicsB->SetFocus();
-
-	pwNGraphicsB->OnEnter = FDelegate(this, (TDelegate)&NUbyteProp::OnEnter);
-	pwNGraphicsB->OnEscape = FDelegate(this, (TDelegate)&NUbyteProp::OnEscape);
-*/
-	return false;
+	m_slider.SetWindowRect(rcItem);
 }
 
-bool NUbyteProp::EndEdit(bool bSaveChanged)
+void NUbyteProp::OnValueChanged(NObject* _psender)
 {
-	if (m_pwNGraphicstrl==null)		return false;
-/*
-	//Save changed
-	if (bSaveChanged)
-	{
-		NString str = ((NEditCtrl*)m_pwNGraphicstrl)->GetText();
-		sdword dwVal = atoi(str.Buffer());
-		if (dwVal>255)		dwVal = 255;
-		if (dwVal<0)		dwVal = 0;
-		m_pvarValue->byVal = (ubyte)dwVal;
-		//strcpy(m_pvarValue->szVal, str.Buffer());
-	}
-
-	//Destroy control
-	delete m_pwNGraphicstrl;
-	m_pwNGraphicstrl=null;
-*/
-	return bSaveChanged;
+	//Change field value
+	ubyte* paddr = m_pObject->GetFieldVarAddr(m_dwFieldIdx);
+	float fpos = m_slider.GetPos();
+	*paddr = (ubyte)fpos;
 }
 
-bool NUbyteProp::AddValue(sdword dwDelta)
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//										NUbyteProp class Implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+FIMPLEMENT_CLASS(NColorProp, NPropertyItem)
+FIMPLEMENT_CLASS_END()
+
+void NColorProp::Init()
 {
-/*
-	sdword dwVal = (sdword)m_pvarValue->byVal + (sdword)dwDelta;
-	if (dwVal>255)		dwVal = 255;
-	if (dwVal<0)			dwVal = 0;
-	m_pvarValue->byVal = (ubyte)dwVal;
-*/
-	return true;
+	m_picker.Create(m_pParent);
 }
 
-void NUbyteProp::OnEnter(NEditCtrl* pEdit)
+void NColorProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
-	//((NPropertiesCtrl*)m_pParent)->EndRowEditing();
+	m_picker.SetWindowRect(rcItem);
 }
 
-void NUbyteProp::OnEscape(NEditCtrl* pEdit)
-{
-	//((NPropertiesCtrl*)m_pParent)->EndRowEditing(false);
-}
 
 /*
 //-----------------------------------------------------------------

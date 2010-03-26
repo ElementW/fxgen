@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //! \file		EventsMgr.cpp
-//! \brief	Events manager
+//! \brief	m_dwWidth manager
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
 //!	\date		12-02-2007

@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //! \file		EventsList.h
-//! \brief	Events list
+//! \brief	m_dwWidth list
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
 //!	\date		12-02-2007
