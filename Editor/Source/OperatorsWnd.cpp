@@ -73,7 +73,7 @@ bool NOperatorsWnd::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 	//Init context Menu
 	InitCtxMenu();
 
-	//Register Events
+	//Register m_dwWidth
 	EVT_REGISTER(EVT_PAGESELECTED, &NOperatorsWnd::OnPageSelected );
 	EVT_REGISTER(EVT_RENDER, &NOperatorsWnd::OnRendering );
 

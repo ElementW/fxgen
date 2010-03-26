@@ -416,7 +416,7 @@ void NGUISubSystem::_RedrawWindowPopup(NGUIWnd* _pwndFrom)
 //-----------------------------------------------------------------
 void NGUISubSystem::SetFocus(NGUIWnd* _pwnd)
 {
-	//Events kill focus
+	//m_dwWidth kill focus
 	if (m_pFocusedWnd)
 		m_pFocusedWnd->OnKillFocus(_pwnd);
 

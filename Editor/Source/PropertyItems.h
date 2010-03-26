@@ -50,11 +50,14 @@ public:
 	virtual ~NPropertyItem();
 
 	//Display
+	virtual void		Init() = 0;
 	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem)	= 0;
+
 	virtual bool		BeginEdit	(NRect& rcItem)										{ return false;	}
 	virtual bool		EndEdit		(bool bSaveChanged=true)					{ return false;	}
-	virtual	bool		AddValue(sdword dwDelta)										{ return false; }
+
 	virtual void		Click(NPoint& pt, NRect& rcItem)	{}
+	virtual udword	GetHeight() { return 16; }
 
 	//Members Access
 	char* GetValue()	{ return m_strValue.Buffer(); }
@@ -63,7 +66,7 @@ protected:
 	NString			m_strValue;					//!< Value in string form
 	NGUIWnd*		m_pwNGraphicstrl;		//!< Control used for item edition
 public:
-	NObject*		m_pObject;			//!< Object that contain field
+	NObject*		m_pObject;			//!< Object that contain field to edit
 	udword			m_dwFieldIdx;		//!< Field to edit
 
 	NGUIWnd*			m_pParent;				//!< Parent windows (ie CPropertiesCtrl)
@@ -78,14 +81,51 @@ class NUbyteProp : public NPropertyItem
 public:
 	FDECLARE_CLASS();
 
+	virtual void		Init();
 	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
-	virtual bool		BeginEdit	(NRect& rcItem);
-	virtual bool		EndEdit		(bool bSaveChanged=true);
-	virtual	bool		AddValue(sdword dwDelta);
 
-	virtual void		OnEnter(NEditCtrl* pEdit);
-	virtual void		OnEscape(NEditCtrl* pEdit);
+
+protected:
+	NSlideCtrl m_slider;
+	void OnValueChanged(NObject* _psender);
 };
+
+//-----------------------------------------------------------------
+//!	\class	NColorProp
+//! \brief	Color Property Item
+//-----------------------------------------------------------------
+class NColorProp : public NPropertyItem
+{
+public:
+	FDECLARE_CLASS();
+
+	virtual void		Init();
+	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
+	virtual udword	GetHeight() { return 128; }
+
+protected:
+	NColorPickerCtrl m_picker;
+};
+
+//-----------------------------------------------------------------
+//!	\class	NUbyteComboProp
+//! \brief	UByte Property Item
+//-----------------------------------------------------------------
+class NUbyteComboProp : public NPropertyItem
+{
+public:
+	FDECLARE_CLASS();
+
+	virtual void		Init();
+	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
+
+protected:
+	NMenuCtrl	m_wndMenu;
+	GArray<NString>	m_carrayStringsList;
+	void OnMenuClick(NObject* _psender);
+
+};
+
 
 /*
 //-----------------------------------------------------------------
@@ -151,51 +191,7 @@ public:
 	virtual void		OnEscape(NEditCtrl* pEdit);
 };
 
-//-----------------------------------------------------------------
-//!	\class	NColorProp
-//! \brief	Color Property Item
-//-----------------------------------------------------------------
-class NColorProp : public NPropertyItem
-{
-public:
-	FDECLARE_CLASS();
 
-	NColorProp()		{ m_dwRGBEditingIdx = 0; m_bFirst=true; }
-	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
-	virtual bool		BeginEdit	(NRect& rcItem);
-	virtual bool		EndEdit		(bool bSaveChanged=true);
-	virtual	bool		AddValue(sdword dwDelta);
-	virtual void		Click(NPoint& pt, NRect& rcItem);
-
-	// Messages Notify
-	void OnColorClick(NObject* _psender);
-
-protected:
-	bool m_bFirst;
-	NColorPickerCtrl m_wndPicker;
-	udword m_dwRGBEditingIdx;
-};
-
-//-----------------------------------------------------------------
-//!	\class	NUbyteComboProp
-//! \brief	UByte Property Item
-//-----------------------------------------------------------------
-class NUbyteComboProp : public NPropertyItem
-{
-public:
-	FDECLARE_CLASS();
-
-	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
-	virtual bool		BeginEdit	(NRect& rcItem);
-	virtual bool		EndEdit		(bool bSaveChanged=true);
-
-	// Messages Notify
-	void OnMenuClick(NObject* _psender);
-
-protected:
-	NMenuCtrl	m_wndMenu;
-	GArray<NString>	m_carrayStringsList;
-};
 
 //-----------------------------------------------------------------
 //!	\class	NFileBrowserProp

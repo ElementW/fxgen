@@ -4,6 +4,7 @@ TODO
 .FxGenLib
 	.Multi-Threading
 	.Rewrite animation processing
+	.How to manage Voxel or Mesh resource ? 'reintegrate NObject ?'
 	
 .Editor:GUI
 	.Review Properties control.
@@ -11,6 +12,10 @@ TODO
 		.Add slider control
 	.TreeNodeCtrl
 		.Add node renaming
+	.Button
+		.add style: menu and color
+	.Viewport
+		.manage resource display
 
 Version 0.7 alpha (Release: New FxGen Engine !)
 ----------------------------------

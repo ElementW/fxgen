@@ -89,7 +89,7 @@ bool NViewportsWnd::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 	m_wndMenu.AddItem("Toggle 2D/3D",	ID_2D3D,				ME_ITEMSTYLE_CHECKBOX);
 	//m_wndMenu.AddItem("Export TGA",		ID_EXPORT,			null);
 
-	//Register Events
+	//Register m_dwWidth
 	EVT_REGISTER(EVT_OPDELETING,	(EVENTFNC)&NViewportsWnd::OnOPDeleting	);
 	EVT_REGISTER(EVT_RENDER,			(EVENTFNC)&NViewportsWnd::OnRender			);
 

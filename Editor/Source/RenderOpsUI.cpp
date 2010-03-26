@@ -29,11 +29,15 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NFlatOp, NOperatorNode)
-	NEWFIELD(eInteger, "width", NFlatOp, wpow, 1, 255, 1, "", "NUbyteProp"),
+	NEWFIELD(eInteger, "width", NFlatOp, wpow, 0, 255, 1, "8", "NUbyteProp"),
+	NEWFIELD(eInteger, "height", NFlatOp, hpow, 0, 255, 1, "8", "NUbyteProp"),
+	NEWFIELD(eRgba,			"color", NFlatOp, color, 1, 255, 1, "0,0,0,255", "NColorProp"),
 FIMPLEMENT_CLASS_END()
 
 NFlatOp::NFlatOp()
 {
+	wpow=hpow=64;
+	color=NRGBA(255,0,0,255);
 }
 
 

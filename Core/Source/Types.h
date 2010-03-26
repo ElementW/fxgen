@@ -296,6 +296,7 @@ public:
 	void ToHLS(float &_h, float &_l, float &_s);	//!< Just return conversion
 	void SetFromHLS(float _h, float _l, float _s);	//!< Set New Color from HLS
 	float ToRGB1(float rm1, float rm2, float rh);
+	void SetFromRGBA(ubyte r, ubyte g, ubyte b, ubyte a);	//!< Set New Color from RGBA
 
 	//Datas
 		union {

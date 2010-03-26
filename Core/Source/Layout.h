@@ -104,7 +104,7 @@ protected:
 	void				GetHitPanes(NPANEINFO* pane, udword side, GArray<NPANEINFO*> &array);
 	bool				MoveSplit(NSPLITBOX* splitbox, NPoint &deltas);
 
-	//Win32 Messages Dispatching
+	//Win32 Events
 	virtual	void	OnPaint();
 	virtual void	OnSize();
 	virtual void	OnMouseMove(NPoint pos);

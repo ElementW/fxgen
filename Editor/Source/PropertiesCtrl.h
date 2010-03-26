@@ -81,7 +81,7 @@ protected:
 	void			DeleteAllProperties();	//!< Reset
 	NRowDesc* GetRowAtIdx(udword idx);
 	udword		GetRowUnderPoint(NPoint& pt);
-	void 			OffsetRowValue(sdword dwOffset);
+	//void 			OffsetRowValue(sdword dwOffset);
 	bool 			SelectRow(udword dwRowIdx);
 	bool			ExpandRow(udword _dwRowIdx);
 	void 			ClickRow(udword dwRowIdx, NPoint& pt);
@@ -103,7 +103,7 @@ protected:
 	GArray<NRowDesc>	m_carrayRowsDesc;
 
 protected:
-	//Win32 Messages Dispatching
+	//Win32 Events
 	virtual	void	OnPaint();
 	virtual void	OnSize();
 	virtual void	OnMouseMove(NPoint pos );

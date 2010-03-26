@@ -359,3 +359,8 @@ float NColor::ToRGB1(float rm1, float rm2, float rh)
   return rm1;
 }
 
+
+void NColor::SetFromRGBA(ubyte r, ubyte g, ubyte b, ubyte a)
+{
+    mA=(float)a/255.0f; mR=(float)r/255.0f; mG=(float)g/255.0f; mB=(float)b/255.0f;
+}

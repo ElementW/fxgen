@@ -59,7 +59,7 @@ protected:
 	// Datas
 
 protected:
-	//Win32 Messages Dispatching
+	//Win32 Events
 	virtual	void	OnPaint();
 	virtual void	OnSize();
 };
@@ -98,7 +98,7 @@ protected:
 	udword	m_dwStyle;
 
 protected:
-	//Messages Dispatching
+	//Events
 	virtual	void	OnPaint();
 	virtual void	OnSize();
 	virtual void	OnMouseMove(NPoint pos );
@@ -152,7 +152,7 @@ protected:
 	bool		m_bPickedHue;
 
 protected:
-	//Messages Dispatching
+	//Events
 	virtual	void	OnPaint();
 	virtual void	OnMouseMove(NPoint pos );
 	virtual void	OnLButtonUp(NPoint pos);
@@ -188,11 +188,11 @@ public:
 	FDelegate		OnEscape;
 
 protected:
-	//Messages Dispatching
+	//Events
 	virtual	void	OnPaint();
-	virtual void	OnLButtonUp(udword _flags, NPoint _pos);
-	virtual void	OnLButtonDown(udword _flags, NPoint _pos);
-	virtual	void	OnLButtonDblClk(udword _flags, NPoint _point);
+	virtual void	OnLButtonUp(NPoint _pos);
+	virtual void	OnLButtonDown(NPoint _pos);
+	virtual	void	OnLButtonDblClk(NPoint _point);
 	virtual	void	OnKillFocus(NGUIWnd* _pNewWnd);
 	virtual	void	OnKeyDown(udword _dwchar);
 	virtual	void	OnText(udword _unicode);
@@ -217,13 +217,27 @@ public:
 
 	void	Update();
 
-	void	SetPos(float _fPos);
-	void	SetStep(float _fStep);
-	void	SetRange(float _fMin, float _fMax);	//If _fMin<_fMax => Slide value ranged
+	void	SetPos(float _fPos)			{ m_fPos=_fPos;		}
+	void	SetStep(float _fStep)		{ m_fStep=_fStep;	}
+	void	SetRange(float _fMin, float _fMax)	{ m_fMin=_fMin;	m_fMax=_fMax; }	//If _fMin<_fMax => Slide value ranged
+
+	float	GetPos()	{ return m_fPos; }
+
+	//Notification Messages
+	FDelegate		OnValueChanged;
 
 protected:
+	//Events
+	virtual void	OnMouseMove(NPoint pos );
+	virtual void	OnLButtonUp(NPoint _pos);
+	virtual void	OnLButtonDown(NPoint _pos);
+	virtual	void	OnLButtonDblClk(NPoint _point);
+
 	// Datas
 	float m_fPos, m_fMin, m_fMax, m_fStep;
+	float m_fStartValue;
+	sdword	m_dwStartPos;
+	bool m_bMovingCursor, m_bOffsetValue;
 
 	//Delegates
 	virtual	void	OnPaint();

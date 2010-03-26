@@ -318,7 +318,7 @@ void NOperatorsPage::Compile()
 		//Rendering
 		//EVT_EXECUTE(EVT_RENDER, (udword)m_popMarkedShow, (udword)&_ftime);
 
-		bRet=bRet;
+		//bRet=bRet;
 	}
 
 

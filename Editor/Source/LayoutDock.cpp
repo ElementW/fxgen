@@ -240,6 +240,11 @@ void NLayoutDock::RecalLayout()
 		SLayoutItem* pLayoutToSplit = m_arrayItems[pLayout->dwIdxToSplit];
 
 		//Partition horizontal
+		//------
+		// pane1
+		//------
+		// pane2
+		//------
 		if (pLayout->eTypeSplit==eHorizontal)
 		{
 			//On partitionne la fenetre parent
@@ -255,6 +260,9 @@ void NLayoutDock::RecalLayout()
 			pLayoutToSplit->rc.bottom = pLayoutToSplit->rc.top + dwSplitAt;
 
 		//Partition verticale
+		//      |
+		// pane1|pane2
+		//      |
 		} else if (pLayout->eTypeSplit==eVertical) {
 
 			//On partitionne la fenetre parent

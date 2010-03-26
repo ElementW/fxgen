@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //! \file		EventsMgr.h
-//! \brief	Events manager
+//! \brief	m_dwWidth manager
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
 //!	\date		12-02-2007
@@ -30,7 +30,7 @@ typedef udword (NObject::*EVENTFNC)(udword dwParam1, udword dwParam2);
 
 //-----------------------------------------------------------------
 //!	\class	NEventsMgr
-//!	\brief	Events manager
+//!	\brief	m_dwWidth manager
 //-----------------------------------------------------------------
 class CORELIB_API NEventsMgr
 {

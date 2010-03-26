@@ -290,7 +290,7 @@ bool NColorPickerCtrl::Create(NGUIWnd* parent)
 	wc.pszText			= "";
 	wc.pwndParent		= parent;
 	wc.rcRect				= NRect(0,0,0,0);
-	wc.dwStyle			= NWS_POPUP;
+	wc.dwStyle			= NWS_VISIBLE;	//Or NWS_POPUP for trackpopup
 	NGUIWnd::Create(wc);
 
 	return true;
@@ -618,19 +618,19 @@ void NEditCtrl::OnPaint()
 //-----------------------------------------------------------------
 //!	\brief
 //-----------------------------------------------------------------
-void NEditCtrl::OnLButtonUp(udword _flags, NPoint _pos)
+void NEditCtrl::OnLButtonUp(NPoint _pos)
 {
 }
 //-----------------------------------------------------------------
 //!	\brief
 //-----------------------------------------------------------------
-void NEditCtrl::OnLButtonDown(udword _flags, NPoint _pos)
+void NEditCtrl::OnLButtonDown(NPoint _pos)
 {
 }
 //-----------------------------------------------------------------
 //!	\brief
 //-----------------------------------------------------------------
-void NEditCtrl::OnLButtonDblClk(udword _flags, NPoint _point)
+void NEditCtrl::OnLButtonDblClk(NPoint _point)
 {
 }
 //-----------------------------------------------------------------
@@ -731,7 +731,9 @@ NSlideCtrl::NSlideCtrl()
 {
 	m_fPos=m_fMin=0.0f;
 	m_fStep=0.01f;
-	m_fMax=1.0f;
+	m_fMax=0.0f;
+
+	m_bMovingCursor=m_bOffsetValue=false;
 }
 
 //-----------------------------------------------------------------
@@ -764,7 +766,6 @@ bool NSlideCtrl::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 void NSlideCtrl::Update()
 {
 	RedrawWindow();
-	//OnPaint();
 }
 
 //-----------------------------------------------------------------
@@ -778,6 +779,8 @@ void NSlideCtrl::OnPaint()
 
 	//Background
   painter.FillSolidRect(rc, GetGUISubSystem()->GetBarColor());
+	painter.Draw3dRect(rc, NColor(255,255,255,255),NColor(255,255,255,255));
+	//painter.RoundRect(0xFF,rc, rc.Height()/3, NColor(255,0,0,255));
 
 	//Mode Ranged
 	if (m_fMin<m_fMax)
@@ -785,34 +788,35 @@ void NSlideCtrl::OnPaint()
 		NRect rcRange(rc);
 		rcRange.right = (sdword)((m_fPos * (float)rcRange.Width()) / (m_fMax-m_fMin));
 		//Display cursor to drag value
-		painter.FillSolidRect(rcRange, GetGUISubSystem()->GetBarColor());
+		painter.FillSolidRect(rcRange, NColor(0,128,255,255));
 
 	//Mode unlimited
 	} else {
 
+		int x=1, y=1;
 		int w=rc.Height();
+		int s=w-2;
 		NColor black(0,0,0,255);
 		NPoint pts[3];
 
 		//Display arrow left
-		pts[0].x=4;		pts[0].y=w/2;
-		pts[1].x=4+w;	pts[1].y=4;
-		pts[2].x=4+w;	pts[2].y=w-4;
+		pts[0].x=x;		pts[0].y=w/2;
+		pts[1].x=x+s;	pts[1].y=y;
+		pts[2].x=x+s;	pts[2].y=s-y;
 		painter.Polygon(pts, 3, black);
 
 		//Display arrow right
-		pts[0].x=4;		pts[0].y=w/2;
-		pts[1].x=4+w;	pts[1].y=4;
-		pts[2].x=4+w;	pts[2].y=w-4;
+		x=rc.Width()-s-4;
+		pts[0].x=x+s;		pts[0].y=w/2;
+		pts[1].x=x;	pts[1].y=y;
+		pts[2].x=x;	pts[2].y=s-y;
 		painter.Polygon(pts, 3, black);
-
-
 
 	}
 
 	//Value
 	NString str;
-	str.Format("%s: %f", m_cstrText, m_fPos);
+	str.Format("%s: %.2f", m_cstrText, m_fPos);
   painter.DrawString(str.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
 
 }
@@ -827,26 +831,89 @@ void NSlideCtrl::OnSize()
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Change pos
+//!	\brief
 //-----------------------------------------------------------------
-void NSlideCtrl::SetPos(float _fPos)
+void NSlideCtrl::OnLButtonUp(NPoint _pos)
 {
-	m_fPos=_fPos;
+	m_bMovingCursor=m_bOffsetValue=false;
+	ReleaseCapture();
+}
+//-----------------------------------------------------------------
+//!	\brief
+//-----------------------------------------------------------------
+void NSlideCtrl::OnLButtonDown(NPoint _pos)
+{
+	//Mode Ranged
+	if (m_fMin<m_fMax)
+	{
+		//Start moving cursor from min to max
+		m_dwStartPos = _pos.x;
+		m_bMovingCursor = true;
+		SetCapture();
+
+	//Mode unlimited
+	} else {
+
+		//Check if under left arrow
+		NRect rc = GetClientRect();
+		int s = rc.Height();
+		if (_pos.x<s)
+		{
+			m_fPos-= m_fStep;
+			Update();
+			OnValueChanged(this);
+
+		//Check if under right arrow
+		} else if (_pos.x>rc.Width()-s) {
+
+			m_fPos+= m_fStep;
+			Update();
+			OnValueChanged(this);
+
+		//Sliding
+		} else {
+
+			//Start offset value
+			m_dwStartPos = _pos.x;
+			m_bOffsetValue = true;
+			m_fStartValue = m_fPos;
+			SetCapture();
+		}
+
+	}
+
+}
+//-----------------------------------------------------------------
+//!	\brief
+//-----------------------------------------------------------------
+void NSlideCtrl::OnLButtonDblClk(NPoint _point)
+{
+	//Start editing value
+
+}
+//-----------------------------------------------------------------
+//!	\brief
+//-----------------------------------------------------------------
+void NSlideCtrl::OnMouseMove(NPoint point )
+{
+	NRect rc = GetClientRect();
+
+	if (m_bMovingCursor)
+	{
+		float fRanged = (m_fMax-m_fMin)* m_fStep;
+		m_fPos = (float)point.x * fRanged / (float)rc.Width();
+
+		m_fPos = max(m_fPos, m_fMin);
+		m_fPos = min(m_fPos, m_fMax);
+		Update();
+		OnValueChanged(this);
+	}	else if(m_bOffsetValue) {
+		sdword offset = point.x-m_dwStartPos;
+		m_fPos = m_fStartValue + ((float)offset*m_fStep);
+		Update();
+		OnValueChanged(this);
+	}
+
+
 }
 
-//-----------------------------------------------------------------
-//!	\brief	Change step
-//-----------------------------------------------------------------
-void NSlideCtrl::SetStep(float _fStep)
-{
-	m_fStep=_fStep;
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Change range
-//-----------------------------------------------------------------
-void NSlideCtrl::SetRange(float _fMin, float _fMax)
-{
-	m_fMin=_fMin;
-	m_fMax=_fMax;
-}
