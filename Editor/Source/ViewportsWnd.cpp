@@ -116,7 +116,7 @@ EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnOPDeleting)
 EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnRender)
 {
 	NOperatorNode* pop = (NOperatorNode*)dwParam1;
-	if (pop==null || pop->m_pObj==null || (pop!=null && pop->m_bError))
+	if (pop==null || pop->GetResource()==null || (pop!=null && pop->m_bError))
 	{
 		m_pcurOp = null;
 	} else {
@@ -396,7 +396,7 @@ void NViewportsWnd::OnPaint()
 
 	////////////////////////////////////////
 	//No operator valid
-	if (m_pcurOp==null || m_pcurOp->m_pObj==null || m_pcurOp->m_bError)
+	if (m_pcurOp==null || m_pcurOp->GetResource()==null || m_pcurOp->m_bError)
 	{
 		//Texte
 		//dc.FillSolidRect(rc, RGBA(255,115,115,115));
@@ -408,7 +408,7 @@ void NViewportsWnd::OnPaint()
 	////////////////////////////////////////
 	//Display operator
 	} else {
-		DisplayTexture(m_pcurOp->m_pObj);
+		DisplayTexture(m_pcurOp->GetResource());
 	}
 	
 

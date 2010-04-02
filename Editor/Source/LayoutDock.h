@@ -57,7 +57,7 @@ struct SLayoutItem
 	ETypeSplit	eTypeSplit;
 	udword			dwIdxWndSelected;
 
-	GArray<SLayoutTabItem>	arrayTabs;	//!< tabs list for this layout
+	NArray<SLayoutTabItem>	arrayTabs;	//!< tabs list for this layout
 
 	//RunTime
 	NRect rc;			//!< Layout's rect
@@ -105,7 +105,7 @@ protected:
 	void SelectTab(SLayoutItem* _playout, udword _idx);
 
 	//Datas
-	GArray<SLayoutItem*>	m_arrayItems;
+	NArray<SLayoutItem*>	m_arrayItems;
 	udword dwTabHeight;
 
 protected:

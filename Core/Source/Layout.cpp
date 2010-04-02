@@ -300,7 +300,7 @@ bool	NGUILayout::DestroyPane(udword id, udword sidetomerge)
 	if (!pane)														return false;
 
 	//Array for Hit panes
-	GArray<NPANEINFO*> hitlist;
+	NArray<NPANEINFO*> hitlist;
 
 	//Clear Panes Side Flag
 	for (i=mPaneList.Count()-1; i>=0; i--) 	mPaneList[i]->side = 0;
@@ -337,7 +337,7 @@ bool	NGUILayout::DestroyPane(udword id, udword sidetomerge)
 NSPLITBOX*	NGUILayout::CreateSplitterBox(NPANEINFO* pane, udword side)
 {
 	//Array for Hit panes
-	GArray<NPANEINFO*> hitlist;
+	NArray<NPANEINFO*> hitlist;
 
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -478,7 +478,7 @@ void	NGUILayout::DestroySplitterBox(NSPLITBOX* splitbox)
 // Name:	GetHitPanes()
 // Desc:	Rq. user must Clear the Panes Side Flag !!!!
 //-----------------------------------------------------------------
-void	NGUILayout::GetHitPanes(NPANEINFO* pane, udword side, GArray<NPANEINFO*> &array)
+void	NGUILayout::GetHitPanes(NPANEINFO* pane, udword side, NArray<NPANEINFO*> &array)
 {
 	if (pane==null)															return;
 

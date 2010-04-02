@@ -2,20 +2,27 @@ TODO
 -------------
 	
 .FxGenLib
-	.Multi-Threading
-	.Rewrite animation processing
-	.How to manage Voxel or Mesh resource ? 'reintegrate NObject ?'
+	.Multi-Threading (later)
+	.Rewrite animation processing (later)
+	.How to manage Voxel or Mesh resources ? 'reintegrate NObject ?'
+	.Add dependency to CoreLib ?
 	
 .Editor:GUI
-	.Review Properties control.
-		.Add variables limits into properties items
-		.Add slider control
+	x Review Properties control.
+		X Add variables limits into properties items
+		X Add slider control
 	.TreeNodeCtrl
 		.Add node renaming
 	.Button
 		.add style: menu and color
 	.Viewport
 		.manage resource display
+	.assets
+		.manage asset
+			.loader, treeview maker
+			.make a projet become an asset
+			.compiled graph cache
+			
 
 Version 0.7 alpha (Release: New FxGen Engine !)
 ----------------------------------

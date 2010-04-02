@@ -19,7 +19,7 @@
 //                   Includes
 //-----------------------------------------------------------------
 #include "Operator.h"
-#include "FxGenLibPkg.h"
+#include "CoreLibPkg.h"
 
 #ifdef __GNUC__
 //#include "gcccompat/gcccompat.h"
@@ -258,15 +258,15 @@ void NOperatorsPage::MoveOp(NOperatorNode* _pop, sword _x, sword _y)
 //-----------------------------------------------------------------
 //!	\brief	Invalidate all operators to force re-processing
 //-----------------------------------------------------------------
-void NOperatorsPage::InvalidateAllOps()
+/*void NOperatorsPage::InvalidateAllOps()
 {
-/*	for (udword i=0; i<m_arrayOps.Count(); i++)
+	for (udword i=0; i<m_arrayOps.Count(); i++)
 	{
 		NOperatorNode* pccurOP = (NOperatorNode*)m_arrayOps[i];
 		pccurOP->m_bInvalided			= true;
 		pccurOP->m_dwLastUsedTime	= 0;
-	}*/
-}
+	}
+}*/
 
 //-----------------------------------------------------------------
 //!	\brief	Page compilation
@@ -421,7 +421,7 @@ void NOperatorsProject::InvalidateOp(NOperatorNode* _pop)
 //-----------------------------------------------------------------
 //!	\brief	Invalidate all operators to force re-processing
 //-----------------------------------------------------------------
-void NOperatorsProject::InvalidateAllOps()
+/*void NOperatorsProject::InvalidateAllOps()
 {
 	NTreeNode* pnode = GetRootGroup();
 	_InvalidateAllOps(pnode);
@@ -442,7 +442,7 @@ void NOperatorsProject::_InvalidateAllOps(NTreeNode* _pnode)
 	if (_pnode)
 		_InvalidateAllOps(_pnode);
 
-}
+}*/
 
 //-----------------------------------------------------------------
 //!	\brief	Return root operator from an operator
@@ -450,9 +450,9 @@ void NOperatorsProject::_InvalidateAllOps(NTreeNode* _pnode)
 //!	\return root operator
 //!	\note		Links must have been computed first
 //-----------------------------------------------------------------
-NOperatorNode* NOperatorsProject::GetRootOperator(NOperatorNode* pop)
+/*NOperatorNode* NOperatorsProject::GetRootOperator(NOperatorNode* pop)
 {
-/*	if (pop==null)		return null;
+	if (pop==null)		return null;
 
 	NOperatorNode* pccurOP = pop;
 	while (pccurOP->m_pprevOpToProcess)
@@ -460,19 +460,19 @@ NOperatorNode* NOperatorsProject::GetRootOperator(NOperatorNode* pop)
 		pccurOP = pccurOP->m_pprevOpToProcess;
 	}
 
-	return pccurOP;*/
+	return pccurOP;
 	return null;
-}
+}*/
 
 //-----------------------------------------------------------------
 //!	\brief	Return a bitmap from ressource management
 //!	\param	_ppobj			object pointeur
 //!	\param	_byObjType	object allocation type
 //-----------------------------------------------------------------
-void NOperatorsProject::GetBitmap(NObject** _ppobj, ubyte _byObjType)
+/*void NOperatorsProject::GetBitmap(NObject** _ppobj, ubyte _byObjType)
 {
 	m_bitmapsAlloc.GetInstance(_ppobj, _byObjType);
-}
+}*/
 
 //-----------------------------------------------------------------
 //!	\brief	Load a project from a file

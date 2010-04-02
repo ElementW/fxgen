@@ -21,7 +21,6 @@
 //                   Includes
 //-----------------------------------------------------------------
 #include "CoreLibPkg.h"
-#include "FxGenLibPkg.h"
 
 #ifdef GetUserName
 #undef GetUserName
@@ -47,7 +46,7 @@ class NObject;
 
 //-----------------------------------------------------------------
 //!	\class		NOperatorNode
-//!	\brief		Base class for an operator
+//!	\brief		Base class for an operator's node
 //-----------------------------------------------------------------
 class NOperatorNode :	public NObject
 {
@@ -58,9 +57,11 @@ public:
 	//Methods
 	virtual NObject* Duplicate();						//!< Duplicate this object (used for copy-paste)
 	virtual	udword GetColor()	= 0;				//!< Operator color
-	virtual const char* GetName()				{ return ""; }			//!< Operator's Name
+	virtual const char* GetName()				{ return ""; }			//!< Operator's class Name
 	virtual const char* GetCategory()		{ return "Misc"; }	//!< Operator's Category
   virtual const char* GetGUIName()		{ return null; }		//!< Operator's User Name
+
+	NObject* GetResource()	{ return m_pObj; }	//!< Return generated resource object
 
 	//Editing
 	//###TODO###
@@ -71,14 +72,20 @@ public:
 	virtual	bool Save(NArchive* _s);	//!< Save object
 	virtual	bool Load(NArchive* _l);	//!< Load object
 
+public:	//###TODO### create metods
 	//Datas GUI
 	udword	m_dwPosX, m_dwPosY;			//!< Position (grid unit)
 	udword	m_dwWidth;							//!< Width (grid unit)
+
 	bool m_bError;
 	bool m_bInvalided;
 	float m_fProcessedTime;
+
+protected:
+
 	NObject *m_pObj;	//!< Ressource
 
+	friend class NOperatorsPage;
 };
 
 //-----------------------------------------------------------------
@@ -158,24 +165,13 @@ public:
 
 	//Editor Membres access
 	NTreeNode*			GetRootGroup()				{ return m_pRootGroup;		}
-	NObjectGarbage* GetBitmapGarbage()		{ return &m_bitmapsAlloc; }
+	//NObjectGarbage* GetBitmapGarbage()		{ return &m_bitmapsAlloc; }
 
 	//Editor Operators Resources management
-	void GetBitmap(NObject** _ppobj, ubyte _byObjType=OBJRES_TYPE_INTERMEDIATE);
+	//void GetBitmap(NObject** _ppobj, ubyte _byObjType=OBJRES_TYPE_INTERMEDIATE);
 
 protected:
-	//Internal Methods
-	void GetFinalOps(NTreeNode* _pnodeFrom, NObjectArray& _finalsOp, bool _bRecurse);
-	void _GetFinalOps(NTreeNode* _pnode, NObjectArray& _finalsOp, bool _bRecurse);
-	void ClearParsedOpsFlags(NOperatorNode* _pop);
-	void _InvalidateAllOps(NTreeNode* _pnode);
-	NOperatorNode* GetRootOperator(NOperatorNode* _pop);
 
-	//Methods for execution
-	void _Execute(float _fTime, NOperatorNode* _popFinal, float _fDetailFactor);
-	void ComputeInvaliddOps(NOperatorNode* _popFinal);
-	void _ComputeInvaliddOps(NOperatorNode* _pop);
-	void _ComputeToProcessOpsCount(NOperatorNode* _popFinal);
 
 	//Datas
 	NTreeNode* m_pRootGroup;							//!< Root	Groups

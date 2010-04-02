@@ -110,8 +110,8 @@ protected:
 
 	//Datas Operators
 	NOperatorsPage*			m_popsPage;						//!< Page used for editing
-	GArray<NOperatorNode*>	m_carrayOpsSelected;	//!< Operators selected
-	GArray<NOperatorNode*>	m_carrayOpsClipboard;	//!< Operators in clipboard
+	NArray<NOperatorNode*>	m_carrayOpsSelected;	//!< Operators selected
+	NArray<NOperatorNode*>	m_carrayOpsClipboard;	//!< Operators in clipboard
 	NOperatorNode	*m_popMarkedSelected, *m_popMarkedShow;
 	float								m_fupdateTime;
 	NRect	m_rcAllOperators;	//!< Operators zone

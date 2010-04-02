@@ -71,7 +71,7 @@ protected:
 	void RecalcLayout();
 
 	// Datas
-	GArray<NSBItemDesc>	m_carrayItems;
+	NArray<NSBItemDesc>	m_carrayItems;
 
 protected:
 	//Win32 Events
