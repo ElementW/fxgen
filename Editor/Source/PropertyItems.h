@@ -108,20 +108,20 @@ protected:
 };
 
 //-----------------------------------------------------------------
-//!	\class	NUbyteComboProp
-//! \brief	UByte Property Item
+//!	\class	NComboProp
+//! \brief	Combo Property Item
 //-----------------------------------------------------------------
-class NUbyteComboProp : public NPropertyItem
+class NComboProp : public NPropertyItem
 {
 public:
 	FDECLARE_CLASS();
 
-	virtual void		Init();
-	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
+	virtual void	Init();
+	virtual	void	DrawItem(N2DPainter* pdc, NRect& rcItem);
 
 protected:
 	NMenuCtrl	m_wndMenu;
-	GArray<NString>	m_carrayStringsList;
+	NArray<NString>	m_carrayStringsList;
 	void OnMenuClick(NObject* _psender);
 
 };

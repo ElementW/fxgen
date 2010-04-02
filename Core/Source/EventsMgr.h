@@ -44,7 +44,7 @@ class CORELIB_API NEventsMgr
 	struct ST_EVENTINFO
 	{
 		uword wID;
-		GArray<ST_EVENTHANDLERINFO>	carrayHandlers;
+		NArray<ST_EVENTHANDLERINFO>	carrayHandlers;
 	};
 
 
@@ -62,7 +62,7 @@ public:
 
 protected:
 	//Datas
-	GArray<ST_EVENTINFO*>	m_carrayEvents;
+	NArray<ST_EVENTINFO*>	m_carrayEvents;
 
 };
 

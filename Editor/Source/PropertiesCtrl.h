@@ -100,7 +100,7 @@ protected:
 	bool			m_bAddValue;
 	NPoint		m_ptStartMouse, m_ptCursor;
 
-	GArray<NRowDesc>	m_carrayRowsDesc;
+	NArray<NRowDesc>	m_carrayRowsDesc;
 
 protected:
 	//Win32 Events

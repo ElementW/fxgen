@@ -198,7 +198,7 @@ public:
 //!	\struct	NRGBA
 //!	\brief	8Bits composants
 //-----------------------------------------------------------------
-struct CORELIB_API NRGBA
+/*struct CORELIB_API NRGBA
 {
   NRGBA() {}
   NRGBA(ubyte R, ubyte G, ubyte B, ubyte A): r(R), g(G), b(B), a(A) {}
@@ -250,6 +250,75 @@ struct CORELIB_API NRGBA
     g = ubyte(v.g * alpha + g * beta);
     b = ubyte(v.b * alpha + b * beta);
   }
+};*/
+//-----------------------------------------------------------------
+//!	\struct	NRGBA
+//!	\brief	8Bits composants
+//-----------------------------------------------------------------
+struct CORELIB_API NRGBA
+{
+	NRGBA() {}
+	NRGBA(ubyte R, ubyte G, ubyte B, ubyte A): r(R), g(G), b(B), a(A) {}
+	union
+	{
+		struct { ubyte r, g, b, a;	};
+		ubyte		col_array[4];
+		udword	dwCol;
+		struct { ubyte x, y, z, w;	};
+	};
+
+	float grey()
+	{
+		return (r + g + b) / 3.f;
+	}
+
+	NRGBA operator*(float c) const
+	{
+		NRGBA retval(*this);
+		retval.a = ubyte(retval.a * c);
+		return retval;
+	}
+
+	void operator*=(float c)
+	{
+		a = ubyte(a * c);
+	}
+
+	//! Non-commutative +: argument is put on top existing color based on alpha
+	NRGBA operator+(const NRGBA& v) const
+	{
+		NRGBA retval;
+		float alpha = v.a / 255.f;
+		float beta = 1- alpha; //opt
+		retval.a = ubyte(v.a     +     a * beta);
+		retval.r = ubyte(v.r * alpha + r * beta);
+		retval.g = ubyte(v.g * alpha + g * beta);
+		retval.b = ubyte(v.b * alpha + b * beta);
+		return retval;
+	}
+
+	//! Non-commutative +: argument is put on top existing color based on alpha
+	void operator+=(const NRGBA& v)
+	{
+		float alpha = v.a / 255.f;
+		float beta = 1- alpha; //opt
+		a = ubyte(v.a     +     a * beta);
+		r = ubyte(v.r * alpha + r * beta);
+		g = ubyte(v.g * alpha + g * beta);
+		b = ubyte(v.b * alpha + b * beta);
+	}
+};
+
+
+//-----------------------------------------------------------------
+//!	\struct	NRGBAI
+//!	\brief	32Bits composants
+//-----------------------------------------------------------------
+struct CORELIB_API NRGBAI
+{
+	NRGBAI(){}
+	NRGBAI(sdword R, sdword G, sdword B, sdword A): r(R), g(G), b(B), a(A) {}
+	sdword r,g,b,a;
 };
 
 

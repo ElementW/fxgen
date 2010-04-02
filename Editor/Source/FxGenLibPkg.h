@@ -4,6 +4,7 @@
 #include "Include/FxGenLib.h"
 
 #include "Source/CompilerOp.h"
+#include "Source/Bitmap.h"
 
 
 

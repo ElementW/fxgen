@@ -101,7 +101,7 @@ protected:
 	void ShowMenu(bool _bShow=true, NMenuCtrl* _pParentMenu=null);
 
 	// Datas
-	GArray<NMEItemDesc>	m_carrayItems;
+	NArray<NMEItemDesc>	m_carrayItems;
 
 	udword	m_dwItemHighLightedIdx;	//!< Idx from m_carrayItems
 	bool		m_bEntered;
