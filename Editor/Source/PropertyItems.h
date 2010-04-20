@@ -84,7 +84,6 @@ public:
 	virtual void		Init();
 	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
 
-
 protected:
 	NSlideCtrl m_slider;
 	void OnValueChanged(NObject* _psender);

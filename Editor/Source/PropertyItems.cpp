@@ -430,19 +430,19 @@ void NColorProp::OnColorClick(NObject* _psender)
 	m_pvarValue->dwVal = m_wndPicker.GetClickedColor().GetRGBA();
 	((NPropertiesCtrl*)m_pParent)->SaveRowEditing();
 }
-
+*/
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
-//										NUbyteComboProp class Implementation
+//										NComboProp class Implementation
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NUbyteComboProp, NPropertyItem);
+FIMPLEMENT_CLASS(NComboProp, NPropertyItem);
 FIMPLEMENT_CLASS_END();
 
-void NUbyteComboProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
+void NComboProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	//Init
 	if (m_carrayStringsList.Count()==0)
@@ -476,7 +476,7 @@ void NUbyteComboProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
   pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 }
 
-bool NUbyteComboProp::BeginEdit(NRect& rcItem)
+bool NComboProp::BeginEdit(NRect& rcItem)
 {
 	assert(m_pParent!=null);
 
@@ -498,12 +498,12 @@ bool NUbyteComboProp::BeginEdit(NRect& rcItem)
 	return false;
 }
 
-bool NUbyteComboProp::EndEdit(bool bSaveChanged)
+bool NComboProp::EndEdit(bool bSaveChanged)
 {
 	return true;
 }
 
-void NUbyteComboProp::OnMenuClick(NObject* _psender)
+void NComboProp::OnMenuClick(NObject* _psender)
 {
 	NMenuCtrl* pmenu = (NMenuCtrl*)_psender;
 	ubyte byVal = (ubyte)pmenu->GetClickedCmdID();

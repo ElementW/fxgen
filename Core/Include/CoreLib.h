@@ -13,6 +13,12 @@
 #include <stddef.h>
 #include <cstdarg>
 
+#ifdef WIN32
+#	include <io.h>
+#else
+#	include <dirent.h>
+#endif
+
 #ifdef __GNUC__
 #include <sys/types.h>
 #include <unistd.h>
