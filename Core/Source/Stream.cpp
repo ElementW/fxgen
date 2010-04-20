@@ -265,3 +265,44 @@ udword NFileStream::Tell()
 {
   return ftell(m_pFile);
 }
+
+/*
+void scanDirectory(const char* path, const char* ext, FileList& list)
+{
+	list.clear();
+	
+#ifdef WIN32
+	_finddata_t dir;
+	char pathWithExt[MAX_PATH];
+	long fh;
+	strcpy(pathWithExt, path);
+	strcat(pathWithExt, "/*");
+	strcat(pathWithExt, ext);
+	fh = _findfirst(pathWithExt, &dir);
+	if (fh == -1L)
+		return;
+	do
+	{
+		list.add(dir.name);
+	}
+	while (_findnext(fh, &dir) == 0);
+	_findclose(fh);
+#else
+	dirent* current = 0;
+	DIR* dp = opendir(path);
+	if (!dp)
+		return;
+	
+	while ((current = readdir(dp)) != 0)
+	{
+		int len = strlen(current->d_name);
+		if (len > 4 && strncmp(current->d_name+len-4, ext, 4) == 0)
+		{
+			list.add(current->d_name);
+		}
+	}
+	closedir(dp);
+#endif
+	list.sort();
+}
+*/

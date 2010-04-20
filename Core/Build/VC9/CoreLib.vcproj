@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\Externals\FreeType\Include;&quot;..\..\..\Externals\SFML-1.5\include&quot;"
+				AdditionalIncludeDirectories="..\..\..\Externals\FreeType\Include;..\..\..\Externals\SFML\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;CORELIB_EXPORT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -64,7 +64,7 @@
 				AdditionalDependencies="opengl32.lib freetype2312.lib sfml-system-d.lib sfml-window-d.lib sfml-main-d.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_D.dll"
 				LinkIncremental="0"
-				AdditionalLibraryDirectories="&quot;..\..\..\Externals\SFML-1.5\lib\vc2008&quot;;..\..\..\Externals\FreeType\Lib"
+				AdditionalLibraryDirectories="..\..\..\Externals\SFML\lib\vc2008;..\..\..\Externals\FreeType\Lib"
 				GenerateDebugInformation="true"
 				SubSystem="0"
 				RandomizedBaseAddress="1"
@@ -259,30 +259,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Source\Layout.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\Source\Layout.h"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="..\..\Source\MenuCtrl.cpp"
 				>
 			</File>
@@ -320,14 +296,6 @@
 			</File>
 			<File
 				RelativePath="..\..\Source\OpEngine\Bitmap.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Source\OpEngine\CompilerOp.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Source\OpEngine\CompilerOp.h"
 				>
 			</File>
 			<File
@@ -393,6 +361,18 @@
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
+			</File>
+		</Filter>
+		<Filter
+			Name="Operator Compiler"
+			>
+			<File
+				RelativePath="..\..\Source\OpEngine\CompilerOp.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Source\OpEngine\CompilerOp.h"
+				>
 			</File>
 		</Filter>
 		<File
