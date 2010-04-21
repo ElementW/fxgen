@@ -91,7 +91,7 @@ void NUbyteProp::OnValueChanged(NObject* _psender)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
-//										NUbyteProp class Implementation
+//										NColorProp class Implementation
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -439,44 +439,50 @@ void NColorProp::OnColorClick(NObject* _psender)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NComboProp, NPropertyItem);
+FIMPLEMENT_CLASS(NComboProp, NPropertyItem)
 FIMPLEMENT_CLASS_END();
+
+void NComboProp::Init()
+{
+	NFieldDesc* pfd = &m_pObject->GetRTClass()->m_paFieldsDesc[m_dwFieldIdx];
+
+	//Make menu items
+	NString str;
+	str = pfd->pszDef;
+
+	NString word;
+	udword i=3;
+	do
+	{
+		i = str.ExtractToken(i, word, ",]");
+		if (i!=-1)
+		{
+			m_carrayStringsList.AddItem(word);
+			i+=word.Length()+1;
+		}
+
+	} while (i!=-1);
+
+
+	//m_picker.Create(m_pParent);
+}
 
 void NComboProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
-	//Init
-	if (m_carrayStringsList.Count()==0)
-	{
-		NString str;
-		str = m_pvarBlocDesc->pszDefValue;
-
-		NString word;
-		udword i=3;
-		do
-		{
-			i = str.ExtractToken(i, word, ",]");
-			if (i!=-1)
-			{
-				m_carrayStringsList.AddItem(word);
-				i+=word.Length()+1;
-			}
-
-		} while (i!=-1);
-
-	}
 
 	//Draw
-	ubyte val = m_pvarValue->byVal;
+/*	ubyte val = m_pvarValue->byVal;
 
 	if (val<(ubyte)m_carrayStringsList.Count())
 		m_strValue.Format("%s", 	m_carrayStringsList[val].Buffer());
 	else
 		m_strValue="?";
 
-  pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+  pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );*/
+
 }
 
-bool NComboProp::BeginEdit(NRect& rcItem)
+/*bool NComboProp::BeginEdit(NRect& rcItem)
 {
 	assert(m_pParent!=null);
 
@@ -496,21 +502,21 @@ bool NComboProp::BeginEdit(NRect& rcItem)
 	m_wndMenu.TrackPopupMenu(pt, null);
 
 	return false;
-}
+}*/
 
+/*
 bool NComboProp::EndEdit(bool bSaveChanged)
 {
 	return true;
 }
-
+*/
 void NComboProp::OnMenuClick(NObject* _psender)
 {
 	NMenuCtrl* pmenu = (NMenuCtrl*)_psender;
 	ubyte byVal = (ubyte)pmenu->GetClickedCmdID();
-	if (byVal!=0)
-		m_pvarValue->byVal = byVal-1;
-
-	((NPropertiesCtrl*)m_pParent)->SaveRowEditing();
+	//if (byVal!=0)
+	//	m_pvarValue->byVal = byVal-1;
+	//((NPropertiesCtrl*)m_pParent)->SaveRowEditing();
 
 }
 
@@ -523,7 +529,7 @@ void NComboProp::OnMenuClick(NObject* _psender)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NFileBrowserProp, NPropertyItem);
+/*FIMPLEMENT_CLASS(NFileBrowserProp, NPropertyItem)
 FIMPLEMENT_CLASS_END();
 
 void NFileBrowserProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
