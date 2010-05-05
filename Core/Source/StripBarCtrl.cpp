@@ -174,7 +174,7 @@ NButtonCtrl* NStripBarCtrl::InsertItemButton(const char* _pszname, udword _dwWid
 	//Create a button
 	NRect rc;
 	NButtonCtrl* pctrl = NNEW(NButtonCtrl);
-	pctrl->Create(_pszname, rc, this, NBUT_STYLE_MENU);
+	pctrl->Create(_pszname, rc, this, 0);
 
 	//Insert new control
 	NSBItemDesc st;

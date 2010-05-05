@@ -512,6 +512,20 @@ NMEItemDesc* NMenuCtrl::GetItemDesc(udword _idx)
 	return null;
 }
 
+NMEItemDesc* NMenuCtrl::GetItemDescFromID(udword _id)
+{
+	for (udword i=0; i<m_carrayItems.Count(); i++)
+	{
+		NMEItemDesc* pitem = &m_carrayItems[i];
+		if (pitem->dwID==_id)
+		{
+			return &m_carrayItems[i];
+		}
+	}
+
+	return null;
+}
+
 NMenuCtrl* NMenuCtrl::GetPopupMenu(udword _idx)
 {
 	if (_idx<m_carrayItems.Count())

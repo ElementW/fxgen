@@ -293,12 +293,12 @@ protected:
 	void InitGLState();
 
 	//Datas
-	NGUIWnd*			m_pMainWnd;
+	NGUIWnd*	m_pMainWnd;
 	NGUIFont*	m_pfont;
 
-	NGUIWnd*			m_pFocusedWnd;
-	NGUIWnd*			m_pCapturedWnd;
-	NGUIWnd*			m_pOldWndUnderMouse;
+	NGUIWnd*	m_pFocusedWnd;
+	NGUIWnd*	m_pCapturedWnd;
+	NGUIWnd*	m_pOldWndUnderMouse;
 	bool			m_keyDown[NKey::Count];
 	bool			m_bMustDrawWindows;
 	NPoint		m_ptCursor;

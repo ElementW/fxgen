@@ -119,8 +119,7 @@ public:
 	virtual	void	DrawItem(N2DPainter* pdc, NRect& rcItem);
 
 protected:
-	NButtonCtrl m_button;
-	NMenuCtrl	m_wndMenu;
+	NMenuButtonCtrl m_button;
 	NArray<NString>	m_carrayStringsList;
 	void OnMenuClick(NObject* _psender);
 
