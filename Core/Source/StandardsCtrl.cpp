@@ -164,7 +164,7 @@ void NButtonCtrl::OnPaint()
 
 	///////////////////////////////////////////////////////////
 	//Normal Button
-	if (m_dwStyle==NBUT_STYLE_PUSH)
+	//if (m_dwStyle==NBUT_STYLE_PUSH)
 	{
 		if (!m_bClicked)
 		{
@@ -186,12 +186,12 @@ void NButtonCtrl::OnPaint()
 
 	///////////////////////////////////////////////////////////
 	//Menu Button
-	} else if (m_dwStyle==NBUT_STYLE_MENU) {
+	}/* else if (m_dwStyle==NBUT_STYLE_MENU) {
 		NColor clr;
-    if (m_bMouseOver)			{ /*painter.RoundRect(0xF, rc, 0, RGBA(64,64,64,255));*/ clr=0xFFFFFFFF; }
+    if (m_bMouseOver)			{ painter.RoundRect(0xF, rc, 0, RGBA(64,64,64,255)); clr=0xFFFFFFFF; }
 		else									{ clr=0xFF000000; }
     painter.DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, clr );
-	}
+	}*/
 
 
 }
@@ -249,8 +249,37 @@ void NButtonCtrl::OnKeyDown(udword dwchar)
 {
 }
 
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//										NMenuButtonCtrl Class Implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
 
+//-----------------------------------------------------------------
+//!	\brief	Control creation
+//-----------------------------------------------------------------
+bool NMenuButtonCtrl::Create(const char* name, const NRect& rect, NGUIWnd* parent, udword _dwStyle)
+{
+	if (!NButtonCtrl::Create(name, rect, parent, _dwStyle))
+		return false;
 
+	OnClick=FDelegate(this, (TDelegate)&NMenuButtonCtrl::OnButtonClick);
+
+	m_wndMenu.Create("", this);
+
+	return true;
+}
+
+void NMenuButtonCtrl::OnButtonClick(NObject* _psender)
+{
+	NRect rc = GetClientRect();
+	NPoint pt(rc.left, rc.bottom);
+	ClientToScreen(pt);
+	m_wndMenu.TrackPopupMenu(pt, null);
+	
+}
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------

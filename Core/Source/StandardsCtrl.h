@@ -21,6 +21,7 @@
 //                   Includes
 //-----------------------------------------------------------------
 #include "GUI.h"
+#include "MenuCtrl.h"
 
 //-----------------------------------------------------------------
 //                   Prototypes
@@ -28,6 +29,8 @@
 //class NGUIWnd
 		class NTextCtrl;
 		class NButtonCtrl;
+			class NColorButtonCtrl;
+			class NMenuButtonCtrl;
 		class NColorPickerCtrl;
 		class NEditCtrl;
 		class NSlideCtrl;
@@ -70,9 +73,6 @@ protected:
 //!	\class		NButtonCtrl
 //!	\brief		GUI control for button
 //-----------------------------------------------------------------
-#define NBUT_STYLE_PUSH		0
-#define NBUT_STYLE_MENU		1
-
 class CORELIB_API NButtonCtrl : public NGUIWnd
 {
 public:
@@ -112,6 +112,26 @@ protected:
 
 };
 
+//-----------------------------------------------------------------
+//!	\class		NMenuButtonCtrl
+//!	\brief		GUI control for menu button
+//-----------------------------------------------------------------
+class CORELIB_API NMenuButtonCtrl : public NButtonCtrl
+{
+public:
+	//Members access
+	NMenuCtrl*	GetMenu()		{ return &m_wndMenu; }
+
+	// Methods
+	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent, udword _dwStyle);
+
+protected:
+	//Events
+	void OnButtonClick(NObject* _psender);
+
+	//Datas
+	NMenuCtrl	m_wndMenu;
+};
 
 //-----------------------------------------------------------------
 //!	\class		NColorPickerCtrl

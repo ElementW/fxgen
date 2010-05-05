@@ -463,60 +463,30 @@ void NComboProp::Init()
 
 	} while (i!=-1);
 
+	//Create menu
+	m_button.Create("", NRect(0,0,0,0), m_pParent, 0);
+	m_button.GetMenu()->OnItemClick=FDelegate(this, (TDelegate)&NComboProp::OnMenuClick);
+	for (udword i=0; i<m_carrayStringsList.Count(); i++)
+	{
+		m_button.GetMenu()->AddItem(m_carrayStringsList[i].Buffer(), i+1, 0);
+	}
 
-	//m_picker.Create(m_pParent);
 }
 
 void NComboProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
-
-	//Draw
-/*	ubyte val = m_pvarValue->byVal;
-
-	if (val<(ubyte)m_carrayStringsList.Count())
-		m_strValue.Format("%s", 	m_carrayStringsList[val].Buffer());
-	else
-		m_strValue="?";
-
-  pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );*/
-
+	m_button.SetWindowRect(rcItem);
 }
 
-/*bool NComboProp::BeginEdit(NRect& rcItem)
-{
-	assert(m_pParent!=null);
-
-	//Menu
-	if (m_wndMenu.GetItemsCount()==0)
-	{
-		m_wndMenu.Create("", m_pParent);
-		m_wndMenu.OnItemClick=FDelegate(this, (TDelegate)&NUbyteComboProp::OnMenuClick);
-		for (udword i=0; i<m_carrayStringsList.Count(); i++)
-		{
-			m_wndMenu.AddItem(m_carrayStringsList[i].Buffer(), i+1, 0);
-		}
-	}
-
-	NPoint pt(rcItem.left, rcItem.bottom);
-	m_pParent->ClientToScreen(pt);
-	m_wndMenu.TrackPopupMenu(pt, null);
-
-	return false;
-}*/
-
-/*
-bool NComboProp::EndEdit(bool bSaveChanged)
-{
-	return true;
-}
-*/
 void NComboProp::OnMenuClick(NObject* _psender)
 {
 	NMenuCtrl* pmenu = (NMenuCtrl*)_psender;
-	ubyte byVal = (ubyte)pmenu->GetClickedCmdID();
-	//if (byVal!=0)
-	//	m_pvarValue->byVal = byVal-1;
-	//((NPropertiesCtrl*)m_pParent)->SaveRowEditing();
+	udword dwVal = pmenu->GetClickedCmdID();
+	NMEItemDesc* pitem = pmenu->GetItemDescFromID( pmenu->GetClickedCmdID() );
+	if (pitem)
+	{
+		m_button.SetText(pitem->strName.Buffer());	
+	}
 
 }
 

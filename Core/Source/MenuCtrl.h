@@ -83,6 +83,7 @@ public:
 
 	udword				GetItemsCount();
 	NMEItemDesc*	GetItemDesc(udword _idx);
+	NMEItemDesc*	GetItemDescFromID(udword _id);
 
 	NMenuCtrl* CreatePopupMenu(const char* _pszName, udword _idx);
 	NMenuCtrl* GetPopupMenu(udword _idx);
@@ -109,7 +110,7 @@ protected:
 	NMenuCtrl* m_pcurPopupMenu, *m_pcurParentMenu;
 
 	// Static Datas
-	static udword	m_dwReturnCmdID;
+	static udword	m_dwReturnCmdID;	//!< Only one menu at once
 
 protected:
 	//Win32 Events
