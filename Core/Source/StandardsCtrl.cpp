@@ -268,6 +268,7 @@ bool NMenuButtonCtrl::Create(const char* name, const NRect& rect, NGUIWnd* paren
 	OnClick=FDelegate(this, (TDelegate)&NMenuButtonCtrl::OnButtonClick);
 
 	m_wndMenu.Create("", this);
+	m_wndMenu.OnItemClick=FDelegate(this, (TDelegate)&NMenuButtonCtrl::OnMenuClick);
 
 	return true;
 }
@@ -278,8 +279,67 @@ void NMenuButtonCtrl::OnButtonClick(NObject* _psender)
 	NPoint pt(rc.left, rc.bottom);
 	ClientToScreen(pt);
 	m_wndMenu.TrackPopupMenu(pt, null);
+}
+
+void NMenuButtonCtrl::OnMenuClick(NObject* _psender)
+{
+	udword dwVal = m_wndMenu.GetClickedCmdID();
+	NMEItemDesc* pitem = m_wndMenu.GetItemDescFromID( m_wndMenu.GetClickedCmdID() );
+	if (pitem)
+	{
+		SetText(pitem->strName.Buffer());	
+	}
 	
 }
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//										NColorButtonCtrl Class Implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+
+//-----------------------------------------------------------------
+//!	\brief	Control creation
+//-----------------------------------------------------------------
+bool NColorButtonCtrl::Create(const NColor& _col, const NRect& rect, NGUIWnd* parent, udword _dwStyle)
+{
+	if (!NButtonCtrl::Create("", rect, parent, _dwStyle))
+		return false;
+
+	OnClick=FDelegate(this, (TDelegate)&NColorButtonCtrl::OnButtonClick);
+
+	m_wndPicker.Create(this);
+	m_wndPicker.OnColorClick=FDelegate(this, (TDelegate)&NColorButtonCtrl::OnColorClick);
+
+	return true;
+}
+
+void NColorButtonCtrl::OnButtonClick(NObject* _psender)
+{
+/*	NRect rc = GetClientRect();
+	NPoint pt(rc.left, rc.bottom);
+	ClientToScreen(pt);
+	m_wndMenu.TrackPopupMenu(pt, null);*/
+}
+
+void NColorButtonCtrl::OnColorClick(NObject* _psender)
+{
+	/*udword dwVal = m_wndMenu.GetClickedCmdID();
+	NMEItemDesc* pitem = m_wndMenu.GetItemDescFromID( m_wndMenu.GetClickedCmdID() );
+	if (pitem)
+	{
+		SetText(pitem->strName.Buffer());	
+	}*/
+	
+}
+
+
+
+
+
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------

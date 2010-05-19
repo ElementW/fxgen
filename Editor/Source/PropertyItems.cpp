@@ -54,37 +54,37 @@ NPropertyItem::~NPropertyItem()
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
-//										NUbyteProp class Implementation
+//										NIntProp class Implementation
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NUbyteProp, NPropertyItem)
+FIMPLEMENT_CLASS(NIntProp, NPropertyItem)
 FIMPLEMENT_CLASS_END()
 
 
-void NUbyteProp::Init()
+void NIntProp::Init()
 {
 	NFieldDesc* pfd = &m_pObject->GetRTClass()->m_paFieldsDesc[m_dwFieldIdx];
-	ubyte* paddr = m_pObject->GetFieldVarAddr(m_dwFieldIdx);
+	sdword* paddr = (sdword*)m_pObject->GetFieldVarAddr(m_dwFieldIdx);
 
 	m_slider.Create(pfd->pszName, NRect(0,0,0,0), m_pParent);
 	m_slider.SetRange(pfd->fMin, pfd->fMax);
-	m_slider.SetPos(*(ubyte*)paddr);
+	m_slider.SetPos(*paddr);
 	m_slider.SetStep(pfd->fStep);
-	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NUbyteProp::OnValueChanged);
+	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NIntProp::OnValueChanged);
 }
 
-void NUbyteProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
+void NIntProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	m_slider.SetWindowRect(rcItem);
 }
 
-void NUbyteProp::OnValueChanged(NObject* _psender)
+void NIntProp::OnValueChanged(NObject* _psender)
 {
 	//Change field value
-	ubyte* paddr = m_pObject->GetFieldVarAddr(m_dwFieldIdx);
+	sdword* paddr = (sdword*)m_pObject->GetFieldVarAddr(m_dwFieldIdx);
 	float fpos = m_slider.GetPos();
-	*paddr = (ubyte)fpos;
+	*paddr = (sdword)fpos;
 }
 
 
@@ -100,13 +100,71 @@ FIMPLEMENT_CLASS_END()
 
 void NColorProp::Init()
 {
-	m_picker.Create(m_pParent);
+	m_button.Create(NColor(255,0,0,0), NRect(0,0,0,0), m_pParent, 0);
 }
 
 void NColorProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
-	m_picker.SetWindowRect(rcItem);
+	m_button.SetWindowRect(rcItem);
 }
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//										NComboProp class Implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+FIMPLEMENT_CLASS(NComboProp, NPropertyItem)
+FIMPLEMENT_CLASS_END();
+
+void NComboProp::Init()
+{
+	NFieldDesc* pfd = &m_pObject->GetRTClass()->m_paFieldsDesc[m_dwFieldIdx];
+	ubyte* paddr = (ubyte*)m_pObject->GetFieldVarAddr(m_dwFieldIdx);
+
+	//Make menu items
+	NString str;
+	str = pfd->pszDef;
+
+	NString word;
+	udword i=3;
+	do
+	{
+		i = str.ExtractToken(i, word, ",]");
+		if (i!=-1)
+		{
+			m_carrayStringsList.AddItem(word);
+			i+=word.Length()+1;
+		}
+
+	} while (i!=-1);
+
+	//Create menu
+	m_button.Create(m_carrayStringsList[*paddr].Buffer(), NRect(0,0,0,0), m_pParent, 0);
+//	m_button.GetMenu()->OnItemClick=FDelegate(this, (TDelegate)&NComboProp::OnMenuClick);
+	for (udword i=0; i<m_carrayStringsList.Count(); i++)
+	{
+		m_button.GetMenu()->AddItem(m_carrayStringsList[i].Buffer(), i+1, 0);
+	}
+
+}
+
+void NComboProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
+{
+	m_button.SetWindowRect(rcItem);
+}
+
+/*void NComboProp::OnMenuClick(NObject* _psender)
+{
+	NMenuCtrl* pmenu = (NMenuCtrl*)_psender;
+	udword dwVal = pmenu->GetClickedCmdID();
+	NMEItemDesc* pitem = pmenu->GetItemDescFromID( pmenu->GetClickedCmdID() );
+	if (pitem)
+	{
+		m_button.SetText(pitem->strName.Buffer());	
+	}
+}*/
 
 
 /*
@@ -432,63 +490,6 @@ void NColorProp::OnColorClick(NObject* _psender)
 }
 */
 
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-//
-//										NComboProp class Implementation
-//
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NComboProp, NPropertyItem)
-FIMPLEMENT_CLASS_END();
-
-void NComboProp::Init()
-{
-	NFieldDesc* pfd = &m_pObject->GetRTClass()->m_paFieldsDesc[m_dwFieldIdx];
-
-	//Make menu items
-	NString str;
-	str = pfd->pszDef;
-
-	NString word;
-	udword i=3;
-	do
-	{
-		i = str.ExtractToken(i, word, ",]");
-		if (i!=-1)
-		{
-			m_carrayStringsList.AddItem(word);
-			i+=word.Length()+1;
-		}
-
-	} while (i!=-1);
-
-	//Create menu
-	m_button.Create("", NRect(0,0,0,0), m_pParent, 0);
-	m_button.GetMenu()->OnItemClick=FDelegate(this, (TDelegate)&NComboProp::OnMenuClick);
-	for (udword i=0; i<m_carrayStringsList.Count(); i++)
-	{
-		m_button.GetMenu()->AddItem(m_carrayStringsList[i].Buffer(), i+1, 0);
-	}
-
-}
-
-void NComboProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
-{
-	m_button.SetWindowRect(rcItem);
-}
-
-void NComboProp::OnMenuClick(NObject* _psender)
-{
-	NMenuCtrl* pmenu = (NMenuCtrl*)_psender;
-	udword dwVal = pmenu->GetClickedCmdID();
-	NMEItemDesc* pitem = pmenu->GetItemDescFromID( pmenu->GetClickedCmdID() );
-	if (pitem)
-	{
-		m_button.SetText(pitem->strName.Buffer());	
-	}
-
-}
 
 
 

@@ -29,7 +29,7 @@
 class NOperatorNode;
 
 class NPropertyItem;
-	class NUbyteProp;
+	class NIntProp;
 	class NUwordProp;
 	class NUdwordProp;
 	class NFloatProp;
@@ -73,10 +73,10 @@ public:
 };
 
 //-----------------------------------------------------------------
-//!	\class	NUbyteProp
-//! \brief	UByte Property Item
+//!	\class	NIntProp
+//! \brief	Integer Property Item
 //-----------------------------------------------------------------
-class NUbyteProp : public NPropertyItem
+class NIntProp : public NPropertyItem
 {
 public:
 	FDECLARE_CLASS();
@@ -100,10 +100,9 @@ public:
 
 	virtual void		Init();
 	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
-	virtual udword	GetHeight() { return 128; }
 
 protected:
-	NColorPickerCtrl m_picker;
+	NColorButtonCtrl m_button;
 };
 
 //-----------------------------------------------------------------
@@ -121,8 +120,7 @@ public:
 protected:
 	NMenuButtonCtrl m_button;
 	NArray<NString>	m_carrayStringsList;
-	void OnMenuClick(NObject* _psender);
-
+	//void OnMenuClick(NObject* _psender);
 };
 
 
