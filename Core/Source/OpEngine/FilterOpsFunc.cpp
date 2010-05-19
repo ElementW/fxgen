@@ -542,7 +542,7 @@ void  NNormalsOp_Process(SEngineState* _state, ubyte _byAmplify, ubyte _byFilter
 	VAR(efloat,	true, "y",	"0.0", "NFloatProp")	//3
 	VAR(efloat,	true, "z",	"1.0", "NFloatProp")	//4
 	VAR(eubyte,	false, "Options",	"", "")	//5
-	VAR(eubyte,	true, "Sensitivity",	"127", "NUbyteProp")	//6
+	VAR(eubyte,	true, "Sensitivity",	"127", "NIntProp")	//6
 	VAR(eubyte,	true, "Compensation",	"0,[Normal,Height,Quaternion]", "NUbyteComboProp")	//7
 	VAR(eubyte,	true, "Mirror",	"0,[None,X : YZ,Y : XZ,X+Y : Z]", "NUbyteComboProp")	//8
 };
@@ -661,7 +661,7 @@ void NAbnormalsOp_Process(ubyte _byRotation, )
 
 static NVarsBlocDesc blocdescNSlopeMagnitudeOp[] =
 {
-	VAR(eudword,	true, "Amplify",	"64", "NUbyteProp")	//0
+	VAR(eudword,	true, "Amplify",	"64", "NIntProp")	//0
 };
 
 
@@ -828,8 +828,8 @@ void NInvertOp_Process(SEngineState* _state)
 
 static NVarsBlocDesc blocdescThresholdOp[] =
 {
-	VAR(eubyte,		true, "Threshold",	"128",	"NUbyteProp")	//0
-	VAR(eubyte,		true, "Ratio",	"128",		"NUbyteProp")	//1
+	VAR(eubyte,		true, "Threshold",	"128",	"NIntProp")	//0
+	VAR(eubyte,		true, "Ratio",	"128",		"NIntProp")	//1
 	VAR(eubyte,		false, "Mode",				"0,[Expand Downwards, Expand Upwards, Compress Below, Compress Above]", "NUbyteComboProp")	//2
 };
 
@@ -998,7 +998,7 @@ FIMPLEMENT_CLASS(NSegmentOp, NOperatorNode);
 
 static NVarsBlocDesc blocdescSegmentOp[] =
 {
-	VAR(eubyte,		true, "Threshold",	"128",	"NUbyteProp")	//0
+	VAR(eubyte,		true, "Threshold",	"128",	"NIntProp")	//0
 };
 
 NSegmentOp::NSegmentOp()
@@ -1114,7 +1114,7 @@ FIMPLEMENT_CLASS(NDilateOp, NOperatorNode);
 
 static NVarsBlocDesc blocdescDilateOp[] =
 {
-	VAR(eubyte,		true, "Iterations",	"10",	"NUbyteProp")	//0
+	VAR(eubyte,		true, "Iterations",	"10",	"NIntProp")	//0
 };
 
 NDilateOp::NDilateOp()
