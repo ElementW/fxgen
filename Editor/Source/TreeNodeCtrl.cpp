@@ -78,15 +78,13 @@ void NTreeNodeCtrl::Update()
 //-----------------------------------------------------------------
 //!	\brief	Paint
 //-----------------------------------------------------------------
-void NTreeNodeCtrl::OnPaint()
+void NTreeNodeCtrl::OnPaint(N2DPainter* _ppainter)
 {
 	NRect rc = GetClientRect();
 
-	N2DPainter dc(this);
-
 	/////////////////////////////////////////////////
 	//Erase Background
-	dc.FillSolidRect(rc, RGBA(115,115,115,255));
+	_ppainter->FillSolidRect(rc, RGBA(115,115,115,255));
 
 	/////////////////////////////////////////////////
 	//Calc Items rect
@@ -136,17 +134,17 @@ void NTreeNodeCtrl::OnPaint()
 		if (item.rcItem.IsEmpty())
 			continue;
 
-		//dc.SetPen(1, RGBA(64,64,64));
+		//_ppainter->SetPen(1, RGBA(64,64,64));
 
 		//Row Background
-		if (m_dwCurItemIdx==idx)	dc.FillSolidRect(item.rcItem,	RGBA(160,159,167,255));
-		//else if (i%2)						dc.FillSolidRect(item.rcItem,	RGBA(107,107,107));
-		//else										dc.FillSolidRect(item.rcItem,	RGBA(113,113,113));
+		if (m_dwCurItemIdx==idx)	_ppainter->FillSolidRect(item.rcItem,	RGBA(160,159,167,255));
+		//else if (i%2)						_ppainter->FillSolidRect(item.rcItem,	RGBA(107,107,107));
+		//else										_ppainter->FillSolidRect(item.rcItem,	RGBA(113,113,113));
 
 		//Display Text
 		NRect rcText = item.rcItem;
 		rcText.left+=((item.dwDepth+1)*TN_ITEMIDENT);
-    dc.DrawString(item.pcobj->GetName(), rcText, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+    _ppainter->DrawString(item.pcobj->GetName(), rcText, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 
 		//Symbol (+) or (-)
 		if (IsParentItem(i))
@@ -165,7 +163,7 @@ void NTreeNodeCtrl::OnPaint()
 				pts[0].x = rcSymb.left;		pts[0].y = rcSymb.top;
 				pts[1].x = rcSymb.right;	pts[1].y = rcSymb.top;
 				pts[2].x = rcSymb.left+rcSymb.Width()/2;		pts[2].y = rcSymb.bottom;
-				dc.Polygon(pts, 3, RGBA(0,0,0,255));
+				_ppainter->Polygon(pts, 3, RGBA(0,0,0,255));
 
 			} else {
 				//(+) >
@@ -173,7 +171,7 @@ void NTreeNodeCtrl::OnPaint()
 				pts[0].x = rcSymb.left;		pts[0].y = rcSymb.top;
 				pts[1].x = rcSymb.right;	pts[1].y = rcSymb.top+rcSymb.Height()/2;
 				pts[2].x = rcSymb.left;		pts[2].y = rcSymb.bottom;
-				dc.Polygon(pts, 3, RGBA(0,0,0,255));
+				_ppainter->Polygon(pts, 3, RGBA(0,0,0,255));
 
 			}
 

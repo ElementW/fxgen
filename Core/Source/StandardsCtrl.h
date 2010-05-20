@@ -64,7 +64,7 @@ protected:
 
 protected:
 	//Win32 Events
-	virtual	void	OnPaint();
+	virtual	void	OnPaint(N2DPainter* _ppainter);
 	virtual void	OnSize();
 };
 
@@ -108,7 +108,7 @@ protected:
 
 protected:
 	//Events
-	virtual	void	OnPaint();
+	virtual	void	OnPaint(N2DPainter* _ppainter);
 	virtual void	OnMouseMove(NPoint pos );
 	virtual void	OnLButtonUp(NPoint pos);
 	virtual void	OnLButtonDown(NPoint pos);
@@ -139,16 +139,13 @@ public:
 	FDelegate		OnClick;
 
 protected:
-	// Internal methods
-
 	// Datas
 	bool		m_bClicked;
 	bool		m_bMouseOver;
 	udword	m_dwStyle;
 
-protected:
 	//Events
-	virtual	void	OnPaint();
+	virtual	void	OnPaint(N2DPainter* _ppainter);
 	virtual void	OnSize();
 	virtual void	OnMouseMove(NPoint pos );
 	virtual void	OnMButtonDown(NPoint pos);
@@ -174,6 +171,9 @@ public:
 	// Methods
 	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent, udword _dwStyle);
 
+	//Notification Messages
+	FDelegate		OnChanged;
+
 protected:
 	//Events
 	void OnButtonClick(NObject* _psender);
@@ -196,13 +196,18 @@ public:
 	// Methods
 	virtual	bool Create(const NColor& _col, const NRect& rect, NGUIWnd* parent, udword _dwStyle);
 
+	//Notification Messages
+	FDelegate		OnChanged;
+
 protected:
 	//Events
+	virtual	void	OnPaint(N2DPainter* _ppainter);
 	void OnButtonClick(NObject* _psender);
 	void OnColorClick(NObject* _psender);
 
 	//Datas
 	NColorPickerCtrl	m_wndPicker;
+	NColor						m_col;
 };
 
 
@@ -235,7 +240,7 @@ public:
 
 protected:
 	//Events
-	virtual	void	OnPaint();
+	virtual	void	OnPaint(N2DPainter* _ppainter);
 	virtual void	OnLButtonUp(NPoint _pos);
 	virtual void	OnLButtonDown(NPoint _pos);
 	virtual	void	OnLButtonDblClk(NPoint _point);
@@ -286,7 +291,7 @@ protected:
 	bool m_bMovingCursor, m_bOffsetValue;
 
 	//Delegates
-	virtual	void	OnPaint();
+	virtual	void	OnPaint(N2DPainter* _ppainter);
 	virtual void	OnSize();
 };
 

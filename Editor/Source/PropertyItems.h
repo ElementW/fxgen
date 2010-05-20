@@ -90,6 +90,24 @@ protected:
 };
 
 //-----------------------------------------------------------------
+//!	\class	NFloatProp
+//! \brief	Float Property Item
+//-----------------------------------------------------------------
+class NFloatProp : public NPropertyItem
+{
+public:
+	FDECLARE_CLASS();
+
+	virtual void		Init();
+	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
+
+protected:
+	NSlideCtrl m_slider;
+	void OnValueChanged(NObject* _psender);
+};
+
+
+//-----------------------------------------------------------------
 //!	\class	NColorProp
 //! \brief	Color Property Item
 //-----------------------------------------------------------------
@@ -103,6 +121,7 @@ public:
 
 protected:
 	NColorButtonCtrl m_button;
+	void OnValueChanged(NObject* _psender);
 };
 
 //-----------------------------------------------------------------
@@ -120,76 +139,12 @@ public:
 protected:
 	NMenuButtonCtrl m_button;
 	NArray<NString>	m_carrayStringsList;
-	//void OnMenuClick(NObject* _psender);
+
+	void OnValueChanged(NObject* _psender);
 };
 
 
 /*
-//-----------------------------------------------------------------
-//!	\class	NUwordProp
-//! \brief	Uword Property Item
-//-----------------------------------------------------------------
-class NUwordProp : public NPropertyItem
-{
-public:
-	FDECLARE_CLASS();
-
-	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
-	virtual bool		BeginEdit	(NRect& rcItem);
-	virtual bool		EndEdit		(bool bSaveChanged=true);
-	virtual	bool		AddValue(sdword dwDelta);
-
-	virtual void		OnEnter(NEditCtrl* pEdit);
-	virtual void		OnEscape(NEditCtrl* pEdit);
-};
-
-//-----------------------------------------------------------------
-//!	\class	NUdwordProp
-//! \brief	Udword Property Item
-//-----------------------------------------------------------------
-class NUdwordProp : public NPropertyItem
-{
-public:
-	//###TODO###
-};
-
-
-//-----------------------------------------------------------------
-//!	\class	NFloatProp
-//! \brief	Float Property Item
-//-----------------------------------------------------------------
-class NFloatProp : public NPropertyItem
-{
-public:
-	FDECLARE_CLASS();
-	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
-	virtual bool		BeginEdit	(NRect& rcItem);
-	virtual bool		EndEdit		(bool bSaveChanged=true);
-	virtual	bool		AddValue(sdword dwDelta);
-
-	virtual void		OnEnter(NEditCtrl* pEdit);
-	virtual void		OnEscape(NEditCtrl* pEdit);
-};
-
-//-----------------------------------------------------------------
-//!	\class	NUFloatProp
-//! \brief	Unsigned Float Property Item
-//-----------------------------------------------------------------
-class NUFloatProp : public NPropertyItem
-{
-public:
-	FDECLARE_CLASS();
-	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
-	virtual bool		BeginEdit	(NRect& rcItem);
-	virtual bool		EndEdit		(bool bSaveChanged=true);
-	virtual	bool		AddValue(sdword dwDelta);
-
-	virtual void		OnEnter(NEditCtrl* pEdit);
-	virtual void		OnEscape(NEditCtrl* pEdit);
-};
-
-
-
 //-----------------------------------------------------------------
 //!	\class	NFileBrowserProp
 //! \brief	File browser Property Item

@@ -79,23 +79,22 @@ void NPropertiesCtrl::Update()
 //-----------------------------------------------------------------
 //!	\brief	Display
 //-----------------------------------------------------------------
-void NPropertiesCtrl::OnPaint()
+void NPropertiesCtrl::OnPaint(N2DPainter* _ppainter)
 {
 	//return;
 
 	NRect rc = GetClientRect();
 
-	N2DPainter dc(this);
-//	dc.SetBkMode(TRANSPARENT);
+//	_ppainter->SetBkMode(TRANSPARENT);
 
 	/////////////////////////////////////////////////
 	//Erase Background
 	m_dwHeaderWidth = rc.Width()/4;
-	dc.FillSolidRect(rc, RGBA(115,115,115,255));
+	_ppainter->FillSolidRect(rc, RGBA(115,115,115,255));
 
 	/////////////////////////////////////////////////
 	//Display Rows
-	//dc.SetPen(1, RGBA(255,140,140,140));
+	//_ppainter->SetPen(1, RGBA(255,140,140,140));
 
 	sdword dwMaxDepth=INT_MAX;
 	sdword dwPosY=0;
@@ -119,10 +118,10 @@ void NPropertiesCtrl::OnPaint()
 
 				prd->rcItem = rcRow;
 
-				//dc.RoundRect(0xF, rcRow, 16, RGBA(255,0,0,0));
+				//_ppainter->RoundRect(0xF, rcRow, 16, RGBA(255,0,0,0));
 
 				rcRow.bottom-=PC_ROWGROUPENDHEIGHT/2;
-				dc.FillSolidRect(rcRow, RGBA(0,0,0,255));
+				_ppainter->FillSolidRect(rcRow, RGBA(0,0,0,255));
 
 				dwPosY+=PC_ROWGROUPENDHEIGHT;
 
@@ -140,15 +139,15 @@ void NPropertiesCtrl::OnPaint()
 
 				prd->rcItem = rcRow;
 
-				//dc.RoundRect(0xC, rcRow, 32, RGBA(255,0,0,0));
+				//_ppainter->RoundRect(0xC, rcRow, 32, RGBA(255,0,0,0));
 
 				//rcRow.top+=PC_ROWSHEIGHT/2;
-				dc.FillSolidRect(rcRow, RGBA(0,0,0,255));
+				_ppainter->FillSolidRect(rcRow, RGBA(0,0,0,255));
 
 				//rcRow.top-=(PC_ROWSHEIGHT/2)-2;
 				rcRow.left+=PC_ROWTEXTIDENT;
 
-        dc.DrawString(prd->strName.Buffer(), rcRow, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(192,192,192,255) );
+        _ppainter->DrawString(prd->strName.Buffer(), rcRow, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(192,192,192,255) );
 				dwPosY+=PC_ROWSHEIGHT;
 
 				bDrawGroupEnd = true;
@@ -168,11 +167,11 @@ void NPropertiesCtrl::OnPaint()
 			rcRow.left = rc.left;		rcRow.top = dwPosY;
 			rcRow.right = m_dwHeaderWidth;	rcRow.bottom = rcRow.top + dwItemH - 1;
 
-			if (m_dwCurSelRow!=i)		dc.FillSolidRect(rcRow,	RGBA(200,200,200,255));
-			else										dc.FillSolidRect(rcRow,	RGBA(255,141,15,255));
+			if (m_dwCurSelRow!=i)		_ppainter->FillSolidRect(rcRow,	RGBA(200,200,200,255));
+			else										_ppainter->FillSolidRect(rcRow,	RGBA(255,141,15,255));
 
 			rcRow.left+=(prd->dwDepth*PC_ROWDEPTHIDENT);
-      dc.DrawString(prd->strName.Buffer(), rcRow, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+      _ppainter->DrawString(prd->strName.Buffer(), rcRow, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 
 			//Check if value can be animated
       bool bCanBeAnimate = false;	//prd->pItem->m_pvarBlocDesc->nFlags&VAR_FLAG_CANBEANIMATED;
@@ -190,8 +189,8 @@ void NPropertiesCtrl::OnPaint()
 				rcRow.right-=PC_ROWSHEIGHT;
 
 			//Display row
-			dc.FillSolidRect(rcRow, RGBA(255,255,255,255));
-			prd->pItem->DrawItem(&dc, rcRow);
+			_ppainter->FillSolidRect(rcRow, RGBA(255,255,255,255));
+			prd->pItem->DrawItem(_ppainter, rcRow);
 
 			//Display button if variable can be animated
 			if (bCanBeAnimate)
@@ -199,9 +198,9 @@ void NPropertiesCtrl::OnPaint()
 				NRect rcABut;
 				rcABut.left=rcRow.right;		rcABut.top=rcRow.top;
 				rcABut.right=rc.right;			rcABut.bottom=rcRow.bottom;
-				dc.Draw3dRect(rcABut, RGBA(255,255,255,255), RGBA(255,0,0,0));
-        if (!bAnimated)		dc.DrawString("A", rcABut, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
-        else							dc.DrawString("R", rcABut, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+				_ppainter->Draw3dRect(rcABut, RGBA(255,255,255,255), RGBA(255,0,0,0));
+        if (!bAnimated)		_ppainter->DrawString("A", rcABut, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+        else							_ppainter->DrawString("R", rcABut, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 
 				prd->rcItemAnim=rcABut;
 			} else {
@@ -225,10 +224,10 @@ void NPropertiesCtrl::OnPaint()
 		rcRow.right = rc.right;	rcRow.bottom	= dwPosY+ PC_ROWGROUPENDHEIGHT ;
 		rcRow.left+=(dwMaxDepth*PC_ROWDEPTHIDENT);
 
-		//dc.RoundRect(0xF, rcRow, PC_ROWGROUPENDHEIGHT/4, RGBA(255,0,0,0));
+		//_ppainter->RoundRect(0xF, rcRow, PC_ROWGROUPENDHEIGHT/4, RGBA(255,0,0,0));
 
 		//rcRow.bottom-=PC_ROWGROUPENDHEIGHT/2;
-		dc.FillSolidRect(rcRow, RGBA(0,0,0,255));
+		_ppainter->FillSolidRect(rcRow, RGBA(0,0,0,255));
 
 		dwPosY+=PC_ROWGROUPENDHEIGHT;
 

@@ -391,7 +391,7 @@ public:
 	udword GetDepth()	{ return m_dwDepth; }
 
 	//Messages
-	virtual	void	OnPaint()		{}
+	virtual	void	OnPaint(N2DPainter* _ppainter)		{}
 	virtual	void	OnSize()		{}
 
 	virtual void	OnMouseMove(NPoint pos )				{}

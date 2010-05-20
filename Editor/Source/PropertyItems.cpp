@@ -61,7 +61,6 @@ NPropertyItem::~NPropertyItem()
 FIMPLEMENT_CLASS(NIntProp, NPropertyItem)
 FIMPLEMENT_CLASS_END()
 
-
 void NIntProp::Init()
 {
 	NFieldDesc* pfd = &m_pObject->GetRTClass()->m_paFieldsDesc[m_dwFieldIdx];
@@ -83,8 +82,42 @@ void NIntProp::OnValueChanged(NObject* _psender)
 {
 	//Change field value
 	sdword* paddr = (sdword*)m_pObject->GetFieldVarAddr(m_dwFieldIdx);
-	float fpos = m_slider.GetPos();
-	*paddr = (sdword)fpos;
+	*paddr = (sdword)m_slider.GetPos();
+}
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//										NFloatProp class Implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+FIMPLEMENT_CLASS(NFloatProp, NPropertyItem)
+FIMPLEMENT_CLASS_END()
+
+void NFloatProp::Init()
+{
+	NFieldDesc* pfd = &m_pObject->GetRTClass()->m_paFieldsDesc[m_dwFieldIdx];
+	sdword* paddr = (sdword*)m_pObject->GetFieldVarAddr(m_dwFieldIdx);
+
+	m_slider.Create(pfd->pszName, NRect(0,0,0,0), m_pParent);
+	m_slider.SetRange(pfd->fMin, pfd->fMax);
+	m_slider.SetPos(*paddr);
+	m_slider.SetStep(pfd->fStep);
+	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NFloatProp::OnValueChanged);
+}
+
+void NFloatProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
+{
+	m_slider.SetWindowRect(rcItem);
+}
+
+void NFloatProp::OnValueChanged(NObject* _psender)
+{
+	//Change field value
+	float* paddr = (float*)m_pObject->GetFieldVarAddr(m_dwFieldIdx);
+	*paddr = m_slider.GetPos();
 }
 
 
@@ -100,12 +133,22 @@ FIMPLEMENT_CLASS_END()
 
 void NColorProp::Init()
 {
-	m_button.Create(NColor(255,0,0,0), NRect(0,0,0,0), m_pParent, 0);
+	udword* paddr = (udword*)m_pObject->GetFieldVarAddr(m_dwFieldIdx);
+
+	m_button.Create(NColor(*paddr), NRect(0,0,0,0), m_pParent, 0);
+	m_button.OnChanged = FDelegate(this, (TDelegate)&NColorProp::OnValueChanged);
 }
 
 void NColorProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	m_button.SetWindowRect(rcItem);
+}
+
+void NColorProp::OnValueChanged(NObject* _psender)
+{
+	//Change field value
+	udword* paddr = (udword*)m_pObject->GetFieldVarAddr(m_dwFieldIdx);
+	*paddr  = m_button.GetPicker()->GetClickedColor().GetRGBA();
 }
 
 //-----------------------------------------------------------------
@@ -140,9 +183,11 @@ void NComboProp::Init()
 
 	} while (i!=-1);
 
-	//Create menu
+	//Create menu button
 	m_button.Create(m_carrayStringsList[*paddr].Buffer(), NRect(0,0,0,0), m_pParent, 0);
-//	m_button.GetMenu()->OnItemClick=FDelegate(this, (TDelegate)&NComboProp::OnMenuClick);
+	m_button.OnChanged = FDelegate(this, (TDelegate)&NComboProp::OnValueChanged);
+
+	//Add items to menu
 	for (udword i=0; i<m_carrayStringsList.Count(); i++)
 	{
 		m_button.GetMenu()->AddItem(m_carrayStringsList[i].Buffer(), i+1, 0);
@@ -155,99 +200,15 @@ void NComboProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 	m_button.SetWindowRect(rcItem);
 }
 
-/*void NComboProp::OnMenuClick(NObject* _psender)
+void NComboProp::OnValueChanged(NObject* _psender)
 {
-	NMenuCtrl* pmenu = (NMenuCtrl*)_psender;
-	udword dwVal = pmenu->GetClickedCmdID();
-	NMEItemDesc* pitem = pmenu->GetItemDescFromID( pmenu->GetClickedCmdID() );
-	if (pitem)
-	{
-		m_button.SetText(pitem->strName.Buffer());	
-	}
-}*/
+	//Change field value
+	udword* paddr = (udword*)m_pObject->GetFieldVarAddr(m_dwFieldIdx);
+	*paddr = m_button.GetMenu()->GetClickedCmdID()-1;
+}
 
 
 /*
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-//
-//										NUwordProp class Implementation
-//
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NUwordProp, NPropertyItem);
-FIMPLEMENT_CLASS_END();
-
-void NUwordProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
-{
-	m_strValue.Format("%d", m_pvarValue->wVal);
-  pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
-}
-
-bool NUwordProp::BeginEdit(NRect& rcItem)
-{
-	if (m_pwNGraphicstrl)	delete m_pwNGraphicstrl;
-
-	NRect rcCB(rcItem);
-
-	NEditCtrl* pwNGraphicsB = new NEditCtrl;
-	pwNGraphicsB->Create("", rcCB, m_pParent);
-	m_pwNGraphicstrl = pwNGraphicsB;
-
-	NString text;
-	text.Format("%u", (udword)m_pvarValue->wVal);
-	pwNGraphicsB->SetText(text.Buffer());
-	pwNGraphicsB->SelectAll();
-	pwNGraphicsB->SetFocus();
-
-	pwNGraphicsB->OnEnter = FDelegate(this, (TDelegate)&NUwordProp::OnEnter);
-	pwNGraphicsB->OnEscape = FDelegate(this, (TDelegate)&NUwordProp::OnEscape);
-
-	return false;
-}
-
-bool NUwordProp::EndEdit(bool bSaveChanged)
-{
-	if (m_pwNGraphicstrl==null)		return false;
-
-	//Save changed
-	if (bSaveChanged)
-	{
-		NString str = ((NEditCtrl*)m_pwNGraphicstrl)->GetText();
-		sdword dwVal = atoi(str.Buffer());
-		if (dwVal>65535)	dwVal = 65535;
-		if (dwVal<0)		dwVal = 0;
-		m_pvarValue->wVal = (uword)dwVal;
-		//strcpy(m_pvarValue->szVal, str.Buffer());
-	}
-
-	//Destroy control
-	delete m_pwNGraphicstrl;
-	m_pwNGraphicstrl=null;
-
-	return bSaveChanged;
-}
-
-bool NUwordProp::AddValue(sdword dwDelta)
-{
-	sdword dwVal = (sdword)m_pvarValue->wVal + (sdword)dwDelta;
-	if (dwVal>65535)	dwVal = 65535;
-	if (dwVal<0)			dwVal = 0;
-	m_pvarValue->wVal = (uword)dwVal;
-	return true;
-}
-
-void NUwordProp::OnEnter(NEditCtrl* pEdit)
-{
-	((NPropertiesCtrl*)m_pParent)->EndRowEditing();
-}
-
-void NUwordProp::OnEscape(NEditCtrl* pEdit)
-{
-	((NPropertiesCtrl*)m_pParent)->EndRowEditing(false);
-}
-
-
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
