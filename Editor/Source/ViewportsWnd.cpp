@@ -275,12 +275,12 @@ void NViewportsWnd::DisplayTexture(NObject* pobj)
 
 	//Texte
 	rc.top = rc.bottom-32;
-	N2DPainter dc(this);
-	//dc.FillSolidRect(rc, RGBA(115,115,115));
-	dc.SetTextColor(RGBA(200,255,200));
+	N2DPainter _ppainter->this);
+	//_ppainter->FillSolidRect(rc, RGBA(115,115,115));
+	_ppainter->SetTextColor(RGBA(200,255,200));
 	NString str;
 	str.Format("Texture Size %dx%d", m_dwTexWidth, m_dwTexHeight);
-	dc.DrawText(str.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE);
+	_ppainter->DrawText(str.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE);
 */
 }
 
@@ -387,23 +387,22 @@ void NViewportsWnd::OnRButtonDown(NPoint pos)
 }
 
 
-void NViewportsWnd::OnPaint()
+void NViewportsWnd::OnPaint(N2DPainter* _ppainter)
 {
 	NRect rc = GetClientRect();
 
-	N2DPainter dc(this);
-	dc.FillSolidRect(rc, RGBA(115,115,115,255));
+	_ppainter->FillSolidRect(rc, RGBA(115,115,115,255));
 
 	////////////////////////////////////////
 	//No operator valid
 	if (m_pcurOp==null || m_pcurOp->GetResource()==null || m_pcurOp->m_bError)
 	{
 		//Texte
-		//dc.FillSolidRect(rc, RGBA(255,115,115,115));
+		//_ppainter->FillSolidRect(rc, RGBA(255,115,115,115));
     if (m_pcurOp==null)
-      dc.DrawString("Select an operator by double clicking on it", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+      _ppainter->DrawString("Select an operator by double clicking on it", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 		else
-      dc.DrawString("Invalid links !", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+      _ppainter->DrawString("Invalid links !", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 
 	////////////////////////////////////////
 	//Display operator

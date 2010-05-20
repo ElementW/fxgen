@@ -110,7 +110,7 @@ protected:
 
 protected:
 	//Win32 Events
-	virtual	void	OnPaint();
+	virtual	void	OnPaint(N2DPainter* _ppainter);
 	virtual void	OnSize();
 	virtual void	OnMouseMove(NPoint pos );
 	virtual void	OnMButtonDown(NPoint pos);

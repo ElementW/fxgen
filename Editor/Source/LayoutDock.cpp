@@ -89,15 +89,13 @@ void NLayoutDock::Update()
 //-----------------------------------------------------------------
 //!	\brief	Paint
 //-----------------------------------------------------------------
-void NLayoutDock::OnPaint()
+void NLayoutDock::OnPaint(N2DPainter* _ppainter)
 {
 	NRect rc = GetClientRect();
 
-	N2DPainter dc(this);
-
 	/////////////////////////////////////////////////
 	//Erase Background
-	//dc.FillSolidRect(rc, RGBA(115,115,115,255));
+	//_ppainter->FillSolidRect(rc, RGBA(115,115,115,255));
 
 	/////////////////////////////////////////////////
 	//Display Tabs
@@ -121,15 +119,15 @@ void NLayoutDock::OnPaint()
 			udword len = pwnd->GetText().Length();
 			lrc.right=lrc.left+(len*8);	//###TOFIX### text len
 
-			dc.GradientVRect(lrc, GetGUISubSystem()->GetFaceColor(), GetGUISubSystem()->GetDarkColor());
+			_ppainter->GradientVRect(lrc, GetGUISubSystem()->GetFaceColor(), GetGUISubSystem()->GetDarkColor());
 			if (pLayout->dwIdxWndSelected==j)
-				dc.FillSolidRect(lrc, NColor(255,255,255,128));
+				_ppainter->FillSolidRect(lrc, NColor(255,255,255,128));
 
-			dc.DrawLine(lrc.left, lrc.top, lrc.right, lrc.top, GetGUISubSystem()->GetDarkColor(), 1);
-			dc.DrawLine(lrc.left, lrc.top, lrc.left, lrc.bottom, GetGUISubSystem()->GetDarkColor(), 1);
-			dc.DrawLine(lrc.right, lrc.top, lrc.right, lrc.bottom, GetGUISubSystem()->GetDarkColor(), 1);
+			_ppainter->DrawLine(lrc.left, lrc.top, lrc.right, lrc.top, GetGUISubSystem()->GetDarkColor(), 1);
+			_ppainter->DrawLine(lrc.left, lrc.top, lrc.left, lrc.bottom, GetGUISubSystem()->GetDarkColor(), 1);
+			_ppainter->DrawLine(lrc.right, lrc.top, lrc.right, lrc.bottom, GetGUISubSystem()->GetDarkColor(), 1);
 
-			dc.DrawString(pwnd->GetText().Buffer(), lrc, NDT_END_ELLIPSIS|NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, NColor(0,0,0,255));
+			_ppainter->DrawString(pwnd->GetText().Buffer(), lrc, NDT_END_ELLIPSIS|NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, NColor(0,0,0,255));
 			pLayout->arrayTabs[j].rc = lrc;
 
 			lrc.left+=lrc.Width();

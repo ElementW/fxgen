@@ -20,10 +20,6 @@
 //                   Includes
 //-----------------------------------------------------------------
 #include "RenderOpsUI.h"
-//#include "EngineOp.h"
-//#include "OpEngine/RectangularArray.h"
-//#include "Bitmap.h"
-//#include "Maths.h"
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -33,9 +29,9 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NFlatOp, NOperatorNode)
-	NEWFIELD(eInteger, "width",  NFlatOp, wpow,  0, 255, 1, "8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NComboProp"),
-	NEWFIELD(eInteger, "height", NFlatOp, hpow,  0, 255, 1, "8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NComboProp"),
-	NEWFIELD(eRgba,		 "color",  NFlatOp, color, 1, 255, 1, "0,0,0,255", "NColorProp"),
+	NEWFIELD(eInteger, "width",  NFlatOp, wpow,  0, 12, 1, "8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NComboProp"),
+	NEWFIELD(eInteger, "height", NFlatOp, hpow,  0, 12, 1, "8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NComboProp"),
+	NEWFIELD(eRgba,		 "color",  NFlatOp, color, 1, -1, 1, "0,0,0,255", "NColorProp"),
 FIMPLEMENT_CLASS_END()
 
 NFlatOp::NFlatOp()
@@ -43,13 +39,6 @@ NFlatOp::NFlatOp()
 	wpow=hpow=8;
 	color=NRGBA(255,0,0,255);
 }
-
-struct SFlatParams
-{
-	ubyte wpow;
-	ubyte hpow;
-	NRGBA color;
-};
 
 void  NFlatOp_Process(SEngineState* _state, void* _params)
 {

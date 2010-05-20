@@ -43,7 +43,7 @@ public:
 
 protected:
 	//Messages
-	virtual	void	OnPaint();
+	virtual	void	OnPaint(N2DPainter* _ppainter);
 	virtual	void	OnMouseWheel		(NPoint pos, sdword zDelta);
 	virtual void	OnMouseMove			(NPoint pos);
 	virtual void	OnMButtonDown		(NPoint pos);

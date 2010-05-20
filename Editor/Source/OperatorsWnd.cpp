@@ -81,12 +81,11 @@ bool NOperatorsWnd::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 }
 
 
-void NOperatorsWnd::OnPaint()
+void NOperatorsWnd::OnPaint(N2DPainter* _ppainter)
 {
 	NRect rc = GetClientRect();
 
-	N2DPainter dc(this);
-	dc.FillSolidRect(rc, RGBA(115,115,115,255));
+	_ppainter->FillSolidRect(rc, RGBA(115,115,115,255));
 
 	/////////////////////////////////////////////////
 	//Draw Grid
@@ -102,11 +101,11 @@ void NOperatorsWnd::OnPaint()
 
 	for (float y=fStartY; y<fMaxY; y+=fIncY)
 	{
-		dc.DrawLine(rc.left,	(sdword)y, rc.right, (sdword)y, GB_GRIDCOLOR, 1);
+		_ppainter->DrawLine(rc.left,	(sdword)y, rc.right, (sdword)y, GB_GRIDCOLOR, 1);
 	}
 	for (float x=fStartX; x<fMaxX; x+=fIncX)
 	{
-		dc.DrawLine((sdword)x, rc.top, (sdword)x, rc.bottom, GB_GRIDCOLOR, 1);
+		_ppainter->DrawLine((sdword)x, rc.top, (sdword)x, rc.bottom, GB_GRIDCOLOR, 1);
 	}
 
 	/////////////////////////////////////////////////
@@ -119,11 +118,11 @@ void NOperatorsWnd::OnPaint()
 		for (udword i=0; i<m_popsPage->GetOpsCount(); i++)
 		{
 			NOperatorNode* pop = m_popsPage->GetOpFromIdx(i);
-			DisplayOperator(&dc, pop);
+			DisplayOperator(_ppainter, pop);
 		}
 
 	} else {
-    dc.DrawString("Please select a page !", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+    _ppainter->DrawString("Please select a page !", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 	}
 
 	/////////////////////////////////////////////////
@@ -131,16 +130,16 @@ void NOperatorsWnd::OnPaint()
 	if (m_bSelectingRect)
 	{
 		NRect rcZone(m_ptStartRect.x, m_ptStartRect.y, m_ptEndRect.x, m_ptEndRect.y);
-		dc.FillSolidRect(rcZone, RGBA(200,55,55,128));
+		_ppainter->FillSolidRect(rcZone, RGBA(200,55,55,128));
 	}
 
 	/////////////////////////////////////////////////
 	//Draw Cursor
-	DisplayCursor(&dc);
+	DisplayCursor(_ppainter);
 
 	/////////////////////////////////////////////////
 	//Draw Global Operators View
-	DisplayOperatorsMap(&dc);
+	DisplayOperatorsMap(_ppainter);
 
 }
 

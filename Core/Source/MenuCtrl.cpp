@@ -91,11 +91,9 @@ void NMenuCtrl::Update()
 //-----------------------------------------------------------------
 //!	\brief	Paint
 //-----------------------------------------------------------------
-void NMenuCtrl::OnPaint()
+void NMenuCtrl::OnPaint(N2DPainter* _ppainter)
 {
 	NRect rc = GetClientRect();
-
-	N2DPainter dc(this);
 
   ubyte byAlpha = 128;
 
@@ -104,7 +102,7 @@ void NMenuCtrl::OnPaint()
 
 	/////////////////////////////////////////////////
 	//Erase Background
-  dc.FillSolidRect(rc, GetGUISubSystem()->GetMenuColor());
+  _ppainter->FillSolidRect(rc, GetGUISubSystem()->GetMenuColor());
 
 	/////////////////////////////////////////////////
 	//Display Menu Title
@@ -117,10 +115,10 @@ void NMenuCtrl::OnPaint()
 		rcText.right-=1;
 		rcText.bottom = rc.top + ME_ITEMTEXTIDENT;
 
-    dc.FillSolidRect(rcText, GetGUISubSystem()->GetMenuColor());
+    _ppainter->FillSolidRect(rcText, GetGUISubSystem()->GetMenuColor());
 
 		rcText.left+=2;
-    dc.DrawString(m_cstrText.Buffer() , rcText, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,byAlpha) );
+    _ppainter->DrawString(m_cstrText.Buffer() , rcText, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,byAlpha) );
 
 		y+=ME_ITEMHEIGHT;
 	}
@@ -144,13 +142,13 @@ void NMenuCtrl::OnPaint()
 			NRect rcHL;
 			rcHL = pitem->rcItem;
 			rcHL.left+=1;	rcHL.right-=1;
-      dc.FillSolidRect(rcHL,	RGBA(0,128,255,byAlpha));
+      _ppainter->FillSolidRect(rcHL,	RGBA(0,128,255,byAlpha));
 		}
 
 		//Display Text
 		rcText = pitem->rcItem;
 		rcText.left+=ME_ITEMTEXTIDENT;
-    dc.DrawString(pitem->strName.Buffer(), rcText, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+    _ppainter->DrawString(pitem->strName.Buffer(), rcText, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 
 		//TRACE("Display: Menu Item %s\n", pitem->strName.Buffer());
 
@@ -164,13 +162,13 @@ void NMenuCtrl::OnPaint()
 				rcCheck.top+=4;		rcCheck.bottom-=4;
 				rcCheck.left+=4;	rcCheck.right=rcCheck.left+8;
 
-				dc.RoundRect(0xF, rcCheck, 8, RGBA(0,0,0,255));
-				//dc.RoundRect(rcCheck, 8,8);
+				_ppainter->RoundRect(0xF, rcCheck, 8, RGBA(0,0,0,255));
+				//_ppainter->RoundRect(rcCheck, 8,8);
 			}
 		}
 
 		//Items Separator
-		dc.DrawLine(1, pitem->rcItem.top, pitem->rcItem.right-1, pitem->rcItem.top, RGBA(140,140,140,byAlpha), 1);
+		_ppainter->DrawLine(1, pitem->rcItem.top, pitem->rcItem.right-1, pitem->rcItem.top, RGBA(140,140,140,byAlpha), 1);
 
 		//Next line
 		y+=ME_ITEMHEIGHT;

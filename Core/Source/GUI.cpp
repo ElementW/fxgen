@@ -371,7 +371,9 @@ void NGUISubSystem::_RedrawWindowChild(NGUIWnd* _pwndFrom)
 	if (pWnd->IsWindowVisible())
 	{
 		//TRACE("Paint Wnd -> %s\n", pWnd->GetText() );
-		pWnd->OnPaint();
+		N2DPainter* painter = new N2DPainter(pWnd);
+		pWnd->OnPaint(painter);
+		delete painter;
 	}
 
 	//Send to Children without popup style
@@ -395,7 +397,9 @@ void NGUISubSystem::_RedrawWindowPopup(NGUIWnd* _pwndFrom)
 	if (pWnd->IsWindowVisible() && (pWnd->GetStyle()&NWS_POPUP))
 	{
 		//TRACE("Paint Wnd -> %s\n", pWnd->GetText() );
-		pWnd->OnPaint();
+		N2DPainter* painter = new N2DPainter(pWnd);
+		pWnd->OnPaint(painter);
+		delete painter;
 	}
 
 	//Send to Children with popup style

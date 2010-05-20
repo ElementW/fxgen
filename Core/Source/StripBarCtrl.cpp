@@ -76,27 +76,25 @@ bool NStripBarCtrl::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 void NStripBarCtrl::Update()
 {
 	RedrawWindow();
-	//OnPaint();
+	//OnPaint(N2DPainter* _ppainter);
 	//::RedrawWindow(m_W32HWnd, null, null, RDW_INVALIDATE | RDW_UPDATENOW /*| RDW_ERASE*/ );
 }
 
 //-----------------------------------------------------------------
 //!	\brief	Paint
 //-----------------------------------------------------------------
-void NStripBarCtrl::OnPaint()
+void NStripBarCtrl::OnPaint(N2DPainter* _ppainter)
 {
 	NRect rc = GetClientRect();
 
-	N2DPainter gfx(this);
-
 	/////////////////////////////////////////////////
 	//Erase Background
-  gfx.Draw3dRect(rc, 0xFF000000,0xFF000000);
+  _ppainter->Draw3dRect(rc, 0xFF000000,0xFF000000);
   rc.Deflate(1,1);
-  gfx.Draw3dRect(rc, GetGUISubSystem()->GetLightColor(), GetGUISubSystem()->GetDarkColor());
+  _ppainter->Draw3dRect(rc, GetGUISubSystem()->GetLightColor(), GetGUISubSystem()->GetDarkColor());
   rc.Deflate(1,1);
-//  gfx.FillSolidRect(rc, GetGUISubSystem()->GetBarColor());
-	gfx.GradientVRect(rc, GetGUISubSystem()->GetBarColor(), GetGUISubSystem()->GetDarkColor());
+//  _ppainter->FillSolidRect(rc, GetGUISubSystem()->GetBarColor());
+	_ppainter->GradientVRect(rc, GetGUISubSystem()->GetBarColor(), GetGUISubSystem()->GetDarkColor());
 
 	//TRACE("%s %dx%d-%dx%d %d\n", m_cstrText, m_rcWnd.left, m_rcWnd.top, m_rcWnd.right, m_rcWnd.bottom, m_dwStyle);
 }

@@ -71,19 +71,18 @@ bool NTextCtrl::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 void NTextCtrl::Update()
 {
 	RedrawWindow();
-	//OnPaint();
+	//OnPaint(N2DPainter* _ppainter);
 }
 
 //-----------------------------------------------------------------
 //!	\brief	Paint
 //-----------------------------------------------------------------
-void NTextCtrl::OnPaint()
+void NTextCtrl::OnPaint(N2DPainter* _ppainter)
 {
 	NRect rc = GetClientRect();
 
-	N2DPainter painter(this);
-  //painter.FillSolidRect(rc, GetGUISubSystem()->GetBarColor());
-  painter.DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
+  //_ppainter->FillSolidRect(rc, GetGUISubSystem()->GetBarColor());
+  _ppainter->DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
 
 }
 
@@ -156,11 +155,9 @@ void NButtonCtrl::Update()
 //-----------------------------------------------------------------
 //!	\brief	Paint
 //-----------------------------------------------------------------
-void NButtonCtrl::OnPaint()
+void NButtonCtrl::OnPaint(N2DPainter* _ppainter)
 {
 	NRect rc = GetClientRect();
-
-	N2DPainter painter(this);
 
 	///////////////////////////////////////////////////////////
 	//Normal Button
@@ -168,29 +165,29 @@ void NButtonCtrl::OnPaint()
 	{
 		if (!m_bClicked)
 		{
-			painter.GradientVRect(rc, RGBA(255, 220, 220, 220), RGBA(120, 120, 120,255));
+			_ppainter->GradientVRect(rc, RGBA(255, 220, 220, 220), RGBA(120, 120, 120,255));
 
-			if (m_bMouseOver)			painter.Draw3dRect(rc, RGBA(205,194,14,255), RGBA(205,194,14,255));
-			else									painter.Draw3dRect(rc, RGBA(255,255,255,255), RGBA(0,0,0,255));
+			if (m_bMouseOver)			_ppainter->Draw3dRect(rc, RGBA(205,194,14,255), RGBA(205,194,14,255));
+			else									_ppainter->Draw3dRect(rc, RGBA(255,255,255,255), RGBA(0,0,0,255));
 
-      painter.DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
+      _ppainter->DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
 		} else {
-			painter.GradientVRect(rc, RGBA(120, 120, 120,255), RGBA(220, 220, 220,255));
+			_ppainter->GradientVRect(rc, RGBA(120, 120, 120,255), RGBA(220, 220, 220,255));
 
-			if (m_bMouseOver)			painter.Draw3dRect(rc, RGBA(205,194,14,255), RGBA(205,194,14,255));
-			else									painter.Draw3dRect(rc, RGBA(0,0,0,255), RGBA(255,255,255,255));
+			if (m_bMouseOver)			_ppainter->Draw3dRect(rc, RGBA(205,194,14,255), RGBA(205,194,14,255));
+			else									_ppainter->Draw3dRect(rc, RGBA(0,0,0,255), RGBA(255,255,255,255));
 
 			rc.Move(1,1);
-      painter.DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
+      _ppainter->DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
 		}
 
 	///////////////////////////////////////////////////////////
 	//Menu Button
 	}/* else if (m_dwStyle==NBUT_STYLE_MENU) {
 		NColor clr;
-    if (m_bMouseOver)			{ painter.RoundRect(0xF, rc, 0, RGBA(64,64,64,255)); clr=0xFFFFFFFF; }
+    if (m_bMouseOver)			{ _ppainter->RoundRect(0xF, rc, 0, RGBA(64,64,64,255)); clr=0xFFFFFFFF; }
 		else									{ clr=0xFF000000; }
-    painter.DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, clr );
+    _ppainter->DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, clr );
 	}*/
 
 
@@ -288,6 +285,10 @@ void NMenuButtonCtrl::OnMenuClick(NObject* _psender)
 	if (pitem)
 	{
 		SetText(pitem->strName.Buffer());	
+
+		//Notification Messages
+		OnChanged(this);
+
 	}
 	
 }
@@ -309,6 +310,8 @@ bool NColorButtonCtrl::Create(const NColor& _col, const NRect& rect, NGUIWnd* pa
 	if (!NButtonCtrl::Create("", rect, parent, _dwStyle))
 		return false;
 
+	m_col = _col;
+
 	OnClick=FDelegate(this, (TDelegate)&NColorButtonCtrl::OnButtonClick);
 
 	m_wndPicker.Create(this);
@@ -319,24 +322,30 @@ bool NColorButtonCtrl::Create(const NColor& _col, const NRect& rect, NGUIWnd* pa
 
 void NColorButtonCtrl::OnButtonClick(NObject* _psender)
 {
-/*	NRect rc = GetClientRect();
+	NRect rc = GetClientRect();
 	NPoint pt(rc.left, rc.bottom);
 	ClientToScreen(pt);
-	m_wndMenu.TrackPopupMenu(pt, null);*/
+	m_wndPicker.TrackPopup(pt, m_col);
 }
 
 void NColorButtonCtrl::OnColorClick(NObject* _psender)
 {
-	/*udword dwVal = m_wndMenu.GetClickedCmdID();
-	NMEItemDesc* pitem = m_wndMenu.GetItemDescFromID( m_wndMenu.GetClickedCmdID() );
-	if (pitem)
-	{
-		SetText(pitem->strName.Buffer());	
-	}*/
-	
+	m_col = m_wndPicker.GetClickedColor();
+
+	//Notification Messages
+	OnChanged(this);
 }
 
+void NColorButtonCtrl::OnPaint(N2DPainter* _ppainter)
+{
+	NRect rc = GetClientRect();
 
+	_ppainter->FillSolidRect(rc, m_col);
+
+	if (m_bMouseOver)			_ppainter->Draw3dRect(rc, RGBA(205,194,14,255), RGBA(205,194,14,255));
+	else									_ppainter->Draw3dRect(rc, RGBA(0,0,0,255), RGBA(255,255,255,255));
+
+}
 
 
 
@@ -424,12 +433,11 @@ void NColorPickerCtrl::TrackPopup(NPoint _ptScreen, const NColor& _clr)
 //-----------------------------------------------------------------
 //!	\brief	Paint
 //-----------------------------------------------------------------
-void NColorPickerCtrl::OnPaint()
+void NColorPickerCtrl::OnPaint(N2DPainter* _ppainter)
 {
 	NRect rc = GetClientRect();
 
-	N2DPainter gfx(this);
-  gfx.FillSolidRect(rc, GetGUISubSystem()->GetBarColor() );
+  _ppainter->FillSolidRect(rc, GetGUISubSystem()->GetBarColor() );
 
 	//Hue Rect
 	m_rcHue.left=0;
@@ -445,7 +453,7 @@ void NColorPickerCtrl::OnPaint()
 	{
 		float h=px*360.0f/(float)m_rcHue.Width();
 		clr.SetFromHLS(h,0.5f,0.5f);
-		gfx.DrawLine(x,m_rcHue.top,x,m_rcHue.bottom, clr,1);
+		_ppainter->DrawLine(x,m_rcHue.top,x,m_rcHue.bottom, clr,1);
 	}
 
 	//LS Rect
@@ -465,7 +473,7 @@ void NColorPickerCtrl::OnPaint()
 		{
 			l=py*1.0f/100.0f;
 			clr.SetFromHLS(m_fHue, l, s);
-			gfx.DrawLine(x,y,x+1,y+1, clr, 1);
+			_ppainter->DrawLine(x,y,x+1,y+1, clr, 1);
 
 		}
 	}
@@ -477,20 +485,20 @@ void NColorPickerCtrl::OnPaint()
 	NString cstr;
 
 	cstr.Format("H: %f", m_fHue);
-  gfx.DrawString(cstr.Buffer() , rcText, NDT_SINGLELINE, RGBA(0,0,0,255) );
+  _ppainter->DrawString(cstr.Buffer() , rcText, NDT_SINGLELINE, RGBA(0,0,0,255) );
 	cstr.Format("L: %f", m_fL); rcText.top+=10;
-  gfx.DrawString(cstr.Buffer() , rcText, NDT_SINGLELINE, RGBA(0,0,0,255) );
+  _ppainter->DrawString(cstr.Buffer() , rcText, NDT_SINGLELINE, RGBA(0,0,0,255) );
 	cstr.Format("S: %f", m_fS); rcText.top+=10;
-  gfx.DrawString(cstr.Buffer() , rcText, NDT_SINGLELINE, RGBA(0,0,0,255) );
+  _ppainter->DrawString(cstr.Buffer() , rcText, NDT_SINGLELINE, RGBA(0,0,0,255) );
 
 
 	rcText.top+=20;
 	cstr.Format("R: %d", m_clr.GetR() );
-  gfx.DrawString(cstr.Buffer() , rcText, NDT_SINGLELINE, RGBA(0,0,0,255) );
+  _ppainter->DrawString(cstr.Buffer() , rcText, NDT_SINGLELINE, RGBA(0,0,0,255) );
 	cstr.Format("G: %d", m_clr.GetG()); rcText.top+=10;
-  gfx.DrawString(cstr.Buffer() , rcText, NDT_SINGLELINE, RGBA(0,0,0,255) );
+  _ppainter->DrawString(cstr.Buffer() , rcText, NDT_SINGLELINE, RGBA(0,0,0,255) );
 	cstr.Format("B: %d", m_clr.GetB()); rcText.top+=10;
-  gfx.DrawString(cstr.Buffer() , rcText, NDT_SINGLELINE, RGBA(0,0,0,255) );
+  _ppainter->DrawString(cstr.Buffer() , rcText, NDT_SINGLELINE, RGBA(0,0,0,255) );
 
 	//Hue Cursors v
 	//						^
@@ -500,20 +508,20 @@ void NColorPickerCtrl::OnPaint()
 	pts[0].x = px-4;	pts[0].y = py;
 	pts[1].x = px+4;	pts[1].y = py;
 	pts[2].x = px;		pts[2].y = py+4;
-	gfx.Polygon(pts, 3, RGBA(0,0,0,255));
+	_ppainter->Polygon(pts, 3, RGBA(0,0,0,255));
 
 	py=m_rcHue.bottom;
 	pts[0].y = py;
 	pts[1].y = py;
 	pts[2].y = py-4;
-	gfx.Polygon(pts, 3, RGBA(0,0,0,255));
+	_ppainter->Polygon(pts, 3, RGBA(0,0,0,255));
 
 	//LS Cursors
 	NRect rcC;
 	px=m_rcLS.left + (m_fS*100.0f);
 	py=m_rcLS.top  + (m_fL*100.0f);
-	gfx.DrawLine(m_rcLS.left, py, m_rcLS.right, py, NColor(0,0,0,100), 1);
-	gfx.DrawLine(px, m_rcLS.top, px, m_rcLS.bottom, NColor(0,0,0,100), 1);
+	_ppainter->DrawLine(m_rcLS.left, py, m_rcLS.right, py, NColor(0,0,0,100), 1);
+	_ppainter->DrawLine(px, m_rcLS.top, px, m_rcLS.bottom, NColor(0,0,0,100), 1);
 
 }
 
@@ -684,23 +692,22 @@ void NEditCtrl::ReplaceSel(const char* _pszText)
 //-----------------------------------------------------------------
 //!	\brief
 //-----------------------------------------------------------------
-void NEditCtrl::OnPaint()
+void NEditCtrl::OnPaint(N2DPainter* _ppainter)
 {
 	NRect rc = GetClientRect();
 
-	N2DPainter painter(this);
-	painter.FillSolidRect(rc, RGBA(255,255,255,255));
-  painter.DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+	_ppainter->FillSolidRect(rc, RGBA(255,255,255,255));
+  _ppainter->DrawString(m_cstrText.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 	//Cursor
 	if( m_dwSelectionTail == m_dwCursorPos )
 	{
 		udword px = m_dwCursorPos*(GetGUISubSystem()->GetFont()->m_h-1);
-		painter.DrawLine(px,0,px, rc.Height(), RGBA(255,141,15,255), 1);
+		_ppainter->DrawLine(px,0,px, rc.Height(), RGBA(255,141,15,255), 1);
 	} else {
 		udword pxs = nmin(m_dwCursorPos, m_dwSelectionTail)*(GetGUISubSystem()->GetFont()->m_h-1);
 		udword pxe = nmax(m_dwCursorPos, m_dwSelectionTail)*(GetGUISubSystem()->GetFont()->m_h-1);
 		NRect rc2(pxs, 0, pxe, rc.Height());
-		painter.FillSolidRect(rc2, NColor(255,141,15,128));
+		_ppainter->FillSolidRect(rc2, NColor(255,141,15,128));
 	}
 
 }
@@ -860,16 +867,15 @@ void NSlideCtrl::Update()
 //-----------------------------------------------------------------
 //!	\brief	Paint
 //-----------------------------------------------------------------
-void NSlideCtrl::OnPaint()
+void NSlideCtrl::OnPaint(N2DPainter* _ppainter)
 {
 	NRect rc = GetClientRect();
 
-	N2DPainter painter(this);
 
 	//Background
-  painter.FillSolidRect(rc, GetGUISubSystem()->GetBarColor());
-	painter.Draw3dRect(rc, NColor(255,255,255,255),NColor(255,255,255,255));
-	//painter.RoundRect(0xFF,rc, rc.Height()/3, NColor(255,0,0,255));
+  _ppainter->FillSolidRect(rc, GetGUISubSystem()->GetBarColor());
+	_ppainter->Draw3dRect(rc, NColor(255,255,255,255),NColor(255,255,255,255));
+	//_ppainter->RoundRect(0xFF,rc, rc.Height()/3, NColor(255,0,0,255));
 
 	//Mode Ranged
 	if (m_fMin<m_fMax)
@@ -877,7 +883,7 @@ void NSlideCtrl::OnPaint()
 		NRect rcRange(rc);
 		rcRange.right = (sdword)((m_fPos * (float)rcRange.Width()) / (m_fMax-m_fMin));
 		//Display cursor to drag value
-		painter.FillSolidRect(rcRange, NColor(0,128,255,255));
+		_ppainter->FillSolidRect(rcRange, NColor(0,128,255,255));
 
 	//Mode unlimited
 	} else {
@@ -892,21 +898,21 @@ void NSlideCtrl::OnPaint()
 		pts[0].x=x;		pts[0].y=w/2;
 		pts[1].x=x+s;	pts[1].y=y;
 		pts[2].x=x+s;	pts[2].y=s-y;
-		painter.Polygon(pts, 3, black);
+		_ppainter->Polygon(pts, 3, black);
 
 		//Display arrow right
 		x=rc.Width()-s-4;
 		pts[0].x=x+s;		pts[0].y=w/2;
 		pts[1].x=x;	pts[1].y=y;
 		pts[2].x=x;	pts[2].y=s-y;
-		painter.Polygon(pts, 3, black);
+		_ppainter->Polygon(pts, 3, black);
 
 	}
 
 	//Value
 	NString str;
 	str.Format("%s: %.2f", m_cstrText, m_fPos);
-  painter.DrawString(str.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
+  _ppainter->DrawString(str.Buffer(), rc, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE|NDT_HCENTER, RGBA(0,0,0,255) );
 
 }
 
