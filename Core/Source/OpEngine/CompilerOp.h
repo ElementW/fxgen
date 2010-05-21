@@ -24,15 +24,9 @@
 #include "../Templates.h"
 #include "EngineOp.h"
 
-/*#ifdef GetUserName
-#undef GetUserName
-#endif*/
-
-
 //-----------------------------------------------------------------
 //                   Defines
 //-----------------------------------------------------------------
-
 
 //-----------------------------------------------------------------
 //                   Prototypes
@@ -71,7 +65,6 @@ struct SOperatorDesc
 struct SLoadOpToSeqPtr
 {
 	const char*	pszName;	//!< To Load store operator's name
-	//SOpsSequence** ppToLoadStoredSeq;	//!< Ref Target, ptr on	SOpsSequence::apSeqsToLoad
 	SOpsSequence*		pLoaderSeq;	//!< Ref Maker
 	udword dwLoaderCallDescIdx;
 	udword dwLoaderSeqIdx;		//!< Index in SOpsSequence::apSeqsToLoad

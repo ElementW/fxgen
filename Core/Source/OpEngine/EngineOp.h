@@ -112,7 +112,7 @@ struct SOpsSequence
 
 	//'Load' Operators used by this sequence
 	// later will be used for multi threading
-	udword				dwSeqsToLoadCount;	//!< How many 'LoadOp' or Sequences to process before this sequence
+	udword				dwSeqsToLoadCount;	//!< How many 'LoadOp' (or Sequences) to process before this sequence
 	SOpsSequence*	apSeqsToLoad[MAX_SEQSTOLOAD];
 
 	SOpsSequence*		pnextOpsSeq;	//!< Link toward next sequence
@@ -132,8 +132,8 @@ struct SCompiledOp
 };
 
 //-----------------------------------------------------------------
-//!	\class		SOpCallDesc
-//!	\brief		Compiled operators graph
+//!	\class		SEngineState
+//!	\brief		Engine state
 //-----------------------------------------------------------------
 struct SEngineState
 {
@@ -144,7 +144,7 @@ struct SEngineState
 
 //-----------------------------------------------------------------
 //!	\class		NEngineOp
-//!	\brief		Engine operators process
+//!	\brief		Operators Engine 
 //-----------------------------------------------------------------
 class CORELIB_API NEngineOp
 {
@@ -164,6 +164,10 @@ public:
 	//Animation Channels methods
 	void SetChannelValue(ubyte _byChannel, float _value);
 	void GetChannelValue(ubyte _byChannel, float& _outValue);
+
+	//Assets management
+	//void AddAsset(SCompiledOp* _pops);	//###TODO###
+	//void RemoveAsset(); //###TODO###
 
 protected:
 	//Methods for execution
