@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{70f84f0a-aed8-460f-ae41-4887d5be4415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor UI Widgets">
+      <UniqueIdentifier>{071e97d0-af3e-4224-a543-1fded956e931}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OperatorsNodes">
+      <UniqueIdentifier>{f2f6171b-2fff-4751-bd34-418e197cc976}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base UI Widgets">
+      <UniqueIdentifier>{329dc849-646b-4ddb-898a-26b0bc56c147}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Source\EditorApp.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\EditorGUI.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FileChooserDialog.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Operator.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\AssetsWnd.cpp">
+      <Filter>Editor UI Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\OperatorsWnd.cpp">
+      <Filter>Editor UI Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\ProjectWnd.cpp">
+      <Filter>Editor UI Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\PropertiesWnd.cpp">
+      <Filter>Editor UI Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\ViewportsWnd.cpp">
+      <Filter>Editor UI Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\RenderOpsUI.cpp">
+      <Filter>OperatorsNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\LayoutDock.cpp">
+      <Filter>Base UI Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\PropertiesCtrl.cpp">
+      <Filter>Base UI Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\PropertyItems.cpp">
+      <Filter>Base UI Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\TreeNodeCtrl.cpp">
+      <Filter>Base UI Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Source\EditorApp.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\EditorGUI.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\EventsList.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FileChooserDialog.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Operator.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\AssetsWnd.h">
+      <Filter>Editor UI Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\OperatorsWnd.h">
+      <Filter>Editor UI Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\ProjectWnd.h">
+      <Filter>Editor UI Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\ViewportsWnd.h">
+      <Filter>Editor UI Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\RenderOpsUI.h">
+      <Filter>OperatorsNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\LayoutDock.h">
+      <Filter>Base UI Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\TreeNodeCtrl.h">
+      <Filter>Base UI Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\CoreLibPkg.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\FxGen TODO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="..\..\..\Source\PropertiesWnd.h">
+      <Filter>Editor UI Widgets</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\..\Source\PropertiesCtrl.h">
+      <Filter>Base UI Widgets</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\..\Source\PropertyItems.h">
+      <Filter>Base UI Widgets</Filter>
+    </CustomBuildStep>
+  </ItemGroup>
+</Project>
