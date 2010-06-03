@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{BF696CA3-B1F2-4175-8CC9-29F348643F13}</ProjectGuid>
+    <RootNamespace>Editor</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30128.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\W32Bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\..\Core;..\..\..\..\Externals\FreeType\Include;..\..\..\..\Externals\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;CORELIB_EXPORT_DLL_LIBRARY_IMPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>opengl32.lib;freetype2312.lib;sfml-system-d.lib;sfml-window-d.lib;sfml-main-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\Externals\SFML\lib\vc2008;..\..\..\..\Externals\FreeType\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Source\EditorApp.cpp" />
+    <ClCompile Include="..\..\..\Source\EditorGUI.cpp" />
+    <ClCompile Include="..\..\..\Source\FileChooserDialog.cpp" />
+    <ClCompile Include="..\..\..\Source\Operator.cpp" />
+    <ClCompile Include="..\..\..\Source\AssetsWnd.cpp" />
+    <ClCompile Include="..\..\..\Source\OperatorsWnd.cpp" />
+    <ClCompile Include="..\..\..\Source\ProjectWnd.cpp" />
+    <ClCompile Include="..\..\..\Source\PropertiesWnd.cpp" />
+    <ClCompile Include="..\..\..\Source\ViewportsWnd.cpp" />
+    <ClCompile Include="..\..\..\Source\RenderOpsUI.cpp" />
+    <ClCompile Include="..\..\..\Source\LayoutDock.cpp" />
+    <ClCompile Include="..\..\..\Source\PropertiesCtrl.cpp" />
+    <ClCompile Include="..\..\..\Source\PropertyItems.cpp" />
+    <ClCompile Include="..\..\..\Source\TreeNodeCtrl.cpp" />
+    <ClCompile Include="..\..\..\Source\Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Source\EditorApp.h" />
+    <ClInclude Include="..\..\..\Source\EditorGUI.h" />
+    <ClInclude Include="..\..\..\Source\EventsList.h" />
+    <ClInclude Include="..\..\..\Source\FileChooserDialog.h" />
+    <ClInclude Include="..\..\..\Source\Operator.h" />
+    <ClInclude Include="..\..\..\Source\AssetsWnd.h" />
+    <ClInclude Include="..\..\..\Source\OperatorsWnd.h" />
+    <ClInclude Include="..\..\..\Source\ProjectWnd.h" />
+    <CustomBuildStep Include="..\..\..\Source\PropertiesWnd.h" />
+    <ClInclude Include="..\..\..\Source\ViewportsWnd.h" />
+    <ClInclude Include="..\..\..\Source\RenderOpsUI.h" />
+    <ClInclude Include="..\..\..\Source\LayoutDock.h" />
+    <CustomBuildStep Include="..\..\..\Source\PropertiesCtrl.h" />
+    <CustomBuildStep Include="..\..\..\Source\PropertyItems.h" />
+    <ClInclude Include="..\..\..\Source\TreeNodeCtrl.h" />
+    <ClInclude Include="..\..\..\Source\CoreLibPkg.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\FxGen TODO.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
