@@ -143,6 +143,28 @@ struct SEngineState
 };
 
 //-----------------------------------------------------------------
+//!	\class		NOperatorFx
+//!	\brief		Operator
+//-----------------------------------------------------------------
+class CORELIB_API NOperatorFx
+{
+public:
+	virtual void Process(SEngineState* _state) = 0;
+
+	//Serialization (like parameters)
+	virtual	bool Save(NArchive* _s);	//!< Save object
+	virtual	bool Load(NArchive* _l);	//!< Load object
+
+protected:
+	//Datas
+	ubyte			byInputsCount;		//!< Input Operators count
+	ubyte			byDepth;					//!< Depth in tree
+
+	//Params...
+};
+
+
+//-----------------------------------------------------------------
 //!	\class		NEngineOp
 //!	\brief		Operators Engine 
 //-----------------------------------------------------------------

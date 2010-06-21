@@ -1,5 +1,12 @@
 TODO
 -------------
+
+.Main
+	.Split Node and Fx
+		.CallDesc is a bad concept
+		.Change CallDesc to OperatorFx
+		.Move compiler to Editor 
+		
 	
 .FxGenLib
 	.Multi-Threading (later)

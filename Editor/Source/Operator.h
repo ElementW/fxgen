@@ -81,6 +81,8 @@ public:	//###TODO### create metods
 	bool m_bInvalided;
 	float m_fProcessedTime;
 
+	NOperatorFX* m_opFX;	//!< FX Operator attached at this node
+
 protected:
 
 	NObject *m_pObj;	//!< Ressource

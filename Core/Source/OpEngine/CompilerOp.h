@@ -48,9 +48,13 @@ struct SOperatorDesc
 	const char*		pszIFnc;			//!< Operator fonction interface name
 	const char*		pszToLoad;		//!< Operator to Load name
 	const char*		pszStoredName;//!< Operator store name
-	udword	adwParams[MAX_PARAMS];	//!< Operator parameters
-	ubyte		byParamsCount;
-	udword	dwTag;
+
+	udword	adwParams[MAX_PARAMS];	//!< Operator parameters	//###TOREMOVE###
+	ubyte		byParamsCount; //###TOREMOVE###
+	udword	dwTag;	//###TOREMOVE###
+
+	//NOperatorFx* popFX;	//###TOADD###
+
 	//Reserved Datas for Compiler
 	SOperatorDesc*	m_pnextOpToProcess;
 	SOperatorDesc*	m_pprevOpToProcess;
