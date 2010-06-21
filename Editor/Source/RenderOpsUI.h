@@ -38,14 +38,7 @@
 //!	\class		NFlatOp
 //!	\brief		Flat rendering
 //-----------------------------------------------------------------
-/*struct SFlatParams
-{
-	ubyte wpow;
-	ubyte hpow;
-	NRGBA color;
-};*/
-
-class  NFlatOp : public NOperatorNode
+class  NFlatOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
