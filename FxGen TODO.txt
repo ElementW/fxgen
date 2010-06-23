@@ -1,35 +1,39 @@
 TODO
 -------------
 
-.Main
-	.Split Node and Fx
-		.CallDesc is a bad concept
-		.Change CallDesc to OperatorFx
-		.Move compiler to Editor 
-		
-	
+.Main ID
+	.Split OperatorNode and OperatorFx
+		.CallDesc is a bad concept => changed to operatorFx class (derived from NObject) that contain parameters
+		.Move compiler code to Editor (need to remove intermediate format, just take NOpProject and NOperatorNode)
+		.OperatorNode now contain intermediate computed texture (make a resource pooling)
+		.OperatorNode contain an operatorFx
+
+	.create a little fxgen operator project lib (later)
+	.C#
+		.create a NengineOp wrapper for fxgenLib Engine
+	.XNA 4.0 (see later)
+		.create a 100% C# engine (used of multi threading on PC and XBox)
+
 .FxGenLib
-	.Multi-Threading (later)
 	.Rewrite animation processing (later)
-	.How to manage Voxel or Mesh resources ? 'reintegrate NObject ?'
-	.Add dependency to CoreLib ?
+	.Derive NResource from NObject
 	
 .Editor:GUI
-	x Review Properties control.
+	X Review Properties control.
 		X Add variables limits into properties items
 		X Add slider control
 	.TreeNodeCtrl
 		.Add node renaming
-	.Button
-		.add style: menu and color
+	X Button
+		X add style: menu and color
 	.Viewport
 		.manage resource display
-	.assets
-		.manage asset
-			.loader, treeview maker
-			.make a projet become an asset
-			.compiled graph cache
-			
+	.add a thread for working process (operatorfx computing, compilation)
+	.add asserts manager
+		.add an asserts directory (an assert is just an fxgen designer project)
+		.load asserts list from directory then add them to treeview
+		.compile and compute asserts node graph (later add cache)
+	.add undo-redo
 
 Version 0.7 alpha (Release: New FxGen Engine !)
 ----------------------------------
@@ -39,7 +43,6 @@ Version 0.7 alpha (Release: New FxGen Engine !)
 .FxGenLib
 	.Entirely rewrite of operator engine
 		.Code lighter.
-		.Operators are now just C functions style. (not classes)
 		.Removed designer related code
 		.At end add support Multi-Core (future support for OpenML or OpenCL)	
 	.Added an operators compiler process (always split between designer and engine)
