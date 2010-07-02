@@ -13,6 +13,7 @@
 #include "Source/EventsMgr.h"
 #include "Source/StandardsCtrl.h"
 
+#include "Source/OpEngine/EngineOp.h"
 #include "Source/OpEngine/CompilerOp.h"
 #include "Source/OpEngine/Bitmap.h"
 #include "Source/OpEngine/RectangularArray.h"

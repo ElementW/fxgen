@@ -134,4 +134,7 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\CoreLib.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="OpEngine_ClassDiagram.cd" />
+  </ItemGroup>
 </Project>
