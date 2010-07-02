@@ -13,6 +13,9 @@
     <Filter Include="Base UI Widgets">
       <UniqueIdentifier>{329dc849-646b-4ddb-898a-26b0bc56c147}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Operator Compiler">
+      <UniqueIdentifier>{03bedba1-bd32-4713-8a14-b48619b259c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Source\EditorApp.cpp">

@@ -67,7 +67,6 @@ CORELIB_API NEngineOp* fgCreateOpEngine()
 //-----------------------------------------------------------------
 NEngineOp::NEngineOp()
 {
-	m_dwOpFuncInterfacesCount = 0;
 	m_nCurContext		= 0;
 
 	gpengineOp			= this;
@@ -259,7 +258,7 @@ void NEngineOp::_ProcessSequence(float _ftime, SOpsSequence* _psequence, float _
 
 	//////////////////////////////////////////////////
 	//Execute this sequence calls
-	SOpCallDesc* pcurCall = _psequence->apopCallDesc;
+	NOperatorFx* pcurCall = _psequence->pfirstOpsCall;
 	udword dwCount = _psequence->dwOpsCount;
 	while (dwCount--)
 	{
@@ -273,7 +272,8 @@ void NEngineOp::_ProcessSequence(float _ftime, SOpsSequence* _psequence, float _
 
 				//pccurOP->Process(_ftime, pOpsIns, _fDetailFactor);
 				//CallSTDCallFunction(&m_astates[m_nCurContext], pcurCall->adwParams, pcurCall->pfncI->dwParamsSize, pcurCall->pfncI->pfnc);
-				(*pcurCall->pfncI->pfnc)(&m_astates[m_nCurContext], &pcurCall->adwParams);
+				//(*pcurCall->pfncI->pfnc)(&m_astates[m_nCurContext], &pcurCall->adwParams);
+				pcurCall->Process(&m_astates[m_nCurContext]);
 
 				m_dwCurProcessOpsCount++;
 
@@ -288,7 +288,7 @@ void NEngineOp::_ProcessSequence(float _ftime, SOpsSequence* _psequence, float _
 		}
 
 		//Next Call
-		pcurCall++;
+		pcurCall = pcurCall->m_pnext;
 	}
 	
 	//Store sequence result
@@ -298,38 +298,13 @@ void NEngineOp::_ProcessSequence(float _ftime, SOpsSequence* _psequence, float _
 }
 
 
-//-----------------------------------------------------------------
-//!	\brief	Register one or more operators interfaces
-//-----------------------------------------------------------------
-udword NEngineOp::RegisterOpsInterfaces(udword _dwCount, SOpFuncInterface* _parray)
-{
-	if (m_dwOpFuncInterfacesCount+_dwCount<MAX_MAXOPINTERFACE)
-	{
-		for (udword i=0; i<_dwCount; i++)
-			m_aOpFuncInterfaces[m_dwOpFuncInterfacesCount++] = _parray[i];
-	}
-	return m_dwOpFuncInterfacesCount;
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Return Register operator interface from idx
-//!	\return null if not found
-//-----------------------------------------------------------------
-SOpFuncInterface* NEngineOp::GetOpsInterfaceFromIdx(udword _idx)
-{
-	if (_idx<m_dwOpFuncInterfacesCount)
-		return &m_aOpFuncInterfaces[_idx];
-	return null;
-}
-
-
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //							NLoadOp implementation
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void NLoadOp_Process(SEngineState* _state, SOpsSequence* _popToLoad)
+/*void NLoadOp_Process(SEngineState* _state, SOpsSequence* _popToLoad)
 {
 	SResource* pDst = _state->apResourcesLayers[_state->pcurCall->byDepth];
 
@@ -341,11 +316,29 @@ void NLoadOp_Process(SEngineState* _state, SOpsSequence* _popToLoad)
 		pRef=null;	//Debug
 
 	Res_CopyBmp(pRef, pDst);
+}*/
+
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//							NOperatorFx implementation
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+bool NOperatorFx::Save(NArchive* _s)
+{
+	NObject::Save(_s);
+
+	*_s<<m_byInputsCount;
+	*_s<<m_byDepth;
+	return true;
 }
 
+bool NOperatorFx::Load(NArchive* _l)
+{
+	NObject::Load(_l);
 
-SOpFuncInterface IOpsMain[] = {
-	"Load",			1*4,  (fxOPFUNCTION*)&NLoadOp_Process
-};
-
-udword dwCountOpsMain = fgCreateOpEngine()->RegisterOpsInterfaces(1, IOpsMain);
+	*_l>>m_byInputsCount;
+	*_l>>m_byDepth;
+	return true;
+}

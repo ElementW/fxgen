@@ -4,7 +4,7 @@
 //! \brief	Operators Engine
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
-//!	\date		12-02-2007
+//!	\date		0-02-2010
 //!
 //!	\brief	This file applies the GNU LESSER GENERAL PUBLIC LICENSE
 //!					Version 2.1 , read file COPYING.
@@ -58,31 +58,6 @@ CORELIB_API NEngineOp * fgCreateOpEngine();
 typedef	void (FXGEN_OPSPROCESSCB)(udword _dwCurrentOp, udword _dwTotalOps);
 typedef void (fxOPFUNCTION)(SEngineState* _state, void* _params);
 
-//-----------------------------------------------------------------
-//!	\class		SOpFuncInterface
-//!	\brief		C Function interface
-//-----------------------------------------------------------------
-struct SOpFuncInterface
-{
-	char					szName[MAX_NAMELEN];	//!< Function Name
-	udword				dwParamsSize;					//!< Parameters size in bytes
-	fxOPFUNCTION*	pfnc;									//!< C function to call
-};
-
-//-----------------------------------------------------------------
-//!	\class		SOpCallDesc
-//!	\brief		Operator call desc
-//-----------------------------------------------------------------
-struct SOpCallDesc
-{
-	//ubyte byResType //!< Ressource Type ###TOADD### later...
-	ubyte			byInputsCount;							//!< Input Operators count
-	ubyte			byDepth;										//!< Depth in tree
-	ubyte			byParamsCount;							//!< Parameters count
-	udword		adwParams[MAX_PARAMS];			//!< Parameters datas
-	SOpFuncInterface* pfncI;							//!< Operator function to call
-	udword		dwTag;
-};
 
 //-----------------------------------------------------------------
 //!	\class		NResource
@@ -107,8 +82,8 @@ struct SOpsSequence
 	char					szName[MAX_NAMELEN];	//!< Sequence Name (usualy stored operator name)
 	ubyte					byEtat;								//!< 0-Invalid, 1-Compute in progress, 3-Computed
 
-	udword				dwOpsCount;			//!< Operators count to call for this sequence
-	SOpCallDesc*	apopCallDesc;		//!< ArrayPtr of Operators to call
+	udword				dwOpsCount;				//!< Operators count to call for this sequence ####TOREMOVE###
+	NOperatorFx*	pfirstOpsCall;		//!< First operator to call, then use next
 
 	//'Load' Operators used by this sequence
 	// later will be used for multi threading
@@ -119,6 +94,9 @@ struct SOpsSequence
 
 	//Cache
 	SResource*			pResourceResult;	//!< Sequence ressource Result
+
+	//###TODO### serialize
+
 };
 
 //-----------------------------------------------------------------
@@ -139,14 +117,14 @@ struct SEngineState
 {
 	float					fDetailFactor;
 	SResource*		apResourcesLayers[MAX_DEPTH];
-	SOpCallDesc*	pcurCall;
+	NOperatorFx*	pcurCall;
 };
 
 //-----------------------------------------------------------------
 //!	\class		NOperatorFx
 //!	\brief		Operator
 //-----------------------------------------------------------------
-class CORELIB_API NOperatorFx
+class CORELIB_API NOperatorFx : NObject
 {
 public:
 	virtual void Process(SEngineState* _state) = 0;
@@ -157,9 +135,11 @@ public:
 
 protected:
 	//Datas
-	ubyte			byInputsCount;		//!< Input Operators count
-	ubyte			byDepth;					//!< Depth in tree
+	ubyte					m_byInputsCount;		//!< Input Operators count
+	ubyte					m_byDepth;					//!< Depth in tree
 
+public:
+	NOperatorFx*	m_pnext;						//!< Next op to call
 	//Params...
 };
 
@@ -177,11 +157,6 @@ public:
 
 	//API Methods
 	SResource* ProcessSequence(SOpsSequence* _psequence, float _ftime, float _fDetailFactor=1.0f);
-
-	//Operators Registration
-	udword RegisterOpsInterfaces(udword _dwCount, SOpFuncInterface* _parray);
-	udword GetOpsInterfacesCount()	{	return m_dwOpFuncInterfacesCount; }
-	SOpFuncInterface* GetOpsInterfaceFromIdx(udword _idx);	//!< return null if not found
 
 	//Animation Channels methods
 	void SetChannelValue(ubyte _byChannel, float _value);
@@ -204,9 +179,6 @@ protected:
 	udword				m_dwTotalProcessOpsCount, m_dwCurProcessOpsCount;
 	FXGEN_OPSPROCESSCB* m_cbOpsProcess;
 
-	//Registered Operator Interfaces
-	udword						m_dwOpFuncInterfacesCount;
-	SOpFuncInterface	m_aOpFuncInterfaces[MAX_MAXOPINTERFACE];
 };
 
 

@@ -72,7 +72,7 @@ public:
 	virtual	bool Save(NArchive* _s);	//!< Save object
 	virtual	bool Load(NArchive* _l);	//!< Load object
 
-public:	//###TODO### create metods
+public:	//###TODO### create methods
 	//Datas GUI
 	udword	m_dwPosX, m_dwPosY;			//!< Position (grid unit)
 	udword	m_dwWidth;							//!< Width (grid unit)
@@ -81,7 +81,7 @@ public:	//###TODO### create metods
 	bool m_bInvalided;
 	float m_fProcessedTime;
 
-	NOperatorFX* m_opFX;	//!< FX Operator attached at this node
+	NOperatorFx* m_opFX;	//!< FX Operator attached at this node
 
 protected:
 

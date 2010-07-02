@@ -143,6 +143,9 @@
     <ClInclude Include="..\..\Source\OpEngine\CompilerOp.h" />
     <ClInclude Include="..\..\Include\CoreLib.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="OpEngine_ClassDiagram.cd" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
