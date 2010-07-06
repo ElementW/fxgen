@@ -4,7 +4,7 @@
 //! \brief	Operators Engine
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
-//!	\date		0-02-2010
+//!	\date		06-07-2010
 //!
 //!	\brief	This file applies the GNU LESSER GENERAL PUBLIC LICENSE
 //!					Version 2.1 , read file COPYING.
@@ -44,6 +44,7 @@
 //                   Prototypes
 //-----------------------------------------------------------------
 class NEngineOp;
+class NOperatorFx;
 struct NRGBA;
 struct SEngineState;
 

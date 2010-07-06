@@ -56,8 +56,9 @@ struct NFieldDesc
 	float				fMin;
 	float				fMax;
 	float				fStep;
-	const char*	pszDef;
+	const char*	pszDef;	//###TOREMOVE###
 	const char*	pszUI;
+	//NControler*	pCtrl;	//###TOADD###
 };
 
 
@@ -120,26 +121,6 @@ public:
 };
 
 
-
-//-----------------------------------------------------------------
-//!	\class		NRTClassFields
-//!	\brief		RuntimeClass Fields description
-//-----------------------------------------------------------------
-/*class CORELIB_API NRTClassFields
-{
-public:
-//Methods
-	NFieldDesc* GetFieldDescByName(const char* _pszFieldName);	//!< Parse bases classes too
-
-	static NRTClassFields*	GetRTFieldsByName(const char* _pszClassName);
-
-//Datas
-	const char*				m_pszClassName;				//!< Class's name
-	NRTClassFields*		m_pSuperClassRTField;	//!< Super class's RTField
-	NFieldDesc*				m_paFieldsDesc;				//!< Fields description array for this class level
-};*/
-
-
 //-----------------------------------------------------------------
 // Defines
 //-----------------------------------------------------------------
@@ -176,22 +157,6 @@ public:
 #define FIMPLEMENT_CLASS_END() \
 	{ -1, "end", 0, 0.0,0.0,0.0, "", "" } };
 
-//Fields Macros
-/*#define		FBEGIN_FIELDS_CLASS(class_name) \
-				NRTClassFields		class_name::m_RTField = { NULL, class_name::m_Table }; \
-				NFieldDesc	class_name::m_Table[] = {
-
-#define		FBEGIN_FIELDS_SUBCLASS(class_name, superclass_name) \
-				NRTClassFields		class_name::m_RTField = { &superclass_name::m_RTField, class_name::m_Table }; \
-				NFieldDesc	class_name::m_Table[] = {
-*/
-//#define		FEND_FIELDS() \
-//			{ -1, "end", 0 } };
-
-/*#define		FDECLARE_FIELDS() \
-				static NFieldDesc	m_Table[]; \
-				static NRTClassFields		m_RTField; \
-				virtual NRTClassFields* GetRTField()	{ return &m_RTField; }*/
 
 #define		OFFSET(c,m)	(size_t)&(((c *)0)->m)
 #define		NEWFIELD(type, name, classname, classmember, min, max, step, def, ui)	{ type, name, OFFSET(classname, classmember), min, max, step, def, ui	}
@@ -322,6 +287,7 @@ public:
 
 	//Fields (reflexion)
 	ubyte* GetFieldVarAddr(udword _idx)	{ return (((ubyte*)this) + GetFieldDesc()[_idx].dwDataOffset); }
+	//void UpdateFieldValue(float _t, udword _idx);	//###TODO###
 
 protected:
 	//Datas
