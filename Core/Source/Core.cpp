@@ -18,7 +18,9 @@
 //-----------------------------------------------------------------
 //                   Includes
 //-----------------------------------------------------------------
+#include "../Include/CoreLib.h"
 #include "Core.h"
+#include "OpEngine/Controllers.h"
 
 //-----------------------------------------------------------------
 //!	localeless atof() for proper interpretation of default values
@@ -47,11 +49,436 @@ double my_atof(const char* s)
 //-----------------------------------------------------------------
 //                   Variables
 //-----------------------------------------------------------------
-//const char* GetModuleName()  { return "FxGenCore"; }
-const char* GetModuleName()  { return "Core"; }
+const char* GetModuleName()  { return "FxGenCore"; }
 
 NRTClassModule* NRTClassModule::m_pFirstRTClassModule=null;
 NRTClassModule* NRTClassModule::m_pLastRTClassModule=null;
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//									NVarsBloc class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+
+//-----------------------------------------------------------------
+//!	\brief	Constructor
+//-----------------------------------------------------------------
+NVarsBloc::NVarsBloc()
+{
+	m_paVarsValues		= null;
+	m_pcnextVarsBloc	= null;
+	m_pcvarsblocDesc	= null;
+	m_dwVarsCount			= 0;
+	m_dwMapVarsCount	= 0;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Destructor
+//-----------------------------------------------------------------
+NVarsBloc::~NVarsBloc()
+{
+	if (m_paVarsValues!=null)		NMemFree(m_paVarsValues);
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Serialize Variable bloc for saving
+//!	\param	_s	archive container
+//!	\return	True if success
+//-----------------------------------------------------------------
+bool NVarsBloc::Save(NArchive* _s)
+{
+	*_s<<m_byVersion;
+	*_s<<m_dwVarsCount;
+	for (udword i=0; i<m_dwVarsCount; i++)
+	{
+		NVarValue* pval = m_paVarsValues + i;
+		NVarsBlocDesc* pdesc = m_pcvarsblocDesc + i;
+		switch (pdesc->eType)
+		{
+			case eubyte:	*_s<<pval->byVal;									break;
+			case euword:	*_s<<pval->wVal;									break;
+			case eudword:	*_s<<pval->dwVal;									break;
+			case efloat:	*_s<<pval->fVal;									break;
+			case erefobj:	_s->PutMappedObj(pval->pcRefObj);	break;
+			case estring:	*_s<<(const char*)pval->szVal; /* cast for GCC - Olter */	break;
+			default:	assert(0);														break;
+		}
+
+		//Anim Control
+		ubyte byAniCtrl = pval->pcCtrlObj!=null?1:0;
+		*_s<<byAniCtrl;
+
+		if (byAniCtrl)		_s->PutClass(pval->pcCtrlObj);
+
+	}
+
+	return true;
+}
+
+
+//-----------------------------------------------------------------
+//!	\brief	Serialize Variable bloc for loading
+//!	\param	_l	archive container
+//!	\return	True if success
+//-----------------------------------------------------------------
+bool NVarsBloc::Load(NArchive* _l)
+{
+	ubyte byFileVersion=0;
+	*_l>>byFileVersion;
+
+	if (m_byVersion!=byFileVersion && byFileVersion!=0)
+	{
+		DoVarBlocVersion_Mapping(_l, byFileVersion);
+	} else {
+		*_l>>m_dwVarsCount;
+		for (udword i=0; i<m_dwVarsCount; i++)
+		{
+			NVarValue* pval = m_paVarsValues + i;
+			NVarsBlocDesc* pdesc = m_pcvarsblocDesc + i;
+			switch (pdesc->eType)
+			{
+				case eubyte:	*_l>>pval->byVal;										break;
+				case euword:	*_l>>pval->wVal;										break;
+				case eudword:	*_l>>pval->dwVal;										break;
+				case efloat:	*_l>>pval->fVal;										break;
+				case erefobj:	SetValue(i, 0, _l->GetMappedObj());	break;
+				case estring:	*_l>>pval->szVal;					break;
+				default:	assert(0);															break;
+			}
+
+			//Anim Control
+			if (byFileVersion>=1)
+			{
+				ubyte byAniCtrl;
+				*_l>>byAniCtrl;
+
+				if (byAniCtrl)		pval->pcCtrlObj = _l->GetClass();
+				else							pval->pcCtrlObj = null;
+			} else {
+				pval->pcCtrlObj = null;
+			}
+
+		}
+
+	}
+
+	return true;
+}
+
+
+//-----------------------------------------------------------------
+//!	\brief	Initialize a variable bloc
+//!	\param	_dwVarsCount		Variables count
+//!	\param	_pvarsBlocDesc	Variables bloc description
+//!	\param	_powner					Object for this variable bloc
+//!	\param	_byVersion			Version for serialization
+//-----------------------------------------------------------------
+void NVarsBloc::Init(udword _dwVarsCount, NVarsBlocDesc* _pvarsBlocDesc, NObject* _powner, ubyte _byVersion)
+{
+	//Store Values
+	m_dwVarsCount			= _dwVarsCount;
+	m_pcvarsblocDesc  = _pvarsBlocDesc;
+	m_powner					= _powner;
+	m_byVersion				= _byVersion;
+
+	//Create variables for this bloc
+	m_paVarsValues = (NVarValue*)NMemAlloc(_dwVarsCount*sizeof(NVarValue));
+
+	//Init default values
+	for (udword i=0; i<m_dwVarsCount; i++)
+	{
+		NVarValue* pval = m_paVarsValues + i;
+		NVarsBlocDesc* pdesc = m_pcvarsblocDesc + i;
+		switch (pdesc->eType)
+		{
+			case eubyte:	pval->byVal=(ubyte)atol(pdesc->pszDefValue);	break;
+			case euword:	pval->wVal=(uword)atol(pdesc->pszDefValue);		break;
+			case eudword:	pval->dwVal=(udword)atof(pdesc->pszDefValue);	break;
+			case efloat:	pval->fVal=(float)my_atof(pdesc->pszDefValue);		break;
+			case erefobj:	pval->pcRefObj=null;	break;
+			case estring:	strcpy_s(pval->szVal, sizeof(pval->szVal), pdesc->pszDefValue);			break;
+			default:	assert(0);																				break;
+		}
+
+		pval->pcCtrlObj = null;
+	}
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Remove a referenced object from variables (see erefobj)
+//!	\param	_pobj	Object referenced by erefobj vars
+//-----------------------------------------------------------------
+void NVarsBloc::RemoveVarsRef(NObject* _pobj)
+{
+	for (udword i=0; i<m_dwVarsCount; i++)
+	{
+		NVarValue* pval = m_paVarsValues + i;
+		NVarsBlocDesc* pdesc = m_pcvarsblocDesc + i;
+		if (pdesc->eType==erefobj && pval->pcRefObj==_pobj)
+			SetValue(i, 0, (NObject*)null);
+	}
+
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Return true if one variable is animated
+//!	\return	True if one variable is animated
+//-----------------------------------------------------------------
+bool NVarsBloc::IsAnimated()
+{
+	for (udword i=0; i<m_dwVarsCount; i++)
+	{
+		NVarValue* pval = m_paVarsValues + i;
+		if (pval->pcCtrlObj!=null)			return true;
+	}
+	return false;
+}
+
+
+//-----------------------------------------------------------------
+//!	\brief	Return variable's value by indice
+//!	\param	_idx		Indice of variable
+//!	\param	_fTime	Time for evaluation
+//!	\param	_val		Returned Value
+//-----------------------------------------------------------------
+void NVarsBloc::GetValue(udword _idx, float _fTime, ubyte& _val)
+{
+	if (m_paVarsValues[_idx].pcCtrlObj)
+		_val = (ubyte)((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
+	else
+		_val = m_paVarsValues[_idx].byVal;
+}
+
+void NVarsBloc::GetValue(udword _idx, float _fTime, uword&	_val)
+{
+	if (m_paVarsValues[_idx].pcCtrlObj)
+		_val = (uword)((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
+	else
+		_val = m_paVarsValues[_idx].wVal;
+
+}
+
+void NVarsBloc::GetValue(udword _idx, float _fTime, udword&	_val)
+{
+	if (m_paVarsValues[_idx].pcCtrlObj)
+		_val = (udword)((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
+	else
+		_val = m_paVarsValues[_idx].dwVal;
+}
+
+void NVarsBloc::GetValue(udword _idx, float _fTime, float& _val)
+{
+	if (m_paVarsValues[_idx].pcCtrlObj)
+		_val = ((NController*)m_paVarsValues[_idx].pcCtrlObj)->GetValue(_fTime);
+	else
+		_val = m_paVarsValues[_idx].fVal;
+}
+
+void NVarsBloc::GetValue(udword _idx, float _fTime, NObject*&	_val)
+{
+	_val = m_paVarsValues[_idx].pcRefObj;
+}
+
+void NVarsBloc::GetValue(udword _idx, float _fTime, char*& _val)
+{
+	_val = m_paVarsValues[_idx].szVal;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Change a variable's value by indice
+//!	\param	_idx		Indice of variable
+//!	\param	_fTime	Time for changed
+//!	\param	_val		New Value
+//-----------------------------------------------------------------
+void NVarsBloc::SetValue(udword _idx, float _fTime, ubyte _val)
+{
+	m_paVarsValues[_idx].byVal = _val;
+}
+
+void NVarsBloc::SetValue(udword _idx, float _fTime, uword	_val)
+{
+	m_paVarsValues[_idx].wVal = _val;
+}
+
+void NVarsBloc::SetValue(udword _idx, float _fTime, udword	_val)
+{
+	m_paVarsValues[_idx].dwVal = _val;
+}
+
+void NVarsBloc::SetValue(udword _idx, float _fTime, float _val)
+{
+	m_paVarsValues[_idx].fVal = _val;
+}
+
+void NVarsBloc::SetValue(udword _idx, float _fTime, NObject* _val)
+{
+	//Remove old reference link
+	if (m_paVarsValues[_idx].pcRefObj != null)
+	{
+		m_powner->RemoveRef( m_paVarsValues[_idx].pcRefObj );
+	}
+
+	//Set New reference
+	m_paVarsValues[_idx].pcRefObj = _val;
+	if (_val)	m_powner->AddRef(_val);
+}
+
+void NVarsBloc::SetValue(udword _idx, float _fTime, const char*	_val)
+{
+	strcpy_s(m_paVarsValues[_idx].szVal, sizeof(m_paVarsValues[_idx].szVal), _val);
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Set a mapping variable bloc to manage blocs versions
+//!	\param	_dwMapVarsCount		Mapped variables count
+//!	\param	_pmapVarsBlocDesc	Mapping variables bloc description
+//-----------------------------------------------------------------
+void NVarsBloc::SetMapVarBlocDesc(udword _dwMapVarsCount, NMapVarsBlocDesc* _pmapVarsBlocDesc)
+{
+	m_pcmapVarsBlocDesc = _pmapVarsBlocDesc;
+	m_dwMapVarsCount  = _dwMapVarsCount;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Change a variable's value by indice
+//!	\param	_byVersion		File version (different to this)
+//-----------------------------------------------------------------
+void NVarsBloc::DoVarBlocVersion_Mapping(NArchive* _l, ubyte _byVersion)
+{
+	udword dwOldVarsCount;
+	*_l>>dwOldVarsCount;
+
+//	NMapVarsBlocDesc* pcmapvarsBloc = m_pcmapVarsBlocDesc;
+
+	for (udword i=0; i<m_dwMapVarsCount; i++)
+	{
+		NMapVarsBlocDesc* pmapdesc = m_pcmapVarsBlocDesc + i;
+		if (pmapdesc->byVersion==_byVersion)
+		{
+			const char* pszMapToIdx = pmapdesc->pszMapping;
+			sdword dwLen = strlen(pszMapToIdx);
+
+			NVarValue* pval			= null;
+			NVarValue* pvalPrev = null;
+			NVarValue arVal;
+
+			while (dwLen>0)
+			{
+				udword j = atol(pszMapToIdx);
+				pval = m_paVarsValues + j;
+
+				if (pvalPrev==null)
+				{
+					switch (pmapdesc->eType)
+					{
+						case eubyte:
+							*_l>>arVal.byVal;
+							MapValueTo((double)arVal.byVal, j, pmapdesc->pszExpression);
+						break;
+
+						case euword:
+							*_l>>arVal.wVal;
+							MapValueTo((double)arVal.wVal, j, pmapdesc->pszExpression);
+						break;
+
+						case eudword:
+							*_l>>arVal.dwVal;
+							MapValueTo((double)arVal.dwVal, j, pmapdesc->pszExpression);
+						break;
+
+						case efloat:
+							*_l>>arVal.fVal;
+							MapValueTo((double)arVal.fVal, j, pmapdesc->pszExpression);
+						break;
+
+						case erefobj:
+							arVal.pcRefObj = _l->GetMappedObj();
+							MapValueTo(arVal.pcRefObj, j);
+						break;
+
+						case estring:
+							*_l>>arVal.szVal;
+							MapValueTo(arVal.szVal, j);
+						break;
+
+						default:	assert(0);	break;
+					} //Switch
+
+					//Anim Control
+					if (_byVersion>=1)
+					{
+						ubyte byAniCtrl;
+						*_l>>byAniCtrl;
+
+						if (byAniCtrl)		pval->pcCtrlObj = _l->GetClass();
+						else							pval->pcCtrlObj = null;
+
+					} else {
+						pval->pcCtrlObj = null;
+					}
+
+					pvalPrev = pval;
+				} else {
+
+					memcpy(pval, pvalPrev, sizeof(NVarValue));
+
+				}
+
+				//Next Idx
+				for (; dwLen>0; --dwLen)
+				{
+					sbyte c = *pszMapToIdx++;
+					if (c==',')		 { dwLen--;  break;}
+				}
+
+			}//While
+
+		}//Version
+
+	}
+
+}
+
+void NVarsBloc::MapValueTo(double _fval, udword _idx, const char* _pszExpression)
+{
+	double fVal = _fval;
+
+	if (_pszExpression[0]=='*')		fVal*= atof(_pszExpression+1);
+	if (_pszExpression[0]=='+')		fVal+= atof(_pszExpression+1);
+
+	NVarValue* pval = m_paVarsValues + _idx;
+	NVarsBlocDesc* pdesc = m_pcvarsblocDesc + _idx;
+	switch (pdesc->eType)
+	{
+		case eubyte:	pval->byVal=(ubyte)fVal;	break;
+		case euword:	pval->wVal=(uword)fVal;		break;
+		case eudword:	pval->dwVal=(udword)fVal;	break;
+		case efloat:	pval->fVal=(float)fVal;		break;
+		default:	assert(0); break;
+	}
+}
+
+void NVarsBloc::MapValueTo(NObject* _val, udword _idx)
+{
+//	NVarValue* pval = m_paVarsValues + _idx;
+	NVarsBlocDesc* pdesc = m_pcvarsblocDesc + _idx;
+
+	assert(pdesc->eType==erefobj);
+	SetValue(_idx, 0.0f, _val);
+}
+
+void NVarsBloc::MapValueTo(const char* _val, udword _idx)
+{
+	NVarValue* pval = m_paVarsValues + _idx;
+	NVarsBlocDesc* pdesc = m_pcvarsblocDesc + _idx;
+
+	assert(pdesc->eType==estring);
+	strcpy_s(pval->szVal, sizeof(pval->szVal), _val);
+}
+
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -60,16 +487,16 @@ NRTClassModule* NRTClassModule::m_pLastRTClassModule=null;
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NObject, NObject)
-FIMPLEMENT_CLASS_END()
-
+FIMPLEMENT_CLASS(NObject, NObject);
 
 //-----------------------------------------------------------------
 //!	\brief	Constructor
 //-----------------------------------------------------------------
 NObject::NObject()
 {
+	m_pcfirstVarsBloc = null;
 	m_dwLastUsedTime	= 0;
+	m_szName[0]				= 0;
 }
 
 //-----------------------------------------------------------------
@@ -85,101 +512,61 @@ NObject::~NObject()
 	while (m_carrayRefTargets.Count())
 		RemoveRef( m_carrayRefTargets[0] );
 
+	//Delete Variables Blocs
+	NVarsBloc* pcur = m_pcfirstVarsBloc;
+	while (pcur)
+	{
+		NVarsBloc* ptoDel = pcur;
+		pcur = pcur->m_pcnextVarsBloc;
+		delete ptoDel;
+	}
 
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Serialize object for saving
+//!	\brief	Serialize Variable bloc for saving
 //!	\param	_s	archive container
 //!	\return	True if success
 //-----------------------------------------------------------------
 bool NObject::Save(NArchive* _s)
 {
-	udword k;
+	//Save object's name
+	ubyte len = (ubyte)strlen(m_szName);
+	*_s<<len;
+	_s->PutData(&m_szName, len);
 
-	//Save Fields
-	NRTClass* prtc = GetRTClass();
-
-	//Count Fields ###TODO### bases class
-	udword dwCount=0;
-	NFieldDesc* pfd = prtc->m_paFieldsDesc;
-	while (pfd[dwCount].byType!=0xFF)
-		dwCount++;
-
-	*_s<<dwCount;
-
-	for (k=0; k<dwCount; k++)
+	//Save Variables Bloc's Values
+	NVarsBloc* pcurvarbloc = m_pcfirstVarsBloc;
+	while (pcurvarbloc)
 	{
-		ubyte* byPtr = (((ubyte*)this) + pfd[k].dwDataOffset);
-		//Data size from type
-		byPtr = byPtr;
-		switch(pfd[k].byType)
-		{
-			case	eBool:
-				_s->PutData(byPtr ,1);
-				break;
-
-			case	eInteger:
-			case	eFloat:
-			case	eRgba:
-			case	eRefObj:	//###TOFIX#### 64 bits ptr
-				_s->PutData(byPtr ,4);
-				break;
-
-			case	eString:
-				break;
-
-			case	eIVec2:	//4*2
-			case	eFVec2:	//4*2
-				_s->PutData(byPtr ,4*2);
-				break;
-
-			case	eIVec3:	//4*3
-			case	eFVec3:	//4*3
-				_s->PutData(byPtr ,4*3);
-				break;
-
-			case	eIRect:	//4*4
-			case	eFRect:	//4*4
-				_s->PutData(byPtr ,4*4);
-				break;
-		}
-
-		
+		pcurvarbloc->Save(_s);
+		pcurvarbloc = m_pcfirstVarsBloc->m_pcnextVarsBloc;
 	}
-
-
 
 	return true;
 }
 
+
 //-----------------------------------------------------------------
-//!	\brief	Serialize object for loading
+//!	\brief	Serialize Variable bloc for loading
 //!	\param	_l	archive container
 //!	\return	True if success
 //-----------------------------------------------------------------
 bool NObject::Load(NArchive* _l)
 {
-	//###TODO###
+	//Load object's name
+	ubyte len;
+	*_l>>len;
+	_l->GetData(&m_szName, len);
+	m_szName[len]=0;
 
-	//Load Fields from current schema
-	// if fields doesn't exist into current reflexion schema => we forget it
-
-/*	udword dwCount=0;
-	NFieldDesc* pfd = prtc->m_paFieldsDesc;
-	while (pfd[dwCount].byType!=0xFF)
-		dwCount++;
-
-	for (k=0; k<dwCount; k++)
+	//Load Variables Bloc's Values
+	NVarsBloc* pcurvarbloc = m_pcfirstVarsBloc;
+	while (pcurvarbloc)
 	{
-		//ubyte* byPtr = (((ubyte*)this) + pfd[k].dwDataOffset);
-		char* pszFieldName = pfd[k].pszName;
-	}*/
-
-	//NRTClassFields::GetFieldDescByName("nom du champ");
-
-	//Control un-initialised fields (fields that not exist in previous reflexion schema)
-	// if not initialised set default value
+		pcurvarbloc->Load(_l);
+		pcurvarbloc = m_pcfirstVarsBloc->m_pcnextVarsBloc;
+	}
 
 	return true;
 }
@@ -188,19 +575,77 @@ bool NObject::Load(NArchive* _l)
 //!	\brief	Duplicate this object
 //!	\return	Object duplicated pointer
 //-----------------------------------------------------------------
+
+
 NObject* NObject::Duplicate()
 {
 	NObject* pobjClone = NRTClass::CreateByName( GetRTClass()->m_pszClassName );
 	if (pobjClone)
 	{
 		//Duplicate object name
-		//pobjClone->SetName( GetName() );
+		pobjClone->SetName( GetName() );
+
+		//Duplicate Variables Bloc's Values
+		NVarsBloc* pcurvarbloc			= m_pcfirstVarsBloc;
+		NVarsBloc* pcurvarblocClone = pobjClone->m_pcfirstVarsBloc;
+		while (pcurvarbloc)
+		{
+			memcpy(pcurvarblocClone->GetValues(), pcurvarbloc->GetValues(), pcurvarbloc->Count() * sizeof(NVarValue));
+			pcurvarbloc = m_pcfirstVarsBloc->m_pcnextVarsBloc;
+			pcurvarblocClone = pobjClone->m_pcfirstVarsBloc->m_pcnextVarsBloc;
+		}
+
 	}
 
 	return pobjClone;
 }
 
 
+//-----------------------------------------------------------------
+//!	\brief	Add a variable bloc to this object
+//!	\param	_dwVarCount		Variables count
+//!	\param	_pdesc				Variables bloc description
+//!	\param	_byVersion		Version for serialization
+//!	\return	Created variable bloc pointer from description
+//-----------------------------------------------------------------
+NVarsBloc* NObject::AddVarsBloc(udword _dwVarCount, NVarsBlocDesc* _pdesc, ubyte _byVersion)
+{
+	//Create bloc
+	NVarsBloc* pvarbloc = new NVarsBloc;
+	pvarbloc->Init(_dwVarCount, _pdesc, this, _byVersion);
+
+	if (m_pcfirstVarsBloc==null)
+	{
+		m_pcfirstVarsBloc = pvarbloc;
+
+	} else {
+
+		//Add at end
+		NVarsBloc* plastvarbloc = m_pcfirstVarsBloc;
+		while (m_pcfirstVarsBloc->m_pcnextVarsBloc)
+			plastvarbloc = m_pcfirstVarsBloc->m_pcnextVarsBloc;
+
+		plastvarbloc->m_pcnextVarsBloc = pvarbloc;
+
+	}
+
+	return pvarbloc;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Update erefobj Variables
+//!	\param
+//-----------------------------------------------------------------
+void NObject::RemoveVarsRef(NObject* _pobj)
+{
+	NVarsBloc* pcurvarbloc = m_pcfirstVarsBloc;
+	while (pcurvarbloc)
+	{
+		pcurvarbloc->RemoveVarsRef(_pobj);
+		pcurvarbloc = m_pcfirstVarsBloc->m_pcnextVarsBloc;
+	}
+
+}
 
 //-----------------------------------------------------------------
 //!	\brief	Add an object to reference by this
@@ -252,10 +697,12 @@ void NObject::RemoveRefToMe(NObject* _pobj)
 		{
 			m_carrayRefMakers.RemoveItem(i);
 			_pobj->RemoveRef(this);
+			_pobj->RemoveVarsRef(this);		//###NEW###
 			break;
 		}
 	}
 }
+
 
 
 
@@ -276,8 +723,8 @@ NObjectArray::NObjectArray()
 	m_dwCount			=	0;
 	m_bManagedDel = false;
 
-	m_pBuffer = (NObject**)NNEWARRAY(NObject*, m_dwSize);
-	NMemFill(m_pBuffer, 0, m_dwSize * sizeof(NObject*));
+	m_pBuffer = (NObject**)NMemAlloc(m_dwSize * sizeof(NObject*));
+	memset(m_pBuffer, 0, m_dwSize * sizeof(NObject*));
 }
 
 //-----------------------------------------------------------------
@@ -286,7 +733,7 @@ NObjectArray::NObjectArray()
 NObjectArray::~NObjectArray()
 {
 	Clear();
-	if (m_pBuffer) NDELETEARRAY(m_pBuffer);
+	if (m_pBuffer) NMemFree(m_pBuffer);
 	m_pBuffer=null;
 }
 
@@ -346,11 +793,9 @@ void NObjectArray::Clear()
 {
 	if (m_bManagedDel)
 		for (udword i=0; i<m_dwCount; i++)
-			if (m_pBuffer[i])	NDELETE(m_pBuffer[i], NObject);
+			if (m_pBuffer[i])	delete m_pBuffer[i];
 
-	if (m_pBuffer!=null)
-		memset(m_pBuffer, 0, m_dwSize * sizeof(NObject*));
-
+	memset(m_pBuffer, 0, m_dwSize * sizeof(NObject*));
 	m_dwCount=0;
 }
 
@@ -367,9 +812,8 @@ udword NObjectArray::AddItem(NObject* _item, udword _idx)
 	{
 		if (m_dwCount+1>=m_dwSize)
 		{
-		  SetSize(m_dwSize+OBJARRAY_GROWSIZE);
-			//m_dwSize+=OBJARRAY_GROWSIZE;
-			//m_pBuffer = (NObject**)NMemRealloc(m_pBuffer, sizeof(NObject*) * m_dwSize);
+			m_dwSize+=OBJARRAY_GROWSIZE;
+			m_pBuffer = (NObject**)NMemRealloc(m_pBuffer, sizeof(NObject*) * m_dwSize);
 		}
 
 		m_pBuffer[m_dwCount] = _item;
@@ -379,12 +823,11 @@ udword NObjectArray::AddItem(NObject* _item, udword _idx)
 
 		if (_idx>=m_dwSize)
 		{
-		  SetSize(_idx+OBJARRAY_GROWSIZE);
-		  //m_dwSize=_idx+OBJARRAY_GROWSIZE;
-			//m_pBuffer = (NObject**)NMemRealloc(m_pBuffer, m_dwSize * sizeof(NObject*));
+			m_dwSize=_idx+OBJARRAY_GROWSIZE;
+			m_pBuffer = (NObject**)NMemRealloc(m_pBuffer, m_dwSize * sizeof(NObject*));
 		}
 
-		NMemCopy(m_pBuffer+_idx+1, m_pBuffer+_idx, (m_dwSize-_idx) * sizeof(NObject*));
+		memcpy(m_pBuffer+_idx+1, m_pBuffer+_idx, (m_dwSize-_idx) * sizeof(NObject*));
 
 		m_pBuffer[_idx] = _item;
 
@@ -403,7 +846,7 @@ void NObjectArray::RemoveItem(udword _idx)
 {
 	m_dwCount--;
 //	if (m_bManagedDel)	m_pBuffer[_idx];
-	NMemMove(m_pBuffer+_idx, m_pBuffer+_idx+1, (m_dwSize-_idx-1) * sizeof(NObject*));
+	memcpy(m_pBuffer+_idx, m_pBuffer+_idx+1, (m_dwSize-_idx-1) * sizeof(NObject*));
 }
 
 //-----------------------------------------------------------------
@@ -415,13 +858,12 @@ void NObjectArray::SetCount(udword _c)
 {
 	if (m_bManagedDel && _c<m_dwCount)
 		for (udword i=_c; i<m_dwCount; i++)
-			if (m_pBuffer[i])		NDELETE(m_pBuffer[i], NObject);
+			if (m_pBuffer[i])		delete m_pBuffer[i];
 
 	if (_c>=m_dwSize)
 	{
-	  SetSize(_c + OBJARRAY_GROWSIZE);
-		//m_pBuffer = (NObject**)NMemRealloc(m_pBuffer, sizeof(NObject*) * (_c + OBJARRAY_GROWSIZE));
-		//m_dwSize = _c + OBJARRAY_GROWSIZE;
+		m_pBuffer = (NObject**)NMemRealloc(m_pBuffer, sizeof(NObject*) * (_c + OBJARRAY_GROWSIZE));
+		m_dwSize = _c + OBJARRAY_GROWSIZE;
 	}
 	m_dwCount = _c;
 }
@@ -436,17 +878,10 @@ void NObjectArray::SetSize(udword _s)
 
 	if (m_bManagedDel && _s<m_dwCount)
 		for (udword i=_s; i<m_dwCount; i++)
-			if (m_pBuffer[i])		NDELETE(m_pBuffer[i], NObject);
+			if (m_pBuffer[i])		delete m_pBuffer[i];
 
-  NObject**	pnewBuffer = NNEWARRAY(NObject*, _s);
-	if (m_dwCount)
-		NMemCopy(pnewBuffer, m_pBuffer, m_dwCount*sizeof(NObject*));
-  NDELETEARRAY(m_pBuffer);
-  m_pBuffer=pnewBuffer;
-  m_dwSize=_s;
-
-	//m_pBuffer = (NObject**)NMemRealloc(m_pBuffer, sizeof(NObject*) * _s);
-	//m_dwSize = _s;
+	m_pBuffer = (NObject**)NMemRealloc(m_pBuffer, sizeof(NObject*) * _s);
+	m_dwSize = _s;
 }
 
 //-----------------------------------------------------------------
@@ -457,7 +892,7 @@ void NObjectArray::AddArray(NObjectArray& _array)
 {
 	udword dwOldCount = m_dwCount;
 	SetSize(m_dwCount+_array.Count()+OBJARRAY_GROWSIZE);
-	NMemCopy(m_pBuffer + dwOldCount, _array.m_pBuffer, _array.m_dwCount * sizeof(NObject*));
+	memcpy(m_pBuffer + dwOldCount, _array.m_pBuffer, _array.m_dwCount * sizeof(NObject*));
 	m_dwCount+=_array.m_dwCount;
 }
 
@@ -471,7 +906,7 @@ udword NObjectArray::Find(NObject* _item)
 	for (udword i=0; i<m_dwCount; i++)
 		if (m_pBuffer[i] == _item)		return i;	//Found
 
-  return 0xFFFFFFFF;	//Not found
+	return -1;	//Not found
 }
 
 //-----------------------------------------------------------------
@@ -494,12 +929,12 @@ void NObjectArray::Sort(CompareFnc _cmp)
 //!	\brief	Constructor
 //!	\param	_pszModuleName				Module name for RTClasses
 //-----------------------------------------------------------------
-NRTClassModule::NRTClassModule()
+NRTClassModule::NRTClassModule(const char* _pszModuleName)
 {
   if (m_pFirstRTClassModule==null)  m_pFirstRTClassModule = this;
   if (m_pLastRTClassModule)         m_pLastRTClassModule->m_pNextRTClassModule = this;
 
-  //m_pszModuleName = _pszModuleName;
+  m_pszModuleName = _pszModuleName;
   m_pNextRTClassModule=null;
 
   m_pFirstRTClass = null;
@@ -507,7 +942,6 @@ NRTClassModule::NRTClassModule()
 
   m_pLastRTClassModule=this;
 }
-
 
 
 //-----------------------------------------------------------------
@@ -523,9 +957,8 @@ NRTClassModule::NRTClassModule()
 //!	\param	_pszClassName				Class name for object
 //!	\param	_pszSuperClassName	Super-Class name for object
 //!	\param	_pmod               RTClass's Module
-//!	\param	_paFieldsDesc				Fields for reflexion
 //-----------------------------------------------------------------
-NRTClass::NRTClass(RTCLASS_HANDLER*	_pcreateCB, const char* _pszClassName, const char* _pszSuperClassName, const char* _pszModuleName, NFieldDesc* _paFieldsDesc)
+NRTClass::NRTClass(RTCLASS_HANDLER*	_pcreateCB, const char* _pszClassName, const char* _pszSuperClassName, const char* _pszModuleName)
 {
   NRTClassModule* pmod = NRTClassModule::RegisterModule(_pszModuleName);
 
@@ -537,11 +970,9 @@ NRTClass::NRTClass(RTCLASS_HANDLER*	_pcreateCB, const char* _pszClassName, const
 	m_pszSuperClassName	= _pszSuperClassName;
 	m_pNextRTC					= null;
   m_pRTClassModule    = pmod;
-	m_paFieldsDesc			= _paFieldsDesc;
 
 	pmod->m_pLastRTClass = this;
 }
-
 
 //-----------------------------------------------------------------
 //!	\brief	Create an object from class Name
@@ -586,21 +1017,21 @@ NRTClass*	NRTClass::GetRTClassByName(const char* _pszClassName)
 //-----------------------------------------------------------------
 //!	\brief	Return First RTClass from a super class name
 //-----------------------------------------------------------------
-NRTClass* NRTClass::GetFirstClassDerivedFrom(const char* _pszSuperClassName)
+NRTClass* NRTClass::GetFirstClassBySuperClass(const char* _pszSuperClassName)
 {
-	NRTClassModule* pmod = NRTClassModule::m_pFirstRTClassModule;
-	while (pmod)
-	{
-		NRTClass* pcurRTC = pmod->m_pFirstRTClass;
-		while (pcurRTC!=null)
-		{
-			if (strcmp(pcurRTC->m_pszSuperClassName, _pszSuperClassName) == 0)
-				return pcurRTC;
-			pcurRTC = pcurRTC->m_pNextRTC;
-		}
+  NRTClassModule* pmod = NRTClassModule::m_pFirstRTClassModule;
+  while (pmod)
+  {
+    NRTClass* pcurRTC = pmod->m_pFirstRTClass;
+    while (pcurRTC!=null)
+    {
+      if (strcmp(pcurRTC->m_pszSuperClassName, _pszSuperClassName) == 0)
+        return pcurRTC;
+      pcurRTC = pcurRTC->m_pNextRTC;
+    }
 
-		pmod=pmod->m_pNextRTClassModule;
-	}
+    pmod=pmod->m_pNextRTClassModule;
+  }
 
 	return null;
 }
@@ -609,66 +1040,28 @@ NRTClass* NRTClass::GetFirstClassDerivedFrom(const char* _pszSuperClassName)
 //-----------------------------------------------------------------
 //!	\brief	Return Next RTClass from a super class name
 //-----------------------------------------------------------------
-NRTClass* NRTClass::GetNextClassDerivedFrom(const char* _pszSuperClassName, NRTClass* _prtclass)
+NRTClass* NRTClass::GetNextClassBySuperClass(const char* _pszSuperClassName, NRTClass* _prtclass)
 {
-	NRTClassModule* pmod = _prtclass->m_pRTClassModule;
-	bool bFirst = false;
-	while (pmod)
-	{
-		if(!bFirst)
-			_prtclass = _prtclass->m_pNextRTC;
+  NRTClassModule* pmod = _prtclass->m_pRTClassModule;
+  while (pmod)
+  {
+    _prtclass = _prtclass->m_pNextRTC;
 
-		while (_prtclass!=null)
-		{
-			if (strcmp(_prtclass->m_pszSuperClassName, _pszSuperClassName) == 0)
-				return _prtclass;
+    while (_prtclass!=null)
+    {
+      if (strcmp(_prtclass->m_pszSuperClassName, _pszSuperClassName) == 0)
+        return _prtclass;
 
-			_prtclass = _prtclass->m_pNextRTC;
-		}
+      _prtclass = _prtclass->m_pNextRTC;
+    }
 
-		pmod=pmod->m_pNextRTClassModule;
+    pmod=pmod->m_pNextRTClassModule;
 		if (pmod)
-		{
 			_prtclass = pmod->m_pFirstRTClass;
-			bFirst = true;
-		}
-	}
+  }
 
 	return null;
 }
-
-//-----------------------------------------------------------------
-//
-//									NRTClassFields class implementation
-//
-//-----------------------------------------------------------------
-
-//-----------------------------------------------------------------
-//!	\brief	Return NFieldDesc* from field name
-//!	\param	_pszFieldName field name
-//!	\return	NFieldDesc*
-//-----------------------------------------------------------------
-/*NFieldDesc* NRTClassFields::GetFieldDescByName(const char* _pszFieldName)
-{
-	NRTClassFields*	prtfield = this;
-	NFieldDesc* pafieldDesc = prtfield->m_paFieldsDesc;
-	while (prtfield)
-	{
-		int idx = 0;
-		while (pafieldDesc[idx].sbyType!=-1)
-		{
-			if (strcmp(_pszFieldName, pafieldDesc[idx].pszName)==0)
-			{
-				return &pafieldDesc[idx];
-			}
-		}
-		prtfield = m_pSuperClassRTField;
-		pafieldDesc = prtfield->m_paFieldsDesc;
-	}
-
-	return null;
-}*/
-
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -677,8 +1070,7 @@ NRTClass* NRTClass::GetNextClassDerivedFrom(const char* _pszSuperClassName, NRTC
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NTreeNode, NObject)
-FIMPLEMENT_CLASS_END()
+FIMPLEMENT_CLASS(NTreeNode, NObject);
 
 //-----------------------------------------------------------------
 //!	\brief	Constructor
@@ -688,7 +1080,6 @@ NTreeNode::NTreeNode()
 	m_pFirstSon	= null;
 	m_ppLastSon	= &m_pFirstSon;
 	m_pBrother	= null;
-	m_szName[0]	= 0;
 	m_carrayObjects.SetManageDelete(true);
 }
 
@@ -707,26 +1098,21 @@ NTreeNode::~NTreeNode()
 //!	\return True if success
 //-----------------------------------------------------------------
 
-bool NTreeNode::Save(NArchive* _s)
+bool NTreeNode::Save(NArchive* s)
 {
-	NObject::Save(_s);
-
-	//Save name
-	ubyte len = (ubyte)strlen(m_szName);
-	*_s<<len;
-	_s->PutData(&m_szName, len);
+	NObject::Save(s);
 
 	//Save objects
-	m_carrayObjects.Save(_s);
+	m_carrayObjects.Save(s);
 
 	//Save hierarchie
 	udword dwCount = GetSonsCount();
-	*_s<<dwCount;
+	*s<<dwCount;
 
 	NTreeNode* pcurnode = m_pFirstSon;
 	while (pcurnode)
 	{
-		pcurnode->Save(_s);
+		pcurnode->Save(s);
 		pcurnode = pcurnode->m_pBrother;
 	}
 
@@ -744,12 +1130,6 @@ bool NTreeNode::Load(NArchive* _l)
 	if (!NObject::Load(_l))
 		return false;
 
-	//Load object's name
-	ubyte len;
-	*_l>>len;
-	_l->GetData(&m_szName, len);
-	m_szName[len]=0;
-
 	//Load objects
 	if (!m_carrayObjects.Load(_l))
 		return false;
@@ -760,7 +1140,7 @@ bool NTreeNode::Load(NArchive* _l)
 
 	while (dwCount--)
 	{
-		NTreeNode* pcurnode = NNEW(NTreeNode);
+		NTreeNode* pcurnode = new NTreeNode;
 		if (!pcurnode->Load(_l))
 			return false;
 
@@ -840,7 +1220,7 @@ void NTreeNode::DeleteSon(udword _idx)
 			NTreeNode* pnodeToDel = *ppnode;
 			*ppnode = pnodeToDel->m_pBrother;	//Unlink
 			if (*ppnode==null)	m_ppLastSon = ppnode;
-			NDELETE(pnodeToDel, NTreeNode);
+			delete pnodeToDel;
 			return;
 		}
 		ppnode=&( (*ppnode)->m_pBrother );
@@ -857,7 +1237,7 @@ void NTreeNode::DeleteAllSons()
 	while (pcurnode)
 	{
 		NTreeNode* pcurnodeToDel = pcurnode->m_pBrother;
-		NDELETE(pcurnode, NTreeNode);
+		delete pcurnode;
 		pcurnode = pcurnodeToDel;
 
 	}
@@ -881,7 +1261,7 @@ udword NTreeNode::FindSon(NTreeNode* _pnode)
 		pnode=pnode->m_pBrother;
 		idx++;
 	}
-  return 0xFFFFFFFF;
+	return -1;
 }
 
 //-----------------------------------------------------------------
@@ -1106,12 +1486,12 @@ void NObjectGarbage::RemoveEntry(NObject** _ppobj)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-/*
+
 NErrors* g_perrors = null;
-NErrors* gGetErrors()
+extern NErrors* gGetErrors()
 {
 	if (g_perrors==null)
-		g_perrors = NNEW(NErrors);
+		g_perrors = new NErrors();
 	return g_perrors;
 }
 
@@ -1125,37 +1505,26 @@ NErrors::NErrors()
 }
 NErrors::~NErrors()
 {
-	if (m_pszErrors)	NDELETEARRAY(m_pszErrors);
+	if (m_pszErrors)	NMemFree(m_pszErrors);
 }
 
 void NErrors::AddError(udword _code, const char* _fmt, ... )
 {
 	if (m_dwStringPos==0 && m_pszErrors!=null)
-		NMemFill(m_pszErrors, 0, m_dwStringSize);
+		ZeroMemory(m_pszErrors, m_dwStringSize);
 
 	char buf[256];
-	//wvsprintf(buf, _fmt, (char *)(&_fmt+1));
-	vsprintf(buf, _fmt, (char *)(&_fmt+1));
+	wvsprintf(buf, _fmt, (char *)(&_fmt+1));
 	udword len = strlen(buf);
 
 	if ((m_dwStringPos+len) >= m_dwStringSize)
 	{
-    udword dwnewSize = m_dwStringPos+len+4096;
-    char*	pnewBuffer = NNEWARRAY(char, dwnewSize);
-    if (m_dwStringSize)
-    {
-      NMemCopy(pnewBuffer, m_pszErrors, m_dwStringSize);
-      NDELETEARRAY(m_pszErrors);
-    }
-    m_pszErrors=pnewBuffer;
-    m_dwStringSize=dwnewSize;
-
-		//m_dwStringSize=m_dwStringPos+len+4096;
-		//m_pszErrors = (char*)NMemRealloc(m_pszErrors, m_dwStringSize);
+		m_dwStringSize=m_dwStringPos+len+4096;
+		m_pszErrors = (char*)NMemRealloc(m_pszErrors, m_dwStringSize);
 	}
 
 	udword ret = sprintf(m_pszErrors+m_dwStringPos, "<%d> %s", _code, buf);
-	if (ret!=(udword)-1)		m_dwStringPos+=ret;
+	if (ret!=-1)		m_dwStringPos+=ret;
 }
 
 char* NErrors::GetErrors()
@@ -1164,7 +1533,6 @@ char* NErrors::GetErrors()
 	return m_pszErrors;
 }
 
-*/
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -1178,15 +1546,15 @@ char* NErrors::GetErrors()
 //!	\brief	Write text into visual C++ debug output window
 //!	\param	_fmt	format
 //-----------------------------------------------------------------
-#ifndef __GNUC__
+#ifdef _WIN32
 void gDebugLog(const char* _fmt, ... )
 {
 	char buf[256];
-	vsprintf(buf, _fmt, (char *)(&_fmt+1));
-	printf(buf);
+	wvsprintf(buf, _fmt, (char *)(&_fmt+1));
+	OutputDebugString(buf);
 }
 #else
-void gDebugLog(const char* /*_fmt*/, ... )
+void gDebugLog(const char* _fmt, ... )
 {
 }
 #endif
@@ -1216,26 +1584,8 @@ NRTClassModule* NRTClassModule::RegisterModule(const char* _pszModuleName)
 
   //If not found
   if (pmodFound==null)
-	{
-    pmodFound = NNEW(NRTClassModule);
-		pmodFound->m_pszModuleName = _pszModuleName;
-	}
+    pmodFound = new NRTClassModule(_pszModuleName);
 
   return pmodFound;
-}
-
-//-----------------------------------------------------------------
-//!	\brief	UnRegister all RTClassModule
-//-----------------------------------------------------------------
-void NRTClassModule::UnRegisterAllModules()
-{
-  NRTClassModule* pmod = NRTClassModule::m_pFirstRTClassModule;
-  while (pmod)
-  {
-		NRTClassModule* pmodToDel=pmod;
-    pmod=pmod->m_pNextRTClassModule;
-		NDELETE(pmodToDel, NRTClassModule);
-  }
-
 }
 

@@ -1,62 +1,58 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-//! \file		AssetsWnd.h
-//! \brief	Assets's windows
+//! \file		Controllers.h
+//! \brief	standart animation controllers
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
-//!	\date		13-03-2010
+//!	\date		12-02-2007
 //!
-//!	\brief	This file applies the GNU GENERAL PUBLIC LICENSE
-//!					Version 2, read file COPYING.
+//!	\brief	This file applies the GNU LESSER GENERAL PUBLIC LICENSE
+//!					Version 2.1 , read file COPYING.
 //!
 //!    			The original version of this library can be located at:
 //!    			http://sourceforge.net/projects/fxgen/
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#ifndef ASSETSWND_H
-#define ASSETSWND_H
-
-//-----------------------------------------------------------------
-//			Includes
-//-----------------------------------------------------------------
-#include "EditorApp.h"
-#include "TreeNodeCtrl.h"
-
-//-----------------------------------------------------------------
-//			Prototypes
-//-----------------------------------------------------------------
+#ifndef CONTROLLERS_H
+#define CONTROLLERS_H
 
 
 //-----------------------------------------------------------------
-//!	\class		NAssetsWnd
-//!	\brief		Assets's windows
+//                   Includes
 //-----------------------------------------------------------------
-class NAssetsWnd :	public NTreeNodeCtrl
+#include "../../Include/CoreLib.h"
+
+//-----------------------------------------------------------------
+//                   Defines
+//-----------------------------------------------------------------
+
+//-----------------------------------------------------------------
+//                   Prototypes
+//-----------------------------------------------------------------
+class NObject;
+	class NControllers;
+
+//-----------------------------------------------------------------
+//!	\class		NController
+//!	\brief		Base class for an animation controller
+//!
+//!	\author		JN
+//!	\version  1.0
+//-----------------------------------------------------------------
+class CORELIB_API NController :	public NObject
 {
 public:
-	NAssetsWnd(void);
-	virtual ~NAssetsWnd(void);
+	FDECLARE_CLASS();
 
-	//Methods
-	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
+	NController();
+	virtual ~NController();
 
+	float GetValue(float _fTime);
 
 protected:
-	//Methods
-
-	// Messages Notify
-	void OnTreeSelChange(NObject* _psender);
-
-	//Events
-	virtual void OnRButtonDown(NPoint pos);
-	void OnMenuClick(NObject* _psender);
-
-	//Methods
-	void InitCtxMenu();
-
-	//Datas
-	NMenuCtrl		m_wndMenu;
+	// Variables Bloc
+	NVarsBloc* m_pcvarsBloc;
 };
 
-#endif //ASSETSWND_H
+#endif //CONTROLLERS_H

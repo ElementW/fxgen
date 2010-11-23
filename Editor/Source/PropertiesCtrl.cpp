@@ -19,6 +19,7 @@
 //			Includes
 //-----------------------------------------------------------------
 #include "PropertiesCtrl.h"
+#include "EditorApp.h"
 
 #ifdef __GNUC__
 #include <limits.h>
@@ -89,7 +90,7 @@ void NPropertiesCtrl::OnPaint(N2DPainter* _ppainter)
 
 	/////////////////////////////////////////////////
 	//Erase Background
-	m_dwHeaderWidth = rc.Width()/4;
+	m_dwHeaderWidth = rc.Width()/2;
 	_ppainter->FillSolidRect(rc, RGBA(115,115,115,255));
 
 	/////////////////////////////////////////////////
@@ -147,7 +148,7 @@ void NPropertiesCtrl::OnPaint(N2DPainter* _ppainter)
 				//rcRow.top-=(PC_ROWSHEIGHT/2)-2;
 				rcRow.left+=PC_ROWTEXTIDENT;
 
-        _ppainter->DrawString(prd->strName.Buffer(), rcRow, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(192,192,192,255) );
+				_ppainter->DrawString(prd->strName.Buffer(), rcRow, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(192,192,192,255) );
 				dwPosY+=PC_ROWSHEIGHT;
 
 				bDrawGroupEnd = true;
@@ -160,22 +161,20 @@ void NPropertiesCtrl::OnPaint(N2DPainter* _ppainter)
 		// Draw Variable Properties
 		} else if (prd->pItem!=null && prd->dwDepth<=dwMaxDepth) {
 
-			udword dwItemH = prd->pItem->GetHeight();
-
 			//Display Left Part
 			NRect rcRow;
 			rcRow.left = rc.left;		rcRow.top = dwPosY;
-			rcRow.right = m_dwHeaderWidth;	rcRow.bottom = rcRow.top + dwItemH - 1;
+			rcRow.right = m_dwHeaderWidth;	rcRow.bottom = rcRow.top + PC_ROWSHEIGHT - 1;
 
 			if (m_dwCurSelRow!=i)		_ppainter->FillSolidRect(rcRow,	RGBA(200,200,200,255));
 			else										_ppainter->FillSolidRect(rcRow,	RGBA(255,141,15,255));
 
 			rcRow.left+=(prd->dwDepth*PC_ROWDEPTHIDENT);
-      _ppainter->DrawString(prd->strName.Buffer(), rcRow, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+			_ppainter->DrawString(prd->strName.Buffer(), rcRow, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 
 			//Check if value can be animated
-      bool bCanBeAnimate = false;	//prd->pItem->m_pvarBlocDesc->nFlags&VAR_FLAG_CANBEANIMATED;
-			bool bAnimated		 = false;	//prd->pItem->m_pvarValue->pcCtrlObj!=null;
+			bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc->bCanBeAnimate;
+			bool bAnimated		 = prd->pItem->m_pvarValue->pcCtrlObj!=null;
 
 			//Display Right Part
 			rcRow.left = rcRow.right;
@@ -199,15 +198,15 @@ void NPropertiesCtrl::OnPaint(N2DPainter* _ppainter)
 				rcABut.left=rcRow.right;		rcABut.top=rcRow.top;
 				rcABut.right=rc.right;			rcABut.bottom=rcRow.bottom;
 				_ppainter->Draw3dRect(rcABut, RGBA(255,255,255,255), RGBA(255,0,0,0));
-        if (!bAnimated)		_ppainter->DrawString("A", rcABut, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
-        else							_ppainter->DrawString("R", rcABut, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+				if (!bAnimated)		_ppainter->DrawString("A", rcABut, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+				else							_ppainter->DrawString("R", rcABut, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 
 				prd->rcItemAnim=rcABut;
 			} else {
 				prd->rcItemAnim.left=prd->rcItemAnim.right=0;
 			}
 
-			dwPosY+=dwItemH;
+			dwPosY+=PC_ROWSHEIGHT;
 		}
 
 		//depth
@@ -344,7 +343,7 @@ void NPropertiesCtrl::OnLButtonDblClk(NPoint point)
 void NPropertiesCtrl::OnMouseMove(NPoint point )
 {
 	//Value sliding
-	/*if (m_bAddValue)
+	if (m_bAddValue)
 	{
 		sdword dwOffset =	point.x - m_ptStartMouse.x;
 		//TRACE("dwOffset <%d> point<%d> ptStartMouse<%d> ptCursor<%d,%d>\n", dwOffset, point.x, m_ptStartMouse.x, m_ptCursor.x, m_ptCursor.y);
@@ -355,7 +354,7 @@ void NPropertiesCtrl::OnMouseMove(NPoint point )
 			OffsetRowValue(dwOffset);
 			Update();
 		}
-	}*/
+	}
 
 }
 
@@ -379,7 +378,7 @@ void NPropertiesCtrl::OnMButtonUp(NPoint pos)
 //-----------------------------------------------------------------
 void NPropertiesCtrl::OnKeyDown(udword dwchar)
 {
-	//GetGUISubSystem()->GetMainWnd()->OnKeyDown(dwchar);
+	//GetApp()->GetMainWnd()->OnKeyDown(dwchar);
 }
 
 //-----------------------------------------------------------------
@@ -409,18 +408,8 @@ void NPropertiesCtrl::DisplayObjectProperties(NObject* _pobj)
 //-----------------------------------------------------------------
 void NPropertiesCtrl::_DisplayObjectProperties(NObject* _pobj, udword _dwDepth)
 {
-	//Parse Object Fields
-	udword idx=0;
-	NFieldDesc* pfd = _pobj->GetRTClass()->m_paFieldsDesc;
-	while (pfd->byType!=255)
-	{
-		AddVarProperties(_pobj, idx, pfd, _dwDepth);
-		pfd++;
-		idx++;
-	}
-
 	//Get First Object var bloc
-/*	NVarsBloc* pbloc = _pobj->GetFirstVarsBloc();
+	NVarsBloc* pbloc = _pobj->GetFirstVarsBloc();
 
 	while (pbloc)
 	{
@@ -440,7 +429,7 @@ void NPropertiesCtrl::_DisplayObjectProperties(NObject* _pobj, udword _dwDepth)
 		//pblocdesc=pblocdesc->	//###TOFIX### Next Bloc
 		pbloc=null;	//###TOFIX####
 	}
-*/
+
 }
 
 //-----------------------------------------------------------------
@@ -448,7 +437,6 @@ void NPropertiesCtrl::_DisplayObjectProperties(NObject* _pobj, udword _dwDepth)
 //-----------------------------------------------------------------
 void NPropertiesCtrl::_DisplayAnimationObjectProperties(NObject* _pobj, udword _dwDepth)
 {
-/*
 	//Get First Object var bloc
 	NVarsBloc* pbloc = _pobj->GetFirstVarsBloc();
 
@@ -477,7 +465,7 @@ void NPropertiesCtrl::_DisplayAnimationObjectProperties(NObject* _pobj, udword _
 		//pblocdesc=pblocdesc->	//###TOFIX### Next Bloc
 		pbloc=null;	//###TOFIX####
 	}
-*/
+
 
 }
 
@@ -501,10 +489,10 @@ udword NPropertiesCtrl::AddGroup(const char* pszName, udword _dwDepth)
 //-----------------------------------------------------------------
 //!	\brief	Add a var property
 //-----------------------------------------------------------------
-udword NPropertiesCtrl::AddVarProperties(NObject* _pobj, udword _idx, NFieldDesc* pfd, udword _dwDepth)
+udword NPropertiesCtrl::AddVarProperties(NVarsBloc* _pvarBloc, NVarsBlocDesc* _pvarBlocDesc, NVarValue* _pvarValue, udword _dwvarIdx, udword _dwDepth)
 {
 	NRowDesc				rd;
-	rd.strName			= pfd->pszName;
+	rd.strName			= _pvarBlocDesc->pszName;
 	rd.bExpanded		= true;
 	rd.dwDepth			= _dwDepth;
 
@@ -513,16 +501,16 @@ udword NPropertiesCtrl::AddVarProperties(NObject* _pobj, udword _idx, NFieldDesc
 
 	//pparentRow?rd.dwDepth = pparentRow->dwDepth+1:0;
 
-	rd.pItem = (NPropertyItem*)NRTClass::CreateByName(pfd->pszUI);
+	rd.pItem = (NPropertyItem*)NRTClass::CreateByName(_pvarBlocDesc->pszCLASSGUI);
 	if (rd.pItem)
 	{
 		rd.pItem->m_pParent				= this;
 
-		rd.pItem->m_pObject				= _pobj;
-		rd.pItem->m_dwFieldIdx		= _idx;
-
-		rd.pItem->Init();
-  }
+		rd.pItem->m_pvarBloc			= _pvarBloc;
+		rd.pItem->m_pvarBlocDesc	= _pvarBlocDesc;
+		rd.pItem->m_pvarValue			= _pvarValue;
+		rd.pItem->m_dwvarIdx			= _dwvarIdx;
+	}
 
 	return m_carrayRowsDesc.AddItem(rd);
 }
@@ -535,7 +523,7 @@ void NPropertiesCtrl::DeleteAllProperties()
 	for (udword i=0; i<m_carrayRowsDesc.Count(); i++)
 	{
 		NRowDesc* prd = &m_carrayRowsDesc[i];
-		if (prd->pItem)		NDELETE(prd->pItem, NPropertyItem);
+		if (prd->pItem)		delete prd->pItem;
 	}
 
 	m_carrayRowsDesc.Clear();
@@ -570,7 +558,7 @@ udword NPropertiesCtrl::GetRowUnderPoint(NPoint& pt)
 //-----------------------------------------------------------------
 //!	\brief	Add property's row Value
 //-----------------------------------------------------------------
-/*void NPropertiesCtrl::OffsetRowValue(sdword dwOffset)
+void NPropertiesCtrl::OffsetRowValue(sdword dwOffset)
 {
 	if (m_dwCurSelRow==-1 || !m_bAddValue)		return;
 
@@ -582,7 +570,7 @@ udword NPropertiesCtrl::GetRowUnderPoint(NPoint& pt)
 		OnPropertiesChanged();
 	}
 
-}*/
+}
 
 //-----------------------------------------------------------------
 //!	\brief	Select a row from an index
@@ -709,23 +697,22 @@ bool NPropertiesCtrl::IsAnimButtonUnderPoint(NPoint& _pt)
 //-----------------------------------------------------------------
 void NPropertiesCtrl::AddRemoveAnimControlToRow(udword _dwRowIdx)
 {
-/*
 	NRowDesc* prd = &m_carrayRowsDesc[_dwRowIdx];
 	//bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc[prd->pItem->m_dwvarIdx].bCanBeAnimate;
 	bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc->bCanBeAnimate;
 	if (bCanBeAnimate && prd->pItem->m_pvarValue->pcCtrlObj==null)
 	{
-		prd->pItem->m_pvarValue->pcCtrlObj = NNEW(NController);
+		prd->pItem->m_pvarValue->pcCtrlObj = new NController();
 		DisplayObjectProperties(m_pobj);
 	} else if (prd->pItem->m_pvarValue->pcCtrlObj) {
-		NDELETE(prd->pItem->m_pvarValue->pcCtrlObj, NObject);
+		delete prd->pItem->m_pvarValue->pcCtrlObj;
 		prd->pItem->m_pvarValue->pcCtrlObj=null;
 		DisplayObjectProperties(m_pobj);
 	}
 
 	//Send Message
 	OnPropertiesChanged();
-*/
+
 }
 
 

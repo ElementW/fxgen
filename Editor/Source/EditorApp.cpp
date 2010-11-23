@@ -25,10 +25,11 @@
 //-----------------------------------------------------------------
 const char* GetModuleName()  { return "Editor"; }
 NEventsMgr*	g_pceventsMgr;
-NFxGenApp		theNApp;
+NFxGenApp* g_pApp;
+
 NGUISubSystem theGUI;
 
-NFxGenApp*		GetApp()	{ return &theNApp; }
+NFxGenApp*		GetApp() { return g_pApp; }
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -44,6 +45,7 @@ NFxGenApp*		GetApp()	{ return &theNApp; }
 //-----------------------------------------------------------------
 NFxGenApp::NFxGenApp()
 {
+	g_pApp = this;
 	g_pceventsMgr = NNEW(NEventsMgr);
 	m_fOldTime = 0;
 }
@@ -68,12 +70,12 @@ NFxGenApp::~NFxGenApp()
 bool NFxGenApp::Init()
 {
 	// Create main window
-	m_appWnd.Create(sf::VideoMode(WIDTH, HEIGHT), CAPTION);
+	NW32Application::Init();
 
 	// GUI SubSystem
 	NGUISubSystem* pgui = GetGUISubSystem();
 	pgui->Init();
-
+	
 	//Create Main Frame Window
 	NEditorGUI* frame = NNEW( NEditorGUI );
 	pgui->SetMainWnd(frame);
@@ -88,15 +90,16 @@ bool NFxGenApp::Init()
 //-----------------------------------------------------------------
 //!	\brief	Run application
 //!	\return	True if success
-//!	\note	Using SFML
 //-----------------------------------------------------------------
 void NFxGenApp::Run()
 {
 	NGUISubSystem* pgui = GetGUISubSystem();
 	NPoint pt;
 
+	NW32Application::Run();
+
 	// Create a clock for measuring the time elapsed
-  sf::Clock clock;
+/*  sf::Clock clock;
 	bool bExist = false;
 
   // Start game loop
@@ -206,7 +209,7 @@ void NFxGenApp::Run()
     // Finally, display the rendered frame on screen
     m_appWnd.Display();
   }
-
+	*/
 
 }
 
@@ -221,7 +224,8 @@ bool NFxGenApp::Exit()
 		NDELETE(pwnd, NGUIWnd);
 
 	GetGUISubSystem()->ShutDown();
-	m_appWnd.Close();
+
+	NW32Application::Exit();
 
 	return true;
 }
@@ -231,6 +235,8 @@ bool NFxGenApp::Exit()
 //-----------------------------------------------------------------
 void NFxGenApp::Update()
 {
+	NW32Application::Update();
+
 	NEditorGUI* pfrm = (NEditorGUI*)GetGUISubSystem()->GetMainWnd();
 
 	//Time 60 Images/Seconds
@@ -240,9 +246,18 @@ void NFxGenApp::Update()
 	if (ftime-m_fOldTime>1.0f)
 	{
 		//Execute operators rendering
-		NOperatorNode* pop = pfrm->Execute(ftime);
+		NOperator* pop = pfrm->Execute(ftime);
 
 	}
+
+	//Update Windows drawing
+	NGUISubSystem* pgui = GetGUISubSystem();
+	if (pgui->Update())
+	{
+		SwapBuffers( m_hDC );
+	}
+
+	Sleep(1);
 
 }
 

@@ -19,7 +19,7 @@
 //			Includes
 //-----------------------------------------------------------------
 #include "AssetsWnd.h"
-#include "Operator.h"
+
 
 //-----------------------------------------------------------------
 //			Defines
@@ -114,7 +114,7 @@ void NAssetsWnd::OnTreeSelChange(NObject* _psender)
 	//TRACE("NProjectWnd::OnSelChange\n");
 
 	//Get Page Selected
-	//NOperatorsPage* pcurpage = GetSelectedPage();
+	//NOpGraphModel* pcurpage = GetSelectedPage();
 
 	//Send notification message
 	//EVT_EXECUTE(EVT_PAGESELECTED, (udword)pcurpage, 0 );

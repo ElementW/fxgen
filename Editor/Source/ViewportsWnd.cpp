@@ -18,10 +18,12 @@
 //-----------------------------------------------------------------
 //                   Includes
 //-----------------------------------------------------------------
+#include "CoreLibPkg.h"
 #include "ViewportsWnd.h"
-//#include "TGAWriter.h"
-#include "FileChooserDialog.h"
-#include "Operator.h"
+#include "TGAWriter.h"
+
+#include "EditorApp.h"
+#include "EventsList.h"
 
 //-----------------------------------------------------------------
 //                   Defines
@@ -45,7 +47,7 @@
 //-----------------------------------------------------------------
 NViewportsWnd::NViewportsWnd(void)
 {
-	m_pcurOp	= null;
+	m_pcurObject	= null;
 	m_dwTextureID = 0;
 	m_dwTexWidth=m_dwTexHeight=0;
 	m_fScale			= 1.0f;
@@ -62,7 +64,6 @@ NViewportsWnd::NViewportsWnd(void)
 //-----------------------------------------------------------------
 NViewportsWnd::~NViewportsWnd(void)
 {
-	EVT_UNREGISTERALL();
 }
 
 //-----------------------------------------------------------------
@@ -70,14 +71,7 @@ NViewportsWnd::~NViewportsWnd(void)
 //-----------------------------------------------------------------
 bool NViewportsWnd::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 {
-	//Call Base class
-	NWNDCREATE			wc;
-	wc.dwId					= 1;
-	wc.pszText			= const_cast<char*>(name);
-	wc.pwndParent		= parent;
-	wc.rcRect				= rect;
-	wc.dwStyle			= NWS_VISIBLE;
-	NGUIWnd::Create(wc);
+	NViewportsCtrl::Create(name, rect, parent);
 
 	//Create context menu
 	m_wndMenu.Create("Viewport:", this);
@@ -87,9 +81,9 @@ bool NViewportsWnd::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 	m_wndMenu.AddItem("Tiling",				ID_TILEONOFF,		ME_ITEMSTYLE_CHECKBOX);
 	m_wndMenu.AddItem("Filtering",		ID_FILTERONOFF,	ME_ITEMSTYLE_CHECKBOX);
 	m_wndMenu.AddItem("Toggle 2D/3D",	ID_2D3D,				ME_ITEMSTYLE_CHECKBOX);
-	//m_wndMenu.AddItem("Export TGA",		ID_EXPORT,			null);
+	m_wndMenu.AddItem("Export TGA",		ID_EXPORT,			null);
 
-	//Register m_dwWidth
+	//Register Events
 	EVT_REGISTER(EVT_OPDELETING,	(EVENTFNC)&NViewportsWnd::OnOPDeleting	);
 	EVT_REGISTER(EVT_RENDER,			(EVENTFNC)&NViewportsWnd::OnRender			);
 
@@ -101,10 +95,10 @@ bool NViewportsWnd::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 //-----------------------------------------------------------------
 EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnOPDeleting)
 {
-	NOperatorNode* pop = (NOperatorNode*)dwParam1;
-	if (pop==m_pcurOp)
+	NOperator* pop = (NOperator*)dwParam1;
+	if (pop->m_pObj==m_pcurObject)
 	{
-		m_pcurOp=null;
+		m_pcurObject=null;
 	}
 
 	return 0;
@@ -115,12 +109,12 @@ EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnOPDeleting)
 //-----------------------------------------------------------------
 EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnRender)
 {
-	NOperatorNode* pop = (NOperatorNode*)dwParam1;
-	if (pop==null || pop->GetResource()==null || (pop!=null && pop->m_bError))
+	NOperator* pop = (NOperator*)dwParam1;
+	if (pop==null || pop->m_pObj==null || (pop!=null && pop->m_bError))
 	{
-		m_pcurOp = null;
+		m_pcurObject = null;
 	} else {
-		m_pcurOp = pop;
+		m_pcurObject = pop->m_pObj;
 	}
 
 	RedrawWindow();
@@ -135,7 +129,7 @@ EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnRender)
 void NViewportsWnd::DisplayTexture(NObject* pobj)
 {
 	//if (m_dwTextureID==0)		return;
-/*
+
 	//Copy Pixels to Texture
 	NBitmap* ptex = (NBitmap*)pobj;
 
@@ -224,18 +218,18 @@ void NViewportsWnd::DisplayTexture(NObject* pobj)
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL/*GL_MODULATE*/);
 	//glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE_EXT);
 	//glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB_EXT, GL_MODULATE);
 	//glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB_EXT, GL_TEXTURE);
 	//glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB_EXT, GL_PRIMARY_COLOR_EXT);
 	if (m_bFiltering)
 	{
-		if (m_bHasMipmapGeneration && !m_bOrtho)
+		/*if (m_bHasMipmapGeneration && !m_bOrtho)
 		{
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,		GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,		GL_LINEAR_MIPMAP_LINEAR);
-		} else {
+		} else*/ {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,		GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,		GL_LINEAR);
 		}
@@ -274,21 +268,21 @@ void NViewportsWnd::DisplayTexture(NObject* pobj)
 	//m_renderer.Update();
 
 	//Texte
-	rc.top = rc.bottom-32;
-	N2DPainter _ppainter->this);
+/*	rc.top = rc.bottom-32;
+	N2DPainter dc(this);
 	//_ppainter->FillSolidRect(rc, RGBA(115,115,115));
 	_ppainter->SetTextColor(RGBA(200,255,200));
 	NString str;
 	str.Format("Texture Size %dx%d", m_dwTexWidth, m_dwTexHeight);
-	_ppainter->DrawText(str.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE);
-*/
+	_ppainter->DrawString(str.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE);*/
+
 }
 
 
 //-----------------------------------------------------------------
 //!	\brief	Mouse wheel message
 //-----------------------------------------------------------------
-void NViewportsWnd::OnMouseWheel(NPoint pos, sdword zDelta)
+void NViewportsWnd::OnMouseWheel(sword zDelta, NPoint point)
 {
 	if (zDelta>0) m_fScale*=2.0f;
 	else					m_fScale/=2.0f;
@@ -387,27 +381,31 @@ void NViewportsWnd::OnRButtonDown(NPoint pos)
 }
 
 
-void NViewportsWnd::OnPaint(N2DPainter* _ppainter)
+void NViewportsWnd::OnPaint(N2DPainter *_ppainter)
 {
 	NRect rc = GetClientRect();
 
 	_ppainter->FillSolidRect(rc, RGBA(115,115,115,255));
 
+	NOperator* pop = (NOperator*)m_pcurObject;
+
 	////////////////////////////////////////
 	//No operator valid
-	if (m_pcurOp==null || m_pcurOp->GetResource()==null || m_pcurOp->m_bError)
+	if (m_pcurObject==null)
 	{
 		//Texte
 		//_ppainter->FillSolidRect(rc, RGBA(255,115,115,115));
-    if (m_pcurOp==null)
-      _ppainter->DrawString("Select an operator by double clicking on it", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
-		else
-      _ppainter->DrawString("Invalid links !", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+		if (pop==null)
+			_ppainter->DrawString("Select an operator by double clicking on it", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(200,255,200,255) );
+		else if (pop && pop->m_bError)
+			_ppainter->DrawString("Invalid links !", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(200,255,200,255) );
 
 	////////////////////////////////////////
 	//Display operator
 	} else {
-		DisplayTexture(m_pcurOp->GetResource());
+
+		if (strcmp(m_pcurObject->GetRTClass()->m_pszClassName, "NBitmap") == 0)
+			DisplayTexture(m_pcurObject);
 	}
 	
 
@@ -469,13 +467,13 @@ void NViewportsWnd::DeleteTexture(udword _dwTextID)
 //!	\param	_h				Height
 //!	\param	_ppixels	Pixels
 //-----------------------------------------------------------------
-/*void NViewportsWnd::CopyPixelsToTexture(udword _dwtexid, udword _w, udword _h, NRGBA* _ppixels)
+void NViewportsWnd::CopyPixelsToTexture(udword _dwtexid, udword _w, udword _h, NRGBA* _ppixels)
 {
 	glBindTexture(GL_TEXTURE_2D, _dwtexid);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, _w, _h, GL_RGBA, GL_UNSIGNED_BYTE, (const GLvoid*)_ppixels);
 	//GLenum e = glGetError();
 	//GL_INVALID_ENUM
-}*/
+}
 
 //-----------------------------------------------------------------
 //!	\brief	Windows Message Command
@@ -511,38 +509,21 @@ void NViewportsWnd::OnMenuItemClick(NObject* _psender)
 			break;
 		}
 
-		/*case ID_EXPORT:
+		case ID_EXPORT:
 		{
-			if (m_pcurOp != null && !m_pcurOp->m_bError)
+			/*if (m_pcurObject != null && strcmp(m_pcurObject->GetRTClass()->m_pszClassName, "NBitmap") == 0)
 			{
 				//Save File Dialog
-				NFileChooserDialog dlg;
+				NFileDialog dlg;
 				dlg.Create("Export TGA...", this, false);
 				if (dlg.DoModal())
 				{
 					NString str = dlg.GetPathName();
-					WriteTGA((NBitmap*)m_pcurOp->m_pObj, str);
+					WriteTGA((NBitmap*)m_pcurObject, str);
 				}
-			}
+			}*/
 			break;
-		}*/
+		}
 	}
 
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Update viewport
-//-----------------------------------------------------------------
-void NViewportsWnd::Update()
-{
-	RedrawWindow();
-}
-
-//-----------------------------------------------------------------
-//!	\brief	Resize viewport
-//-----------------------------------------------------------------
-void NViewportsWnd::OnSize()
-{
-	//Redraw
-	Update();
 }

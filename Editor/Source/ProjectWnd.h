@@ -14,19 +14,13 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#ifndef PROJECTWND_H
-#define PROJECTWND_H
+#pragma once
 
 //-----------------------------------------------------------------
 //			Includes
 //-----------------------------------------------------------------
-#include "EditorApp.h"
+#include "Editor.h"
 #include "TreeNodeCtrl.h"
-
-//-----------------------------------------------------------------
-//			Prototypes
-//-----------------------------------------------------------------
-class NOperatorsPage;
 
 //-----------------------------------------------------------------
 //!	\class		NProjectWnd
@@ -41,25 +35,25 @@ public:
 	//Methods
 	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
 
-	void DisplayOperatorsProject(NOperatorsProject* _popsProject);
-	void SelectFirstPage();
+	void DisplayOperatorsProject(NEngineOp* _popsProject);
+	void SelectFirstGraph();
 
 protected:
 	//Methods
-	void AddGroup();
-	void AddPage();
+	void AddFolder();
+	void AddGraph();
 	void Delete();
 	void Rename();
 
-	NTreeNode*			GetSelectedGroup();
-	NOperatorsPage* GetSelectedPage();
+	NTreeNode*			GetSelectedFolder();
+	NOpGraphModel* GetSelectedGraph();
 
 	NObject* _FindNodeFromClassName(NTreeNode* _pParent, char* _pszClassName);
 
 	// Messages Notify
 	void OnTreeSelChange(NObject* _psender);
 
-	//Events
+	//Messages Dispatching
 	virtual void OnRButtonDown(NPoint pos);
 	void OnMenuClick(NObject* _psender);
 
@@ -67,8 +61,6 @@ protected:
 	void InitCtxMenu();
 
 	//Datas
-	NOperatorsProject*	m_popsProject;
+	NEngineOp*	m_popsProject;
 	NMenuCtrl		m_wndMenu;
 };
-
-#endif //PROJECTWND_H

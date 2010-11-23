@@ -139,7 +139,7 @@ bool NArchive::FinalizeSave()
 //-----------------------------------------------------------------
 void NArchive::WriteRTClassesSchema()
 {
-	udword j, k;
+/*	udword j, k;
 
 	for (j=0; j<(udword)m_wRTClassCount; j++)
 	{
@@ -162,6 +162,7 @@ void NArchive::WriteRTClassesSchema()
 		}
 
 	}
+*/
 }
 
 //-----------------------------------------------------------------
@@ -169,7 +170,7 @@ void NArchive::WriteRTClassesSchema()
 //-----------------------------------------------------------------
 bool NArchive::ReadRTClassesSchema()
 {
-	udword i, k;
+/*	udword i, k;
 
 	//Alloc Class's Names Table
 	if (m_wRTClassCount>=m_wRTClassesSize)
@@ -213,7 +214,7 @@ bool NArchive::ReadRTClassesSchema()
 		}
 
 	}
-
+*/
 	return true;
 }
 

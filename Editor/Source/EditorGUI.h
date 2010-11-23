@@ -29,8 +29,9 @@
 class NOperatorsWnd;
 class NProjectWnd;
 class NAssetsWnd;
-class NOperatorNode;
-class NOperatorsProject;
+
+//class NOperator;
+//class NOperatorsProject;
 
 //-----------------------------------------------------------------
 //!	\class		NEditorGUI
@@ -45,17 +46,17 @@ public:
 	virtual	bool Create(char* name, const NRect& rect);
 
 	//Methods
-	void MarkShowOperator(NOperatorNode* pop);	//!< Set final Operator to mark final result
-	void DeletingOperator(NOperatorNode* pop);	//!< Notif deleting operator
-	void DeletedOperator(NOperatorNode* pop);		//!< Notif deleted operator
-	void EmitPropertiesChanged(NOperatorNode* pop);
+	void MarkShowOperator(NOperator* pop);	//!< Set final Operator to mark final result
+	void DeletingOperator(NOperator* pop);	//!< Notif deleting operator
+	void DeletedOperator(NOperator* pop);		//!< Notif deleted operator
+	void EmitPropertiesChanged(NOperator* pop);
 
-	NOperatorNode* Execute(float _ftime);
+	NOperator* Execute(float _ftime);
 
 	void LoadProject(NString path = NString());
 	void SaveProject(NString path = NString());
 
-	NOperatorsProject* GetProject() { return m_pcurProject; }
+	//NOperatorsProject* GetProject() { return m_pcurProject; }
 
 protected:
 	//Methods
@@ -74,12 +75,12 @@ protected:
 	void OnOptionMenuClick(NObject* _psender);
 
 	//Datas
-	NOperatorsProject*	m_pcurProject;		//!< Current project
+	//NOperatorsProject*	m_pcurProject;		//!< Current project
 	bool							m_bExecuteLocked;	//!< Lock-Unlock operators execution
 	NOperatorsWnd*		m_opswnd;					//!< Operators Window
 	NProjectWnd*			m_pprojectwnd;		//!< Pages Window
 	NAssetsWnd*				m_passetswnd;			//!< Assets window
-	NOperatorNode*		m_popMarkedShow;	//!< Operator marked show for final result
+	NOperator*				m_popMarkedShow;	//!< Operator marked show for final result
 	NString						projectname;
 	float							m_fDetailFactor;
 	NMenuCtrl					m_wndFileMenu;

@@ -14,22 +14,23 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#ifndef PROPERTYITEMS_H
-#define PROPERTYITEMS_H
-
+#pragma once
 
 //-----------------------------------------------------------------
 //									Includes
 //-----------------------------------------------------------------
 #include "CoreLibPkg.h"
+/*#include "Core.h"
+#include "GUI.h"
+#include "StandardsCtrl.h"*/
 
 //-----------------------------------------------------------------
 //									Prototypes
 //-----------------------------------------------------------------
-class NOperatorNode;
+class NOperator;
 
 class NPropertyItem;
-	class NIntProp;
+	class NUbyteProp;
 	class NUwordProp;
 	class NUdwordProp;
 	class NFloatProp;
@@ -50,44 +51,67 @@ public:
 	virtual ~NPropertyItem();
 
 	//Display
-	virtual void		Init() = 0;
 	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem)	= 0;
-
 	virtual bool		BeginEdit	(NRect& rcItem)										{ return false;	}
 	virtual bool		EndEdit		(bool bSaveChanged=true)					{ return false;	}
-
+	virtual	bool		AddValue(sdword dwDelta)										{ return false; }
 	virtual void		Click(NPoint& pt, NRect& rcItem)	{}
-	virtual udword	GetHeight() { return 16; }
 
 	//Members Access
 	char* GetValue()	{ return m_strValue.Buffer(); }
 
 protected:
-	NString			m_strValue;					//!< Value in string form
-	NGUIWnd*		m_pwNGraphicstrl;		//!< Control used for item edition
+	NString			m_strValue;			//!< Value in string form
+	NGUIWnd*	m_pwNGraphicstrl;			//!< Control used for item edition
 public:
-	NObject*		m_pObject;			//!< Object that contain field to edit
-	udword			m_dwFieldIdx;		//!< Field to edit
+	NVarsBloc*			m_pvarBloc;			//!< Variable bloc
+	NVarsBlocDesc*	m_pvarBlocDesc;	//!< Variable Description
+	NVarValue*			m_pvarValue;		//!< Variable Value Ptr	//###TOREMOVE### see m_dwvarIdx
+	udword					m_dwvarIdx;			//!< Variable indice in bloc
 
 	NGUIWnd*			m_pParent;				//!< Parent windows (ie CPropertiesCtrl)
 };
 
 //-----------------------------------------------------------------
-//!	\class	NIntProp
-//! \brief	Integer Property Item
+//!	\class	NUbyteProp
+//! \brief	UByte Property Item
 //-----------------------------------------------------------------
-class NIntProp : public NPropertyItem
+class NUbyteProp : public NPropertyItem
 {
 public:
 	FDECLARE_CLASS();
 
-	virtual void		Init();
 	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
-
-protected:
-	NSlideCtrl m_slider;
-	void OnValueChanged(NObject* _psender);
+	virtual bool		BeginEdit	(NRect& rcItem);
+	virtual bool		EndEdit		(bool bSaveChanged=true);
+	virtual	bool		AddValue(sdword dwDelta);
 };
+
+//-----------------------------------------------------------------
+//!	\class	NUwordProp
+//! \brief	Uword Property Item
+//-----------------------------------------------------------------
+class NUwordProp : public NPropertyItem
+{
+public:
+	FDECLARE_CLASS();
+
+	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
+	virtual bool		BeginEdit	(NRect& rcItem);
+	virtual bool		EndEdit		(bool bSaveChanged=true);
+	virtual	bool		AddValue(sdword dwDelta);
+};
+
+//-----------------------------------------------------------------
+//!	\class	NUdwordProp
+//! \brief	Udword Property Item
+//-----------------------------------------------------------------
+class NUdwordProp : public NPropertyItem
+{
+public:
+	//###TODO###
+};
+
 
 //-----------------------------------------------------------------
 //!	\class	NFloatProp
@@ -97,15 +121,25 @@ class NFloatProp : public NPropertyItem
 {
 public:
 	FDECLARE_CLASS();
-
-	virtual void		Init();
 	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
-
-protected:
-	NSlideCtrl m_slider;
-	void OnValueChanged(NObject* _psender);
+	virtual bool		BeginEdit	(NRect& rcItem);
+	virtual bool		EndEdit		(bool bSaveChanged=true);
+	virtual	bool		AddValue(sdword dwDelta);
 };
 
+//-----------------------------------------------------------------
+//!	\class	NUFloatProp
+//! \brief	Unsigned Float Property Item
+//-----------------------------------------------------------------
+class NUFloatProp : public NPropertyItem
+{
+public:
+	FDECLARE_CLASS();
+	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
+	virtual bool		BeginEdit	(NRect& rcItem);
+	virtual bool		EndEdit		(bool bSaveChanged=true);
+	virtual	bool		AddValue(sdword dwDelta);
+};
 
 //-----------------------------------------------------------------
 //!	\class	NColorProp
@@ -116,35 +150,43 @@ class NColorProp : public NPropertyItem
 public:
 	FDECLARE_CLASS();
 
-	virtual void		Init();
+	NColorProp()		{ m_dwRGBEditingIdx = 0; m_bFirst=true; }
 	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
+	virtual bool		BeginEdit	(NRect& rcItem);
+	virtual bool		EndEdit		(bool bSaveChanged=true);
+	virtual	bool		AddValue(sdword dwDelta);
+	virtual void		Click(NPoint& pt, NRect& rcItem);
+
+	// Messages Notify
+	void OnColorClick(NObject* _psender);
 
 protected:
-	NColorButtonCtrl m_button;
-	void OnValueChanged(NObject* _psender);
+	bool m_bFirst;
+	NColorPickerCtrl m_wndPicker;
+	udword m_dwRGBEditingIdx;
 };
 
 //-----------------------------------------------------------------
-//!	\class	NComboProp
-//! \brief	Combo Property Item
+//!	\class	NUbyteComboProp
+//! \brief	UByte Property Item
 //-----------------------------------------------------------------
-class NComboProp : public NPropertyItem
+class NUbyteComboProp : public NPropertyItem
 {
 public:
 	FDECLARE_CLASS();
 
-	virtual void	Init();
-	virtual	void	DrawItem(N2DPainter* pdc, NRect& rcItem);
+	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
+	virtual bool		BeginEdit	(NRect& rcItem);
+	virtual bool		EndEdit		(bool bSaveChanged=true);
+
+	// Messages Notify
+	void OnMenuClick(NObject* _psender);
 
 protected:
-	NMenuButtonCtrl m_button;
+	NMenuCtrl	m_wndMenu;
 	NArray<NString>	m_carrayStringsList;
-
-	void OnValueChanged(NObject* _psender);
 };
 
-
-/*
 //-----------------------------------------------------------------
 //!	\class	NFileBrowserProp
 //! \brief	File browser Property Item
@@ -195,9 +237,4 @@ public:
 	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
-	virtual void		OnEnter(NEditCtrl* pEdit);
-	virtual void		OnEscape(NEditCtrl* pEdit);
 };
-*/
-
-#endif //PROPERTYITEMS_H

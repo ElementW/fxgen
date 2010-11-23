@@ -58,8 +58,8 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;freetype2312.lib;sfml-system-d.lib;sfml-window-d.lib;sfml-main-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\Externals\SFML\lib\vc2008;..\..\..\..\Externals\FreeType\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;freetype2312.lib;corelib_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\Externals\FreeType\Lib;..\..\..\..\Core\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -89,13 +89,14 @@
     <ClCompile Include="..\..\..\Source\EditorApp.cpp" />
     <ClCompile Include="..\..\..\Source\EditorGUI.cpp" />
     <ClCompile Include="..\..\..\Source\FileChooserDialog.cpp" />
-    <ClCompile Include="..\..\..\Source\Operator.cpp" />
     <ClCompile Include="..\..\..\Source\AssetsWnd.cpp" />
+    <ClCompile Include="..\..\..\Source\GUI_Win32.cpp" />
+    <ClCompile Include="..\..\..\Source\OperatorsCtrl.cpp" />
     <ClCompile Include="..\..\..\Source\OperatorsWnd.cpp" />
     <ClCompile Include="..\..\..\Source\ProjectWnd.cpp" />
     <ClCompile Include="..\..\..\Source\PropertiesWnd.cpp" />
+    <ClCompile Include="..\..\..\Source\ViewportsCtrl.cpp" />
     <ClCompile Include="..\..\..\Source\ViewportsWnd.cpp" />
-    <ClCompile Include="..\..\..\Source\RenderOpsUI.cpp" />
     <ClCompile Include="..\..\..\Source\LayoutDock.cpp" />
     <ClCompile Include="..\..\..\Source\PropertiesCtrl.cpp" />
     <ClCompile Include="..\..\..\Source\PropertyItems.cpp" />
@@ -107,13 +108,14 @@
     <ClInclude Include="..\..\..\Source\EditorGUI.h" />
     <ClInclude Include="..\..\..\Source\EventsList.h" />
     <ClInclude Include="..\..\..\Source\FileChooserDialog.h" />
-    <ClInclude Include="..\..\..\Source\Operator.h" />
     <ClInclude Include="..\..\..\Source\AssetsWnd.h" />
+    <ClInclude Include="..\..\..\Source\GUI_Win32.h" />
+    <ClInclude Include="..\..\..\Source\OperatorsCtrl.h" />
     <ClInclude Include="..\..\..\Source\OperatorsWnd.h" />
     <ClInclude Include="..\..\..\Source\ProjectWnd.h" />
     <CustomBuildStep Include="..\..\..\Source\PropertiesWnd.h" />
+    <ClInclude Include="..\..\..\Source\ViewportsCtrl.h" />
     <ClInclude Include="..\..\..\Source\ViewportsWnd.h" />
-    <ClInclude Include="..\..\..\Source\RenderOpsUI.h" />
     <ClInclude Include="..\..\..\Source\LayoutDock.h" />
     <CustomBuildStep Include="..\..\..\Source\PropertiesCtrl.h" />
     <CustomBuildStep Include="..\..\..\Source\PropertyItems.h" />

@@ -71,7 +71,6 @@ NEditorGUI::NEditorGUI(void)
 	m_bExecuteLocked	= false;
 	m_popMarkedShow		= null;
 	m_fDetailFactor		= 1.0f;
-	m_pcurProject			= null;
 }
 
 //-----------------------------------------------------------------
@@ -235,13 +234,13 @@ void NEditorGUI::OnNewProject()
 	pNewGrpNode->SetName("Group");
 	prootNode->AddSon(pNewGrpNode);
 
-	NOperatorsPage* ppage = NNEW(NOperatorsPage);
+	NOpGraphModel* ppage = NNEW(NOpGraphModel);
 	ppage->SetName("Page");
 	pNewGrpNode->GetObjsArray().AddItem(ppage);*/
 
 
 	//Clear project
-	if (m_pcurProject==null)
+/*	if (m_pcurProject==null)
 		m_pcurProject = new NOperatorsProject();
 
 	m_pcurProject->Clear();
@@ -256,7 +255,7 @@ void NEditorGUI::OnNewProject()
 	NString strTitle(CAPTION);
 	strTitle+="Untitled";
 	SetText(strTitle.Buffer());
-
+	*/
 	m_bExecuteLocked = false;
 
 }
@@ -370,7 +369,7 @@ void NEditorGUI::OnSaveProjectAs()
 //!	\param	_ftime	time
 //!	\return	Operator result
 //-----------------------------------------------------------------
-NOperatorNode* NEditorGUI::Execute(float _ftime)
+NOperator* NEditorGUI::Execute(float _ftime)
 {
 /*
 	if (!m_bExecuteLocked)
@@ -398,7 +397,7 @@ NOperatorNode* NEditorGUI::Execute(float _ftime)
 //!	\brief	Show an operator to viewport
 //!	\param	pop		operator to show
 //-----------------------------------------------------------------
-void NEditorGUI::MarkShowOperator(NOperatorNode* _pop)
+void NEditorGUI::MarkShowOperator(NOperator* _pop)
 {
 	m_popMarkedShow = _pop;
 
@@ -407,7 +406,7 @@ void NEditorGUI::MarkShowOperator(NOperatorNode* _pop)
 
 	//###DEBUG###
 	float ftime = (float)GetTickCount() * 60.0f / 1000.0f;
-	//NOperatorNode* pop = Execute(ftime);
+	//NOperator* pop = Execute(ftime);
 
 }
 
@@ -415,7 +414,7 @@ void NEditorGUI::MarkShowOperator(NOperatorNode* _pop)
 //!	\brief	Delete an operator
 //!	\param	pop		operator to delete
 //-----------------------------------------------------------------
-void NEditorGUI::DeletingOperator(NOperatorNode* _pop)
+void NEditorGUI::DeletingOperator(NOperator* _pop)
 {
 	m_bExecuteLocked = true;
 
@@ -431,7 +430,7 @@ void NEditorGUI::DeletingOperator(NOperatorNode* _pop)
 //!	\brief	operator Deleted
 //!	\param	pop		operator deleted
 //-----------------------------------------------------------------
-void NEditorGUI::DeletedOperator(NOperatorNode* pop)
+void NEditorGUI::DeletedOperator(NOperator* pop)
 {
 	m_bExecuteLocked = false;
 }
@@ -440,7 +439,7 @@ void NEditorGUI::DeletedOperator(NOperatorNode* pop)
 //!	\brief	operator properties changed
 //!	\param	pop		operator
 //-----------------------------------------------------------------
-void NEditorGUI::EmitPropertiesChanged(NOperatorNode* pop)
+void NEditorGUI::EmitPropertiesChanged(NOperator* pop)
 {
 	
 }

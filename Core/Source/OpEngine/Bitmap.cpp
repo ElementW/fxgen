@@ -18,71 +18,19 @@
 //-----------------------------------------------------------------
 //                   Includes
 //-----------------------------------------------------------------
-//#include "../../Include/CoreLib.h"
+#include "../../Include/CoreLib.h"
 #include "Bitmap.h"
-#include "EngineOp.h"
-#include "../Types.h"
+
 
 //-----------------------------------------------------------------
-//!	\func	Bitmap_SetSize
-//!	\brief	Change Bitmap Size
 //-----------------------------------------------------------------
-void Res_SetBmpSize(SResource* _pres, udword _w, udword _h)
-{
-	if (_w!=_pres->dwWidth || _h!=_pres->dwHeight)
-	{
-		//Bitmap resize
-		if (_pres->pbyPixels!=null)
-		{
-			NRGBA* pbyNewPixels = (NRGBA*)NNEWARRAY(NRGBA, _w*_h);
+//
+//							NBitmap class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+FIMPLEMENT_CLASS(NBitmap, NObject);
 
-			NRGBA* pPxSrc	= _pres->pbyPixels;
-			NRGBA* pPxDst	= pbyNewPixels;
-
-			for (udword y=0; y<_h; y++)
-			{
-				for (udword x=0; x<_w; x++)
-				{
-					udword px = x * _pres->dwWidth/_w;
-					udword py = y * _pres->dwHeight/_h;
-					*pPxDst = pPxSrc[px + py*_pres->dwHeight];
-					pPxDst++;
-				}
-			}
-
-			NDELETEARRAY(_pres->pbyPixels);
-			_pres->pbyPixels = pbyNewPixels;
-
-		//Bitmap creation
-		} else {
-			_pres->pbyPixels = (NRGBA*)NNEWARRAY(NRGBA, _w*_h);
-		}
-
-		_pres->dwWidth = _w;
-		_pres->dwHeight= _h;
-	}
-
-}
-
-void Res_CopyBmp(SResource* _pres1, SResource* _pres2)
-{
-	udword w = _pres1->dwWidth;
-	udword h = _pres1->dwHeight;
-	if (_pres2->pbyPixels && (_pres2->dwWidth!=w || _pres2->dwHeight!=h))
-	{
-		NDELETEARRAY(_pres2->pbyPixels);
-		_pres2->pbyPixels = (NRGBA*)NNEWARRAY(NRGBA, w*h);
-	} else if (_pres2->pbyPixels==null) {
-		_pres2->pbyPixels = (NRGBA*)NNEWARRAY(NRGBA, w*h);
-	}
-	_pres2->dwWidth=w;
-	_pres2->dwHeight=h;
-	NMemCopy(_pres2->pbyPixels, _pres1->pbyPixels, _pres1->dwWidth*_pres1->dwHeight*sizeof(NRGBA*));
-}
-
-
-
-/*
 //-----------------------------------------------------------------
 //!	\brief	Constructor
 //-----------------------------------------------------------------
@@ -99,7 +47,7 @@ NBitmap::NBitmap() : NObject()
 //-----------------------------------------------------------------
 NBitmap::~NBitmap()
 {
-	if (m_pbyPixels)			NDELETEARRAY(m_pbyPixels);
+	if (m_pbyPixels)			NMemFree(m_pbyPixels);
 }
 
 //-----------------------------------------------------------------
@@ -114,7 +62,7 @@ void NBitmap::SetSize(udword _w, udword _h)
 		//Bitmap resize
 		if (m_pbyPixels)
 		{
-			NRGBA* pbyNewPixels = (NRGBA*)NNEWARRAY(NRGBA, _w*_h);
+			NRGBA* pbyNewPixels = (NRGBA*)NMemAlloc(_w*_h*sizeof(NRGBA));
 
 			NRGBA* pPxSrc	= m_pbyPixels;
 			NRGBA* pPxDst	= pbyNewPixels;
@@ -130,17 +78,53 @@ void NBitmap::SetSize(udword _w, udword _h)
 				}
 			}
 
-			NDELETEARRAY(m_pbyPixels);
+			NMemFree(m_pbyPixels);
 			m_pbyPixels = pbyNewPixels;
 
 		//Bitmap creation
 		} else {
-			m_pbyPixels = (NRGBA*)NNEWARRAY(NRGBA, _w*_h);
+			m_pbyPixels = (NRGBA*)NMemAlloc(_w*_h*sizeof(NRGBA));
 		}
 
 		m_dwWidth	=_w;	m_dwHeight=_h;
 	}
 
 }
-*/
 
+////-----------------------------------------------------------------
+////!	\brief	Change bitmap size
+////!	\param	_w	Width
+////!	\param	_h	Height
+////-----------------------------------------------------------------
+//void NBitmap::saveBMP(char *filename)
+//{
+//	NRGBA* pdata = m_pbyPixels;
+//
+//	noise::utils::Image *image = new noise::utils::Image( m_dwWidth, m_dwHeight );
+//
+//	for( int i = 0; i < m_dwHeight; i++ )
+//	{
+//		for( int j = 0; j < m_dwWidth; j++ )
+//		{
+//			image->SetValue( j, i,
+//				noise::utils::Color((*pdata).r,
+//									(*pdata).g,
+//									(*pdata).b,
+//									(*pdata).a));
+//
+//			*pdata++;
+//
+//		}
+//	}
+//
+//	noise::utils::WriterBMP writer;
+//
+//	std::string fname(filename);
+//	writer.SetDestFilename (fname);
+//	writer.SetSourceImage(*image);
+//
+//	writer.WriteDestFile();
+//
+//	delete image;
+//}
+//

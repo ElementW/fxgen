@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-//! \file		OperatorsWnd.h
-//! \brief	Windows for operators editing
+//! \file		NViewportsCtrl.h
+//! \brief	GUI control for viewport
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
 //!	\date		12-02-2007
@@ -17,46 +17,30 @@
 #pragma once
 
 //-----------------------------------------------------------------
-//			Includes
+//                   Includes
 //-----------------------------------------------------------------
-#include "OperatorsCtrl.h"
-#include "Editor.h"
+#include "CoreLibPkg.h"
 
 //-----------------------------------------------------------------
-//!	\class		NOperatorsWnd
-//!	\brief		Windows for operators editing
+//!	\class		NViewportsCtrl
+//!	\brief		GUI control for viewport
 //-----------------------------------------------------------------
-class NOperatorsWnd :	public NOperatorsCtrl
+class NViewportsCtrl : public NGUIWnd
 {
+
 public:
-	NOperatorsWnd(void);
-	virtual ~NOperatorsWnd(void);
+	// Constructor-Destructor
+	NViewportsCtrl();
+	virtual ~NViewportsCtrl();
 
-	//Methods
+	// Methods
 	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
-	virtual void OnMarkShowOperator(NOperator* pop);
 
-	virtual void OnDeletingOperator(NOperator* pop);
-	virtual void OnDeletedOperator(NOperator* pop);
-
-	//Methods Debug
-	void Dump();
+	void	Update();
 
 protected:
-	//Methods
-	void InitCtxMenu();
-
-	// Messages Notify
-	void OnMenuItemClick(NObject* _psender);
-
-	//Events
-	EVT_DECLARE_HANDLER(OnPageSelected);
-	EVT_DECLARE_HANDLER(OnRendering);
-
 	//Messages Dispatching
-	virtual void OnRButtonDown(NPoint pos);
-
-	//Datas
-	NMenuCtrl	m_wndMenu;
-
+	//virtual	void	OnPaint();
+	virtual void	OnSize();
 };
+

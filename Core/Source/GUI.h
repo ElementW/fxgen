@@ -60,7 +60,7 @@ class NCmdTarget;
 #define	NIDNO			3
 
 //-----------------------------------------------------------------
-//			Defines DrawText Format
+//			Defines DrawString Format
 //-----------------------------------------------------------------
 #define NDT_HCENTER					1
 #define NDT_VCENTER					2
@@ -239,7 +239,7 @@ public:
 	//Platform Dependent Methods
 	bool Init();
 	bool ShutDown();
-	void Update();
+	bool Update();
 
 	void GetCursorPos(NPoint& _pos) { _pos=m_ptCursor;			}
 	bool IsKeyDown(NKey::Code _key) { return m_keyDown[_key]; }

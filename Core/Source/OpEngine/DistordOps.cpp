@@ -6,7 +6,7 @@
 //!	\author	Johann Nadalutti (fxgen@free.fr)
 //!	        Anders Stenberg (anders.stenberg@gmail.com)
 //!         Andrew Caudwell (acaudwell@gmail.com)
-//!	\date		03-06-2009
+//!	\date		17-05-2007
 //!
 //!	\brief	This file applies the GNU LESSER GENERAL PUBLIC LICENSE
 //!					Version 2.1 , read file COPYING.
@@ -20,58 +20,117 @@
 //-----------------------------------------------------------------
 //                   Includes
 //-----------------------------------------------------------------
-#include "pch.h"
-#include "EngineOp.h"
-#include "Maths.h"
+#include "../../Include/CoreLib.h"
+#include "DistordOps.h"
+#include "RectangularArray.h"
 #include "Bitmap.h"
+
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-//							NRotoZoomOp implementation
+//
+//							NRotoZoomOp class implementation
+//
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void  NRotoZoomOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, vec2 _center, float _fRotate, vec2 _zoom, ubyte _byWrap)
+FIMPLEMENT_CLASS(NRotoZoomOp, NOperator);
+
+static NMapVarsBlocDesc mapblocdescRotoZoomOp[] =
 {
-	SResource* pRes = _state->apLayers[_state->pcurCall->byDepth];
-	udword tw= pRes->dwWidth;
-	udword th= pRes->dwHeight;
+	MAP(1, eubyte,		"2",		"*0.00390625"	)	//V1 => 0-CenterX
+	MAP(1, eubyte,		"3",		"*0.00390625"	)	//V1 => 1-CenterY
+	MAP(1, eubyte,		"4",		"*0.00390625"	)	//V1 => 2-Rotate
+	MAP(1, eubyte,		"5,6",	"*0.0078125"	)	//V1 => 3-Zoom
+};
+
+
+static NVarsBlocDesc blocdescRotoZoomOp[] =
+{
+	VAR(eubyte,	false, "Set Width",		"0,[0 (Default),1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
+	VAR(eubyte,	false, "Set Height",	"0,[0 (Default),1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//1
+	VAR(efloat,		true, "CenterX",	"0.5",		"NFloatProp")	//2
+	VAR(efloat,		true, "CenterY",	"0.5",		"NFloatProp")	//3
+	VAR(efloat,		true, "Rotate",		"0.0",		"NFloatProp")	//4
+	VAR(efloat,		true, "ZoomX",		"1.0",		"NFloatProp")	//5
+	VAR(efloat,		true, "ZoomY",		"1.0",		"NFloatProp")	//6
+	VAR(eubyte,		true, "Wrap",			"1,[0 (Off), 1 (On)]",	"NUbyteComboProp")	//7
+};
+
+NRotoZoomOp::NRotoZoomOp()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(8, blocdescRotoZoomOp, 2);
+	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
+	m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescRotoZoomOp);
+
+}
+
+NRotoZoomOp::~NRotoZoomOp()
+{
+}
+
+udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+{
+	//Only one Input
+	if (m_byInputs!=1)		return (udword)-1;
+
+	//Bitmap instance
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+
+	//Get input texture
+	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
+	NBitmap* pDst = (NBitmap*)m_pObj;
+
+	udword tw = pSrc->GetWidth();
+	udword th = pSrc->GetHeight();
+
 	udword w = tw;
 	udword h = th;
 
-	//Copy Input to Temps Layer used as texture
-	SResource* pResTexture = _state->apLayers[TPS_LAYER];
-	Res_CopyBmp(pRes, pResTexture);
+	//Get Variables Values
+	ubyte byVal;
 
-	if (_wpow!=0)
+	m_pcvarsBloc->GetValue(0, 0, byVal);
+	if (byVal!=0)
 	{
-		w=1<<((udword)(_wpow-1));
-		w=(udword) ((float)w*_state->fDetailFactor);
+		w=1<<((udword)(byVal-1));
+		w=(udword) ((float)w*_fDetailFactor);
 	}
 
-	if (_hpow!=0)
+	m_pcvarsBloc->GetValue(1, 0, byVal);
+	if (byVal!=0)
 	{
-		h=1<<((udword)(_hpow-1));
-		h=(udword) ((float)h*_state->fDetailFactor);
+		h=1<<((udword)(byVal-1));
+		h=(udword) ((float)h*_fDetailFactor);
 	}
+
+	pDst->SetSize(w, h);
+
+	float fCenterX, fCenterY, fRotate, fZoomX, fZoomY;
+	m_pcvarsBloc->GetValue(2, _ftime, fCenterX);	//-0.5 <> +0.1
+	m_pcvarsBloc->GetValue(3, _ftime, fCenterY);	//-0.5 <> +0.1
+	m_pcvarsBloc->GetValue(4, _ftime, fRotate);		//0.0 <> 1.0 => 0 => 2xPi
+	m_pcvarsBloc->GetValue(5, _ftime, fZoomX);
+	m_pcvarsBloc->GetValue(6, _ftime, fZoomY);
 
 	//Rotate
-	_fRotate = _fRotate * nv_two_pi;
+	fRotate = fRotate * nv_two_pi;
 
 	//Zoom
 	//fZoomX=0.5f - (fZoomX/2.0f);
-	_zoom.x=pow(.5f,_zoom.x-1);
+	fZoomX=pow(.5f,fZoomX-1);
 
 	//fZoomY=0.5f - (fZoomY/2.0f);
-	_zoom.y=pow(.5f,_zoom.y-1);
+	fZoomY=pow(.5f,fZoomY-1);
 
 	//Process RotoZoom
-	NRGBA* pPxlSrc = pResTexture->pbyPixels;
-	NRGBA* pPxlDst = pRes->pbyPixels;
+	NRGBA* pPxlSrc = pSrc->GetPixels();
+	NRGBA* pPxlDst = pDst->GetPixels();
 
-	float fCoefX = /*((float)tw / (float)w) * */_zoom.x;
-	float fCoefY = /*((float)th / (float)h) * */_zoom.y;
+	float fCoefX = /*((float)tw / (float)w) * */fZoomX;
+	float fCoefY = /*((float)th / (float)h) * */fZoomY;
 
-	float	c = (float) (cosf(_fRotate));
-	float	s = (float) (sinf(_fRotate));
+	float	c = (float) (cosf(fRotate));
+	float	s = (float) (sinf(fRotate));
 
 	float tw2 = (float)w / 2.0f;
 	float th2 = (float)h / 2.0f;
@@ -83,8 +142,8 @@ void  NRotoZoomOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, vec2 _
 
 	for (udword y=0; y<h; y++)
 	{
-		float	u = (((c * -tw2) - ys) * fCoefX) + (_center.x*(float)tw);		// x' = cos(x)-sin(y) + Center X;
-		float	v = (((s * -tw2) + yc) * fCoefY) + (_center.y*(float)th);		// y' = sin(x)+cos(y) + Center Y;
+		float	u = (((c * -tw2) - ys) * fCoefX) + (fCenterX*(float)tw);		// x' = cos(x)-sin(y) + Center X;
+		float	v = (((s * -tw2) + yc) * fCoefY) + (fCenterY*(float)th);		// y' = sin(x)+cos(y) + Center Y;
 
 		for (udword x=0; x<w; x++)
 		{
@@ -147,33 +206,61 @@ void  NRotoZoomOp_Process(SEngineState* _state, ubyte _wpow, ubyte _hpow, vec2 _
 		ys+=s; yc+=c;
 	};
 
+
+	return 1;
 }
 
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-//							NDistortOp implementation
+//
+//							NDistortOp class implementation
+//
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-/*
-void NDistortOp_Process(SEngineState* _state, ubyte _byPower)
+FIMPLEMENT_CLASS(NDistortOp, NOperator);
+
+static NVarsBlocDesc blocdescDistortOp[] =
+{
+	VAR(eudword,	true, "Power",	"0", "NUbyteProp")	//0
+};
+
+NDistortOp::NDistortOp()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(1, blocdescDistortOp, 1);
+
+}
+
+udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Two inputs (texture, normal)
-	NBitmap* pSrc		= _state->apInputs[0];
-	NBitmap* pNorm	=	_state->apInputs[1];
-	NBitmap* pDst		= _state->pcurCall->pbmp;
+	if (m_byInputs!=2)		return (udword)-1;
+
+	//Get input Texture and Normal
+	NBitmap* pSrc		= (NBitmap*)(*(_pOpsInts+0))->m_pObj;
+	NBitmap* pNorm	= (NBitmap*)(*(_pOpsInts+1))->m_pObj;
 
 	// Same inputs W and H sizes
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
-	//if (w!=pNorm->GetWidth() )		return (udword)-1;
-	//if (h!=pNorm->GetHeight())		return (udword)-1;
+	if (w!=pNorm->GetWidth() )		return (udword)-1;
+	if (h!=pNorm->GetHeight())		return (udword)-1;
+
+	//Bitmap instance
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	//Set Texture size
+	NBitmap* pDst	= (NBitmap*)m_pObj;
 	pDst->SetSize(w, h);
 
+
+	/////////////////////////////////////////
 	//Get Variables Values
-	float fPower = (float)_byPower;	//0.0<->8.0
+	ubyte byPower;
+	m_pcvarsBloc->GetValue(0, _ftime, byPower);
+
+	float fPower = (float)byPower;	//0.0<->8.0
 
 	/////////////////////////////////////////
 	//Process operator
@@ -198,10 +285,10 @@ void NDistortOp_Process(SEngineState* _state, ubyte _byPower)
 			float u = fmodf((x + (n.x*fPower)), w);
 			float v = fmodf((y + (n.y*fPower)), h);
 
-      float uf = u>=0 ? (u - (sdword)u) : 1+(u - (sdword)u);	//Fraction
-      float vf = v>=0 ? (v - (sdword)v) : 1+(v - (sdword)v);	//Fraction
+            float uf = u>=0 ? (u - (sdword)u) : 1+(u - (sdword)u);	//Fraction
+            float vf = v>=0 ? (v - (sdword)v) : 1+(v - (sdword)v);	//Fraction
 
-      udword ut = u>=0 ? (udword)u : (udword)u - 1;
+            udword ut = u>=0 ? (udword)u : (udword)u - 1;
 			udword vt = v>=0 ? (udword)v : (udword)v - 1;
 
 
@@ -249,8 +336,9 @@ void NDistortOp_Process(SEngineState* _state, ubyte _byPower)
 		}
 	}
 
+	return 0;
 }
-*/
+
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
@@ -258,7 +346,7 @@ void NDistortOp_Process(SEngineState* _state, ubyte _byPower)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-/*FIMPLEMENT_CLASS(NVortexOp, NOperatorNode);
+FIMPLEMENT_CLASS(NVortexOp, NOperator);
 
 static NVarsBlocDesc blocdescVortexOp[] =
 {
@@ -277,13 +365,13 @@ NVortexOp::NVortexOp()
 
 }
 
-udword NVortexOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDetailFactor)
+udword NVortexOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)              return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetProject()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -393,7 +481,7 @@ udword NVortexOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDetai
 
 	return 1;
 }
-*/
+
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -402,14 +490,13 @@ udword NVortexOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDetai
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-/*
-FIMPLEMENT_CLASS(NLookupOp, NOperatorNode);
+FIMPLEMENT_CLASS(NLookupOp, NOperator);
 
 NLookupOp::NLookupOp()
 {
 }
 
-udword NLookupOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDetailFactor)
+udword NLookupOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Two inputs (texture, texcoords)
 	if (m_byInputs!=2) return (udword)-1;
@@ -427,7 +514,7 @@ udword NLookupOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDetai
 	float scaleH = th / 256.0f;
 
 	//Bitmap instance
-	NEngineOp::GetProject()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	//Set Texture size
 	NBitmap* pDst = (NBitmap*)m_pObj;
@@ -453,11 +540,7 @@ udword NLookupOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDetai
 	return 0;
 }
 
-*/
 
 
-SOpFuncInterface IOpsDistord[] = {
-	"Roto Zoom",		8*4,  (fxOPFUNCTION*)&NRotoZoomOp_Process,
-};
 
-udword dwCountOpsDistord = fgCreateOpEngine()->RegisterOpsInterfaces(1, IOpsDistord);
+

@@ -14,9 +14,6 @@
     <Filter Include="Operators">
       <UniqueIdentifier>{b8355ebc-0065-4ef2-b739-999d4fa5089c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Operator Compiler">
-      <UniqueIdentifier>{51a19d91-ea48-4e40-a2dd-a91953706133}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Archive.cpp">
@@ -55,26 +52,29 @@
     <ClCompile Include="..\..\Source\StripBarCtrl.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\OpEngine\CombineOps.cpp">
+      <Filter>Operators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\OpEngine\DistordOps.cpp">
+      <Filter>Operators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\OpEngine\FilterOps.cpp">
+      <Filter>Operators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\OpEngine\MainOps.cpp">
+      <Filter>Operators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\OpEngine\RenderOps.cpp">
+      <Filter>Operators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\OpEngine\Controllers.cpp">
+      <Filter>Operator Engine</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\OpEngine\Bitmap.cpp">
       <Filter>Operator Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\OpEngine\EngineOp.cpp">
       <Filter>Operator Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\OpEngine\CombineOpsFunc.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\OpEngine\DistordOpsFunc.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\OpEngine\FilterOpsFunc.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\OpEngine\RenderOpsFunc.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\OpEngine\CompilerOp.cpp">
-      <Filter>Operator Compiler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +120,25 @@
     <ClInclude Include="..\..\Source\Templates.h">
       <Filter>GUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\CoreLib.h" />
+    <ClInclude Include="..\..\Source\OpEngine\CombineOps.h">
+      <Filter>Operators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\OpEngine\DistordOps.h">
+      <Filter>Operators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\OpEngine\FilterOps.h">
+      <Filter>Operators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\OpEngine\MainOps.h">
+      <Filter>Operators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\OpEngine\RenderOps.h">
+      <Filter>Operators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\OpEngine\Controllers.h">
+      <Filter>Operator Engine</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\OpEngine\Bitmap.h">
       <Filter>Operator Engine</Filter>
     </ClInclude>
@@ -129,10 +148,6 @@
     <ClInclude Include="..\..\Source\OpEngine\RectangularArray.h">
       <Filter>Operator Engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\OpEngine\CompilerOp.h">
-      <Filter>Operator Compiler</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\CoreLib.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="OpEngine_ClassDiagram.cd" />

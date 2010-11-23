@@ -58,7 +58,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;freetype2312.lib;sfml-system-d.lib;sfml-window-d.lib;sfml-main-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;freetype2312.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)_D.dll</OutputFile>
       <AdditionalLibraryDirectories>..\..\..\Externals\SFML\lib\vc2008;..\..\..\Externals\FreeType\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -66,7 +66,7 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <ImportLibrary>$(TargetDir)$(TargetName).lib</ImportLibrary>
+      <ImportLibrary>$(TargetDir)$(TargetName)_D.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
@@ -98,6 +98,14 @@
     <ClCompile Include="..\..\Source\Core.cpp" />
     <ClCompile Include="..\..\Source\Maths.cpp" />
     <ClCompile Include="..\..\Source\MemoryMgr.cpp" />
+    <ClCompile Include="..\..\Source\OpEngine\Bitmap.cpp" />
+    <ClCompile Include="..\..\Source\OpEngine\CombineOps.cpp" />
+    <ClCompile Include="..\..\Source\OpEngine\Controllers.cpp" />
+    <ClCompile Include="..\..\Source\OpEngine\DistordOps.cpp" />
+    <ClCompile Include="..\..\Source\OpEngine\EngineOp.cpp" />
+    <ClCompile Include="..\..\Source\OpEngine\FilterOps.cpp" />
+    <ClCompile Include="..\..\Source\OpEngine\MainOps.cpp" />
+    <ClCompile Include="..\..\Source\OpEngine\RenderOps.cpp" />
     <ClCompile Include="..\..\Source\Stream.cpp" />
     <ClCompile Include="..\..\Source\Types.cpp" />
     <ClCompile Include="..\..\Source\EventsMgr.cpp" />
@@ -106,21 +114,6 @@
     <ClCompile Include="..\..\Source\MenuCtrl.cpp" />
     <ClCompile Include="..\..\Source\StandardsCtrl.cpp" />
     <ClCompile Include="..\..\Source\StripBarCtrl.cpp" />
-    <ClCompile Include="..\..\Source\OpEngine\Bitmap.cpp" />
-    <ClCompile Include="..\..\Source\OpEngine\EngineOp.cpp" />
-    <ClCompile Include="..\..\Source\OpEngine\CombineOpsFunc.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\OpEngine\DistordOpsFunc.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\OpEngine\FilterOpsFunc.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\OpEngine\RenderOpsFunc.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\OpEngine\CompilerOp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Archive.h" />
@@ -128,6 +121,15 @@
     <ClInclude Include="..\..\Source\Keyboard.h" />
     <ClInclude Include="..\..\Source\Maths.h" />
     <ClInclude Include="..\..\Source\MemoryMgr.h" />
+    <ClInclude Include="..\..\Source\OpEngine\Bitmap.h" />
+    <ClInclude Include="..\..\Source\OpEngine\CombineOps.h" />
+    <ClInclude Include="..\..\Source\OpEngine\Controllers.h" />
+    <ClInclude Include="..\..\Source\OpEngine\DistordOps.h" />
+    <ClInclude Include="..\..\Source\OpEngine\EngineOp.h" />
+    <ClInclude Include="..\..\Source\OpEngine\FilterOps.h" />
+    <ClInclude Include="..\..\Source\OpEngine\MainOps.h" />
+    <ClInclude Include="..\..\Source\OpEngine\RectangularArray.h" />
+    <ClInclude Include="..\..\Source\OpEngine\RenderOps.h" />
     <ClInclude Include="..\..\Source\Stream.h" />
     <ClInclude Include="..\..\Source\Types.h" />
     <ClInclude Include="..\..\Source\EventsMgr.h" />
@@ -137,10 +139,6 @@
     <ClInclude Include="..\..\Source\StandardsCtrl.h" />
     <ClInclude Include="..\..\Source\StripBarCtrl.h" />
     <ClInclude Include="..\..\Source\Templates.h" />
-    <ClInclude Include="..\..\Source\OpEngine\Bitmap.h" />
-    <ClInclude Include="..\..\Source\OpEngine\EngineOp.h" />
-    <ClInclude Include="..\..\Source\OpEngine\RectangularArray.h" />
-    <ClInclude Include="..\..\Source\OpEngine\CompilerOp.h" />
     <ClInclude Include="..\..\Include\CoreLib.h" />
   </ItemGroup>
   <ItemGroup>

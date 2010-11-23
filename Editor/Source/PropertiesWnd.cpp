@@ -74,7 +74,7 @@ void NPropertiesWnd::OnPropertiesChanged()
 //-----------------------------------------------------------------
 EVT_IMPLEMENT_HANDLER(NPropertiesWnd, OnOPSelChanged)
 {
-	m_pcurOp = (NOperatorNode*)dwParam1;
+	m_pcurOp = (NOperator*)dwParam1;
 	DisplayObjectProperties((NObject*)m_pcurOp);
 	Update();
 

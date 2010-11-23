@@ -7,14 +7,14 @@
     <Filter Include="Editor UI Widgets">
       <UniqueIdentifier>{071e97d0-af3e-4224-a543-1fded956e931}</UniqueIdentifier>
     </Filter>
-    <Filter Include="OperatorsNodes">
-      <UniqueIdentifier>{f2f6171b-2fff-4751-bd34-418e197cc976}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Base UI Widgets">
       <UniqueIdentifier>{329dc849-646b-4ddb-898a-26b0bc56c147}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Operator Compiler">
-      <UniqueIdentifier>{03bedba1-bd32-4713-8a14-b48619b259c4}</UniqueIdentifier>
+    <Filter Include="Win32 Platform">
+      <UniqueIdentifier>{2380b735-6672-40e6-bca8-47238752a294}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{3f8f1b04-9ba5-4395-aec7-5275597b1884}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -25,9 +25,6 @@
       <Filter>Editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Source\FileChooserDialog.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Source\Operator.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Source\AssetsWnd.cpp">
@@ -45,9 +42,6 @@
     <ClCompile Include="..\..\..\Source\ViewportsWnd.cpp">
       <Filter>Editor UI Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\RenderOpsUI.cpp">
-      <Filter>OperatorsNodes</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Source\LayoutDock.cpp">
       <Filter>Base UI Widgets</Filter>
     </ClCompile>
@@ -61,6 +55,15 @@
       <Filter>Base UI Widgets</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Main.cpp" />
+    <ClCompile Include="..\..\..\Source\ViewportsCtrl.cpp">
+      <Filter>Base UI Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\OperatorsCtrl.cpp">
+      <Filter>Base UI Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\GUI_Win32.cpp">
+      <Filter>Win32 Platform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Source\EditorApp.h">
@@ -75,9 +78,6 @@
     <ClInclude Include="..\..\..\Source\FileChooserDialog.h">
       <Filter>Editor</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Source\Operator.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Source\AssetsWnd.h">
       <Filter>Editor UI Widgets</Filter>
     </ClInclude>
@@ -90,9 +90,6 @@
     <ClInclude Include="..\..\..\Source\ViewportsWnd.h">
       <Filter>Editor UI Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Source\RenderOpsUI.h">
-      <Filter>OperatorsNodes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Source\LayoutDock.h">
       <Filter>Base UI Widgets</Filter>
     </ClInclude>
@@ -100,6 +97,15 @@
       <Filter>Base UI Widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\CoreLibPkg.h" />
+    <ClInclude Include="..\..\..\Source\ViewportsCtrl.h">
+      <Filter>Base UI Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\OperatorsCtrl.h">
+      <Filter>Base UI Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\GUI_Win32.h">
+      <Filter>Win32 Platform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\FxGen TODO.txt" />
