@@ -44,9 +44,6 @@
 
 #define TCHAR char
 
-//SFML API
-#include <SFML/Window.hpp>
-
 //Editor
 /*#include "Core/Core.h"
 #include "GUI/GUI.h"

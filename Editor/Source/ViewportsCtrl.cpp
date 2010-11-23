@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-//! \file		Editor.cpp
-//! \brief	FxGen Editor application
+//! \file		NViewportsCtrl.cpp
+//! \brief	GUI control for viewport
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
-//!	\date		01-09-2008
+//!	\date		12-02-2007
 //!
 //!	\brief	This file applies the GNU GENERAL PUBLIC LICENSE
 //!					Version 2, read file COPYING.
@@ -14,65 +14,65 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#ifndef EDITORAPP_H
-#define EDITORAPP_H
+#pragma once
 
 //-----------------------------------------------------------------
 //                   Includes
 //-----------------------------------------------------------------
-#include "CoreLibPkg.h"
-
-#include "EditorGUI.h"
-#include "EventsList.h"
-#include "GUI_Win32.h"
+#include "ViewportsCtrl.h"
 
 //-----------------------------------------------------------------
-//                   Defines
 //-----------------------------------------------------------------
-#ifdef __GNUC__
-#define CAPTION		"FxGen Editor v0.7 alpha (gcc) - "
-#else
-#define CAPTION		"FxGen Editor v0.7 alpha - "
-#endif
-#define WIDTH			800
-#define HEIGHT		600
+//
+//										NViewportsCtrl Class Implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
 
 //-----------------------------------------------------------------
-//                   Prototypes
+//										Constructor
 //-----------------------------------------------------------------
-class NEventsMgr;
-
-//-----------------------------------------------------------------
-//!	\class		NFXGenApp
-//!	\brief		Application class declaration
-//-----------------------------------------------------------------
-class NFxGenApp : NW32Application
+NViewportsCtrl::NViewportsCtrl()
 {
-public:
-	//Constructor-Destructor
-					NFxGenApp();
-	virtual	~NFxGenApp();
+}
 
-	//Methods
-	virtual bool Init();
-	virtual void Run();
-	virtual bool Exit();
-	virtual void Update();
+//-----------------------------------------------------------------
+//										Destructor
+//-----------------------------------------------------------------
+NViewportsCtrl::~NViewportsCtrl()
+{
+}
 
-	NEditorGUI* GetMainWnd()		{ return (NEditorGUI*)GetGUISubSystem()->GetMainWnd(); }
+//-----------------------------------------------------------------
+//!	\brief	Control creation
+//-----------------------------------------------------------------
+bool NViewportsCtrl::Create(const char* name, const NRect& rect, NGUIWnd* parent)
+{
+	//Call Base class
+	NWNDCREATE			wc;
+	wc.dwId					= 1;
+	wc.pszText			= const_cast<char*>(name);
+	wc.pwndParent		= parent;
+	wc.rcRect				= rect;
+	wc.dwStyle			= NWS_VISIBLE;
+	NGUIWnd::Create(wc);
 
-	udword MessageBox(char* _pszText, udword _dwStyle);
-
-protected:
-	//Datas
-	float m_fOldTime;
-};
+	return true;
+}
 
 
 //-----------------------------------------------------------------
-//                   Externs
+//!	\brief	Update control
 //-----------------------------------------------------------------
-extern NEventsMgr*	g_pceventsMgr;
-extern NFxGenApp*		GetApp();
+void NViewportsCtrl::Update()
+{
+	RedrawWindow();
+}
 
-#endif //EDITORAPP_H
+void NViewportsCtrl::OnSize()
+{
+	//Redraw
+	Update();
+}
+
+

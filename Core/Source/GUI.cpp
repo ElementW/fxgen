@@ -101,17 +101,22 @@ bool NGUISubSystem::ShutDown()
 //-----------------------------------------------------------------
 //!	\brief	Update GUI
 //-----------------------------------------------------------------
-void NGUISubSystem::Update()
+bool NGUISubSystem::Update()
 {
 	if (m_bMustDrawWindows)
 	{
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);				// Background
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		_RedrawWindowChild(null);
 		_RedrawWindowPopup(null);
 
 		glFlush();
-		m_bMustDrawWindows=false;
-	}
 
+		m_bMustDrawWindows=false;
+		return true;
+	}
+	return false;
 }
 
 

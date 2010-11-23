@@ -20,8 +20,7 @@
 //-----------------------------------------------------------------
 #include "PropertiesCtrl.h"
 #include "PropertyItems.h"
-#include "EditorApp.h"
-#include "Operator.h"
+#include "Editor.h"
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -37,9 +36,11 @@
 NPropertyItem::NPropertyItem()
 {
 	m_pwNGraphicstrl= null;
+	m_pvarBloc			= null;
+	m_pvarBlocDesc	= null;
+	m_pvarValue			= null;
 	m_pParent				= null;
-	m_pObject				= null;
-	m_dwFieldIdx		= 0;
+	m_dwvarIdx			= 0;
 }
 
 //-----------------------------------------------------------------
@@ -47,168 +48,80 @@ NPropertyItem::NPropertyItem()
 //-----------------------------------------------------------------
 NPropertyItem::~NPropertyItem()
 {
-	if (m_pwNGraphicstrl)		NDELETE(m_pwNGraphicstrl, NGUIWnd);
+	if (m_pwNGraphicstrl)		delete m_pwNGraphicstrl;
 }
 
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
-//										NIntProp class Implementation
+//										NUbyteProp class Implementation
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NIntProp, NPropertyItem)
-FIMPLEMENT_CLASS_END()
+FIMPLEMENT_CLASS(NUbyteProp, NPropertyItem);
 
-void NIntProp::Init()
+void NUbyteProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
-	NFieldDesc* pfd = &m_pObject->GetRTClass()->m_paFieldsDesc[m_dwFieldIdx];
-	sdword* paddr = (sdword*)m_pObject->GetFieldVarAddr(m_dwFieldIdx);
-
-	m_slider.Create(pfd->pszName, NRect(0,0,0,0), m_pParent);
-	m_slider.SetRange(pfd->fMin, pfd->fMax);
-	m_slider.SetPos(*paddr);
-	m_slider.SetStep(pfd->fStep);
-	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NIntProp::OnValueChanged);
+	m_strValue.Format("%d", m_pvarValue->byVal);
+	pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 }
 
-void NIntProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
+bool NUbyteProp::BeginEdit(NRect& rcItem)
 {
-	m_slider.SetWindowRect(rcItem);
+ return false;
 }
 
-void NIntProp::OnValueChanged(NObject* _psender)
+bool NUbyteProp::EndEdit(bool bSaveChanged)
 {
-	//Change field value
-	sdword* paddr = (sdword*)m_pObject->GetFieldVarAddr(m_dwFieldIdx);
-	*paddr = (sdword)m_slider.GetPos();
+	return false;
 }
 
-
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-//
-//										NFloatProp class Implementation
-//
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NFloatProp, NPropertyItem)
-FIMPLEMENT_CLASS_END()
-
-void NFloatProp::Init()
+bool NUbyteProp::AddValue(sdword dwDelta)
 {
-	NFieldDesc* pfd = &m_pObject->GetRTClass()->m_paFieldsDesc[m_dwFieldIdx];
-	sdword* paddr = (sdword*)m_pObject->GetFieldVarAddr(m_dwFieldIdx);
-
-	m_slider.Create(pfd->pszName, NRect(0,0,0,0), m_pParent);
-	m_slider.SetRange(pfd->fMin, pfd->fMax);
-	m_slider.SetPos(*paddr);
-	m_slider.SetStep(pfd->fStep);
-	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NFloatProp::OnValueChanged);
-}
-
-void NFloatProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
-{
-	m_slider.SetWindowRect(rcItem);
-}
-
-void NFloatProp::OnValueChanged(NObject* _psender)
-{
-	//Change field value
-	float* paddr = (float*)m_pObject->GetFieldVarAddr(m_dwFieldIdx);
-	*paddr = m_slider.GetPos();
+	sdword dwVal = (sdword)m_pvarValue->byVal + (sdword)dwDelta;
+	if (dwVal>255)		dwVal = 255;
+	if (dwVal<0)			dwVal = 0;
+	m_pvarValue->byVal = (ubyte)dwVal;
+	return true;
 }
 
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
-//										NColorProp class Implementation
+//										NUwordProp class Implementation
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NColorProp, NPropertyItem)
-FIMPLEMENT_CLASS_END()
+FIMPLEMENT_CLASS(NUwordProp, NPropertyItem);
 
-void NColorProp::Init()
+void NUwordProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
-	udword* paddr = (udword*)m_pObject->GetFieldVarAddr(m_dwFieldIdx);
-
-	m_button.Create(NColor(*paddr), NRect(0,0,0,0), m_pParent, 0);
-	m_button.OnChanged = FDelegate(this, (TDelegate)&NColorProp::OnValueChanged);
+	m_strValue.Format("%d", m_pvarValue->wVal);
+	pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 }
 
-void NColorProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
+bool NUwordProp::BeginEdit(NRect& rcItem)
 {
-	m_button.SetWindowRect(rcItem);
+	return false;
 }
 
-void NColorProp::OnValueChanged(NObject* _psender)
+bool NUwordProp::EndEdit(bool bSaveChanged)
 {
-	//Change field value
-	udword* paddr = (udword*)m_pObject->GetFieldVarAddr(m_dwFieldIdx);
-	*paddr  = m_button.GetPicker()->GetClickedColor().GetRGBA();
+	return false;
 }
 
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-//
-//										NComboProp class Implementation
-//
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NComboProp, NPropertyItem)
-FIMPLEMENT_CLASS_END();
-
-void NComboProp::Init()
+bool NUwordProp::AddValue(sdword dwDelta)
 {
-	NFieldDesc* pfd = &m_pObject->GetRTClass()->m_paFieldsDesc[m_dwFieldIdx];
-	ubyte* paddr = (ubyte*)m_pObject->GetFieldVarAddr(m_dwFieldIdx);
-
-	//Make menu items
-	NString str;
-	str = pfd->pszDef;
-
-	NString word;
-	udword i=3;
-	do
-	{
-		i = str.ExtractToken(i, word, ",]");
-		if (i!=-1)
-		{
-			m_carrayStringsList.AddItem(word);
-			i+=word.Length()+1;
-		}
-
-	} while (i!=-1);
-
-	//Create menu button
-	m_button.Create(m_carrayStringsList[*paddr].Buffer(), NRect(0,0,0,0), m_pParent, 0);
-	m_button.OnChanged = FDelegate(this, (TDelegate)&NComboProp::OnValueChanged);
-
-	//Add items to menu
-	for (udword i=0; i<m_carrayStringsList.Count(); i++)
-	{
-		m_button.GetMenu()->AddItem(m_carrayStringsList[i].Buffer(), i+1, 0);
-	}
-
-}
-
-void NComboProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
-{
-	m_button.SetWindowRect(rcItem);
-}
-
-void NComboProp::OnValueChanged(NObject* _psender)
-{
-	//Change field value
-	udword* paddr = (udword*)m_pObject->GetFieldVarAddr(m_dwFieldIdx);
-	*paddr = m_button.GetMenu()->GetClickedCmdID()-1;
+	sdword dwVal = (sdword)m_pvarValue->wVal + (sdword)dwDelta;
+	if (dwVal>65535)	dwVal = 65535;
+	if (dwVal<0)			dwVal = 0;
+	m_pvarValue->wVal = (uword)dwVal;
+	return true;
 }
 
 
-/*
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
@@ -217,53 +130,21 @@ void NComboProp::OnValueChanged(NObject* _psender)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NFloatProp, NPropertyItem);
-FIMPLEMENT_CLASS_END();
 
 void NFloatProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	m_strValue.Format("%0.3f", m_pvarValue->fVal);
-  pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+	pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 }
 
 bool NFloatProp::BeginEdit(NRect& rcItem)
 {
-	if (m_pwNGraphicstrl)	delete m_pwNGraphicstrl;
-
-	NRect rcCB(rcItem);
-
-	NEditCtrl* pwNGraphicsB = new NEditCtrl;
-	pwNGraphicsB->Create("", rcCB, m_pParent);
-	m_pwNGraphicstrl = pwNGraphicsB;
-
-	NString text;
-	text.Format("%f", m_pvarValue->fVal);
-	pwNGraphicsB->SetText(text.Buffer());
-	pwNGraphicsB->SelectAll();
-	pwNGraphicsB->SetFocus();
-
-	pwNGraphicsB->OnEnter = FDelegate(this, (TDelegate)&NFloatProp::OnEnter);
-	pwNGraphicsB->OnEscape = FDelegate(this, (TDelegate)&NFloatProp::OnEscape);
-
 	return false;
 }
 
 bool NFloatProp::EndEdit(bool bSaveChanged)
 {
-	if (m_pwNGraphicstrl==null)		return false;
-
-	//Save changed
-	if (bSaveChanged)
-	{
-		NString str = ((NEditCtrl*)m_pwNGraphicstrl)->GetText();
-		m_pvarValue->fVal = atof(str.Buffer());
-		//strcpy(m_pvarValue->szVal, str.Buffer());
-	}
-
-	//Destroy control
-	delete m_pwNGraphicstrl;
-	m_pwNGraphicstrl=null;
-
-	return bSaveChanged;
+	return false;
 }
 
 bool NFloatProp::AddValue(sdword dwDelta)
@@ -275,15 +156,6 @@ bool NFloatProp::AddValue(sdword dwDelta)
 	return true;
 }
 
-void NFloatProp::OnEnter(NEditCtrl* pEdit)
-{
-	((NPropertiesCtrl*)m_pParent)->EndRowEditing();
-}
-
-void NFloatProp::OnEscape(NEditCtrl* pEdit)
-{
-	((NPropertiesCtrl*)m_pParent)->EndRowEditing(false);
-}
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -293,12 +165,11 @@ void NFloatProp::OnEscape(NEditCtrl* pEdit)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NUFloatProp, NPropertyItem);
-FIMPLEMENT_CLASS_END();
 
 void NUFloatProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	m_strValue.Format("%0.3f", m_pvarValue->fVal);
-  pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+	pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 }
 
 bool NUFloatProp::BeginEdit(NRect& rcItem)
@@ -322,16 +193,6 @@ bool NUFloatProp::AddValue(sdword dwDelta)
 	return true;
 }
 
-void NUFloatProp::OnEnter(NEditCtrl* pEdit)
-{
-	((NPropertiesCtrl*)m_pParent)->EndRowEditing();
-}
-
-void NUFloatProp::OnEscape(NEditCtrl* pEdit)
-{
-	((NPropertiesCtrl*)m_pParent)->EndRowEditing(false);
-}
-
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -341,7 +202,6 @@ void NUFloatProp::OnEscape(NEditCtrl* pEdit)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NColorProp, NPropertyItem);
-FIMPLEMENT_CLASS_END();
 
 void NColorProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
@@ -357,22 +217,22 @@ void NColorProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 	//Red
 	rc.right = rc.left + w;
 	cstr.Format("%d", val.r);
-  pdc->DrawString(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+	pdc->DrawString(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 
 	//Green
 	rc.Move(w,0);
 	cstr.Format("%d",  val.g);
-  pdc->DrawString(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+	pdc->DrawString(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 
 	//Blue
 	rc.Move(w,0);
 	cstr.Format("%d",  val.b);
-  pdc->DrawString(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+	pdc->DrawString(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 
 	//Alpha
 	rc.Move(w,0);
 	cstr.Format("%d",  val.a);
-  pdc->DrawString(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+	pdc->DrawString(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 
 	///////////////////////////////////////
 	//Display Color Rect
@@ -449,8 +309,88 @@ void NColorProp::OnColorClick(NObject* _psender)
 	m_pvarValue->dwVal = m_wndPicker.GetClickedColor().GetRGBA();
 	((NPropertiesCtrl*)m_pParent)->SaveRowEditing();
 }
-*/
 
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//										NUbyteComboProp class Implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+FIMPLEMENT_CLASS(NUbyteComboProp, NPropertyItem);
+
+void NUbyteComboProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
+{
+	//Init
+	if (m_carrayStringsList.Count()==0)
+	{
+		NString str;
+		str = m_pvarBlocDesc->pszDefValue;
+
+		NString word;
+		udword i=3;
+		do
+		{
+			i = str.ExtractToken(i, word, ",]");
+			if (i!=-1)
+			{
+				m_carrayStringsList.AddItem(word);
+				i+=word.Length()+1;
+			}
+
+		} while (i!=-1);
+
+	}
+
+	//Draw
+	ubyte val = m_pvarValue->byVal;
+
+	if (val<(ubyte)m_carrayStringsList.Count())
+		m_strValue.Format("%s", 	m_carrayStringsList[val].Buffer());
+	else
+		m_strValue="?";
+
+	pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+}
+
+bool NUbyteComboProp::BeginEdit(NRect& rcItem)
+{
+	assert(m_pParent!=null);
+
+	//Menu
+	if (m_wndMenu.GetItemsCount()==0)
+	{
+		m_wndMenu.Create("", m_pParent);
+		m_wndMenu.OnItemClick=FDelegate(this, (TDelegate)&NUbyteComboProp::OnMenuClick);
+		for (udword i=0; i<m_carrayStringsList.Count(); i++)
+		{
+			m_wndMenu.AddItem(m_carrayStringsList[i].Buffer(), i+1, 0);
+		}
+	}
+
+	NPoint pt(rcItem.left, rcItem.bottom);
+	m_pParent->ClientToScreen(pt);
+	m_wndMenu.TrackPopupMenu(pt, null);
+
+	return false;
+}
+
+bool NUbyteComboProp::EndEdit(bool bSaveChanged)
+{
+	return true;
+}
+
+void NUbyteComboProp::OnMenuClick(NObject* _psender)
+{
+	NMenuCtrl* pmenu = (NMenuCtrl*)_psender;
+	ubyte byVal = (ubyte)pmenu->GetClickedCmdID();
+	if (byVal!=0)
+		m_pvarValue->byVal = byVal-1;
+
+	((NPropertiesCtrl*)m_pParent)->SaveRowEditing();
+
+}
 
 
 
@@ -461,25 +401,24 @@ void NColorProp::OnColorClick(NObject* _psender)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-/*FIMPLEMENT_CLASS(NFileBrowserProp, NPropertyItem)
-FIMPLEMENT_CLASS_END();
+FIMPLEMENT_CLASS(NFileBrowserProp, NPropertyItem);
 
 void NFileBrowserProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
-  pdc->DrawString(m_pvarValue->szVal, rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+	pdc->DrawString(m_pvarValue->szVal, rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 }
 
 bool NFileBrowserProp::BeginEdit(NRect& rcItem)
 {
 	assert(m_pParent!=null);
 
-	//NFileDialog dlg;
-	//dlg.Create("Choose a File to Load", m_pParent);
-	//if (1==dlg.DoModal())
-	//{
-	//	NString str = dlg.GetPathName(0);
-	//	strcpy(m_pvarValue->szVal, str.Buffer());
-	//}
+/*	NFileDialog dlg;
+	dlg.Create("Choose a File to Load", m_pParent);
+	if (1==dlg.DoModal())
+	{
+		NString str = dlg.GetPathName(0);
+		strcpy_s(m_pvarValue->szVal, sizeof(m_pvarValue->szVal), str.Buffer());
+	}*/
 
 	return true;	//End of Edition
 }
@@ -498,7 +437,6 @@ bool NFileBrowserProp::EndEdit(bool bSaveChanged)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NUseStoredOpsProp, NPropertyItem);
-FIMPLEMENT_CLASS_END();
 
 void NUseStoredOpsProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
@@ -510,9 +448,9 @@ void NUseStoredOpsProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 		char* pszName;
 		NVarsBloc* pbloc = pobj->GetFirstVarsBloc();
 		pbloc->GetValue(0, 0.0f, pszName);
-    pdc->DrawString(pszName, rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+		pdc->DrawString(pszName, rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 	} else {
-    pdc->DrawString("", rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+		pdc->DrawString("", rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 	}
 
 }
@@ -520,23 +458,12 @@ void NUseStoredOpsProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 bool NUseStoredOpsProp::BeginEdit(NRect& rcItem)
 {
 	NRect rc = rcItem;
-
 	rc.left = rc.right;
 
-	//Menu Creation
-	if (m_wndMenu.GetItemsCount()==0)
-	{
-		m_wndMenu.Create("", m_pParent);
-		m_wndMenu.OnItemClick=FDelegate(this, (TDelegate)&NUseStoredOpsProp::OnMenuClick);
-	}	else {
-		m_wndMenu.DeleteAllItems();
-	}
+	//Creation du menu
+	NTreeNode* pnode = NEngineOp::GetEngine()->GetRootGroup();
+	BuildMenu(pnode);
 
-	//Insert Menu Items
-//	NTreeNode* pnode = NEngineOp::GetProject()->GetRootGroup();
-//	BuildMenu(pnode);
-
-	//Display  menu
 	NPoint pt(rcItem.left, rcItem.bottom);
 	m_pParent->ClientToScreen(pt);
 	m_wndMenu.TrackPopupMenu(pt, null);
@@ -552,7 +479,7 @@ bool NUseStoredOpsProp::EndEdit(bool bSaveChanged)
 void NUseStoredOpsProp::OnMenuClick(NObject* _psender)
 {
 	NMenuCtrl* pmenu = (NMenuCtrl*)_psender;
-	NOperatorNode* popSel = (NOperatorNode*)pmenu->GetClickedCmdID();
+	NOperator* popSel = (NOperator*)pmenu->GetClickedCmdID();
 
 	//Affect selected 'stored operator'
 	if (popSel!=null)
@@ -563,34 +490,42 @@ void NUseStoredOpsProp::OnMenuClick(NObject* _psender)
 
 void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 {
-//
-//	//Parse Alls Pages to add 'NStoreOp'
-//	NObjectArray& arrayObjs = _pnode->GetObjsArray();
-//	udword dwCount = arrayObjs.Count();
-//	udword idx=0;
-//	while (dwCount--)
-//	{
-//		NOperatorsPage* ppage = (NOperatorsPage*)arrayObjs[idx++];
-//
-//		NMenuCtrl* popMenu = m_wndMenu.CreatePopupMenu(ppage->GetName(), -1);
-//
-//		NObjectArray storedOp;
-//		storedOp.SetManageDelete(false);
-//		ppage->GetOpsFromClassName("NStoreOp", storedOp);
-//
-//		for (udword i=0; i<storedOp.Count(); i++)
-//		{
-//			NOperatorNode* pop = (NOperatorNode*)storedOp[i];
-//			if (strlen(pop->GetUserName())!=0)
-//				popMenu->AddItem(pop->GetUserName(), (udword)pop, 0);
-//		}
-//	}
-//
-//	//Childs
-//	_pnode = _pnode->GetSon();
-//	if (_pnode)
-//		BuildMenu(_pnode);
-//
+
+	if (m_wndMenu.GetItemsCount()==0)
+	{
+		m_wndMenu.Create("", m_pParent);
+		m_wndMenu.OnItemClick=FDelegate(this, (TDelegate)&NUseStoredOpsProp::OnMenuClick);
+	}	else {
+		m_wndMenu.DeleteAllItems();
+	}
+
+	//Parse Alls Pages to add 'NStoreOp'
+	NObjectArray& arrayObjs = _pnode->GetObjsArray();
+	udword dwCount = arrayObjs.Count();
+	udword idx=0;
+	while (dwCount--)
+	{
+		NOpGraphModel* ppage = (NOpGraphModel*)arrayObjs[idx++];
+
+		NMenuCtrl* popMenu = m_wndMenu.CreatePopupMenu(ppage->GetName(), -1);
+
+		NObjectArray storedOp;
+		storedOp.SetManageDelete(false);
+		ppage->GetOpsFromClassName("NStoreOp", storedOp);
+
+		for (udword i=0; i<storedOp.Count(); i++)
+		{
+			NOperator* pop = (NOperator*)storedOp[i];
+			if (strlen(pop->GetUserName())!=0)
+				popMenu->AddItem(pop->GetUserName(), (udword)pop, 0);
+		}
+	}
+
+	//Childs
+	_pnode = _pnode->GetSon();
+	if (_pnode)
+		BuildMenu(_pnode);
+
 }
 
 
@@ -602,11 +537,10 @@ void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NStringProp, NPropertyItem);
-FIMPLEMENT_CLASS_END();
 
 void NStringProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
-  pdc->DrawString(m_pvarValue->szVal, rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+	pdc->DrawString(m_pvarValue->szVal, rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
 }
 
 bool NStringProp::BeginEdit(NRect& rcItem)
@@ -614,20 +548,17 @@ bool NStringProp::BeginEdit(NRect& rcItem)
 	assert(m_pParent!=null);
 
 	//Delete Old Control
-	if (m_pwNGraphicstrl)	NDELETE(m_pwNGraphicstrl, NGUIWnd);
+	if (m_pwNGraphicstrl)	delete m_pwNGraphicstrl;
 
 	//Create edit
 	NRect rcCB(rcItem);
 
-	NEditCtrl* pwNGraphicsB = NNEW(NEditCtrl);
+	NEditCtrl* pwNGraphicsB = new NEditCtrl;
 	pwNGraphicsB->Create("", rcCB, m_pParent);
 	m_pwNGraphicstrl = pwNGraphicsB;
 
 	pwNGraphicsB->SetText(m_pvarValue->szVal);
 	pwNGraphicsB->SetFocus();
-
-	pwNGraphicsB->OnEnter = FDelegate(this, (TDelegate)&NStringProp::OnEnter);
-	pwNGraphicsB->OnEscape = FDelegate(this, (TDelegate)&NStringProp::OnEscape);
 
 	return false;
 }
@@ -640,23 +571,12 @@ bool NStringProp::EndEdit(bool bSaveChanged)
 	if (bSaveChanged)
 	{
 		NString str = ((NEditCtrl*)m_pwNGraphicstrl)->GetText();
-		strcpy(m_pvarValue->szVal, str.Buffer());
+		strcpy_s(m_pvarValue->szVal, sizeof(m_pvarValue->szVal), str.Buffer());
 	}
 
 	//Destroy control
-	NDELETE(m_pwNGraphicstrl, NGUIWnd);
+	delete m_pwNGraphicstrl;
 	m_pwNGraphicstrl=null;
 
 	return bSaveChanged;
 }
-
-void NStringProp::OnEnter(NEditCtrl* pEdit)
-{
-	((NPropertiesCtrl*)m_pParent)->EndRowEditing();
-}
-
-void NStringProp::OnEscape(NEditCtrl* pEdit)
-{
-	((NPropertiesCtrl*)m_pParent)->EndRowEditing(false);
-}
-*/

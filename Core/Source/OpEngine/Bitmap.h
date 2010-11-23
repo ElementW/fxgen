@@ -21,36 +21,33 @@
 //                   Includes
 //-----------------------------------------------------------------
 #include "../../Include/CoreLib.h"
+#include "../Types.h"
 
 //-----------------------------------------------------------------
 //                   Prototypes
 //-----------------------------------------------------------------
-struct SResource;
 
-
-//-----------------------------------------------------------------
-//										Functions
-//-----------------------------------------------------------------
-CORELIB_API void Res_SetBmpSize(SResource* _pres, udword _w, udword _h);
-CORELIB_API void Res_CopyBmp(SResource* _pres1, SResource* _pres2);
 
 //-----------------------------------------------------------------
 //!	\class	NBitmap
 //!	\brief	Bitmap resource type
 //-----------------------------------------------------------------
-/*class CORELIB_API NBitmap //: public NRessource
+class CORELIB_API NBitmap : public NObject
 {
 public:
 	//Constructor-Destructor
 					NBitmap();
 	virtual	~NBitmap();
+
+	FDECLARE_CLASS();
+
 	//Methods
 	void SetSize(udword _w, udword _h);
 
 	//Members Access
-	udword		GetWidth()			{ return m_dwWidth;			}
-	udword		GetHeight()			{ return m_dwHeight;		}
-	NRGBA*		GetPixels()			{ return m_pbyPixels;		}
+	udword				GetWidth()			{ return m_dwWidth;			}
+	udword				GetHeight()			{ return m_dwHeight;		}
+	NRGBA*				GetPixels()			{ return m_pbyPixels;		}
 
 //	virtual void					saveBMP(char *filename);
 
@@ -59,7 +56,6 @@ protected:
 	NRGBA*		m_pbyPixels;
 	udword	m_dwWidth, m_dwHeight;
 };
-*/
 
 #endif //BITMAP_H
 

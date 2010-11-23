@@ -48,7 +48,7 @@ protected:
 	virtual void OnPropertiesChanged();
 
 	//Datas
-	NOperatorNode* m_pcurOp;	//!< current viewed operator
+	NOperator* m_pcurOp;	//!< current viewed operator
 };
 
 #endif //PROPERTIESWND_H

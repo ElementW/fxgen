@@ -46,7 +46,7 @@
 //#endif
 
 
-#ifdef CORE_USE_NAMESPACE
+/*#ifdef CORE_USE_NAMESPACE
  #define BEGIN_CORE_NAMESPACE namespace CoreLib {
  #define END_CORE_NAMESPACE }
 #else
@@ -55,7 +55,7 @@
 #endif
 
 BEGIN_CORE_NAMESPACE
-
+*/
 
 //-----------------------------------------------------------------
 // Types
@@ -155,6 +155,6 @@ extern CORELIB_API NErrors* gGetErrors();
 //	Functions
 //-----------------------------------------------------------------
 
-END_CORE_NAMESPACE
+//END_CORE_NAMESPACE
 
 #endif

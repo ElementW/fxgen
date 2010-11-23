@@ -1,13 +1,13 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-//! \file		FilterOpsFunc.cpp
-//! \brief	Filter Operators Functions
+//! \file		FilterOps.cpp
+//! \brief	Filter Operators
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
 //!					Anders Stenberg (anders.stenberg@gmail.com)
 //!						Sebastian Olter (qduaty@gmail.com)
 //!
-//!	\date		03-06-2009
+//!	\date		17-05-2007
 //!
 //!	\brief	This file applies the GNU LESSER GENERAL PUBLIC LICENSE
 //!					Version 2.1 , read file COPYING.
@@ -21,33 +21,79 @@
 //-----------------------------------------------------------------
 //                   Includes
 //-----------------------------------------------------------------
-#include "pch.h"
-#include "EngineOp.h"
+#include "../../Include/CoreLib.h"
+#include "FilterOps.h"
 #include "RectangularArray.h"
 #include "Bitmap.h"
-#include "Maths.h"
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-//							NBlurOp implementation
+//
+//							NBlurOp class implementation
+//
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void  NBlurOp_Process(SEngineState* _state, float _fWidth, float _fHeight, ubyte _byAmplify, ubyte _byType)
+FIMPLEMENT_CLASS(NBlurOp, NOperator);
+
+static NMapVarsBlocDesc mapblocdescBlurOp[] =
 {
-	SResource* pRes = _state->apLayers[_state->pcurCall->byDepth];
-	sdword w= (sdword)pRes->dwWidth;
-	sdword h= (sdword)pRes->dwHeight;
+	MAP(1,	eubyte,		"0",		""	)	//V1 => 0-Width
+	MAP(1,	eubyte,		"1",		""	)	//V1 => 1-Height
+	MAP(1,	eubyte,		"2",		""	)	//V1 => 2-Amplify
+	MAP(2,	eubyte,		"0",		"*0.0039215"	)	//V1 => 0-Width
+	MAP(2,	eubyte,		"1",		"*0.0039215"	)	//V1 => 1-Height
+	MAP(2,	eubyte,		"2",		""	)	//V1 => 2-Amplify
+	MAP(2,	eubyte,		"3",		""	)	//V1 => 3-Type
+};
+
+static NVarsBlocDesc blocdescBlurOp[] =
+{
+	VAR(efloat,		true, "Width",		"0.01",		"NFloatProp")	//0
+	VAR(efloat,		true, "Height",		"0.01",		"NFloatProp")	//1
+	VAR(eubyte,		true, "Amplify",	"16",		"NUbyteProp")	//2
+	VAR(eubyte,		false, "Type",	"0,[Box,Gaussian]",	"NUbyteComboProp")	//3
+};
+
+NBlurOp::NBlurOp()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(4, blocdescBlurOp, 3);
+	m_pcvarsBloc->SetMapVarBlocDesc(7, mapblocdescBlurOp);
+}
+
+udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+{
+	//Only one Input
+	if (m_byInputs!=1)		return (udword)-1;
+
+	//Bitmap instance
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+
+	//Get input texture
+	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
+	NBitmap* pDst = (NBitmap*)m_pObj;
+	sdword w = pSrc->GetWidth();
+	sdword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
+
+	//Get Variables Values
+	ubyte byAmplify, byType;
+	float fWidth, fHeight;
+	m_pcvarsBloc->GetValue(0, _ftime, fWidth);
+	m_pcvarsBloc->GetValue(1, _ftime, fHeight);
+	m_pcvarsBloc->GetValue(2, _ftime, byAmplify);
+	m_pcvarsBloc->GetValue(3, _ftime, byType);
 
 	// Do three passes if gaussian...
 	// Don't change the number of passes if you don't know what you're doing :)
-	ubyte byPasses = _byType == 1 ? 3 : 1;
+	ubyte byPasses = byType == 1 ? 3 : 1;
 
 	//Radius: 0->0, 2->1, 255->127.5d
-	float radiusW= (float)_fWidth  * 127.5f * _state->fDetailFactor;
-	float radiusH= (float)_fHeight * 127.5f * _state->fDetailFactor;
+	float radiusW= (float)fWidth * 127.5f * _fDetailFactor;
+	float radiusH= (float)fHeight * 127.5f * _fDetailFactor;
 
 	//Amplify
-	float amplify= (float)_byAmplify;
+	float amplify= (float)byAmplify;
 	float amp = powf(floor(amplify*16.0f)/256.0f, 1.0f/byPasses)*256.0f;
 
 	sdword bw = (sdword) (floor(radiusW)*2+1);
@@ -55,216 +101,277 @@ void  NBlurOp_Process(SEngineState* _state, float _fWidth, float _fHeight, ubyte
 	float wamp = amp / bw / 256;
 	float hamp = amp / bh / 256;
 
-	//Do nothing...
-	if (bw == 0 && bh == 0)
-		return;
 
-	// Set temporary bitmap
-	NRGBA* pPxInter = NULL;
+	if (bw == 0 && bh == 0)
+	{
+		memcpy(pDst->GetPixels(), pSrc->GetPixels(), w*h*sizeof(NRGBA));
+		return 0;
+	}
+
+	// Allocate a temporary buffer if needed
+	NRGBA* pPxInter = null;
 	if (byPasses > 0 || (bw > 0 && bh > 0))
 	{
-		Res_SetBmpSize(_state->apLayers[TPS_LAYER], w,h);
-		pPxInter = _state->apLayers[TPS_LAYER]->pbyPixels;
+		pPxInter = (NRGBA*)NMemAlloc(w*h*sizeof(NRGBA));
 	}
 
 	/////////////////////////////////////////////////////////
 	// Blur Horizontal
-  NRGBA* pPxSrc;
-  NRGBA* pPxDst;
-	NRGBA* pAccu;
 
-  for (int i=0; i<byPasses; ++i)
-  {
-    if (bw>0)
-    {
-      for(sdword y=0;y<h;y++)
-      {
-        // Make sure to use source, intermediate and destination in a pattern to avoid unnecessary copies
-        if (i == 0)
+        for (int i=0; i<byPasses; ++i)
         {
-					pPxSrc = pRes->pbyPixels + (y*w);
-        } else {
-          if (bh == 0)
+          if (bw>0)
           {
-            if (i % 2 == byPasses % 2)
-              pPxSrc = pRes->pbyPixels + (y*w);	//pDst->GetPixels() + (y*w);
-            else
-              pPxSrc = pPxInter + (y*w);
-          } else {
-            pPxSrc = pRes->pbyPixels + (y*w);	//pDst->GetPixels() + (y*w);
+            for(sdword y=0;y<h;y++)
+            {
+              // Make sure to use source, intermediate and destination in a pattern to avoid unnecessary copies
+              NRGBA* pPxSrc;
+              if (i == 0)
+              {
+                pPxSrc = pSrc->GetPixels() + (y*w);
+              } else {
+                if (bh == 0)
+                {
+                  if (i % 2 == byPasses % 2)
+                    pPxSrc = pDst->GetPixels() + (y*w);
+                  else
+                    pPxSrc = pPxInter + (y*w);
+                } else {
+                  pPxSrc = pDst->GetPixels() + (y*w);
+                }
+              }
+              NRGBA* pAccu		= pPxSrc;
+              NRGBA* pPxDst;
+              if (bh == 0)
+              {
+                if (i % 2 == byPasses % 2)
+                  pPxDst = pPxInter + (y*w);
+                else
+                  pPxDst = pDst->GetPixels() + (y*w);
+              } else {
+                pPxDst = pPxInter + (y*w);
+              }
+
+              // Accumulation precalc
+              sdword x = 0;
+              NRGBAI sum(0,0,0,0);
+              while (x<bw)
+              {
+                sum.r+=pAccu->r;
+                sum.g+=pAccu->g;
+                sum.b+=pAccu->b;
+                sum.a+=pAccu->a;
+                pAccu++;
+                ++x;
+              }
+
+              pAccu = pPxSrc;
+
+              // Blur
+              x=0;
+              while (x<w)
+              {
+                sdword r = sdword(sum.r*wamp);
+                sdword g = sdword(sum.g*wamp);
+                sdword b = sdword(sum.b*wamp);
+                sdword a = sdword(sum.a*wamp);
+
+                NRGBA& px = pPxDst[(x+bw/2)%w];
+                px.r= (ubyte) ((r<255)?r:255);
+                px.g= (ubyte) ((g<255)?g:255);
+                px.b= (ubyte) ((b<255)?b:255);
+                px.a= (ubyte) ((a<255)?a:255);
+
+                sum.r-=pPxSrc->r;
+                sum.g-=pPxSrc->g;
+                sum.b-=pPxSrc->b;
+				sum.a-=pPxSrc->a;
+                pPxSrc++;
+
+                NRGBA ac = pAccu[(x+bw)%w];
+                sum.r+=ac.r;
+                sum.g+=ac.g;
+                sum.b+=ac.b;
+                sum.a+=ac.a;
+
+                ++x;
+              }
+            }
+          }
+
+          /////////////////////////////////////////////////////////
+          // Blur Vertical
+
+          if (bh>0)
+          {
+
+            for(sdword x=0;x<w;x++)
+            {
+              // Make sure to use source, intermediate and destination in a pattern to avoid unnecessary copies
+              NRGBA* pPxSrc;
+              if (bw == 0)
+              {
+                if (i == 0)
+                {
+                  pPxSrc = pSrc->GetPixels() + x;
+                } else {
+                  if (i % 2 == byPasses % 2)
+                    pPxSrc = pDst->GetPixels() + x;
+                  else
+                    pPxSrc = pPxInter + x;
+                }
+              } else {
+                pPxSrc = pPxInter + x;
+              }
+              NRGBA* pAccu		= pPxSrc;
+              NRGBA* pPxDst;
+              if (bw == 0)
+              {
+                if (i % 2 == byPasses % 2)
+                  pPxDst = pPxInter + x;
+                else
+                  pPxDst = pDst->GetPixels() + x;
+              } else {
+                pPxDst = pDst->GetPixels() + x;
+              }
+
+              // Accumulation Precalc
+              sdword y = 0;
+              NRGBAI sum(0,0,0,0);
+              while (y<bh)
+              {
+                sum.r+=pAccu->r;
+                sum.g+=pAccu->g;
+                sum.b+=pAccu->b;
+                sum.a+=pAccu->a;
+                pAccu+=w;
+                ++y;
+              }
+
+              pAccu = pPxSrc;
+
+              // Blur
+              y=0;
+              while (y<h)
+              {
+                sdword r = sdword(sum.r*hamp);
+                sdword g = sdword(sum.g*hamp);
+                sdword b = sdword(sum.b*hamp);
+                sdword a = sdword(sum.a*hamp);
+
+                NRGBA& px = pPxDst[((y+bh/2)%h)*w];
+                px.r= (ubyte) ((r<255)?r:255);
+                px.g= (ubyte) ((g<255)?g:255);
+                px.b= (ubyte) ((b<255)?b:255);
+                px.a= (ubyte) ((a<255)?a:255);
+
+                sum.r-=pPxSrc->r;
+                sum.g-=pPxSrc->g;
+                sum.b-=pPxSrc->b;
+				sum.a-=pPxSrc->a;
+                pPxSrc+=w;
+
+                NRGBA ac = pAccu[((y+bh)%h)*w];
+                sum.r+=ac.r;
+                sum.g+=ac.g;
+                sum.b+=ac.b;
+                sum.a+=ac.a;
+
+                ++y;
+              }
+            }
           }
         }
-        pAccu = pPxSrc;
- 
-        if (bh == 0)
-        {
-          if (i % 2 == byPasses % 2)
-            pPxDst = pPxInter + (y*w);
-          else
-            pPxDst = pRes->pbyPixels + (y*w);	//pDst->GetPixels() + (y*w);
-        } else {
-          pPxDst = pPxInter + (y*w);
-        }
 
-        // Accumulation precalc
-        sdword x = 0;
-        NRGBAI sum(0,0,0,0);
-        while (x<bw)
-        {
-          sum.r+=pAccu->r;
-          sum.g+=pAccu->g;
-          sum.b+=pAccu->b;
-          sum.a+=pAccu->a;
-          pAccu++;
-          ++x;
-        }
+	if (pPxInter)		NMemFree(pPxInter);		//###TOFIX###
 
-        pAccu = pPxSrc;
-
-        // Blur
-        x=0;
-        while (x<w)
-        {
-          sdword r = sdword(sum.r*wamp);
-          sdword g = sdword(sum.g*wamp);
-          sdword b = sdword(sum.b*wamp);
-          sdword a = sdword(sum.a*wamp);
-
-          NRGBA& px = pPxDst[(x+bw/2)%w];
-          px.r= (ubyte) ((r<255)?r:255);
-          px.g= (ubyte) ((g<255)?g:255);
-          px.b= (ubyte) ((b<255)?b:255);
-          px.a= (ubyte) ((a<255)?a:255);
-
-          sum.r-=pPxSrc->r;
-          sum.g-=pPxSrc->g;
-          sum.b-=pPxSrc->b;
-					sum.a-=pPxSrc->a;
-          pPxSrc++;
-
-          NRGBA ac = pAccu[(x+bw)%w];
-          sum.r+=ac.r;
-          sum.g+=ac.g;
-          sum.b+=ac.b;
-          sum.a+=ac.a;
-
-          ++x;
-        }
-      }
-    }
-
-    /////////////////////////////////////////////////////////
-    // Blur Vertical
-
-    if (bh>0)
-    {
-
-      for(sdword x=0;x<w;x++)
-      {
-        // Make sure to use source, intermediate and destination in a pattern to avoid unnecessary copies
-        if (bw == 0)
-        {
-          if (i == 0)
-          {
-            pPxSrc = pRes->pbyPixels + x;
-          } else {
-            if (i % 2 == byPasses % 2)
-              pPxSrc = pRes->pbyPixels+x;	//pDst->GetPixels() + x;
-            else
-              pPxSrc = pPxInter + x;
-          }
-        } else {
-          pPxSrc = pPxInter + x;
-        }
-
-				pAccu		= pPxSrc;
-        if (bw == 0)
-        {
-          if (i % 2 == byPasses % 2)
-            pPxDst = pPxInter + x;
-          else
-            pPxDst = pRes->pbyPixels + x;	//pDst->GetPixels() + x;
-        } else {
-          pPxDst = pRes->pbyPixels + x;	//pDst->GetPixels() + x;
-        }
-
-        // Accumulation Precalc
-        sdword y = 0;
-        NRGBAI sum(0,0,0,0);
-        while (y<bh)
-        {
-          sum.r+=pAccu->r;
-          sum.g+=pAccu->g;
-          sum.b+=pAccu->b;
-          sum.a+=pAccu->a;
-          pAccu+=w;
-          ++y;
-        }
-
-        pAccu = pPxSrc;
-
-        // Blur
-        y=0;
-        while (y<h)
-        {
-          sdword r = sdword(sum.r*hamp);
-          sdword g = sdword(sum.g*hamp);
-          sdword b = sdword(sum.b*hamp);
-          sdword a = sdword(sum.a*hamp);
-
-          NRGBA& px = pPxDst[((y+bh/2)%h)*w];
-          px.r= (ubyte) ((r<255)?r:255);
-          px.g= (ubyte) ((g<255)?g:255);
-          px.b= (ubyte) ((b<255)?b:255);
-          px.a= (ubyte) ((a<255)?a:255);
-
-          sum.r-=pPxSrc->r;
-          sum.g-=pPxSrc->g;
-          sum.b-=pPxSrc->b;
-					sum.a-=pPxSrc->a;
-          pPxSrc+=w;
-
-          NRGBA ac = pAccu[((y+bh)%h)*w];
-          sum.r+=ac.r;
-          sum.g+=ac.g;
-          sum.b+=ac.b;
-          sum.a+=ac.a;
-
-          ++y;
-        }
-      }
-    }
-  }
-
-
+	return 0;
 }
 
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//							NColorsOp class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+FIMPLEMENT_CLASS(NColorsOp, NOperator);
 
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-//							NColorsOp implementation
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-void  NColorsOp_Process(SEngineState* _state, NRGBA _colBase, NRGBA _colPerc, ubyte _byBrithness, ubyte _byContrast, ubyte _bySaturation, ubyte _byAlpha)
+static NMapVarsBlocDesc mapblocdescColorsOp[] =
 {
-	SResource* pRes = _state->apLayers[_state->pcurCall->byDepth];
-	udword w= pRes->dwWidth;
-	udword h= pRes->dwHeight;
+	MAP(1,	eudword,		"0",		""	)	//V1 => 0-Color Base
+	MAP(1,	eudword,		"1",		""	)	//V1 => 1-Color Percent
+	MAP(1,	eubyte,			"2",		""	)	//V1 => 2-Brithness
+	MAP(1,	eubyte,			"3",		""	)	//V1 => 3-Contrast
+	MAP(2,	eudword,		"0",		""	)	//V1 => 0-Color Base
+	MAP(2,	eudword,		"1",		""	)	//V1 => 1-Color Percent
+	MAP(2,	eubyte,			"2",		""	)	//V1 => 2-Brithness
+	MAP(2,	eubyte,			"3",		""	)	//V1 => 3-Contrast
+	MAP(2,	eubyte,			"5",		""	)	//V1 => 5-Alpha
+};
+
+static NVarsBlocDesc blocdescColorsOp[] =
+{
+	//eubyte,		false,	"Mode",				"0,[RGB,HLS]",	"NUbyteComboProp",	//0
+	VAR(eudword,	true,		"Color Base",			"0",					"NColorProp")				//0
+	VAR(eudword,	true,		"Color Percent",		"-1",					"NColorProp")				//1
+	VAR(eubyte,		true,		"Brithness",			"127",					"NUbyteProp")				//2
+	VAR(eubyte,		true,		"Contrast",				"127",					"NUbyteProp")				//3
+	VAR(eubyte,		true,		"Saturation",			"127",					"NUbyteProp")				//4
+	VAR(eubyte,		true,		"Alpha",				"127",					"NUbyteProp")				//5
+};
+
+
+NColorsOp::NColorsOp()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(6, blocdescColorsOp, 3);
+	m_pcvarsBloc->SetMapVarBlocDesc(9, mapblocdescColorsOp);
+}
+
+udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+{
+	//Only one Input
+	if (m_byInputs!=1)		return (udword)-1;
+
+	//Bitmap instance
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+
+	//Get input texture
+	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
+	NBitmap* pDst = (NBitmap*)m_pObj;
+
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
+
+	//Get Variables Values
+//	ubyte byMode=1;
+	NRGBA ColorBase, ColorPer;
+	ubyte byBrihtness, byContrast, bySaturation, byAlpha;
+	//m_pcvarsBloc->GetValue(0, _ftime, byMode);
+	m_pcvarsBloc->GetValue(0, _ftime, (udword&)ColorBase);
+	m_pcvarsBloc->GetValue(1, _ftime, (udword&)ColorPer);
+	m_pcvarsBloc->GetValue(2, _ftime, byBrihtness);
+	m_pcvarsBloc->GetValue(3, _ftime, byContrast);
+	m_pcvarsBloc->GetValue(4, _ftime, bySaturation);
+	m_pcvarsBloc->GetValue(5, _ftime, byAlpha);
 
 	//Process operator
-	sdword	brithness = (((sdword)_byBrithness)*2) - 256;	//-255 <> +255
-	sdword	contrast	= (((sdword)_byContrast));						//0 <> 255
+	sdword	brithness = (((sdword)byBrihtness)*2) - 256;	//-255 <> +255
+	sdword	contrast	= (((sdword)byContrast));						//0 <> 255
 
 	float fconstrast = (float)contrast/128.0f;
+//	if (contrast>64)
 	fconstrast = fconstrast*fconstrast*fconstrast;
 	contrast=(sdword)(fconstrast*256.0f);
 
-	ubyte minalpha = (_byAlpha >=127) ? ubyte((_byAlpha - 127) * 2.f - (_byAlpha - 127) / 128.f) : 0;
-	ubyte maxalpha = (_byAlpha <=127) ? ubyte(_byAlpha * 2.f + _byAlpha / 127.f) : 255;
+	ubyte minalpha = (byAlpha >=127) ? ubyte((byAlpha - 127) * 2.f - (byAlpha - 127) / 128.f) : 0;
+	ubyte maxalpha = (byAlpha <=127) ? ubyte(byAlpha * 2.f + byAlpha / 127.f) : 255;
 	float alphamult = (maxalpha - minalpha) / 255.f;
 
-	NRGBA* pPxSrc = pRes->pbyPixels;
-	NRGBA* pPxDst = pRes->pbyPixels;
+	NRGBA* pPxSrc = pSrc->GetPixels();
+	NRGBA* pPxDst = pDst->GetPixels();
 
 	///////////////////////////////////////////////
 	// RGB Process + Brithness + Contrast
@@ -273,9 +380,9 @@ void  NColorsOp_Process(SEngineState* _state, NRGBA _colBase, NRGBA _colPerc, ub
 		for (udword x=0; x<w; x++)
 		{
 			//Color Base + Color Percent + Brithness
-			sdword r = (sdword)_colBase.r + (((sdword)pPxSrc->r * (sdword)_colPerc.r)>>8) + brithness;
-			sdword g = (sdword)_colBase.g + (((sdword)pPxSrc->g * (sdword)_colPerc.g)>>8) + brithness;
-			sdword b = (sdword)_colBase.b + (((sdword)pPxSrc->b * (sdword)_colPerc.b)>>8) + brithness;
+			sdword r = (sdword)ColorBase.r + (((sdword)pPxSrc->r * (sdword)ColorPer.r)>>8) + brithness;
+			sdword g = (sdword)ColorBase.g + (((sdword)pPxSrc->g * (sdword)ColorPer.g)>>8) + brithness;
+			sdword b = (sdword)ColorBase.b + (((sdword)pPxSrc->b * (sdword)ColorPer.b)>>8) + brithness;
 
 			//Contrast
 			sdword c = (sdword) (((r - 127) * contrast)>>8) + 127;
@@ -289,11 +396,11 @@ void  NColorsOp_Process(SEngineState* _state, NRGBA _colBase, NRGBA _colPerc, ub
 
 
 			//Saturation
-			if(/*for efficiency*/_bySaturation != 127)
+			if(/*for efficiency*/bySaturation != 127)
 			{
 				sdword l = r + g + b;
-				sdword u = (3 * r - l) * _bySaturation / 127;
-				sdword v = (3 * b - l) * _bySaturation / 127;
+				sdword u = (3 * r - l) * bySaturation / 127;
+				sdword v = (3 * b - l) * bySaturation / 127;
 				r = (u + l) / 3;
 				g = (l - (u + v)) / 3;
 				b = (v + l) / 3;
@@ -313,45 +420,132 @@ void  NColorsOp_Process(SEngineState* _state, NRGBA _colBase, NRGBA _colPerc, ub
 		}
 	}
 
-
+	return 0;
 }
 
 
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-//							NLightOp implementation
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-void  NLightOp_Process(SEngineState* _state, NRGBA _colAmb, NRGBA _colDiff, NRGBA _colSpec, vec3 _light, ubyte _byspecPower, ubyte _bybumpPower)
+/*void NColorsOp::ToRGB(udword dwHSCB)
 {
-	SResource* pRes			= _state->apLayers[_state->pcurCall->byDepth];
-	SResource* pResNorm	= _state->apLayers[_state->pcurCall->byDepth+1];
-	sdword w= pRes->dwWidth;
-	sdword h= pRes->dwHeight;
 
+	if (m_saturation == 0.0) // Grauton, einfacher Fall
+	{
+		m_color[c_red] = m_color[c_green] = m_color[c_blue] = unsigned char(m_luminance * 255.0);
+	}
+	else
+	{
+		float rm1, rm2;
+
+		if (m_luminance <= 0.5f) rm2 = m_luminance + m_luminance * m_saturation;
+		else                     rm2 = m_luminance + m_saturation - m_luminance * m_saturation;
+		rm1 = 2.0f * m_luminance - rm2;
+		m_color[c_red]   = ToRGB1(rm1, rm2, m_hue + 120.0f);
+		m_color[c_green] = ToRGB1(rm1, rm2, m_hue);
+		m_color[c_blue]  = ToRGB1(rm1, rm2, m_hue - 120.0f);
+	}
+
+}
+
+ubyte NColorsOp::ToRGB1(float rm1, float rm2, float rh)
+{
+	if      (rh > 360.0f) rh -= 360.0f;
+	else if (rh <   0.0f) rh += 360.0f;
+
+	if      (rh <  60.0f) rm1 = rm1 + (rm2 - rm1) * rh / 60.0f;
+	else if (rh < 180.0f) rm1 = rm2;
+	else if (rh < 240.0f) rm1 = rm1 + (rm2 - rm1) * (240.0f - rh) / 60.0f;
+
+	return ubyte(rm1 * 255);
+}*/
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//							NLightOp class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+FIMPLEMENT_CLASS(NLightOp, NOperator);
+
+static NVarsBlocDesc blocdescLightOp[] =
+{
+	VAR(eudword,	true, "Ambiant",		"0",				"NColorProp")	//0
+	VAR(eudword,	true, "Diffuse",		"8421504",	"NColorProp")	//1
+	VAR(eudword,	true, "Specular",		"-1",				"NColorProp")	//2
+
+	VAR(eubyte,		true, "PosX",				"255",			"NUbyteProp")	//3
+	VAR(eubyte,		true, "PosY",				"255",			"NUbyteProp")	//4
+	VAR(eubyte,		true, "PosZ",				"127",			"NUbyteProp")	//5
+
+	VAR(eubyte,		true, "Specular power",		"0",			"NUbyteProp")	//6
+	VAR(eubyte,		true, "Bump power",				"0",			"NUbyteProp")	//7
+};
+
+
+NLightOp::NLightOp()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(8, blocdescLightOp, 1);
+
+}
+
+udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+{
 	//Two inputs (texture, normal)
-	//NBitmap* pSrc		= _state->apInputs[0];
-	//NBitmap* pNorm	= _state->apInputs[1];
-	//NBitmap* pDst = _state->pcurCall->pbmp;
+	if (m_byInputs!=2)		return (udword)-1;
 
-	Res_SetBmpSize(pResNorm, w, h);
+	//Bitmap instance
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+
+	//Get input Texture and Normal
+	NBitmap* pSrc	= (NBitmap*)(*_pOpsInts)->m_pObj;
+	_pOpsInts++;
+	NBitmap* pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
+	NBitmap* pDst	= (NBitmap*)m_pObj;
+
+
+	sdword w = pSrc->GetWidth();
+	sdword h = pSrc->GetHeight();
+
+	pDst->SetSize( w, h );
+	pNorm->SetSize( w, h );
+
+	/////////////////////////////////////////
+	//Get Variables Values
+	NRGBA Ambiant, Diffuse, Specular;
+	ubyte byPosX, byPosY, byPosZ;
+	ubyte bySpecPower, byBumpPower;
+	m_pcvarsBloc->GetValue(0, _ftime, (udword&)Ambiant);
+	m_pcvarsBloc->GetValue(1, _ftime, (udword&)Diffuse);
+	m_pcvarsBloc->GetValue(2, _ftime, (udword&)Specular);
+
+	m_pcvarsBloc->GetValue(3, _ftime, byPosX);
+	m_pcvarsBloc->GetValue(4, _ftime, byPosY);
+	m_pcvarsBloc->GetValue(5, _ftime, byPosZ);		//255-near 0-far
+
+	m_pcvarsBloc->GetValue(6, _ftime, bySpecPower);
+	m_pcvarsBloc->GetValue(7, _ftime, byBumpPower);
 
 	/////////////////////////////////////////
 	//Init
-	vec3 light = _light;
-	//light.x = (float)byPosX - 127.0f;
-	//light.y = -((float)byPosY - 127.0f);
-	//light.z = -(127.0f - (float)byPosZ);
+	//sdword nlX	= (sdword)byPosX;
+	//sdword nlY = (sdword)byPosY;
+	//sdword nlZ = (sdword)byPosZ;
+	vec3 light;
+	light.x = (float)byPosX - 127.0f;
+	light.y = -((float)byPosY - 127.0f);
+	light.z = -(127.0f - (float)byPosZ);
+
 	light.normalize();
 
-	float fSpecularPower	= ((float)_byspecPower) / 32.0f;
-	float fBumpPower			= ((float)_bybumpPower) / 32.0f;
+	float fSpecularPower	= ((float)bySpecPower) / 32.0f;
+	float fBumpPower			= ((float)byBumpPower) / 32.0f;
 
 	/////////////////////////////////////////
 	// DIRECTIONAL LIGHT TYPE
-	NRGBA* pPxNorm = pResNorm->pbyPixels;
-	NRGBA* pPxSrc	= pRes->pbyPixels;
-	NRGBA* pPxDst	= pPxSrc;
+	NRGBA* pPxNorm = pNorm->GetPixels();
+	NRGBA* pPxSrc	= pSrc->GetPixels();
+	NRGBA* pPxDst	= pDst->GetPixels();
 
 	for (sdword y=0; y<h; y++)
 	{
@@ -373,10 +567,23 @@ void  NLightOp_Process(SEngineState* _state, NRGBA _colAmb, NRGBA _colDiff, NRGB
 			//Add bump on normal
 			fdot*=fBumpPower;
 
+			/*float fdotSpec=0.0;
+			if (dot > 0.0) {
+				//color += diffuse * NdotL;
+				//halfV = normalize(halfVector);
+				//NdotHV = max(dot(n,halfV),0.0);
+				//color += gl_FrontMaterial.specular * gl_LightSource[0].specular * pow(NdotHV, gl_FrontMaterial.shininess);
+				fdotSpec = pow(fdot, 64);
+			}*/
+
 			// Color = ambient + dif*dot + dot^2 * spec
-			sdword r	= (sdword) (_colAmb.r + (fdot*_colDiff.r) + (fdot*fdot*_colSpec.r*fSpecularPower));
-			sdword g	= (sdword) (_colAmb.g + (fdot*_colDiff.g) + (fdot*fdot*_colSpec.g*fSpecularPower));
-			sdword b	= (sdword) (_colAmb.b + (fdot*_colDiff.b) + (fdot*fdot*_colSpec.b*fSpecularPower));
+			sdword r	= (sdword) (Ambiant.r + (fdot*Diffuse.r) + (fdot*fdot*Specular.r*fSpecularPower));
+			sdword g	= (sdword) (Ambiant.g + (fdot*Diffuse.g) + (fdot*fdot*Specular.g*fSpecularPower));
+			sdword b	= (sdword) (Ambiant.b + (fdot*Diffuse.b) + (fdot*fdot*Specular.b*fSpecularPower));
+
+			//sdword r	= pPxSrc->r + (fdot * pPxSrc->r);
+			//sdword g	= pPxSrc->g + (fdot * pPxSrc->g);
+			//sdword b	= pPxSrc->b + (fdot * pPxSrc->b);
 
 			//Summ
 			r = (pPxSrc->r + r) / 2;
@@ -394,147 +601,144 @@ void  NLightOp_Process(SEngineState* _state, NRGBA _colAmb, NRGBA _colDiff, NRGB
 		}
 	}
 
+
+	return 0;
 }
 
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-//							NNormalsOp implementation
+//
+//							NNormalsOp class implementation
+//
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void  NNormalsOp_Process(SEngineState* _state, ubyte _byAmplify, ubyte _byFilter)
+FIMPLEMENT_CLASS(NNormalsOp, NOperator);
+
+static NVarsBlocDesc blocdescNormalsOp[] =
 {
-	SResource* pRes = _state->apLayers[_state->pcurCall->byDepth];
-	udword w= pRes->dwWidth;
-	udword h= pRes->dwHeight;
+	VAR(eudword,	true, "Amplify",	"64", "NUbyteProp")	//0
+};
 
-	float fAmp = (float)_byAmplify*_state->fDetailFactor / 64.0f; //[0<->4]
 
-	//Copy Input to Temps Layer used as texture
-	SResource* pResTexture = _state->apLayers[TPS_LAYER];
-	Res_CopyBmp(pRes, pResTexture);
+NNormalsOp::NNormalsOp()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(1, blocdescNormalsOp, 1);
+
+}
+
+udword NNormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+{
+	//Only one Input
+	if (m_byInputs!=1)		return (udword)-1;
+
+	//Bitmap instance
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+
+	//////////////////////////////////////////
+	//Get input texture
+	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
+	NBitmap* pDst = (NBitmap*)m_pObj;
+
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
+
+
+	/////////////////////////////////////////
+	//Get Variables Values
+	ubyte byAmp;
+	m_pcvarsBloc->GetValue(0, _ftime, byAmp);
+
+	float fAmp = (float)byAmp*_fDetailFactor / 64.0f; //[0<->4]
 
 	//////////////////////////////////////////
 	// Creation des normales
-	NRGBA* pcurSour = pResTexture->pbyPixels;
-	NRGBA* pcurNorm = pRes->pbyPixels;
+	NRGBA* pcurSour = pSrc->GetPixels();
+	NRGBA* pcurNorm = pDst->GetPixels();
 
-	// 3x3 Sobel Filter
-	if(_byFilter==0) // 3x3 Sobel
+	for (udword y=0; y<h; y++)
 	{
-		for (udword y=0; y<h; y++)
+		for (udword x=0; x<w; x++)
 		{
-			for (udword x=0; x<w; x++)
-			{
-				size_t xp = (x-1) % w;
-				size_t xn = (x+1) % w;
-				size_t yp = ((y-1) % h)*w;
-				size_t yn = ((y+1) % h)*w;
-				size_t yc = y * w;
-				//Y Sobel filter
-				float fPix = (float)pcurSour[xp+yn].r;
-				float dY  = fPix * -1.0f;
+			size_t xp = (x-1) % w;
+			size_t xn = (x+1) % w;
+			size_t yp = ((y-1) % h)*w;
+			size_t yn = ((y+1) % h)*w;
+			size_t yc = y * w;
+			//Y Sobel filter
+			float fPix = (float)pcurSour[xp+yn].r;
+			float dY  = fPix * -1.0f;
 
-				fPix = (float)pcurSour[x+yn].r;
-				dY+= fPix * -2.0f;
+			fPix = (float)pcurSour[x+yn].r;
+			dY+= fPix * -2.0f;
 
-				fPix = (float)pcurSour[xn+yn].r;
-				dY+= fPix * -1.0f;
+			fPix = (float)pcurSour[xn+yn].r;
+			dY+= fPix * -1.0f;
 
-				fPix = (float)pcurSour[xp+yp].r;
-				dY+= fPix * 1.0f;
+			fPix = (float)pcurSour[xp+yp].r;
+			dY+= fPix * 1.0f;
 
-				fPix = (float)pcurSour[x+yp].r;
-				dY+= fPix * 2.0f;
+			fPix = (float)pcurSour[x+yp].r;
+			dY+= fPix * 2.0f;
 
-				fPix = (float)pcurSour[xn+yp].r;
-				dY+= fPix * 1.0f;
+			fPix = (float)pcurSour[xn+yp].r;
+			dY+= fPix * 1.0f;
 
-				//X Sobel filter
-				fPix = (float)pcurSour[xp+yp].r;
-				float dX  = fPix * -1.0f;
+			//X Sobel filter
+			fPix = (float)pcurSour[xp+yp].r;
+			float dX  = fPix * -1.0f;
 
-				fPix = (float)pcurSour[xp+yc].r;
-				dX+= fPix * -2.0f;
+			fPix = (float)pcurSour[xp+yc].r;
+			dX+= fPix * -2.0f;
 
-				fPix = (float)pcurSour[xp+yn].r;
-				dX+= fPix * -1.0f;
+			fPix = (float)pcurSour[xp+yn].r;
+			dX+= fPix * -1.0f;
 
-				fPix = (float)pcurSour[xn+yp].r;
-				dX+= fPix * 1.0f;
+			fPix = (float)pcurSour[xn+yp].r;
+			dX+= fPix * 1.0f;
 
-				fPix = (float)pcurSour[xn+yc].r;
-				dX+= fPix * 2.0f;
+			fPix = (float)pcurSour[xn+yc].r;
+			dX+= fPix * 2.0f;
 
-				fPix = (float)pcurSour[xn+yn].r;
-				dX+= fPix * 1.0f;
+			fPix = (float)pcurSour[xn+yn].r;
+			dX+= fPix * 1.0f;
 
 
-				// Compute the cross product of the two vectors
-				vec3 norm;
-				norm.x = -dX*fAmp/ 255.0f;
-				norm.y = -dY*fAmp/ 255.0f;
-				norm.z = 1.0f;
+			// Compute the cross product of the two vectors
+			vec3 norm;
+			norm.x = -dX*fAmp/ 255.0f;
+			norm.y = -dY*fAmp/ 255.0f;
+			norm.z = 1.0f;
 
-				// Normalize
-				norm.normalize();
+			// Normalize
+			norm.normalize();
 
-				// Store
-				pcurNorm->x = (ubyte) ((norm.x+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
-				pcurNorm->y = (ubyte) ((norm.y+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
-				pcurNorm->z = (ubyte) ((norm.z+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
-				pcurNorm->a = pcurSour[x+y*w].a;
+			// Store
+			pcurNorm->x = (ubyte) ((norm.x+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
+			pcurNorm->y = (ubyte) ((norm.y+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
+			pcurNorm->z = (ubyte) ((norm.z+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
+			pcurNorm->a = pcurSour[x+y*w].a;
 
-				pcurNorm++;
-			}
-		}
-
-	///////////////////////////////////////////////
-	// 2x2 Simple Filter
-	} else if (_byFilter==1) { // 2x2 Simple
-
-		for (udword y=0; y<h; y++)
-		{
-			for (udword x=0; x<w; x++)
-			{
-				size_t xn = (x+1) % w;
-				size_t yp = ((y-1) % h)*w;
-				size_t yc = y * w;
-
-				float dX = pcurSour[xn+yc].r-pcurSour[x+yc].r;
-				float dY = pcurSour[x+yp].r-pcurSour[x+yc].r;
-
-				// Compute the cross product of the two vectors
-				vec3 norm;
-				norm.x = -dX*fAmp/ 255.0f;
-				norm.y = -dY*fAmp/ 255.0f;
-				norm.z = 1.0f;
-
-				// Normalize
-				norm.normalize();
-
-				// Store
-				pcurNorm->x = (ubyte) ((norm.x+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
-				pcurNorm->y = (ubyte) ((norm.y+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
-				pcurNorm->z = (ubyte) ((norm.z+1.0f) / 2.0f * 255.0f);	//[-1.0f->1.0f]	[0 -> 255]
-				pcurNorm->a = pcurSour[x+y*w].a;
-
-				pcurNorm++;
-			}
+			pcurNorm++;
 		}
 	}
 
+	return 0;
 }
 
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
-//							NAbnormalsOp implementation
+//							NAbnormalsOp class implementation
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-/*static NVarsBlocDesc blocdescAbnormalsOp[] =
+FIMPLEMENT_CLASS(NAbnormalsOp, NOperator);
+
+static NVarsBlocDesc blocdescAbnormalsOp[] =
 {
 	VAR(eubyte,	false, "Rotation",	"", "")	//0
 	VAR(efloat,	true, "w",	"0.0", "NFloatProp")	//1 "1.0" is full angle
@@ -542,18 +746,26 @@ void  NNormalsOp_Process(SEngineState* _state, ubyte _byAmplify, ubyte _byFilter
 	VAR(efloat,	true, "y",	"0.0", "NFloatProp")	//3
 	VAR(efloat,	true, "z",	"1.0", "NFloatProp")	//4
 	VAR(eubyte,	false, "Options",	"", "")	//5
-	VAR(eubyte,	true, "Sensitivity",	"127", "NIntProp")	//6
+	VAR(eubyte,	true, "Sensitivity",	"127", "NUbyteProp")	//6
 	VAR(eubyte,	true, "Compensation",	"0,[Normal,Height,Quaternion]", "NUbyteComboProp")	//7
 	VAR(eubyte,	true, "Mirror",	"0,[None,X : YZ,Y : XZ,X+Y : Z]", "NUbyteComboProp")	//8
 };
 
-void NAbnormalsOp_Process(ubyte _byRotation, )
+
+NAbnormalsOp::NAbnormalsOp()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(9, blocdescAbnormalsOp, 1);
+
+}
+
+udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//One or two inputs
 	if (m_byInputs!=1 && m_byInputs!=2)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetProject()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	//////////////////////////////////////////
 	//Get input texture
@@ -650,18 +862,20 @@ void NAbnormalsOp_Process(ubyte _byRotation, )
 
 	return 0;
 }
-*/
+
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-//							NSlopeMagnitudeOp implementation
+//
+//							NNormalsOp class implementation
+//
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-/*FIMPLEMENT_CLASS(NSlopeMagnitudeOp, NOperatorNode);
+FIMPLEMENT_CLASS(NSlopeMagnitudeOp, NOperator);
 
 static NVarsBlocDesc blocdescNSlopeMagnitudeOp[] =
 {
-	VAR(eudword,	true, "Amplify",	"64", "NIntProp")	//0
+	VAR(eudword,	true, "Amplify",	"64", "NUbyteProp")	//0
 };
 
 
@@ -672,13 +886,13 @@ NSlopeMagnitudeOp::NSlopeMagnitudeOp()
 
 }
 
-udword NSlopeMagnitudeOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDetailFactor)
+udword NSlopeMagnitudeOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetProject()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	//////////////////////////////////////////
 	//Get input texture
@@ -778,20 +992,27 @@ udword NSlopeMagnitudeOp::Process(float _ftime, NOperatorNode** _pOpsInts, float
 
 	return 0;
 }
-*/
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-//							NInvertOp implementation
+//
+//							NInvertOp class implementation
+//
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-/*
-void NInvertOp_Process(SEngineState* _state)
+FIMPLEMENT_CLASS(NInvertOp, NOperator);
+
+udword NInvertOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//One input
-	//Get input texture
-	NBitmap* pSrc = _state->apInputs[0];
-	NBitmap* pDst = _state->pcurCall->pbmp;
+	if (m_byInputs!=1)		return (udword)-1;
+
+	//Bitmap instance
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+
+	// Init
+	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
+	NBitmap* pDst	= (NBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
@@ -814,8 +1035,10 @@ void NInvertOp_Process(SEngineState* _state)
 			pPxDst++;
 		}
 	}
+
+	return 0;
 }
-*/
+
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -824,14 +1047,20 @@ void NInvertOp_Process(SEngineState* _state)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-/*FIMPLEMENT_CLASS(NThresholdOp, NOperatorNode);
+FIMPLEMENT_CLASS(NThresholdOp, NOperator);
 
 static NVarsBlocDesc blocdescThresholdOp[] =
 {
-	VAR(eubyte,		true, "Threshold",	"128",	"NIntProp")	//0
-	VAR(eubyte,		true, "Ratio",	"128",		"NIntProp")	//1
+	VAR(eubyte,		true, "Threshold",	"128",	"NUbyteProp")	//0
+	VAR(eubyte,		true, "Ratio",	"128",		"NUbyteProp")	//1
 	VAR(eubyte,		false, "Mode",				"0,[Expand Downwards, Expand Upwards, Compress Below, Compress Above]", "NUbyteComboProp")	//2
 };
+
+NThresholdOp::NThresholdOp()
+{
+	//Create variables bloc
+	m_pcvarsBloc = AddVarsBloc(3, blocdescThresholdOp, 1);
+}
 
 static inline ubyte expandIntensity(ubyte intensity, float ratio, ubyte threshold)
 {
@@ -855,13 +1084,13 @@ static inline ubyte compressIntensity(ubyte intensity, float ratio, ubyte thresh
   }
 }
 
-udword NThresholdOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDetailFactor)
+udword NThresholdOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//One input
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetProject()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	// Init
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -947,7 +1176,7 @@ udword NThresholdOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDe
 
 	return 0;
 }
-*/
+
 
 
 //-----------------------------------------------------------------
@@ -957,14 +1186,28 @@ udword NThresholdOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDe
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-void  NAlphaOp_Process(SEngineState* _state)
-{
-	SResource* pRes = _state->apLayers[_state->pcurCall->byDepth];
-	udword w= pRes->dwWidth;
-	udword h= pRes->dwHeight;
+FIMPLEMENT_CLASS(NAlphaOp, NOperator);
 
-	NRGBA* pPxSrc = pRes->pbyPixels;
-	NRGBA* pPxDst = pRes->pbyPixels;
+NAlphaOp::NAlphaOp(){}
+
+udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+{
+	//One input
+	if (m_byInputs!=1)		return (udword)-1;
+
+	//Bitmap instance
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+
+	//Get input texture
+	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
+	NBitmap* pDst = (NBitmap*)m_pObj;
+
+	udword w = pSrc->GetWidth();
+	udword h = pSrc->GetHeight();
+	pDst->SetSize(w,h);
+
+	NRGBA*	pPxSrc = pSrc->GetPixels();
+	NRGBA*	pPxDst = pDst->GetPixels();
 
 	//Process
 	for (udword y=0; y<h; y++)
@@ -983,6 +1226,7 @@ void  NAlphaOp_Process(SEngineState* _state)
 		}
 	}
 
+	return 0;
 }
 
 
@@ -993,12 +1237,11 @@ void  NAlphaOp_Process(SEngineState* _state)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-/*
-FIMPLEMENT_CLASS(NSegmentOp, NOperatorNode);
+FIMPLEMENT_CLASS(NSegmentOp, NOperator);
 
 static NVarsBlocDesc blocdescSegmentOp[] =
 {
-	VAR(eubyte,		true, "Threshold",	"128",	"NIntProp")	//0
+	VAR(eubyte,		true, "Threshold",	"128",	"NUbyteProp")	//0
 };
 
 NSegmentOp::NSegmentOp()
@@ -1007,13 +1250,13 @@ NSegmentOp::NSegmentOp()
 	m_pcvarsBloc = AddVarsBloc(1, blocdescSegmentOp, 1);
 }
 
-udword NSegmentOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDetailFactor)
+udword NSegmentOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//Two inputs
 	if (m_byInputs!=2)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetProject()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	// Init
 	NBitmap* pSrc1 = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -1039,11 +1282,10 @@ udword NSegmentOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDeta
 	{
 		uword x;
 		uword y;
-		Coord() {};
-		Coord(uword x, uword y) : x(x), y(y) {};
+		Coord(uword x, uword y) : x(x), y(y) {}
 	};
-	ubyte* pCoverage = (ubyte*)NNEWARRAY(ubyte, w*h);
-	Coord* pStack = (Coord*)NNEWARRAY(Coord, w*h*4);
+	ubyte* pCoverage = (ubyte*)NMemAlloc(w*h);
+	Coord* pStack = (Coord*)NMemAlloc(w*h*sizeof(Coord)*4);
 
 	memset(pCoverage, 0, w*h);
 
@@ -1094,12 +1336,11 @@ udword NSegmentOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDeta
 		}
 	}
 
-	NDELETEARRAY(pCoverage);
-	NDELETEARRAY(pStack);
+	NMemFree(pCoverage);
+	NMemFree(pStack);
 
 	return 0;
 }
-*/
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -1108,13 +1349,12 @@ udword NSegmentOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDeta
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-/*
-FIMPLEMENT_CLASS(NDilateOp, NOperatorNode);
+FIMPLEMENT_CLASS(NDilateOp, NOperator);
 
 
 static NVarsBlocDesc blocdescDilateOp[] =
 {
-	VAR(eubyte,		true, "Iterations",	"10",	"NIntProp")	//0
+	VAR(eubyte,		true, "Iterations",	"10",	"NUbyteProp")	//0
 };
 
 NDilateOp::NDilateOp()
@@ -1123,13 +1363,13 @@ NDilateOp::NDilateOp()
 	m_pcvarsBloc = AddVarsBloc(1, blocdescDilateOp, 1);
 }
 
-udword NDilateOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDetailFactor)
+udword NDilateOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//One input
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetProject()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	// Init
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -1143,7 +1383,7 @@ udword NDilateOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDetai
 	ubyte byIterations;
 	m_pcvarsBloc->GetValue(0, _ftime, byIterations);
 
-	NRGBA* pPxInter = (NRGBA*)NNEWARRAY(NRGBA, w*h);
+	NRGBA* pPxInter = (NRGBA*)NMemAlloc(w*h*sizeof(NRGBA));
 
 	for (sdword i=0; i<byIterations+1; ++i)
 	{
@@ -1188,12 +1428,11 @@ udword NDilateOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDetai
 		}
 	}
 
-	NDELETEARRAY(pPxInter);
+	NMemFree(pPxInter);
 
 
 	return 0;
 }
-*/
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -1202,8 +1441,7 @@ udword NDilateOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDetai
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-/*
-FIMPLEMENT_CLASS(NAlphaMaskOp, NOperatorNode);
+FIMPLEMENT_CLASS(NAlphaMaskOp, NOperator);
 
 
 static NVarsBlocDesc blocdescAlphaMaskOp[] =
@@ -1218,13 +1456,13 @@ NAlphaMaskOp::NAlphaMaskOp()
 	m_pcvarsBloc = AddVarsBloc(1, blocdescAlphaMaskOp, 1);
 }
 
-udword NAlphaMaskOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDetailFactor)
+udword NAlphaMaskOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
 {
 	//One or two Inputs
 	if (m_byInputs !=1 && m_byInputs != 2)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetProject()->GetBitmap(&m_pObj);
+	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
 
 	// Init
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -1296,15 +1534,3 @@ udword NAlphaMaskOp::Process(float _ftime, NOperatorNode** _pOpsInts, float _fDe
 
 	return 0;
 }
-*/
-
-
-SOpFuncInterface IOpsFilter[] = {
-	"Blur",			4*4,  (fxOPFUNCTION*)&NBlurOp_Process,
-	"Color",		6*4,  (fxOPFUNCTION*)&NColorsOp_Process,
-	"Light",		8*4,	(fxOPFUNCTION*)&NLightOp_Process,
-	"Normals",	2*4,	(fxOPFUNCTION*)&NNormalsOp_Process,
-	"Alpha",		0*4,	(fxOPFUNCTION*)&NAlphaOp_Process
-};
-
-udword dwCountOpsFilter = fgCreateOpEngine()->RegisterOpsInterfaces(5, IOpsFilter);

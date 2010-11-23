@@ -4,7 +4,7 @@ TODO
 .Main ID
 	.Split OperatorNode and OperatorFx
 		.CallDesc is a bad concept => changed to operatorFx class (derived from NObject) that contain parameters
-		.Move compiler code to Editor (need to remove intermediate format, just take NOpProject and NOperatorNode)
+		.Move compiler code to Editor (need to remove intermediate format, just take NOpProject and NOperator)
 		.OperatorNode now contain intermediate computed texture (make a resource pooling)
 		.OperatorNode contain an operatorFx
 

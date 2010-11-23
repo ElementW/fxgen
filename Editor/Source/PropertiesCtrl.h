@@ -64,7 +64,6 @@ public:
 	void	DisplayObjectProperties(NObject* pobj);		//!< Display Object Properties
 
 	void 	SaveRowEditing();
-	void 	EndRowEditing(bool bSaveChanged=true);
 
 	// Messages Notify
 	virtual void OnPropertiesChanged()	{};
@@ -76,16 +75,17 @@ protected:
 
 
 	udword		AddGroup(const char* pszName, udword _dwDepth);
-	udword		AddVarProperties(NObject* _pobj, udword _idx, NFieldDesc* pfd, udword _dwDepth);
+	udword		AddVarProperties(NVarsBloc* _pvarBloc, NVarsBlocDesc* _pvarBlocDesc, NVarValue* _pvarValue, udword _dwvarIdx, udword _dwDepth);
 
 	void			DeleteAllProperties();	//!< Reset
 	NRowDesc* GetRowAtIdx(udword idx);
 	udword		GetRowUnderPoint(NPoint& pt);
-	//void 			OffsetRowValue(sdword dwOffset);
+	void 			OffsetRowValue(sdword dwOffset);
 	bool 			SelectRow(udword dwRowIdx);
 	bool			ExpandRow(udword _dwRowIdx);
 	void 			ClickRow(udword dwRowIdx, NPoint& pt);
 	void 			StartRowEditing(udword dwRowIdx);
+	void 			EndRowEditing(bool bSaveChanged=true);
 	bool			IsAnimButtonUnderPoint(NPoint& pt);
 	void			AddRemoveAnimControlToRow(udword _dwRowIdx);
 	udword		GetRowIdxFromGroupIdx(udword _groupIdx);
@@ -103,7 +103,7 @@ protected:
 	NArray<NRowDesc>	m_carrayRowsDesc;
 
 protected:
-	//Win32 Events
+	//Win32 Messages Dispatching
 	virtual	void	OnPaint(N2DPainter* _ppainter);
 	virtual void	OnSize();
 	virtual void	OnMouseMove(NPoint pos );

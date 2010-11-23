@@ -18,14 +18,17 @@
 //-----------------------------------------------------------------
 //			Includes
 //-----------------------------------------------------------------
+#include "CoreLibPkg.h"
 #include "ProjectWnd.h"
-#include "Operator.h"
+
+#include "EditorApp.h"
+#include "EventsList.h"
 
 //-----------------------------------------------------------------
 //			Defines
 //-----------------------------------------------------------------
-#define ID_ADDGROUP		100
-#define ID_ADDPAGE		101
+#define ID_ADDFOLDER	100
+#define ID_ADDGRAPH		101
 #define ID_DELETE			102
 #define ID_RENAME			103
 
@@ -50,7 +53,6 @@ NProjectWnd::NProjectWnd(void)
 //-----------------------------------------------------------------
 NProjectWnd::~NProjectWnd(void)
 {
-	EVT_UNREGISTERALL();
 }
 
 //-----------------------------------------------------------------
@@ -73,7 +75,7 @@ bool NProjectWnd::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 //!	\brief	Display a new operators project
 //!	\param	_popsProject	Project to display
 //-----------------------------------------------------------------
-void NProjectWnd::DisplayOperatorsProject(NOperatorsProject* _popsProject)
+void NProjectWnd::DisplayOperatorsProject(NEngineOp* _popsProject)
 {
 	EVT_EXECUTE(EVT_PAGESELECTED, 0, 0 );
 
@@ -105,10 +107,10 @@ void NProjectWnd::InitCtxMenu()
 	//Menu creation
 	m_wndMenu.Create("Project:", this);
 	m_wndMenu.OnItemClick=FDelegate(this, (TDelegate)&NProjectWnd::OnMenuClick);
-	m_wndMenu.AddItem("Add Group",		ID_ADDGROUP, 0);
-	m_wndMenu.AddItem("Add Page",		ID_ADDPAGE,		 0);
-	m_wndMenu.AddItem("Delete",			ID_DELETE,		 0);
-	m_wndMenu.AddItem("Rename",			ID_RENAME,		 0);
+	m_wndMenu.AddItem("Add Folder",	ID_ADDFOLDER,	0);
+	m_wndMenu.AddItem("Add Graph",	ID_ADDGRAPH,	0);
+	m_wndMenu.AddItem("Delete",			ID_DELETE,		0);
+	m_wndMenu.AddItem("Rename",			ID_RENAME,		0);
 
 }
 
@@ -121,8 +123,8 @@ void NProjectWnd::OnMenuClick(NObject* _psender)
 	udword dwID = pmenu->GetClickedCmdID();
 	switch (dwID)
 	{
-		case ID_ADDGROUP:	AddGroup();		break;
-		case ID_ADDPAGE:	AddPage();		break;
+		case ID_ADDFOLDER:AddFolder();	break;
+		case ID_ADDGRAPH:	AddGraph();		break;
 		case ID_DELETE:		Delete();			break;
 		case ID_RENAME:		Rename();			break;
 	}
@@ -130,10 +132,10 @@ void NProjectWnd::OnMenuClick(NObject* _psender)
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Return selected group
-//!	\return	Pointer on selected group else null
+//!	\brief	Return selected folder
+//!	\return	Pointer on selected folder else null
 //-----------------------------------------------------------------
-NTreeNode* NProjectWnd::GetSelectedGroup()
+NTreeNode* NProjectWnd::GetSelectedFolder()
 {
 	//Get Selected Object
 	NObject* pobj = GetSelectedItemObj();
@@ -149,10 +151,10 @@ NTreeNode* NProjectWnd::GetSelectedGroup()
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Return selected page
+//!	\brief	Return selected graph
 //!	\return	Pointer on selected page else null
 //-----------------------------------------------------------------
-NOperatorsPage* NProjectWnd::GetSelectedPage()
+NOpGraphModel* NProjectWnd::GetSelectedGraph()
 {
 	//Get Selected Object
 	NObject* pobj = GetSelectedItemObj();
@@ -160,75 +162,75 @@ NOperatorsPage* NProjectWnd::GetSelectedPage()
 	//Check if selected item is a TreeNode
 	if (pobj!=null)
 	{
-		if (strcmp(pobj->GetRTClass()->m_pszClassName, "NOperatorsPage")==0 )
-			return (NOperatorsPage*)pobj;
+		if (strcmp(pobj->GetRTClass()->m_pszClassName, "NOpGraphModel")==0 )
+			return (NOpGraphModel*)pobj;
 	}
 
 	return null;
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Add a new group at selected node
+//!	\brief	Add a new folder at selected node
 //-----------------------------------------------------------------
-void NProjectWnd::AddGroup()
+void NProjectWnd::AddFolder()
 {
-	//Get Selected Group
-	NTreeNode* pnodeGroup=GetSelectedGroup();
+	//Get Selected Folder
+	NTreeNode* pnodeFolder=GetSelectedFolder();
 
-	if (pnodeGroup==null)	return;
+	if (pnodeFolder==null)	return;
 
-	//Check Parent Group
-	//if (pnodeGroup==null)		pnodeGroup = m_popsProject->GetRootGroup();
+	//Check Parent Folder
+	//if (pnodeFolder==null)		pnodeFolder = m_popsProject->GetRootFolder();
 
-	//Attach a new group to Parent Group
-	NTreeNode* pNewGrpNode = NNEW(NTreeNode);
-	pNewGrpNode->SetName("Group");
-	pnodeGroup->AddSon(pNewGrpNode);
+	//Attach a new folder to Parent Folder
+	NTreeNode* pNewFolderNode = new NTreeNode;
+	pNewFolderNode->SetName("Folder");
+	pnodeFolder->AddSon(pNewFolderNode);
 	DisplayOperatorsProject(m_popsProject);
 
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Add a new page at selected node
+//!	\brief	Add a new graph at selected node
 //-----------------------------------------------------------------
-void NProjectWnd::AddPage()
+void NProjectWnd::AddGraph()
 {
-	//Get Selected Group
-	NTreeNode* pnodeGroup=GetSelectedGroup();
-	if (pnodeGroup==null)
+	//Get Selected Folder
+	NTreeNode* pnodeFolder=GetSelectedFolder();
+	if (pnodeFolder==null)
 		return;
 
-	//Add NOperatorsPage object to this TreeNode
-	NObjectArray& array = pnodeGroup->GetObjsArray();
+	//Add NOpGraphModel object to this TreeNode
+	NObjectArray& array = pnodeFolder->GetObjsArray();
 
-	NOperatorsPage* ppage = NNEW(NOperatorsPage);
-	//ppage->SetName("Page");
-	array.AddItem(ppage);
+	NOpGraphModel* pgraph = new NOpGraphModel;
+	pgraph->SetName("Graph");
+	array.AddItem(pgraph);
 
 	DisplayOperatorsProject(m_popsProject);
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Delete a group or a page
+//!	\brief	Delete a folder or a page
 //-----------------------------------------------------------------
 void NProjectWnd::Delete()
 {
 	/////////////////////////////////////////////
-	// Delete a page from project
-	NOperatorsPage* ppage = GetSelectedPage();
-	if (ppage)
+	// Delete a graph from project
+	NOpGraphModel* pgraph = GetSelectedGraph();
+	if (pgraph)
 	{
-		udword dwRet = GetApp()->MessageBox("Do you really want to delete this page ?", NMB_YESNO);
+		udword dwRet = GetApp()->MessageBox("Do you really want to delete this graph ?", NMB_YESNO);
 		if (dwRet==NIDYES)
 		{
-			//Get Group for this page
-			NTreeNode* pnodegroup = (NTreeNode*)GetParent(ppage);
+			//Get Folder for this page
+			NTreeNode* pnodefolder = (NTreeNode*)GetParent(pgraph);
 
-			assert(strcmp(pnodegroup->GetRTClass()->m_pszClassName, "NTreeNode")==0 );
+			assert(strcmp(pnodefolder->GetRTClass()->m_pszClassName, "NTreeNode")==0 );
 
-			//Delete page from TreeNode ObjectArray
-			NObjectArray& array = pnodegroup->GetObjsArray();
-			udword idx = array.Find(ppage);
+			//Delete graph from TreeNode ObjectArray
+			NObjectArray& array = pnodefolder->GetObjsArray();
+			udword idx = array.Find(pgraph);
 			if (idx!=-1)
 			{
 				array.RemoveItem(idx);
@@ -240,18 +242,18 @@ void NProjectWnd::Delete()
 	}
 
 	/////////////////////////////////////////////
-	// Delete a group from project
-	NTreeNode* pgroup =	GetSelectedGroup();
-	if (pgroup)
+	// Delete a folder from project
+	NTreeNode* pfolder =	GetSelectedFolder();
+	if (pfolder)
 	{
-		//Get parent for this group
-		NTreeNode* pnodeparent = (NTreeNode*)GetParent(pgroup);
+		//Get parent for this folder
+		NTreeNode* pnodeparent = (NTreeNode*)GetParent(pfolder);
 		if (pnodeparent)
 		{
-			udword dwRet = GetApp()->MessageBox("Do you really want to delete this group ?", NMB_YESNO);
+			udword dwRet = GetApp()->MessageBox("Do you really want to delete this folder ?", NMB_YESNO);
 			if (dwRet==NIDYES)
 			{
-				udword idx = pnodeparent->FindSon(pgroup);
+				udword idx = pnodeparent->FindSon(pfolder);
 				if (idx!=-1)
 				{
 					pnodeparent->DeleteSon(idx);
@@ -295,7 +297,7 @@ void NProjectWnd::OnTreeSelChange(NObject* _psender)
 	//TRACE("NProjectWnd::OnSelChange\n");
 
 	//Get Page Selected
-	NOperatorsPage* pcurpage = GetSelectedPage();
+	NOpGraphModel* pcurpage = GetSelectedGraph();
 
 	//Send notification message
 	EVT_EXECUTE(EVT_PAGESELECTED, (udword)pcurpage, 0 );
@@ -304,12 +306,12 @@ void NProjectWnd::OnTreeSelChange(NObject* _psender)
 //-----------------------------------------------------------------
 //!	\brief	Select first page found from root
 //-----------------------------------------------------------------
-void NProjectWnd::SelectFirstPage()
+void NProjectWnd::SelectFirstGraph()
 {
 	if (m_popsProject)
 	{
 		NTreeNode* pRoot = m_popsProject->GetRootGroup();
-		NObject* pobj = _FindNodeFromClassName(pRoot, "NOperatorsPage");
+		NObject* pobj = _FindNodeFromClassName(pRoot, "NOpGraphModel");
 		if (pobj)
 		{
 			udword idx = GetItemIdxFromObject(pobj);

@@ -4,7 +4,7 @@
 //! \brief	Operators Engine
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
-//!	\date		06-07-2010
+//!	\date		12-02-2007
 //!
 //!	\brief	This file applies the GNU LESSER GENERAL PUBLIC LICENSE
 //!					Version 2.1 , read file COPYING.
@@ -12,8 +12,6 @@
 //!    			The original version of this library can be located at:
 //!    			http://sourceforge.net/projects/fxgen/
 //!
-//! \note		Todo: Separate compiler and operators machine from Engine
-//!								can save compiled form only if no error (separate validate and process from process())
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 #ifndef ENGINEOP_H
@@ -27,127 +25,139 @@
 //-----------------------------------------------------------------
 //                   Defines
 //-----------------------------------------------------------------
-#define	MAX_CONTEXTS				16		//!< Max Stack contexts
-#define	MAX_DEPTH						32		//!< Max Stack Hierarchical depth
-#define	MAX_CHANNELS				255		//!< Max channels animation (1-255)
-#define	MAX_OPSTOLOAD				64		//!< Max operators that can be loaded by one sequence
-#define	MAX_SEQSTOLOAD			64		//!< Max sequences that can be loaded by one sequence
-#define	MAX_MAXOPINTERFACE	255		//!< Max operators interface
-#define	MAX_PARAMS					32		//!< Max parameters
-#define	TPS_LAYER						MAX_DEPTH-1		//!< Temp Ressource Layer
+#define	MAX_CONTEXTS	256		//!< Max Stack contexts
+#define	MAX_DEPTH			64		//!< Max Stack Hierarchical depth
+#define	MAX_CHANNELS	255		//!< Max channels animation (1-255)
 
-/*#define	OBJRES_TYPE_INTERMEDIATE	1		//!< Intermediate allocated bitmaps
+#define	OBJRES_TYPE_INTERMEDIATE	1		//!< Intermediate allocated bitmaps
 #define	OBJRES_TYPE_STORED				2		//!< Stored bitmaps
-#define	OBJRES_TYPE_FINALSTORED		4		//!< Final Stored bitmaps*/
+#define	OBJRES_TYPE_FINALSTORED		4		//!< Final Stored bitmaps
 
 //-----------------------------------------------------------------
 //                   Prototypes
 //-----------------------------------------------------------------
-class NEngineOp;
-class NOperatorFx;
-struct NRGBA;
-struct SEngineState;
-
-//-----------------------------------------------------------------
-//                   Functions
-//-----------------------------------------------------------------
-CORELIB_API NEngineOp * fgCreateOpEngine();
+class NObject;
+	class NOperator;
+		class	NStoreResultOp;
+	class NOpGraphModel;
+	class NEngineOp;
 
 //-----------------------------------------------------------------
 //                   TypesDef
 //-----------------------------------------------------------------
-typedef	void (FXGEN_OPSPROCESSCB)(udword _dwCurrentOp, udword _dwTotalOps);
-typedef void (fxOPFUNCTION)(SEngineState* _state, void* _params);
-
+typedef	void (__cdecl FXGEN_OPSPROCESSCB)(udword _dwCurrentOp, udword _dwTotalOps);
 
 //-----------------------------------------------------------------
-//!	\class		NResource
-//!	\brief		Resource
-//!	\note			###TODO### mesh, voxel... see SOpCallDesc::byResType
+//!	\class		NOperator
+//!	\brief		Base class for an operator
+//!	\note			TODO will been split in NOperatorFX(Engine) and NOperatorNode(Designer)
 //-----------------------------------------------------------------
-struct SResource
-{
-	//Bitmap
-	NRGBA*		pbyPixels;
-	udword		dwWidth, dwHeight;
-};
-
-
-//-----------------------------------------------------------------
-//!	\class		SOpsSequence
-//!	\brief		One operators sequence
-//! \note			There is one sequence per 'Store' Operator
-//-----------------------------------------------------------------
-struct SOpsSequence
-{
-	char					szName[MAX_NAMELEN];	//!< Sequence Name (usualy stored operator name)
-	ubyte					byEtat;								//!< 0-Invalid, 1-Compute in progress, 3-Computed
-
-	udword				dwOpsCount;				//!< Operators count to call for this sequence ####TOREMOVE###
-	NOperatorFx*	pfirstOpsCall;		//!< First operator to call, then use next
-
-	//'Load' Operators used by this sequence
-	// later will be used for multi threading
-	udword				dwSeqsToLoadCount;	//!< How many 'LoadOp' (or Sequences) to process before this sequence
-	SOpsSequence*	apSeqsToLoad[MAX_SEQSTOLOAD];
-
-	SOpsSequence*		pnextOpsSeq;	//!< Link toward next sequence
-
-	//Cache
-	SResource*			pResourceResult;	//!< Sequence ressource Result
-
-	//###TODO### serialize
-
-};
-
-//-----------------------------------------------------------------
-//!	\class		SCompiledOp
-//!	\brief		Compiled operators graph
-//-----------------------------------------------------------------
-struct SCompiledOp
-{
-	udword dwTotalOpsCount;		//!< sum of operators for all sequences
-	SOpsSequence *pfirstOpsSeq, *plastOpsSeq;		//!< First and last sequences pointers
-};
-
-//-----------------------------------------------------------------
-//!	\class		SEngineState
-//!	\brief		Engine state
-//-----------------------------------------------------------------
-struct SEngineState
-{
-	float					fDetailFactor;
-	SResource*		apResourcesLayers[MAX_DEPTH];
-	NOperatorFx*	pcurCall;
-};
-
-//-----------------------------------------------------------------
-//!	\class		NOperatorFx
-//!	\brief		Operator
-//-----------------------------------------------------------------
-class CORELIB_API NOperatorFx : NObject
+class CORELIB_API NOperator :	public NObject
 {
 public:
-	virtual void Process(SEngineState* _state) = 0;
+	NOperator();
+	virtual ~NOperator();
 
-	//Serialization (like parameters)
+	//Methods
+	virtual NObject* Duplicate();						//!< Duplicate this object (used for copy-paste)
+	virtual	udword GetColor()	= 0;				//!< Operator color
+	virtual const char* GetName()				{ return ""; }			//!< Operator's Name
+	virtual const char* GetCategory()		{ return "Misc"; }	//!< Operator's Category
+	virtual const char* GetUserName()		{ return null; }		//!< Operator's User Name
+	//Serialization
 	virtual	bool Save(NArchive* _s);	//!< Save object
 	virtual	bool Load(NArchive* _l);	//!< Load object
 
-protected:
-	//Datas
-	ubyte					m_byInputsCount;		//!< Input Operators count
-	ubyte					m_byDepth;					//!< Depth in tree
+	//Processing methods
+	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor) = 0;	//!< object processing (texture, mesh ...)
 
-public:
-	NOperatorFx*	m_pnext;						//!< Next op to call
-	//Params...
+	//Datas GUI
+	sword	m_wPosX, m_wPosY;			//!< Position (grid unit)
+	sword	m_wWidth;							//!< Width (grid unit)
+
+	//Datas Execution
+	ubyte	m_byDepth;						//!< Depth in tree
+	ubyte	m_byInputs;						//!< Input Operators numbers
+
+	//Datas RT
+	bool				m_bInvalided;				//!< Invalid operator (must be processed for result)
+	bool				m_bError;						//!< Error while process
+	bool				m_bParsed;					//!< Operators scan optimization
+	float				m_fProcessedTime;		//!< Time for last process() call
+	NObject*		m_pObj;							//!< Object generated (Texture, Mesh ...)
+	NOperator*	m_pnextOpToProcess;	//!< Next operator to execute
+	NOperator*	m_pprevOpToProcess;	//!< Previous operator executed
+
+	// Variables Bloc
+	NVarsBloc* m_pcvarsBloc;
 };
 
 
 //-----------------------------------------------------------------
+//!	\class		NOpGraphModel
+//!	\brief		operators graph model
+//!	\note will been moved to Designer
+//-----------------------------------------------------------------
+class CORELIB_API NOpGraphModel : public NObject
+{
+public:
+	FDECLARE_CLASS();
+
+	NOpGraphModel();
+	virtual ~NOpGraphModel();
+
+	//Serialization
+	virtual	bool Save(NArchive* _s);	//!< Save object
+	virtual	bool Load(NArchive* _l);	//!< Load object
+
+	udword			GetOpsCount()							{ return m_arrayOps.Count();					}
+	NOperator*	GetOpFromIdx(udword _idx)	{ return (NOperator*)m_arrayOps[_idx];}
+
+	udword			AddOp(NOperator* _pop);
+	void				DeleteAllOps();
+	udword			DeleteOp(NOperator* _pop);
+	void				MoveOp(NOperator* _pop, sword _x, sword _y);
+	void				InvalidateAllOps();
+
+	//Methodes de recherche
+	void GetOpsFromClassName(const char* _pszClassName, NObjectArray& _carray);
+
+	//Methodes pour la generation des liens entre les ops
+	void ComputeLinks();
+	void _ComputeLinks(NOperator* _pop, NOperator* _pprevop, udword _dwCurDepth);
+
+	void GetPrevOperators(NOperator* _pop, NObjectArray& _carrayPrevOpS);
+	void GetNextOperators(NOperator* _pop, NObjectArray& _carrayNextOpS);
+	NOperator* GetFinalOpFrom(NOperator* _pop);
+
+	//Datas	GUI
+	NObjectArray	m_arrayOps;						//!< Operators array
+
+	//Datas for compilation and linkage
+	NOperator*		m_pprevOp;
+	NObjectArray	m_arrayOpsUnlinked;		//!< Operators unlinked array
+};
+
+//-----------------------------------------------------------------
+//!	\class		NAssetModel
+//!	\brief		Asset model
+//!	\note will been moved to Editor
+//-----------------------------------------------------------------
+class NAssetModel :	public NObject
+{
+public:
+	NAssetModel(void);
+	virtual ~NAssetModel(void);
+
+	NTreeNode*			GetRootGroup()				{ return m_pRootGroup;		}
+
+protected:
+	NTreeNode* m_pRootGroup;							//!< Root	Groups
+};
+
+//-----------------------------------------------------------------
 //!	\class		NEngineOp
-//!	\brief		Operators Engine 
+//!	\brief		Engine operators process
 //-----------------------------------------------------------------
 class CORELIB_API NEngineOp
 {
@@ -156,31 +166,67 @@ public:
 	NEngineOp();
 	virtual ~NEngineOp();
 
+	//Get unique Engine Instance
+	static	NEngineOp* GetEngine();
+
 	//API Methods
-	SResource* ProcessSequence(SOpsSequence* _psequence, float _ftime, float _fDetailFactor=1.0f);
+	void	Clear();
+	bool	LoadProject(const char* _pszFullFileName);
 
-	//Animation Channels methods
-	void SetChannelValue(ubyte _byChannel, float _value);
-	void GetChannelValue(ubyte _byChannel, float& _outValue);
+	void	GetFinalsResultsList(NObjectArray& _carray, const char* _pszFromGroup=NULL, bool _bRecurse=true);
+	void	ProcessFinalResult(NStoreResultOp* _pFinalResultOp, float _ftime, float _fDetailFactor=1.0f, FXGEN_OPSPROCESSCB* _cbOpsProcess=NULL);
+	void	CompactMemory(ubyte _byTypeMask=OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED);
 
-	//Assets management
-	//void AddAsset(SCompiledOp* _pops);	//###TODO###
-	//void RemoveAsset(); //###TODO###
+	//Editor Methods
+	bool SaveProject(const char* _pszFullFileName);
+
+	//Editor Execution
+	void InvalidateAllOps();
+	void InvalidateOp(NOperator* _pop);
+	void Execute(float _ftime, NOperator* _popFinal, float _fDetailFactor=1.0f, FXGEN_OPSPROCESSCB* _cbProcess=NULL);
+
+	//Editor Channels methods
+	void SetChannelValue(ubyte _byChannel, NVarValue& _value);
+	void GetChannelValue(ubyte _byChannel, NVarValue& _outValue);
+
+	//Editor Membres access
+	NTreeNode*			GetRootGroup()				{ return m_pRootGroup;		}
+	NObjectGarbage* GetBitmapGarbage()		{ return &m_bitmapsAlloc; }
+
+	//Editor Operators Resources management
+	void GetBitmap(NObject** _ppobj, ubyte _byObjType=OBJRES_TYPE_INTERMEDIATE);
+#ifdef THREADS_ENABLED
+	bool m_bEngineLock; // public allows this variable to be checked for existence by external programs
+#endif
 
 protected:
+	//Internal Methods
+	void GetFinalOps(NTreeNode* _pnodeFrom, NObjectArray& _finalsOp, bool _bRecurse);
+	void _GetFinalOps(NTreeNode* _pnode, NObjectArray& _finalsOp, bool _bRecurse);
+	void ClearParsedOpsFlags(NOperator* _pop);
+	void _InvalidateAllOps(NTreeNode* _pnode);
+	NOperator* GetRootOperator(NOperator* _pop);
+
 	//Methods for execution
-	void _ProcessSequence(float _ftime, SOpsSequence* _psequence, float _fDetailFactor);
-	//void ComputeInvaliddOps(NOperatorNode* _popFinal);
+	void _Execute(float _fTime, NOperator* _popFinal, float _fDetailFactor);
+	void ComputeInvaliddOps(NOperator* _popFinal);
+	void _ComputeInvaliddOps(NOperator* _pop);
+	void _ComputeToProcessOpsCount(NOperator* _popFinal);
 
 	//Datas
-	float  m_achannels[MAX_CHANNELS];	//!< Values for animation channels
+	NTreeNode* m_pRootGroup;							//!< Root	Groups
+	NVarValue  m_achannels[MAX_CHANNELS];	//!< Values for animation channels
 
-	SEngineState	m_astates[MAX_CONTEXTS];
-	udword				m_nCurContext;				//!< indice (see m_astates[m_nCurContext])
-	udword				m_dwTotalProcessOpsCount, m_dwCurProcessOpsCount;
+	//Datas for compilation and execution
+	NOperator*	m_aStacks[MAX_CONTEXTS][MAX_DEPTH];	//!< Inputs Stack for operators process
+	udword			m_nCurContext;				//!< indice (see m_aStacks[m_nCurContext, dwCurLevel])
+	NOperator*	m_popFinal;
+	bool				m_bError;							//!< Error while process
+	udword			m_dwTotalProcessOpsCount, m_dwCurProcessOpsCount;
 	FXGEN_OPSPROCESSCB* m_cbOpsProcess;
 
+	//Garbages for media (bitmaps ...)
+	NObjectGarbage	m_bitmapsAlloc;
 };
-
 
 #endif //ENGINEOP_H

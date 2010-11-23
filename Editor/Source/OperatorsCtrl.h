@@ -20,7 +20,7 @@
 //			Includes
 //-----------------------------------------------------------------
 #include "CoreLibPkg.h"
-#include "Operator.h"
+
 
 //-----------------------------------------------------------------
 // 			Defines
@@ -46,35 +46,35 @@ public:
 	// Methods
 	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
 
-	void DisplayOperatorsPage(NOperatorsPage* popsPage);
+	void DisplayOperatorsPage(NOpGraphModel* popsPage);
 
 	void	PlaceOperator(const char* _pszClassName);
 
-	void	SelectOperator(NOperatorNode* pop);
+	void	SelectOperator(NOperator* pop);
 	void	DeleteOperatorsSelected();
 
 	void	Update();	//!< MAJ de l'affichage
 	void	Update(float _ftime);
 
-	virtual void	OnMarkShowOperator(NOperatorNode* pop);			//OVERLOAD
-	virtual void	OnDeletingOperator(NOperatorNode* pop)	{}	//OVERRIDE
-	virtual void	OnDeletedOperator(NOperatorNode* pop)		{}	//OVERRIDE
+	virtual void	OnMarkShowOperator(NOperator* pop);			//OVERLOAD
+	virtual void	OnDeletingOperator(NOperator* pop)	{}	//OVERRIDE
+	virtual void	OnDeletedOperator(NOperator* pop)		{}	//OVERRIDE
 
 	//Members Access
-	NOperatorNode*	GetMarkedShowOperator()		{ return m_popMarkedShow; }
+	NOperator*	GetMarkedShowOperator()		{ return m_popMarkedShow; }
 
 protected:
 	// Internal methods
-	NOperatorNode*	AddOperator(sword x, sword y, sword w, const char* _pszClassName);
-	void				DeleteOperator(NOperatorNode* pop);
+	NOperator*	AddOperator(sword x, sword y, sword w, const char* _pszClassName);
+	void				DeleteOperator(NOperator* pop);
 	void				Reset();
 
-	NOperatorNode*	GetOperatorAt(NPoint& pt, bool& bResizeZone);
+	NOperator*	GetOperatorAt(NPoint& pt, bool& bResizeZone);
 	void				UpdateCursor(NPoint& pt);
 	void				SelectOperatorsIntoRect(NRect& rc);
-	void				GetOperatorRect(NOperatorNode* _pop, NRect& _rc);
+	void				GetOperatorRect(NOperator* _pop, NRect& _rc);
 
-	void				DisplayOperator(N2DPainter* _pdc, NOperatorNode* _pop);
+	void				DisplayOperator(N2DPainter* _pdc, NOperator* _pop);
 
 	bool				IsMovedSelOperatorsCollide(sdword _dwoffsetX, sdword _dwoffsetY);
 	bool				IsOpRectCollide(NRect _rcItemTest, bool _bExcludeSel);
@@ -87,11 +87,11 @@ protected:
 	void ClearClipboard();
 
 	//Selection Methods
-	bool				IsOperatorSelected(NOperatorNode* pcbloc);
+	bool				IsOperatorSelected(NOperator* pcbloc);
 
 	//Cursor Methods
 	void				DisplayCursor(N2DPainter* _pdc);
-	void				SetOpCursorPos(sdword _dwX, sdword _dwY);
+	void				SetCursorPos(sdword _dwX, sdword _dwY);
 
 	// Datas
 	float		m_fPosX, m_fPosY, m_fStartPosXPan, m_fStartPosYPan;
@@ -104,10 +104,10 @@ protected:
 	bool		m_bAskedForMove;
 
 	//Datas Operators
-	NOperatorsPage*			m_popsPage;						//!< Page used for editing
-	GArray<NOperatorNode*>	m_carrayOpsSelected;	//!< Operators selected
-	GArray<NOperatorNode*>	m_carrayOpsClipboard;	//!< Operators in clipboard
-	NOperatorNode	*m_popMarkedSelected, *m_popMarkedShow;
+	NOpGraphModel*			m_popsPage;						//!< Page used for editing
+	NArray<NOperator*>	m_carrayOpsSelected;	//!< Operators selected
+	NArray<NOperator*>	m_carrayOpsClipboard;	//!< Operators in clipboard
+	NOperator	*m_popMarkedSelected, *m_popMarkedShow;
 	float								m_fupdateTime;
 	NRect	m_rcAllOperators;	//!< Operators zone
 
@@ -116,9 +116,8 @@ protected:
 
 protected:
 	//Messages Dispatching
-	virtual	void	OnPaint();
+	virtual	void	OnPaint(N2DPainter* _ppainter);
 	virtual void	OnSize();
-
 	virtual void	OnMouseMove(NPoint pos );
 	virtual void	OnMButtonDown(NPoint pos);
 	virtual void	OnMButtonUp(NPoint pos);
@@ -126,8 +125,7 @@ protected:
 	virtual void	OnLButtonDown(NPoint pos);
 	virtual	void	OnLButtonDblClk(NPoint point);
 	virtual void	OnRButtonDown(NPoint pos);
-	virtual	void	OnMouseWheel(NPoint pos, sdword zDelta);
-
+	virtual	void	OnMouseWheel(sword zDelta, NPoint pos);
 	virtual	void	OnKeyUp(udword dwchar);
 
 };

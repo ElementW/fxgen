@@ -21,6 +21,7 @@
 // Includes
 //-----------------------------------------------------------------
 #include <math.h>
+#include "../Types.h"
 
 //! Simple wrapper for pixel arrays, which allows safe operation as an option.
 //! It can be a bit slower than pointer arithmetics.
@@ -44,16 +45,14 @@ template < typename T, bool bilc = true > struct RectangularArray
 
 	//! Ctor with heap allocation.
 	RectangularArray(size_t w, size_t h)
-			: width(w), height(h), need_delete(true)
-	{
-		data = NNEWARRAY(T, w*h);
-	}
+			: width(w), height(h), data(new T[w*h]), need_delete(true)
+	{}
 
 	//! dtor
 	~RectangularArray()
 	{
 		if (need_delete)
-			NDELETEARRAY(data);
+			delete[] data;
 	}
 
 	//! Get a pixel value from given position.

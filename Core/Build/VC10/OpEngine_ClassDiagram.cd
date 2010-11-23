@@ -1,67 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="NOperatorFx">
-    <Position X="2.75" Y="0.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAgIAAAAQAAAAAAgAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>C:\Cle\old\FxGen\Core\Source\OpEngine\EngineOp.h</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="NEngineOp">
-    <Position X="0.75" Y="0.75" Width="1.5" />
+    <Position X="2.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AACAAAAgJAAAAAEAACAAAgABEAhAEAgAAiAAAQAAAgA=</HashCode>
-      <FileName>C:\Cle\old\FxGen\Core\Source\OpEngine\EngineOp.h</FileName>
+      <HashCode>gAAAAAASJBAQAAQoQAACJxCBEACAGEABAgAkESBAAgA=</HashCode>
+      <FileName>c:\temp\download\perso\fxgen\fxgen\core\source\opengine\engineop.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Struct Name="SOpFuncInterface">
-    <Position X="10.5" Y="1" Width="1.5" />
+  <Class Name="NObject" Collapsed="true">
+    <Position X="5.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAACAAAAAAg=</HashCode>
-      <FileName>C:\Cle\old\FxGen\Core\Source\OpEngine\EngineOp.h</FileName>
+      <HashCode>AAIQwIAAAAAEBCgAASIAQEACgAIAIAAAABAYQAAABCA=</HashCode>
+      <FileName>C:\temp\Download\Perso\FxGen\FxGen\Core\Source\Core.h</FileName>
     </TypeIdentifier>
-  </Struct>
-  <Struct Name="SOpCallDesc">
-    <Position X="6" Y="5.75" Width="1.5" />
+  </Class>
+  <Class Name="NOperator" Collapsed="true">
+    <Position X="5.25" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAUAAIAAAABAAAAAAAEAAAAAAAAAAAABAAA=</HashCode>
-      <FileName>C:\Cle\old\FxGen\Core\Source\OpEngine\EngineOp.h</FileName>
+      <HashCode>AAAAgIEIAIQAAAAIAwAEAAIAAAAAoMjAAAAJEACABAA=</HashCode>
+      <FileName>c:\temp\download\perso\fxgen\fxgen\core\source\opengine\engineop.h</FileName>
     </TypeIdentifier>
-  </Struct>
-  <Struct Name="SResource">
-    <Position X="12" Y="5.75" Width="1.5" />
+  </Class>
+  <Class Name="NOpGraphModel">
+    <Position X="8.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAEAAAAACAAAAAAAAAAQAAAAAAAA=</HashCode>
-      <FileName>C:\Cle\old\FxGen\Core\Source\OpEngine\EngineOp.h</FileName>
+      <HashCode>AAAAgIFACAAAASAAASBAhAgCAgAAICCAQAAAACAIAAA=</HashCode>
+      <FileName>c:\temp\download\perso\fxgen\fxgen\core\source\opengine\engineop.h</FileName>
     </TypeIdentifier>
-  </Struct>
-  <Struct Name="SOpsSequence">
-    <Position X="8.75" Y="4.75" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAEABAAAAAAAAAAAAAAAEAUAAAAggAAAACAAAAAAA=</HashCode>
-      <FileName>C:\Cle\old\FxGen\Core\Source\OpEngine\EngineOp.h</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="apopCallDesc" />
-      <Field Name="pResourceResult" />
-    </ShowAsAssociation>
-  </Struct>
-  <Struct Name="SCompiledOp">
-    <Position X="6.25" Y="3.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAEAAAAQAAAAAAAAAAAAAAAAAAAAAEAAAAAAA=</HashCode>
-      <FileName>C:\Cle\old\FxGen\Core\Source\OpEngine\EngineOp.h</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="pfirstOpsSeq" />
-    </ShowAsAssociation>
-  </Struct>
-  <Struct Name="SEngineState">
-    <Position X="7.75" Y="0.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAIAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
-      <FileName>C:\Cle\old\FxGen\Core\Source\OpEngine\EngineOp.h</FileName>
-    </TypeIdentifier>
-  </Struct>
+  </Class>
   <Font Name="Tahoma" Size="8.25" />
 </ClassDiagram>
