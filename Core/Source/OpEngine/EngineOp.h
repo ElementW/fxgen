@@ -94,66 +94,28 @@ public:
 
 
 //-----------------------------------------------------------------
-//!	\class		NOpGraphModel
-//!	\brief		operators graph model
-//!	\note will been moved to Designer
+//!	\class		NCompiledAsset
+//!	\brief		
 //-----------------------------------------------------------------
-class CORELIB_API NOpGraphModel : public NObject
+class CORELIB_API NCompiledAsset :	public NObject
 {
 public:
-	FDECLARE_CLASS();
-
-	NOpGraphModel();
-	virtual ~NOpGraphModel();
+	NCompiledAsset();
+	virtual ~NCompiledAsset();
 
 	//Serialization
 	virtual	bool Save(NArchive* _s);	//!< Save object
 	virtual	bool Load(NArchive* _l);	//!< Load object
 
-	udword			GetOpsCount()							{ return m_arrayOps.Count();					}
-	NOperator*	GetOpFromIdx(udword _idx)	{ return (NOperator*)m_arrayOps[_idx];}
-
-	udword			AddOp(NOperator* _pop);
-	void				DeleteAllOps();
-	udword			DeleteOp(NOperator* _pop);
-	void				MoveOp(NOperator* _pop, sword _x, sword _y);
-	void				InvalidateAllOps();
-
-	//Methodes de recherche
-	void GetOpsFromClassName(const char* _pszClassName, NObjectArray& _carray);
-
-	//Methodes pour la generation des liens entre les ops
-	void ComputeLinks();
-	void _ComputeLinks(NOperator* _pop, NOperator* _pprevop, udword _dwCurDepth);
-
-	void GetPrevOperators(NOperator* _pop, NObjectArray& _carrayPrevOpS);
-	void GetNextOperators(NOperator* _pop, NObjectArray& _carrayNextOpS);
-	NOperator* GetFinalOpFrom(NOperator* _pop);
-
-	//Datas	GUI
-	NObjectArray	m_arrayOps;						//!< Operators array
-
-	//Datas for compilation and linkage
-	NOperator*		m_pprevOp;
-	NObjectArray	m_arrayOpsUnlinked;		//!< Operators unlinked array
-};
-
-//-----------------------------------------------------------------
-//!	\class		NAssetModel
-//!	\brief		Asset model
-//!	\note will been moved to Editor
-//-----------------------------------------------------------------
-class NAssetModel :	public NObject
-{
-public:
-	NAssetModel(void);
-	virtual ~NAssetModel(void);
-
-	NTreeNode*			GetRootGroup()				{ return m_pRootGroup;		}
+	//Methods
+	//NStoreResultOp* GetFinalOpByName(pszName)	//Name => Graph:FinalOutput
 
 protected:
-	NTreeNode* m_pRootGroup;							//!< Root	Groups
+	//Datas
+	NObjectArray	m_arrayOps;				//!< Operators array
+	NObjectArray	m_arrayFinalOps;	//!< Final Operators array
 };
+
 
 //-----------------------------------------------------------------
 //!	\class		NEngineOp
@@ -167,22 +129,18 @@ public:
 	virtual ~NEngineOp();
 
 	//Get unique Engine Instance
-	static	NEngineOp* GetEngine();
+	static	NEngineOp* GetInstance();
 
 	//API Methods
 	void	Clear();
-	bool	LoadProject(const char* _pszFullFileName);
 
-	void	GetFinalsResultsList(NObjectArray& _carray, const char* _pszFromGroup=NULL, bool _bRecurse=true);
+	//void	GetFinalsResultsList(NObjectArray& _carray, const char* _pszFromGroup=NULL, bool _bRecurse=true);
 	void	ProcessFinalResult(NStoreResultOp* _pFinalResultOp, float _ftime, float _fDetailFactor=1.0f, FXGEN_OPSPROCESSCB* _cbOpsProcess=NULL);
 	void	CompactMemory(ubyte _byTypeMask=OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED);
 
-	//Editor Methods
-	bool SaveProject(const char* _pszFullFileName);
-
 	//Editor Execution
-	void InvalidateAllOps();
-	void InvalidateOp(NOperator* _pop);
+	//void InvalidateAllOps();
+	//void InvalidateOp(NOperator* _pop);
 	void Execute(float _ftime, NOperator* _popFinal, float _fDetailFactor=1.0f, FXGEN_OPSPROCESSCB* _cbProcess=NULL);
 
 	//Editor Channels methods
@@ -190,22 +148,19 @@ public:
 	void GetChannelValue(ubyte _byChannel, NVarValue& _outValue);
 
 	//Editor Membres access
-	NTreeNode*			GetRootGroup()				{ return m_pRootGroup;		}
+	//NTreeNode*			GetRootGroup()				{ return m_pRootGroup;		}
 	NObjectGarbage* GetBitmapGarbage()		{ return &m_bitmapsAlloc; }
 
 	//Editor Operators Resources management
 	void GetBitmap(NObject** _ppobj, ubyte _byObjType=OBJRES_TYPE_INTERMEDIATE);
-#ifdef THREADS_ENABLED
-	bool m_bEngineLock; // public allows this variable to be checked for existence by external programs
-#endif
 
 protected:
-	//Internal Methods
-	void GetFinalOps(NTreeNode* _pnodeFrom, NObjectArray& _finalsOp, bool _bRecurse);
-	void _GetFinalOps(NTreeNode* _pnode, NObjectArray& _finalsOp, bool _bRecurse);
-	void ClearParsedOpsFlags(NOperator* _pop);
-	void _InvalidateAllOps(NTreeNode* _pnode);
-	NOperator* GetRootOperator(NOperator* _pop);
+	//Internal Methods	
+	//void GetFinalOps(NTreeNode* _pnodeFrom, NObjectArray& _finalsOp, bool _bRecurse);	//###TOMOVE### to compiler
+	//void _GetFinalOps(NTreeNode* _pnode, NObjectArray& _finalsOp, bool _bRecurse); //###TOMOVE### to compiler
+	void ClearParsedOpsFlags(NOperator* _pop); //###TOMOVE### to compiler
+	//void _InvalidateAllOps(NTreeNode* _pnode); //###TOMOVE### to compiler
+	NOperator* GetRootOperator(NOperator* _pop); //###TOMOVE### to compiler
 
 	//Methods for execution
 	void _Execute(float _fTime, NOperator* _popFinal, float _fDetailFactor);
@@ -214,7 +169,8 @@ protected:
 	void _ComputeToProcessOpsCount(NOperator* _popFinal);
 
 	//Datas
-	NTreeNode* m_pRootGroup;							//!< Root	Groups
+	//NTreeNode* m_pRootGroup;							//!< Root	Groups	//###TOMOVE### to compiler and replace by CompiledAsset
+
 	NVarValue  m_achannels[MAX_CHANNELS];	//!< Values for animation channels
 
 	//Datas for compilation and execution

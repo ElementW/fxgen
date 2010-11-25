@@ -78,7 +78,7 @@ udword NFlatOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	m_pcvarsBloc->GetValue(2, _ftime, (udword&)col);
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	NBitmap* pDst = (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
@@ -154,7 +154,7 @@ udword NCloudOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	h=(udword) ((float)h*_fDetailFactor);
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	NBitmap* pDst	= (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
@@ -447,7 +447,7 @@ udword NGradientOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 	m_pcvarsBloc->GetValue(5, _ftime, (udword&)colD);
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 	NBitmap* pDst = (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
 	NRGBA* pPxDst = pDst->GetPixels();
@@ -559,7 +559,7 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	SetSeedValue(wSeed);
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 	NBitmap* pDst = (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
 	NRGBA* pPxDst = pDst->GetPixels();
@@ -639,7 +639,7 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 
 			if(chessboard)
 			{
-				bool cfc = (xo&1)^(yo&1);
+				bool cfc = ((xo&1)^(yo&1))!=0;
 				float coeff = (1 - 2 * cfc) / 2.5f;
 				pPxDst->r = (ubyte)((cfc + coeff * minDist)*col.r);
 				pPxDst->g = (ubyte)((cfc + coeff * minDist)*col.g);
@@ -711,7 +711,7 @@ udword NNoiseOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	SetSeedValue(wSeed);
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	NBitmap* pDst = (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);
@@ -821,7 +821,7 @@ udword NVectorOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	h=(udword) ((float)h*_fDetailFactor);
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	NBitmap* pDst = (NBitmap*)m_pObj;
 	pDst->SetSize(w,h);

@@ -89,11 +89,10 @@
     <ClCompile Include="..\..\..\Source\EditorApp.cpp" />
     <ClCompile Include="..\..\..\Source\EditorGUI.cpp" />
     <ClCompile Include="..\..\..\Source\FileChooserDialog.cpp" />
-    <ClCompile Include="..\..\..\Source\AssetsWnd.cpp" />
     <ClCompile Include="..\..\..\Source\GUI_Win32.cpp" />
     <ClCompile Include="..\..\..\Source\OperatorsCtrl.cpp" />
     <ClCompile Include="..\..\..\Source\OperatorsWnd.cpp" />
-    <ClCompile Include="..\..\..\Source\ProjectWnd.cpp" />
+    <ClCompile Include="..\..\..\Source\AssetWnd.cpp" />
     <ClCompile Include="..\..\..\Source\PropertiesWnd.cpp" />
     <ClCompile Include="..\..\..\Source\ViewportsCtrl.cpp" />
     <ClCompile Include="..\..\..\Source\ViewportsWnd.cpp" />
@@ -102,17 +101,20 @@
     <ClCompile Include="..\..\..\Source\PropertyItems.cpp" />
     <ClCompile Include="..\..\..\Source\TreeNodeCtrl.cpp" />
     <ClCompile Include="..\..\..\Source\Main.cpp" />
+    <ClCompile Include="AssetModel.cpp" />
+    <ClCompile Include="OpGraphModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Source\EditorApp.h" />
     <ClInclude Include="..\..\..\Source\EditorGUI.h" />
     <ClInclude Include="..\..\..\Source\EventsList.h" />
     <ClInclude Include="..\..\..\Source\FileChooserDialog.h" />
-    <ClInclude Include="..\..\..\Source\AssetsWnd.h" />
     <ClInclude Include="..\..\..\Source\GUI_Win32.h" />
     <ClInclude Include="..\..\..\Source\OperatorsCtrl.h" />
     <ClInclude Include="..\..\..\Source\OperatorsWnd.h" />
-    <ClInclude Include="..\..\..\Source\ProjectWnd.h" />
+    <ClInclude Include="..\..\..\Source\AssetWnd.h" />
+    <ClInclude Include="AssetModel.h" />
+    <ClInclude Include="OpGraphModel.h" />
     <CustomBuildStep Include="..\..\..\Source\PropertiesWnd.h" />
     <ClInclude Include="..\..\..\Source\ViewportsCtrl.h" />
     <ClInclude Include="..\..\..\Source\ViewportsWnd.h" />
