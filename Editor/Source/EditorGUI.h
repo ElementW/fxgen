@@ -27,11 +27,11 @@
 //		Prototypes
 //-----------------------------------------------------------------
 class NOperatorsWnd;
-class NProjectWnd;
+class NAssetWnd;
 class NAssetsWnd;
 
 //class NOperator;
-//class NOperatorsProject;
+//class NOperatorsAsset;
 
 //-----------------------------------------------------------------
 //!	\class		NEditorGUI
@@ -53,20 +53,20 @@ public:
 
 	NOperator* Execute(float _ftime);
 
-	void LoadProject(NString path = NString());
-	void SaveProject(NString path = NString());
+	void LoadAsset(NString path);
+	void SaveAsset(NString path = "");
 
-	//NOperatorsProject* GetProject() { return m_pcurProject; }
+	//NOperatorsAsset* GetAsset() { return m_pcurAsset; }
 
 protected:
 	//Methods
-	void	OnNewProject();
-	void	OnOpenProject();
-	void	OnSaveProjectAs();
+	void	OnNewAsset();
+	void	OnOpenAsset();
+	void	OnSaveAssetAs();
 
 	void OnKeyDown(udword dwchar);
 
-	bool AnnoyUserProjectMayBeLost();
+	bool AnnoyUserAssetMayBeLost();
 
 	// Messages Notify
 	void OnFile(NObject* _psender);
@@ -75,11 +75,10 @@ protected:
 	void OnOptionMenuClick(NObject* _psender);
 
 	//Datas
-	//NOperatorsProject*	m_pcurProject;		//!< Current project
+	//NOperatorsAsset*	m_pcurAsset;		//!< Current project
 	bool							m_bExecuteLocked;	//!< Lock-Unlock operators execution
 	NOperatorsWnd*		m_opswnd;					//!< Operators Window
-	NProjectWnd*			m_pprojectwnd;		//!< Pages Window
-	NAssetsWnd*				m_passetswnd;			//!< Assets window
+	NAssetWnd*				m_passetswnd;			//!< Assets window
 	NOperator*				m_popMarkedShow;	//!< Operator marked show for final result
 	NString						projectname;
 	float							m_fDetailFactor;

@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-//! \file		AssetsWnd.h
-//! \brief	Assets's windows
+//! \file		AssetWnd.h
+//! \brief	Asset's windows
 //!
 //!	\author	Johann Nadalutti (fxgen@free.fr)
-//!	\date		13-03-2010
+//!	\date		23-11-2010
 //!
 //!	\brief	This file applies the GNU GENERAL PUBLIC LICENSE
 //!					Version 2, read file COPYING.
@@ -14,41 +14,46 @@
 //!
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-#ifndef ASSETSWND_H
-#define ASSETSWND_H
+#pragma once
 
 //-----------------------------------------------------------------
 //			Includes
 //-----------------------------------------------------------------
-#include "EditorApp.h"
+#include "Editor.h"
 #include "TreeNodeCtrl.h"
 
 //-----------------------------------------------------------------
-//			Prototypes
+//!	\class		NAssetWnd
+//!	\brief		Asset's windows
 //-----------------------------------------------------------------
-
-
-//-----------------------------------------------------------------
-//!	\class		NAssetsWnd
-//!	\brief		Assets's windows
-//-----------------------------------------------------------------
-class NAssetsWnd :	public NTreeNodeCtrl
+class NAssetWnd :	public NTreeNodeCtrl
 {
 public:
-	NAssetsWnd(void);
-	virtual ~NAssetsWnd(void);
+	NAssetWnd(void);
+	virtual ~NAssetWnd(void);
 
 	//Methods
 	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
 
+	void DisplayOperatorsAsset(NEngineOp* _popsAsset);
+	void SelectFirstGraph();
 
 protected:
 	//Methods
+	void AddFolder();
+	void AddGraph();
+	void Delete();
+	void Rename();
+
+	NTreeNode*			GetSelectedFolder();
+	NOpGraphModel* GetSelectedGraph();
+
+	NObject* _FindNodeFromClassName(NTreeNode* _pParent, char* _pszClassName);
 
 	// Messages Notify
 	void OnTreeSelChange(NObject* _psender);
 
-	//Events
+	//Messages Dispatching
 	virtual void OnRButtonDown(NPoint pos);
 	void OnMenuClick(NObject* _psender);
 
@@ -56,7 +61,6 @@ protected:
 	void InitCtxMenu();
 
 	//Datas
+	NEngineOp*	m_popsAsset;
 	NMenuCtrl		m_wndMenu;
 };
-
-#endif //ASSETSWND_H

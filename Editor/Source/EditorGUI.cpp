@@ -23,20 +23,19 @@
 #include "OperatorsWnd.h"
 #include "PropertiesWnd.h"
 #include "ViewportsWnd.h"
-#include "ProjectWnd.h"
 #include "FileChooserDialog.h"
-#include "AssetsWnd.h"
+#include "AssetWnd.h"
 
 //-----------------------------------------------------------------
 //                   Defines
 //-----------------------------------------------------------------
 
-#define	MENU_NEWPROJECT			100
-#define	MENU_OPENPROJECT		101
-#define	MENU_SAVEPROJECTAS	102
-#define	MENU_EXIT						103
-#define	MENU_SAVEPROJECT		104
-#define	MENU_RELOADPROJECT	105
+#define	MENU_NEWASSET			100
+#define	MENU_OPENASSET		101
+#define	MENU_SAVEASSETAS	102
+#define	MENU_EXIT					103
+#define	MENU_SAVEASSET		104
+#define	MENU_RELOADASSET	105
 
 #define	MENU_DETAILLOW			200
 #define	MENU_DETAILNORMAL		201
@@ -106,37 +105,36 @@ bool NEditorGUI::Create(char* name, const NRect& rect)
 	NViewportsWnd* viewportswnd = NNEW(NViewportsWnd);
 	viewportswnd->Create("View", GetClientRect(), this);
 
-	//Create Project window
-	m_pprojectwnd = NNEW(NProjectWnd);
-	m_pprojectwnd->Create("Project", GetClientRect(), this);
+	//Create Asset window
+	//m_pprojectwnd = NNEW(NAssetWnd);
+	//m_pprojectwnd->Create("Asset", GetClientRect(), this);
 
 	//Create Assets window
-	m_passetswnd = NNEW(NAssetsWnd);
+	m_passetswnd = NNEW(NAssetWnd);
 	m_passetswnd->Create("Assets", GetClientRect(), this);
 
 	///////////////////////////////////////////////
 	// Mainframe's Split
 	udword dwViewportsPaneID	= 0;
-	udword dwProjectPaneID		= SplitH(dwViewportsPaneID, 50);
+	udword dwAssetsPaneID		= SplitH(dwViewportsPaneID, 50);
 	udword dwPropertiesPaneID = SplitV(dwViewportsPaneID, 70);
-	udword dwOperatorsPaneID	= SplitV(dwProjectPaneID, 20);
+	udword dwOperatorsPaneID	= SplitV(dwAssetsPaneID, 20);
 
 	AddWndToLayout(dwViewportsPaneID,	viewportswnd);
 	AddWndToLayout(dwOperatorsPaneID,	m_opswnd);
 	AddWndToLayout(dwPropertiesPaneID,	propswnd);
-	AddWndToLayout(dwProjectPaneID,	m_pprojectwnd);
-	AddWndToLayout(dwProjectPaneID,	m_passetswnd);
+	AddWndToLayout(dwAssetsPaneID,	m_passetswnd);
 
 	RecalLayout();
 
 	/*udword dwViewportsPaneID	= SPLITPANE_DEFAULT_ID;
-	udword dwProjectPaneID		= SplitRow(dwViewportsPaneID, 50);
+	udword dwAssetPaneID		= SplitRow(dwViewportsPaneID, 50);
 	udword dwPropertiesPaneID = SplitColumn(dwViewportsPaneID, 70);
-	udword dwOperatorsPaneID	= SplitColumn(dwProjectPaneID, 20);
+	udword dwOperatorsPaneID	= SplitColumn(dwAssetPaneID, 20);
 	SetPaneWnd("View", dwViewportsPaneID,	viewportswnd);
 	SetPaneWnd("Stacked Operators", dwOperatorsPaneID,	m_opswnd);
 //	SetPaneWnd("Properties", dwPropertiesPaneID,	propswnd);
-	SetPaneWnd("Project", dwProjectPaneID,	m_pprojectwnd);
+	SetPaneWnd("Asset", dwAssetPaneID,	m_pprojectwnd);
 
 	//Init StripBar
 	NPANEINFO* pinfo = GetPaneInfo(dwViewportsPaneID);
@@ -150,15 +148,15 @@ bool NEditorGUI::Create(char* name, const NRect& rect)
 //	pinfo = GetPaneInfo(dwPropertiesPaneID);
 //	pinfo->pstripBar->InsertItemText("Properties", 10*8);
 
-	pinfo = GetPaneInfo(dwProjectPaneID);
-	pinfo->pstripBar->InsertItemText("Project", 7*8);
+	pinfo = GetPaneInfo(dwAssetPaneID);
+	pinfo->pstripBar->InsertItemText("Asset", 7*8);
 
 	//Init File Menu
 	m_wndFileMenu.Create("", pbuttonFile);
-	m_wndFileMenu.AddItem("New", MENU_NEWPROJECT, 0);
-	m_wndFileMenu.AddItem("Open", MENU_OPENPROJECT, 0);
-	m_wndFileMenu.AddItem("Save", MENU_SAVEPROJECT, 0);
-	m_wndFileMenu.AddItem("Save as...", MENU_SAVEPROJECTAS, 0);
+	m_wndFileMenu.AddItem("New", MENU_NEWASSET, 0);
+	m_wndFileMenu.AddItem("Open", MENU_OPENASSET, 0);
+	m_wndFileMenu.AddItem("Save", MENU_SAVEASSET, 0);
+	m_wndFileMenu.AddItem("Save as...", MENU_SAVEASSETAS, 0);
 	m_wndFileMenu.AddItem("Exit", MENU_EXIT, 0);
 	m_wndFileMenu.OnItemClick=FDelegate(this, (TDelegate)&NEditorGUI::OnFileMenuClick);
 
@@ -178,7 +176,7 @@ bool NEditorGUI::Create(char* name, const NRect& rect)
 
 	///////////////////////////////////////////////
 	// Create Start project
-	OnNewProject();
+	OnNewAsset();
 
 	return true;
 }
@@ -186,7 +184,7 @@ bool NEditorGUI::Create(char* name, const NRect& rect)
 //-----------------------------------------------------------------
 //!	\brief	###TOFIX###
 //-----------------------------------------------------------------
-bool NEditorGUI::AnnoyUserProjectMayBeLost()
+bool NEditorGUI::AnnoyUserAssetMayBeLost()
 {
 /*
 	static int firsttime = 2;
@@ -197,7 +195,7 @@ bool NEditorGUI::AnnoyUserProjectMayBeLost()
 		return true;
 	}
 
-	NTreeNode* prootNode = NEngineOp::GetProject()->GetRootGroup();
+	NTreeNode* prootNode = NEngineOp::GetAsset()->GetRootGroup();
 
 	udword dwCount = prootNode->GetSonsCount();
 
@@ -212,12 +210,12 @@ bool NEditorGUI::AnnoyUserProjectMayBeLost()
 
 
 //-----------------------------------------------------------------
-//!	\brief	Project creation
+//!	\brief	Asset creation
 //-----------------------------------------------------------------
-void NEditorGUI::OnNewProject()
+void NEditorGUI::OnNewAsset()
 {
-//	NTreeNode* prootNode = NEngineOp::GetProject()->GetRootGroup();
-//	if(!AnnoyUserProjectMayBeLost())
+//	NTreeNode* prootNode = NEngineOp::GetAsset()->GetRootGroup();
+//	if(!AnnoyUserAssetMayBeLost())
 //		return;
 
 	m_popMarkedShow = null;
@@ -225,10 +223,10 @@ void NEditorGUI::OnNewProject()
 	projectname = "";
 
 	//New project
-//	NEngineOp::GetProject()->Clear();
+//	NEngineOp::GetAsset()->Clear();
 
 	//Create empty project
-	//prootNode = NEngineOp::GetProject()->GetRootGroup();
+	//prootNode = NEngineOp::GetAsset()->GetRootGroup();
 
 /*	NTreeNode* pNewGrpNode = NNEW(NTreeNode);
 	pNewGrpNode->SetName("Group");
@@ -240,13 +238,13 @@ void NEditorGUI::OnNewProject()
 
 
 	//Clear project
-/*	if (m_pcurProject==null)
-		m_pcurProject = new NOperatorsProject();
+/*	if (m_pcurAsset==null)
+		m_pcurAsset = new NOperatorsAsset();
 
-	m_pcurProject->Clear();
+	m_pcurAsset->Clear();
 
-	//Display Projects's Pages
-	m_pprojectwnd->DisplayOperatorsProject(m_pcurProject);
+	//Display Assets's Pages
+	m_pprojectwnd->DisplayOperatorsAsset(m_pcurAsset);
 	m_pprojectwnd->SelectFirstPage();
 
 	//m_opswnd->DisplayOperatorsPage(null);
@@ -260,10 +258,10 @@ void NEditorGUI::OnNewProject()
 
 }
 
-void NEditorGUI::LoadProject(NString str)
+void NEditorGUI::LoadAsset(NString str)
 {
 /*
-	if(!AnnoyUserProjectMayBeLost())
+	if(!AnnoyUserAssetMayBeLost())
 		return;
 
 	if (!str.Length())
@@ -271,19 +269,19 @@ void NEditorGUI::LoadProject(NString str)
 
 	if(!str.Length())
 	{
-		OnOpenProject();
+		OnOpenAsset();
 		return;
 	}
 
 	m_popMarkedShow = null;
 	m_bExecuteLocked = true;
 
-	NEngineOp::GetProject()->Clear();
+	NEngineOp::GetAsset()->Clear();
 
-	m_pprojectwnd->DisplayOperatorsProject(NEngineOp::GetProject());
+	m_pprojectwnd->DisplayOperatorsAsset(NEngineOp::GetAsset());
 	m_pprojectwnd->SelectFirstPage();
 
-	if (NEngineOp::GetProject()->LoadProject(str.Buffer()))
+	if (NEngineOp::GetAsset()->LoadAsset(str.Buffer()))
 	{
 		projectname = str;
 		NString strTitle(CAPTION);
@@ -291,17 +289,17 @@ void NEditorGUI::LoadProject(NString str)
 		SetText(strTitle.Buffer());
 
 		//###TEST###
-		//NEngineOp::GetProject()->ProcessOperators(0.0, staticProcess);
+		//NEngineOp::GetAsset()->ProcessOperators(0.0, staticProcess);
 
 	} else {
 		//Error Message
 		GetApp()->MessageBox(gGetErrors()->GetErrors(), NMB_OK);
 		//Clean up
-		OnNewProject();
+		OnNewAsset();
 	}
 
-	//Display Projects's Pages
-	m_pprojectwnd->DisplayOperatorsProject(NEngineOp::GetProject());
+	//Display Assets's Pages
+	m_pprojectwnd->DisplayOperatorsAsset(NEngineOp::GetAsset());
 	m_pprojectwnd->SelectFirstPage();
 
 	m_bExecuteLocked = false;
@@ -309,20 +307,20 @@ void NEditorGUI::LoadProject(NString str)
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Project loading
+//!	\brief	Asset loading
 //-----------------------------------------------------------------
-void NEditorGUI::OnOpenProject()
+void NEditorGUI::OnOpenAsset()
 {
 	//Open File Dialog
   /*NFileChooserDialog dlg;
-	dlg.Create("Opening Project...", this);
+	dlg.Create("Opening Asset...", this);
 	if (dlg.DoModal())
 	{
-		LoadProject(dlg.GetPathName());
+		LoadAsset(dlg.GetPathName());
   }*/
 }
 
-void NEditorGUI::SaveProject(NString path)
+void NEditorGUI::SaveAsset(NString path)
 {
 /*
 //	bool show_message = false;
@@ -332,13 +330,13 @@ void NEditorGUI::SaveProject(NString path)
 
 	if (!path.Length())
 	{
-		OnSaveProjectAs();
+		OnSaveAssetAs();
 		return;
 	}
 
 	m_bExecuteLocked = true;
 
-	if (NEngineOp::GetProject()->SaveProject(path.Buffer()))
+	if (NEngineOp::GetAsset()->SaveAsset(path.Buffer()))
 	{
 		projectname = path;
 		NString strTitle(CAPTION);
@@ -352,15 +350,15 @@ void NEditorGUI::SaveProject(NString path)
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Project saving
+//!	\brief	Asset saving
 //-----------------------------------------------------------------
-void NEditorGUI::OnSaveProjectAs()
+void NEditorGUI::OnSaveAssetAs()
 {
 	//Save File Dialog
   /*NFileChooserDialog dlg;
-	dlg.Create("Saving Project...", this, false);
+	dlg.Create("Saving Asset...", this, false);
 	if (dlg.DoModal())
-    SaveProject(dlg.GetPathName());*/
+    SaveAsset(dlg.GetPathName());*/
 }
 
 
@@ -379,7 +377,7 @@ NOperator* NEditorGUI::Execute(float _ftime)
 		//m_wndProgress.TrackPopup(NPoint(256,256), RGBA(240,100,0,190));
 
 		//Process operators
-		NEngineOp::GetProject()->Execute(_ftime, m_popMarkedShow, m_fDetailFactor, staticOperatorsProcessCB);
+		NEngineOp::GetAsset()->Execute(_ftime, m_popMarkedShow, m_fDetailFactor, staticOperatorsProcessCB);
 
 		//Rendering
 		EVT_EXECUTE(EVT_RENDER, (udword)m_popMarkedShow, (udword)&_ftime);
@@ -453,10 +451,10 @@ void NEditorGUI::OnKeyDown(udword dwchar)
 //#ifdef USE_QUAKE_KEYS		//###JN### ok for now... :-)
 /*	switch (dwchar)
 	{
-		case VK_F6: SaveProject();	break;
-		case VK_F9:	LoadProject(); break;
-		case VK_F2:	OnSaveProjectAs(); break;
-		case VK_F3:	OnOpenProject(); break;
+		case VK_F6: SaveAsset();	break;
+		case VK_F9:	LoadAsset(); break;
+		case VK_F2:	OnSaveAssetAs(); break;
+		case VK_F3:	OnOpenAsset(); break;
 		default: break;
 	}*/
 //#endif
@@ -491,11 +489,11 @@ void NEditorGUI::OnFileMenuClick(NObject* _psender)
 	NMenuCtrl* pmenu = (NMenuCtrl*)_psender;
 	switch (pmenu->GetClickedCmdID())
 	{
-		case MENU_NEWPROJECT:			OnNewProject();				break;
-		case MENU_OPENPROJECT:		OnOpenProject();			break;
-		//case MENU_RELOADPROJECT:	LoadProject();				break;
-		case MENU_SAVEPROJECTAS:	OnSaveProjectAs();		break;
-		case MENU_SAVEPROJECT:		SaveProject();				break;
+		case MENU_NEWASSET:			OnNewAsset();				break;
+		case MENU_OPENASSET:		OnOpenAsset();			break;
+		//case MENU_RELOADASSET:	LoadAsset();				break;
+		case MENU_SAVEASSETAS:	OnSaveAssetAs();		break;
+		case MENU_SAVEASSET:		SaveAsset();				break;
 //		case MENU_EXIT:						GetGUISubSystem()->AskExit();	break;
 	};
 
@@ -509,48 +507,48 @@ void NEditorGUI::OnOptionMenuClick(NObject* _psender)
 	{
 		case MENU_DETAILLOW:
 			m_bExecuteLocked = true;
-			NEngineOp::GetProject()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-			NEngineOp::GetProject()->InvalidateAllOps();
+			NEngineOp::GetAsset()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			NEngineOp::GetAsset()->InvalidateAllOps();
 			m_fDetailFactor = 0.5f;
 			m_bExecuteLocked = false;
 			break;
 
 		case MENU_DETAILNORMAL:
 			m_bExecuteLocked = true;
-			NEngineOp::GetProject()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-			NEngineOp::GetProject()->InvalidateAllOps();
+			NEngineOp::GetAsset()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			NEngineOp::GetAsset()->InvalidateAllOps();
 			m_fDetailFactor = 1.0f;
 			m_bExecuteLocked = false;
 			break;
 
 		case MENU_DETAILHIGH:
 			m_bExecuteLocked = true;
-			NEngineOp::GetProject()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-			NEngineOp::GetProject()->InvalidateAllOps();
+			NEngineOp::GetAsset()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+			NEngineOp::GetAsset()->InvalidateAllOps();
 			m_fDetailFactor = 2.0f;
 			m_bExecuteLocked = false;
 			break;
 
 		//case MENU_DETAILFINE:
 		//	m_bExecuteLocked = true;
-		//	NEngineOp::GetProject()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-		//	NEngineOp::GetProject()->InvalidateAllOps();
+		//	NEngineOp::GetAsset()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+		//	NEngineOp::GetAsset()->InvalidateAllOps();
 		//	m_fDetailFactor = 4.0f;
 		//	m_bExecuteLocked = false;
 		//	break;
 
 		//case MENU_DETAILREALISTIC:
 		//	m_bExecuteLocked = true;
-		//	NEngineOp::GetProject()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-		//	NEngineOp::GetProject()->InvalidateAllOps();
+		//	NEngineOp::GetAsset()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+		//	NEngineOp::GetAsset()->InvalidateAllOps();
 		//	m_fDetailFactor = 8.0f;
 		//	m_bExecuteLocked = false;
 		//	break;
 
 		//case MENU_DETAILULTRA:
 		//	m_bExecuteLocked = true;
-		//	NEngineOp::GetProject()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-		//	NEngineOp::GetProject()->InvalidateAllOps();
+		//	NEngineOp::GetAsset()->GetBitmapGarbage()->Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
+		//	NEngineOp::GetAsset()->InvalidateAllOps();
 		//	m_fDetailFactor = 16.0f;
 		//	m_bExecuteLocked = false;
 		//	break;

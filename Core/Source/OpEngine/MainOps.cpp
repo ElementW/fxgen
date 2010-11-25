@@ -60,7 +60,7 @@ udword NStoreOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj, OBJRES_TYPE_STORED);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj, OBJRES_TYPE_STORED);
 
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -124,7 +124,7 @@ udword NStoreResultOp::Process(float _ftime, NOperator** _pOpsInts, float _fDeta
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj, OBJRES_TYPE_FINALSTORED);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj, OBJRES_TYPE_FINALSTORED);
 
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -191,7 +191,7 @@ udword NLoadOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get Variables Values
 	NOperator* popRef;
@@ -268,7 +268,7 @@ udword NChannelAnimFX1Op::Process(float _ftime, NOperator** _pOpsInts, float _fD
 	}
 
 	//Update channel value
-	NEngineOp::GetEngine()->SetChannelValue(byChannel, value);
+	NEngineOp::GetInstance()->SetChannelValue(byChannel, value);
 
 	return 0;
 }

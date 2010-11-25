@@ -451,10 +451,10 @@ public:
 
 	void SetManagedClass(const char* _pszClassName);
 	void Compact(ubyte _byTypeMask, udword _dwTimevalidityMs);
-	void GetInstance(NObject** _ppobj, ubyte _byAsType=1);	//!< Return an instance
+	void Asset(NObject** _ppobj, ubyte _byAsType=1);	//!< Return an instance
 	void RemoveEntry(NObject** _ppobj);
 
-	//SetMaxUsedMemory()	//!< if max used memory reached, Compact() is called while GetInstance()
+	//SetMaxUsedMemory()	//!< if max used memory reached, Compact() is called while Asset()
 
 	udword		GetCount()	{	return m_dwCount; }
 //	NObject*	GetObjectAt(udword _idx);

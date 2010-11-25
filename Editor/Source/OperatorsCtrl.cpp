@@ -115,7 +115,7 @@ void NOperatorsCtrl::OnPaint(N2DPainter* _ppainter)
 		}
 
 	} else {
-		_ppainter->DrawString("Please select a page !", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
+		_ppainter->DrawString("Please select a graph !", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 	}
 
 	/////////////////////////////////////////////////

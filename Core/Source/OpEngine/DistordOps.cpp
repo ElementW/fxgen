@@ -74,7 +74,7 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -248,7 +248,7 @@ udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 	if (h!=pNorm->GetHeight())		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Set Texture size
 	NBitmap* pDst	= (NBitmap*)m_pObj;
@@ -371,7 +371,7 @@ udword NVortexOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	if (m_byInputs!=1)              return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -514,7 +514,7 @@ udword NLookupOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	float scaleH = th / 256.0f;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Set Texture size
 	NBitmap* pDst = (NBitmap*)m_pObj;

@@ -67,7 +67,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -335,7 +335,7 @@ udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -495,7 +495,7 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	if (m_byInputs!=2)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input Texture and Normal
 	NBitmap* pSrc	= (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -634,7 +634,7 @@ udword NNormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//////////////////////////////////////////
 	//Get input texture
@@ -765,7 +765,7 @@ udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	if (m_byInputs!=1 && m_byInputs!=2)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//////////////////////////////////////////
 	//Get input texture
@@ -892,7 +892,7 @@ udword NSlopeMagnitudeOp::Process(float _ftime, NOperator** _pOpsInts, float _fD
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//////////////////////////////////////////
 	//Get input texture
@@ -1008,7 +1008,7 @@ udword NInvertOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	// Init
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -1090,7 +1090,7 @@ udword NThresholdOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	// Init
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -1196,7 +1196,7 @@ udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -1256,7 +1256,7 @@ udword NSegmentOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 	if (m_byInputs!=2)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	// Init
 	NBitmap* pSrc1 = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -1369,7 +1369,7 @@ udword NDilateOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	// Init
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
@@ -1462,7 +1462,7 @@ udword NAlphaMaskOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 	if (m_byInputs !=1 && m_byInputs != 2)		return (udword)-1;
 
 	//Bitmap instance
-	NEngineOp::GetEngine()->GetBitmap(&m_pObj);
+	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	// Init
 	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;

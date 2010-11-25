@@ -101,7 +101,7 @@ Version 0.5 alpha (Release: Use FxGen in your Games !)
 New NTreeNode::GetSonFromName()
 	
 .API
-	NEngineOp* NEngineOp::GetEngine();
+	NEngineOp* NEngineOp::GetInstance();
 	.NEngineOp::Clear()
 	.NEngineOp::LoadProject()
 	.NEngineOp::CompactMemory()

@@ -1411,7 +1411,7 @@ void NObjectGarbage::Compact(ubyte _byTypeMask, udword _dwTimevalidityMs)
 //!	\param	_ppobj			object pointer
 //!	\param	_byAsType		Set object of a type (let free to developer)
 //-----------------------------------------------------------------
-void NObjectGarbage::GetInstance(NObject** _ppobj, ubyte _byAsType)
+void NObjectGarbage::Asset(NObject** _ppobj, ubyte _byAsType)
 {
 	if (m_aobjects)
 	{
@@ -1439,7 +1439,7 @@ void NObjectGarbage::GetInstance(NObject** _ppobj, ubyte _byAsType)
 				}
 
 #ifdef _DEBUG
-				TRACE("NObjectGarbage::GetInstance Count<%d> ObjPtr<0x%X>\n", m_dwCount, _ppobj);
+				TRACE("NObjectGarbage::Asset Count<%d> ObjPtr<0x%X>\n", m_dwCount, _ppobj);
 #endif
 			}
 		}

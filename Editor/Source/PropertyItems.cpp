@@ -461,7 +461,7 @@ bool NUseStoredOpsProp::BeginEdit(NRect& rcItem)
 	rc.left = rc.right;
 
 	//Creation du menu
-	NTreeNode* pnode = NEngineOp::GetEngine()->GetRootGroup();
+	NTreeNode* pnode = NEngineOp::GetInstance()->GetRootGroup();
 	BuildMenu(pnode);
 
 	NPoint pt(rcItem.left, rcItem.bottom);
