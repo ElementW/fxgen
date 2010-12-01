@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------
 #include "EditorApp.h"
 #include "OperatorsCtrl.h"
-
+#include "OpGraphModel.h"
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -42,7 +42,7 @@ NOperatorsCtrl::NOperatorsCtrl()
 	m_popMarkedShow			= null;
 	m_popMarkedSelected = null;
 	m_dwSeedValue				= 123345646;
-	m_popsPage					= null;
+	m_popsGraph					= null;
 	m_dwCursorX = m_dwCursorY = 0;
 
 	m_fupdateTime = 0.0f;
@@ -106,11 +106,11 @@ void NOperatorsCtrl::OnPaint(N2DPainter* _ppainter)
 	m_rcAllOperators.left=m_rcAllOperators.top=1000000000;	//##TOFIX###
 	m_rcAllOperators.right=m_rcAllOperators.bottom=0;
 
-	if (m_popsPage!=null)
+	if (m_popsGraph!=null)
 	{
-		for (udword i=0; i<m_popsPage->GetOpsCount(); i++)
+		for (udword i=0; i<m_popsGraph->GetOpsCount(); i++)
 		{
-			NOperator* pop = m_popsPage->GetOpFromIdx(i);
+			NOperator* pop = m_popsGraph->GetOpFromIdx(i);
 			DisplayOperator(_ppainter, pop);
 		}
 
@@ -266,7 +266,7 @@ void NOperatorsCtrl::DisplayCursor(N2DPainter* _pdc)
 
 void NOperatorsCtrl::DisplayOperatorsMap(N2DPainter* _pdc)
 {
-	if (m_popsPage==null)		return;
+	if (m_popsGraph==null)		return;
 
 	udword w=100,h=64;
 
@@ -289,9 +289,9 @@ void NOperatorsCtrl::DisplayOperatorsMap(N2DPainter* _pdc)
 	fScaleY = ((float)h/(float)m_rcAllOperators.Height())* m_fScaleY;
 
 	//Display operators
-	for (udword i=0; i<m_popsPage->GetOpsCount() ; i++)
+	for (udword i=0; i<m_popsGraph->GetOpsCount() ; i++)
 	{
-		NOperator* pop = m_popsPage->GetOpFromIdx(i);
+		NOperator* pop = m_popsGraph->GetOpFromIdx(i);
 
 		NRect rcBlock;
 		rcBlock.left		= (sdword) ((( pop->m_wPosX * GB_GRIDUNIT) ) * fScaleX);
@@ -411,7 +411,7 @@ void NOperatorsCtrl::OnLButtonUp(NPoint point)
 				for (udword i=0; i<m_carrayOpsSelected.Count(); i++)
 				{
 					NOperator* pop = m_carrayOpsSelected[i];
-					m_popsPage->MoveOp(pop, sword(pop->m_wPosX+dwOffsetX), sword(pop->m_wPosY+ dwOffsetY));
+					m_popsGraph->MoveOp(pop, sword(pop->m_wPosX+dwOffsetX), sword(pop->m_wPosY+ dwOffsetY));
 				}
 			}
 			Update();
@@ -427,7 +427,7 @@ void NOperatorsCtrl::OnLButtonUp(NPoint point)
 		for (udword i=0; i<m_carrayOpsSelected.Count(); i++)
 		{
 			NOperator* pop = m_carrayOpsSelected[i];
-			m_popsPage->MoveOp(pop, pop->m_wPosX, pop->m_wPosY);	//###TOFIX###
+			m_popsGraph->MoveOp(pop, pop->m_wPosX, pop->m_wPosY);	//###TOFIX###
 		}
 
 		Update();
@@ -622,7 +622,7 @@ void NOperatorsCtrl::DisplayOperatorsPage(NOpGraphModel* popsPage)
 {
 	Reset();
 
-	m_popsPage = popsPage;
+	m_popsGraph = popsPage;
 }
 
 
@@ -657,7 +657,7 @@ void NOperatorsCtrl::PlaceOperator(const char* _pszClassName)
 
 NOperator* NOperatorsCtrl::AddOperator(sword x, sword y, sword w, const char* _pszClassName)
 {
-	if (m_popsPage==null)		return null;
+	if (m_popsGraph==null)		return null;
 
 	//Create operator
 	NOperator* pop = (NOperator*)NRTClass::CreateByName(_pszClassName);
@@ -672,7 +672,7 @@ NOperator* NOperatorsCtrl::AddOperator(sword x, sword y, sword w, const char* _p
 		pop->m_bInvalided	= true;
 
 		//Add operator
-		m_popsPage->AddOp(pop);
+		m_popsGraph->AddOp(pop);
 	}
 	return pop;
 }
@@ -688,7 +688,7 @@ void NOperatorsCtrl::DeleteOperator(NOperator* pop)
 
 	OnDeletingOperator(pop);
 
-	m_popsPage->DeleteOp(pop);
+	m_popsGraph->DeleteOp(pop);
 
 	OnDeletedOperator(pop);
 
@@ -705,7 +705,7 @@ void NOperatorsCtrl::Reset()
 	m_popMarkedShow=null;
 
 	m_fScaleX=m_fScaleY=1.0f;
-	m_popsPage = null;
+	m_popsGraph = null;
 }
 
 
@@ -724,11 +724,11 @@ NOperator* NOperatorsCtrl::GetOperatorAt(NPoint& pt, bool& bResizeZone)
 {
 	bResizeZone = false;
 
-	if (m_popsPage)
+	if (m_popsGraph)
 	{
-		for (udword i=0; i<m_popsPage->GetOpsCount() ; i++)
+		for (udword i=0; i<m_popsGraph->GetOpsCount() ; i++)
 		{
-			NOperator* pop = m_popsPage->GetOpFromIdx(i);
+			NOperator* pop = m_popsGraph->GetOpFromIdx(i);
 			NRect rcItem;
 			GetOperatorRect(pop, rcItem);
 			if (rcItem.Contain(pt))
@@ -767,16 +767,16 @@ void NOperatorsCtrl::SelectOperator(NOperator* pop)
 
 void NOperatorsCtrl::SelectOperatorsIntoRect(NRect& rc)
 {
-	if (!m_popsPage)	return;
+	if (!m_popsGraph)	return;
 
 	rc.Normalize();
 	if (rc.IsEmpty())		return;
 
 	m_carrayOpsSelected.Clear();
 
-	for (udword i=0; i<m_popsPage->GetOpsCount(); i++)
+	for (udword i=0; i<m_popsGraph->GetOpsCount(); i++)
 	{
-		NOperator* pop = m_popsPage->GetOpFromIdx(i);
+		NOperator* pop = m_popsGraph->GetOpFromIdx(i);
 		NRect rcItem;
 		GetOperatorRect(pop, rcItem);
 		if (!rc.IsIntersected(rcItem))
@@ -856,7 +856,7 @@ void NOperatorsCtrl::PasteOperatorsFromClipboard()
 		pop->m_wPosY			= sword(pop->m_wPosY+dwOffsetY);
 
 		//Add operator
-		m_popsPage->AddOp(pop);
+		m_popsGraph->AddOp(pop);
 	}
 
 	//m_carrayOpsClipboard.Clear();
@@ -900,11 +900,11 @@ bool NOperatorsCtrl::IsMovedSelOperatorsCollide(sdword _dwoffsetX, sdword _dwoff
 
 bool NOperatorsCtrl::IsOpRectCollide(NRect _rcItemTest, bool _bExcludeSel)
 {
-	if (m_popsPage)
+	if (m_popsGraph)
 	{
-		for (udword i=0; i<m_popsPage->GetOpsCount() ; i++)
+		for (udword i=0; i<m_popsGraph->GetOpsCount() ; i++)
 		{
-			NOperator* pop = m_popsPage->GetOpFromIdx(i);
+			NOperator* pop = m_popsGraph->GetOpFromIdx(i);
 
 			if (_bExcludeSel && m_carrayOpsSelected.Find(pop)!=-1)	continue;
 

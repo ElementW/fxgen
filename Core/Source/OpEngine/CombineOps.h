@@ -47,7 +47,7 @@ public:
 	FDECLARE_CLASS();
 
 	//Methods
-	virtual	udword	GetColor()		{ return 0x009696c0;	}
+	virtual	udword	GetColor()					{ return 0x009696c0;	}
 	virtual const char*		GetName()			{ return "Nop"; }		//!< Operator's Name
 	virtual const char*		GetCategory()	{ return "Misc"; }	//!< Operator's Category
 

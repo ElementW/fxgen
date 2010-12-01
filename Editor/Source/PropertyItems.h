@@ -85,6 +85,8 @@ public:
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
+
+	//NSlideCtrl	//###TODO###
 };
 
 //-----------------------------------------------------------------

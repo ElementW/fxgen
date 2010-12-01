@@ -26,17 +26,6 @@
 //-----------------------------------------------------------------
 NEngineOp* gpengineOp = null;
 
-//-----------------------------------------------------------------
-//!	\brief	Sort operators from left to right position
-//-----------------------------------------------------------------
-int SortOpsLeftToRight(const void *elem1, const void *elem2)
-{
-	NOperator* e1 = *(NOperator**)elem1;
-	NOperator* e2 = *(NOperator**)elem2;
-	if (e1->m_wPosX<e2->m_wPosX)	return +1;
-	if (e1->m_wPosX>e2->m_wPosX)	return -1;
-	return 0;
-}
 
 
 //-----------------------------------------------------------------
@@ -208,7 +197,7 @@ NEngineOp::~NEngineOp()
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Static Methods that return an unique Engine Instance
+//!	\brief	Static Methods that return an unique Instance
 //-----------------------------------------------------------------
 NEngineOp*	NEngineOp::GetInstance()
 {
@@ -529,14 +518,14 @@ void NEngineOp::_ComputeToProcessOpsCount(NOperator* _popFinal)
 //!	\param	_pop operator to invalid
 //!	\note		all dependent operators are invalided too
 //-----------------------------------------------------------------
-/*void NEngineOp::InvalidateOp(NOperator* _pop)
+void NEngineOp::InvalidateOp(NOperator* _pop)
 {
 	//Invalidate operator
 	_pop->m_bInvalided = true;
 
 	//Invalidate linked ops
 	ComputeInvaliddOps(_pop);
-}*/
+}
 
 //-----------------------------------------------------------------
 //!	\brief	Invalidate all operators to force re-processing
