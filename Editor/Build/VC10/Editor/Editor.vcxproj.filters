@@ -61,10 +61,10 @@
     <ClCompile Include="..\..\..\Source\AssetWnd.cpp">
       <Filter>Editor Views</Filter>
     </ClCompile>
-    <ClCompile Include="AssetModel.cpp">
+    <ClCompile Include="..\..\..\Source\AssetModel.cpp">
       <Filter>Models</Filter>
     </ClCompile>
-    <ClCompile Include="OpGraphModel.cpp">
+    <ClCompile Include="..\..\..\Source\OpGraphModel.cpp">
       <Filter>Models</Filter>
     </ClCompile>
   </ItemGroup>
@@ -106,10 +106,10 @@
     <ClInclude Include="..\..\..\Source\AssetWnd.h">
       <Filter>Editor Views</Filter>
     </ClInclude>
-    <ClInclude Include="AssetModel.h">
+    <ClInclude Include="..\..\..\Source\AssetModel.h">
       <Filter>Models</Filter>
     </ClInclude>
-    <ClInclude Include="OpGraphModel.h">
+    <ClInclude Include="..\..\..\Source\OpGraphModel.h">
       <Filter>Models</Filter>
     </ClInclude>
   </ItemGroup>

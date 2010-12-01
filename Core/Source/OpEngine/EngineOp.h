@@ -128,7 +128,7 @@ public:
 	NEngineOp();
 	virtual ~NEngineOp();
 
-	//Get unique Engine Instance
+	//Get unique Instance
 	static	NEngineOp* GetInstance();
 
 	//API Methods
@@ -140,7 +140,7 @@ public:
 
 	//Editor Execution
 	//void InvalidateAllOps();
-	//void InvalidateOp(NOperator* _pop);
+	void InvalidateOp(NOperator* _pop);
 	void Execute(float _ftime, NOperator* _popFinal, float _fDetailFactor=1.0f, FXGEN_OPSPROCESSCB* _cbProcess=NULL);
 
 	//Editor Channels methods

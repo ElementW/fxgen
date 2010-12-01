@@ -24,6 +24,9 @@
 #include "EditorApp.h"
 #include "EventsList.h"
 
+#include "AssetModel.h"
+#include "OpGraphModel.h"
+
 //-----------------------------------------------------------------
 //			Defines
 //-----------------------------------------------------------------
@@ -74,10 +77,10 @@ bool NAssetWnd::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Display a new operators project
+//!	\brief	Display an asset
 //!	\param	_popsAsset	Asset to display
 //-----------------------------------------------------------------
-void NAssetWnd::DisplayOperatorsAsset(NEngineOp* _popsAsset)
+void NAssetWnd::DisplayAssetModel(NAssetModel* _popsAsset)
 {
 	EVT_EXECUTE(EVT_PAGESELECTED, 0, 0 );
 
@@ -189,7 +192,7 @@ void NAssetWnd::AddFolder()
 	NTreeNode* pNewFolderNode = new NTreeNode;
 	pNewFolderNode->SetName("Folder");
 	pnodeFolder->AddSon(pNewFolderNode);
-	DisplayOperatorsAsset(m_popsAsset);
+	DisplayAssetModel(m_popsAsset);
 
 }
 
@@ -210,7 +213,7 @@ void NAssetWnd::AddGraph()
 	pgraph->SetName("Graph");
 	array.AddItem(pgraph);
 
-	DisplayOperatorsAsset(m_popsAsset);
+	DisplayAssetModel(m_popsAsset);
 }
 
 //-----------------------------------------------------------------
@@ -237,7 +240,7 @@ void NAssetWnd::Delete()
 			if (idx!=-1)
 			{
 				array.RemoveItem(idx);
-				DisplayOperatorsAsset(m_popsAsset);
+				DisplayAssetModel(m_popsAsset);
 			}
 
 		}
@@ -260,7 +263,7 @@ void NAssetWnd::Delete()
 				if (idx!=-1)
 				{
 					pnodeparent->DeleteSon(idx);
-					DisplayOperatorsAsset(m_popsAsset);
+					DisplayAssetModel(m_popsAsset);
 				}
 			}
 		}

@@ -23,6 +23,11 @@
 #include "TreeNodeCtrl.h"
 
 //-----------------------------------------------------------------
+//			Prototypes
+//-----------------------------------------------------------------
+class NAssetModel;
+
+//-----------------------------------------------------------------
 //!	\class		NAssetWnd
 //!	\brief		Asset's windows
 //-----------------------------------------------------------------
@@ -35,7 +40,7 @@ public:
 	//Methods
 	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
 
-	void DisplayOperatorsAsset(NEngineOp* _popsAsset);
+	void DisplayAssetModel(NAssetModel* _popsAsset);
 	void SelectFirstGraph();
 
 protected:
@@ -61,6 +66,6 @@ protected:
 	void InitCtxMenu();
 
 	//Datas
-	NEngineOp*	m_popsAsset;
-	NMenuCtrl		m_wndMenu;
+	NAssetModel*	m_popsAsset;
+	NMenuCtrl			m_wndMenu;
 };

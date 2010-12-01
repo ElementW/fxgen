@@ -26,6 +26,9 @@
 #include "FileChooserDialog.h"
 #include "AssetWnd.h"
 
+#include "AssetModel.h"
+#include "OpGraphModel.h"
+
 //-----------------------------------------------------------------
 //                   Defines
 //-----------------------------------------------------------------
@@ -44,7 +47,10 @@
 #define	MENU_DETAILREALISTIC	204
 #define	MENU_DETAILULTRA		205
 
-
+//-----------------------------------------------------------------
+//	Variables
+//-----------------------------------------------------------------
+NEditorGUI* gpeditorGUI = null;
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -79,6 +85,18 @@ NEditorGUI::~NEditorGUI(void)
 {
 
 }
+
+//-----------------------------------------------------------------
+//!	\brief	Static Methods that return an unique Instance
+//-----------------------------------------------------------------
+NEditorGUI*	NEditorGUI::GetInstance()
+{
+	if (gpeditorGUI==null)
+		gpeditorGUI = new NEditorGUI;
+
+	return gpeditorGUI;
+}
+
 
 //-----------------------------------------------------------------
 //!	\brief	Main frame creation
@@ -222,6 +240,10 @@ void NEditorGUI::OnNewAsset()
 	m_bExecuteLocked = true;
 	projectname = "";
 
+	m_pcurAsset = NNEW(NAssetModel);
+
+	m_passetswnd->DisplayAssetModel(m_pcurAsset);
+	
 	//New project
 //	NEngineOp::GetAsset()->Clear();
 
@@ -369,7 +391,8 @@ void NEditorGUI::OnSaveAssetAs()
 //-----------------------------------------------------------------
 NOperator* NEditorGUI::Execute(float _ftime)
 {
-/*
+
+	//TODO Put this code into another thread...
 	if (!m_bExecuteLocked)
 	{
 		m_bExecuteLocked = true;
@@ -377,7 +400,7 @@ NOperator* NEditorGUI::Execute(float _ftime)
 		//m_wndProgress.TrackPopup(NPoint(256,256), RGBA(240,100,0,190));
 
 		//Process operators
-		NEngineOp::GetAsset()->Execute(_ftime, m_popMarkedShow, m_fDetailFactor, staticOperatorsProcessCB);
+		NEngineOp::GetInstance()->Execute(_ftime, m_popMarkedShow, m_fDetailFactor, staticOperatorsProcessCB);
 
 		//Rendering
 		EVT_EXECUTE(EVT_RENDER, (udword)m_popMarkedShow, (udword)&_ftime);
@@ -386,7 +409,7 @@ NOperator* NEditorGUI::Execute(float _ftime)
 
 		m_bExecuteLocked = false;
 	}
-*/
+
 	return m_popMarkedShow;
 }
 
@@ -399,11 +422,8 @@ void NEditorGUI::MarkShowOperator(NOperator* _pop)
 {
 	m_popMarkedShow = _pop;
 
-	//Get Sequence from operator
-
-
 	//###DEBUG###
-	float ftime = (float)GetTickCount() * 60.0f / 1000.0f;
+	//float ftime = (float)GetTickCount() * 60.0f / 1000.0f;
 	//NOperator* pop = Execute(ftime);
 
 }
@@ -439,7 +459,8 @@ void NEditorGUI::DeletedOperator(NOperator* pop)
 //-----------------------------------------------------------------
 void NEditorGUI::EmitPropertiesChanged(NOperator* pop)
 {
-	
+	//Invalidate operator
+	NEngineOp::GetInstance()->InvalidateOp(pop);
 }
 
 //-----------------------------------------------------------------

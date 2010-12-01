@@ -104,7 +104,7 @@ protected:
 	bool		m_bAskedForMove;
 
 	//Datas Operators
-	NOpGraphModel*			m_popsPage;						//!< Page used for editing
+	NOpGraphModel*			m_popsGraph;						//!< Page used for editing
 	NArray<NOperator*>	m_carrayOpsSelected;	//!< Operators selected
 	NArray<NOperator*>	m_carrayOpsClipboard;	//!< Operators in clipboard
 	NOperator	*m_popMarkedSelected, *m_popMarkedShow;

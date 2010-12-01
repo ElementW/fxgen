@@ -20,7 +20,10 @@
 //-----------------------------------------------------------------
 #include "PropertiesCtrl.h"
 #include "PropertyItems.h"
-#include "Editor.h"
+#include "EditorGUI.h"
+
+#include "AssetModel.h"
+#include "OpGraphModel.h"
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -461,7 +464,7 @@ bool NUseStoredOpsProp::BeginEdit(NRect& rcItem)
 	rc.left = rc.right;
 
 	//Creation du menu
-	NTreeNode* pnode = NEngineOp::GetInstance()->GetRootGroup();
+	NTreeNode* pnode = NEditorGUI::GetInstance()->GetAsset()->GetRootGroup();
 	BuildMenu(pnode);
 
 	NPoint pt(rcItem.left, rcItem.bottom);
@@ -499,7 +502,7 @@ void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 		m_wndMenu.DeleteAllItems();
 	}
 
-	//Parse Alls Pages to add 'NStoreOp'
+	//Parse alls Graphs in order to add 'NStoreOp'
 	NObjectArray& arrayObjs = _pnode->GetObjsArray();
 	udword dwCount = arrayObjs.Count();
 	udword idx=0;

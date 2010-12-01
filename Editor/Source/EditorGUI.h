@@ -31,7 +31,7 @@ class NAssetWnd;
 class NAssetsWnd;
 
 //class NOperator;
-//class NOperatorsAsset;
+class NAssetModel;
 
 //-----------------------------------------------------------------
 //!	\class		NEditorGUI
@@ -45,6 +45,9 @@ public:
 
 	virtual	bool Create(char* name, const NRect& rect);
 
+	//Get unique Instance
+	static	NEditorGUI* GetInstance();
+
 	//Methods
 	void MarkShowOperator(NOperator* pop);	//!< Set final Operator to mark final result
 	void DeletingOperator(NOperator* pop);	//!< Notif deleting operator
@@ -56,7 +59,7 @@ public:
 	void LoadAsset(NString path);
 	void SaveAsset(NString path = "");
 
-	//NOperatorsAsset* GetAsset() { return m_pcurAsset; }
+	NAssetModel* GetAsset() { return m_pcurAsset; }
 
 protected:
 	//Methods
@@ -75,7 +78,7 @@ protected:
 	void OnOptionMenuClick(NObject* _psender);
 
 	//Datas
-	//NOperatorsAsset*	m_pcurAsset;		//!< Current project
+	NAssetModel*			m_pcurAsset;		//!< Current project
 	bool							m_bExecuteLocked;	//!< Lock-Unlock operators execution
 	NOperatorsWnd*		m_opswnd;					//!< Operators Window
 	NAssetWnd*				m_passetswnd;			//!< Assets window
