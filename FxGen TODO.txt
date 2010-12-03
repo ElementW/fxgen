@@ -25,6 +25,7 @@ TODO
 		.load assets list from directory then add them to treeview
 		.compile and compute asserts node graph (later add cache)
 	.add undo-redo
+	.add min-max properties limits
 
 Version 0.7 alpha (Release: New FxGen Engine !)
 ----------------------------------

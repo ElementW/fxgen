@@ -172,6 +172,9 @@ void NPropertiesCtrl::OnPaint(N2DPainter* _ppainter)
 			rcRow.left+=(prd->dwDepth*PC_ROWDEPTHIDENT);
 			_ppainter->DrawString(prd->strName.Buffer(), rcRow, NDT_END_ELLIPSIS|NDT_VCENTER|NDT_SINGLELINE, RGBA(0,0,0,255) );
 
+			//Store Row Rect
+			prd->rcItem = rcRow;
+
 			//Check if value can be animated
 			bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc->bCanBeAnimate;
 			bool bAnimated		 = prd->pItem->m_pvarValue->pcCtrlObj!=null;
@@ -180,8 +183,6 @@ void NPropertiesCtrl::OnPaint(N2DPainter* _ppainter)
 			rcRow.left = rcRow.right;
 			rcRow.right = rc.right;
 
-			//Store Row Rect
-			prd->rcItem = rcRow;
 
 			//leave place for animate button
 			if (bCanBeAnimate)
@@ -267,7 +268,7 @@ void NPropertiesCtrl::OnLButtonDown(NPoint point)
 			bool bAnimButton = IsAnimButtonUnderPoint(point);
 
 			//Value sliding
-			if (m_dwCurSelRow!=-1 && !bAnimButton)
+			/*if (m_dwCurSelRow!=-1 && !bAnimButton)
 			{
 				SetCapture();
 
@@ -275,7 +276,7 @@ void NPropertiesCtrl::OnLButtonDown(NPoint point)
 				m_ptStartMouse = point;
 				m_bAddValue = true;
 				TRACE("Start Sliding...\n");
-			}
+			}*/
 
 			if (bAnimButton)
 			{
@@ -298,11 +299,11 @@ void NPropertiesCtrl::OnLButtonDown(NPoint point)
 //-----------------------------------------------------------------
 void NPropertiesCtrl::OnLButtonUp(NPoint point)
 {
-	if (m_bAddValue)
+	/*if (m_bAddValue)
 	{
 		m_bAddValue=false;
 		ReleaseCapture();
-	}
+	}*/
 
 }
 
@@ -328,11 +329,11 @@ void NPropertiesCtrl::OnLButtonDblClk(NPoint point)
 	ClickRow(nidx, point);
 
 	//Start Edit Cell
-	if (!m_bEditingRow && m_dwCurSelRow!=-1)
+	/*if (!m_bEditingRow && m_dwCurSelRow!=-1)
 	{
 		//Edit Cell
 		StartRowEditing(m_dwCurSelRow);
-	}
+	}*/
 
 }
 
@@ -343,7 +344,7 @@ void NPropertiesCtrl::OnLButtonDblClk(NPoint point)
 void NPropertiesCtrl::OnMouseMove(NPoint point )
 {
 	//Value sliding
-	if (m_bAddValue)
+	/*if (m_bAddValue)
 	{
 		sdword dwOffset =	point.x - m_ptStartMouse.x;
 		//TRACE("dwOffset <%d> point<%d> ptStartMouse<%d> ptCursor<%d,%d>\n", dwOffset, point.x, m_ptStartMouse.x, m_ptCursor.x, m_ptCursor.y);
@@ -354,7 +355,7 @@ void NPropertiesCtrl::OnMouseMove(NPoint point )
 			OffsetRowValue(dwOffset);
 			Update();
 		}
-	}
+	}*/
 
 }
 
@@ -386,7 +387,7 @@ void NPropertiesCtrl::OnKeyDown(udword dwchar)
 //-----------------------------------------------------------------
 void NPropertiesCtrl::DisplayObjectProperties(NObject* _pobj)
 {
-	EndRowEditing(true);
+	//EndRowEditing(true);
 
 	//Clear current display
 	DeleteAllProperties();
@@ -510,6 +511,8 @@ udword NPropertiesCtrl::AddVarProperties(NVarsBloc* _pvarBloc, NVarsBlocDesc* _p
 		rd.pItem->m_pvarBlocDesc	= _pvarBlocDesc;
 		rd.pItem->m_pvarValue			= _pvarValue;
 		rd.pItem->m_dwvarIdx			= _dwvarIdx;
+
+		rd.pItem->Init();
 	}
 
 	return m_carrayRowsDesc.AddItem(rd);
@@ -558,7 +561,7 @@ udword NPropertiesCtrl::GetRowUnderPoint(NPoint& pt)
 //-----------------------------------------------------------------
 //!	\brief	Add property's row Value
 //-----------------------------------------------------------------
-void NPropertiesCtrl::OffsetRowValue(sdword dwOffset)
+/*void NPropertiesCtrl::OffsetRowValue(sdword dwOffset)
 {
 	if (m_dwCurSelRow==-1 || !m_bAddValue)		return;
 
@@ -570,7 +573,7 @@ void NPropertiesCtrl::OffsetRowValue(sdword dwOffset)
 		OnPropertiesChanged();
 	}
 
-}
+}*/
 
 //-----------------------------------------------------------------
 //!	\brief	Select a row from an index
@@ -583,7 +586,7 @@ bool NPropertiesCtrl::SelectRow(udword dwRowIdx)
 	if (m_carrayRowsDesc[dwRowIdx].pItem==null)
 		return false;
 
-	EndRowEditing();
+//	EndRowEditing();
 	m_dwCurSelRow = dwRowIdx;
 	return true;
 }
@@ -625,7 +628,7 @@ void NPropertiesCtrl::ClickRow(udword dwRowIdx, NPoint& pt)
 //-----------------------------------------------------------------
 //!	\brief	Start Row editing
 //-----------------------------------------------------------------
-void NPropertiesCtrl::StartRowEditing(udword dwRowIdx)
+/*void NPropertiesCtrl::StartRowEditing(udword dwRowIdx)
 {
 	if (dwRowIdx==-1)		return;
 
@@ -649,7 +652,7 @@ void NPropertiesCtrl::StartRowEditing(udword dwRowIdx)
 //-----------------------------------------------------------------
 //!	\brief	Stop Row editing
 //-----------------------------------------------------------------
-void NPropertiesCtrl::EndRowEditing(bool bSaveChanged/*=true*/)
+void NPropertiesCtrl::EndRowEditing(bool bSaveChanged)
 {
 	if (m_bEditingRow && m_dwCurSelRow!=-1)
 	{
@@ -663,12 +666,12 @@ void NPropertiesCtrl::EndRowEditing(bool bSaveChanged/*=true*/)
 		m_bEditingRow=false;
 	}
 
-}
+}*/
 
 //-----------------------------------------------------------------
 //!	\brief	Save Row editing
 //-----------------------------------------------------------------
-void NPropertiesCtrl::SaveRowEditing()
+/*void NPropertiesCtrl::SaveRowEditing()
 {
 	if (m_bEditingRow && m_dwCurSelRow!=-1)
 	{
@@ -676,7 +679,7 @@ void NPropertiesCtrl::SaveRowEditing()
 		OnPropertiesChanged();
 	}
 
-}
+}*/
 
 //-----------------------------------------------------------------
 //!	\brief	Return true if an anim button is under a position

@@ -51,6 +51,7 @@ public:
 	virtual ~NPropertyItem();
 
 	//Display
+	virtual void		Init() {}
 	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem)	= 0;
 	virtual bool		BeginEdit	(NRect& rcItem)										{ return false;	}
 	virtual bool		EndEdit		(bool bSaveChanged=true)					{ return false;	}
@@ -85,8 +86,6 @@ public:
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
-
-	//NSlideCtrl	//###TODO###
 };
 
 //-----------------------------------------------------------------
@@ -239,4 +238,22 @@ public:
 	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
+};
+
+
+//-----------------------------------------------------------------
+//!	\class	NIntProp
+//! \brief	UByte Property Item
+//-----------------------------------------------------------------
+class NIntProp : public NPropertyItem
+{
+public:
+	FDECLARE_CLASS();
+
+	virtual void		Init();
+	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
+
+protected:
+	NSlideCtrl m_slider;
+	void OnValueChanged(NObject* _psender);
 };

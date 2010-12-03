@@ -116,7 +116,7 @@ static NVarsBlocDesc blocdescCloudOp[] =
 	VAR(eubyte,	false, "Height",	"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//1
 	VAR(eudword,	true, "Color 0",		"4278190080",		"NColorProp")	//2
 	VAR(eudword,	true, "Color 1",		"-1",		"NColorProp")	//3
-	VAR(eubyte,		true, "Amp",				"128",	"NUbyteProp") //4
+	VAR(eubyte,		true, "Amp",				"128",	"NIntProp") //4	//###TEST###
 	VAR(euword,		true, "Seed",				"5412",	"NUwordProp") //5
 };
 

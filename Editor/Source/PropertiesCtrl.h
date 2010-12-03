@@ -63,7 +63,7 @@ public:
 	void	Update();	//!< Update Display
 	void	DisplayObjectProperties(NObject* pobj);		//!< Display Object Properties
 
-	void 	SaveRowEditing();
+	//void 	SaveRowEditing();
 
 	// Messages Notify
 	virtual void OnPropertiesChanged()	{};
@@ -80,12 +80,12 @@ protected:
 	void			DeleteAllProperties();	//!< Reset
 	NRowDesc* GetRowAtIdx(udword idx);
 	udword		GetRowUnderPoint(NPoint& pt);
-	void 			OffsetRowValue(sdword dwOffset);
+	//void 			OffsetRowValue(sdword dwOffset);
 	bool 			SelectRow(udword dwRowIdx);
 	bool			ExpandRow(udword _dwRowIdx);
 	void 			ClickRow(udword dwRowIdx, NPoint& pt);
-	void 			StartRowEditing(udword dwRowIdx);
-	void 			EndRowEditing(bool bSaveChanged=true);
+	//void 			StartRowEditing(udword dwRowIdx);
+	//void 			EndRowEditing(bool bSaveChanged=true);
 	bool			IsAnimButtonUnderPoint(NPoint& pt);
 	void			AddRemoveAnimControlToRow(udword _dwRowIdx);
 	udword		GetRowIdxFromGroupIdx(udword _groupIdx);
