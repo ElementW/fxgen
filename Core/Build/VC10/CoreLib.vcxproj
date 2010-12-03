@@ -47,7 +47,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\Externals\FreeType\Include;..\..\..\Externals\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Externals\FreeType\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;CORELIB_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -60,7 +60,7 @@
     <Link>
       <AdditionalDependencies>opengl32.lib;freetype2312.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)_D.dll</OutputFile>
-      <AdditionalLibraryDirectories>..\..\..\Externals\SFML\lib\vc2008;..\..\..\Externals\FreeType\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\Externals\FreeType\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>NotSet</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -68,9 +68,11 @@
       </DataExecutionPrevention>
       <ImportLibrary>$(TargetDir)$(TargetName)_D.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
+      <ProgramDatabaseFile>$(TargetDir)$(TargetName)_D.pdb</ProgramDatabaseFile>
     </Link>
     <PostBuildEvent>
-      <Command>XCopy /S /Y $(OutDir)*.dll ..\..\..\W32Bin\</Command>
+      <Command>XCopy /S /Y $(OutDir)*.dll ..\..\..\W32Bin\
+XCopy /S /Y $(OutDir)*.pdb ..\..\..\W32Bin\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

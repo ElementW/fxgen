@@ -310,7 +310,7 @@ void NColorProp::OnColorClick(NObject* _psender)
 {
 	//TRACE("NColorProp::OnColorClick\n");
 	m_pvarValue->dwVal = m_wndPicker.GetClickedColor().GetRGBA();
-	((NPropertiesCtrl*)m_pParent)->SaveRowEditing();
+	//((NPropertiesCtrl*)m_pParent)->SaveRowEditing();
 }
 
 
@@ -391,7 +391,7 @@ void NUbyteComboProp::OnMenuClick(NObject* _psender)
 	if (byVal!=0)
 		m_pvarValue->byVal = byVal-1;
 
-	((NPropertiesCtrl*)m_pParent)->SaveRowEditing();
+	//((NPropertiesCtrl*)m_pParent)->SaveRowEditing();
 
 }
 
@@ -488,7 +488,7 @@ void NUseStoredOpsProp::OnMenuClick(NObject* _psender)
 	if (popSel!=null)
 		m_pvarBloc->SetValue(m_dwvarIdx, 0.0f, popSel);
 
-	((NPropertiesCtrl*)m_pParent)->SaveRowEditing();
+	//((NPropertiesCtrl*)m_pParent)->SaveRowEditing();
 }
 
 void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
@@ -582,4 +582,38 @@ bool NStringProp::EndEdit(bool bSaveChanged)
 	m_pwNGraphicstrl=null;
 
 	return bSaveChanged;
+}
+
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//										NIntProp class Implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+FIMPLEMENT_CLASS(NIntProp, NPropertyItem)
+
+void NIntProp::Init()
+{
+	m_slider.Create(m_pvarBlocDesc->pszName, NRect(0,0,0,0), m_pParent);
+	m_slider.SetRange(0.0f, 255.0f);	//###TOFIX###
+	m_slider.SetPos(m_pvarValue->byVal);
+	m_slider.SetStep(1.0f);	//###TOFIX###
+	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NIntProp::OnValueChanged);
+}
+
+void NIntProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
+{
+	m_slider.SetWindowRect(rcItem);
+}
+
+void NIntProp::OnValueChanged(NObject* _psender)
+{
+	//Change field value
+	m_pvarValue->byVal = (sdword)m_slider.GetPos();
+
+	// Send Event
+	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperator*)m_pvarBloc->GetOwner());
 }
