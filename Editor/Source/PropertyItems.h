@@ -77,7 +77,7 @@ public:
 //!	\class	NUbyteProp
 //! \brief	UByte Property Item
 //-----------------------------------------------------------------
-class NUbyteProp : public NPropertyItem
+/*class NUbyteProp : public NPropertyItem
 {
 public:
 	FDECLARE_CLASS();
@@ -86,7 +86,7 @@ public:
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
-};
+};*/
 
 //-----------------------------------------------------------------
 //!	\class	NUwordProp
@@ -151,20 +151,12 @@ class NColorProp : public NPropertyItem
 public:
 	FDECLARE_CLASS();
 
-	NColorProp()		{ m_dwRGBEditingIdx = 0; m_bFirst=true; }
+	virtual void		Init();
 	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
-	virtual bool		BeginEdit	(NRect& rcItem);
-	virtual bool		EndEdit		(bool bSaveChanged=true);
-	virtual	bool		AddValue(sdword dwDelta);
-	virtual void		Click(NPoint& pt, NRect& rcItem);
-
-	// Messages Notify
-	void OnColorClick(NObject* _psender);
 
 protected:
-	bool m_bFirst;
-	NColorPickerCtrl m_wndPicker;
-	udword m_dwRGBEditingIdx;
+	NColorButtonCtrl m_button;
+	void OnValueChanged(NObject* _psender);
 };
 
 //-----------------------------------------------------------------
@@ -176,16 +168,14 @@ class NUbyteComboProp : public NPropertyItem
 public:
 	FDECLARE_CLASS();
 
-	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
-	virtual bool		BeginEdit	(NRect& rcItem);
-	virtual bool		EndEdit		(bool bSaveChanged=true);
-
-	// Messages Notify
-	void OnMenuClick(NObject* _psender);
+	virtual void	Init();
+	virtual	void	DrawItem(N2DPainter* pdc, NRect& rcItem);
 
 protected:
-	NMenuCtrl	m_wndMenu;
+	NMenuButtonCtrl m_button;
 	NArray<NString>	m_carrayStringsList;
+
+	void OnValueChanged(NObject* _psender);
 };
 
 //-----------------------------------------------------------------
@@ -242,10 +232,10 @@ public:
 
 
 //-----------------------------------------------------------------
-//!	\class	NIntProp
+//!	\class	NUbyteProp
 //! \brief	UByte Property Item
 //-----------------------------------------------------------------
-class NIntProp : public NPropertyItem
+class NUbyteProp : public NPropertyItem
 {
 public:
 	FDECLARE_CLASS();

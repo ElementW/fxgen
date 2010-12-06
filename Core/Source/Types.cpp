@@ -364,3 +364,11 @@ void NColor::SetFromRGBA(ubyte r, ubyte g, ubyte b, ubyte a)
 {
     mA=(float)a/255.0f; mR=(float)r/255.0f; mG=(float)g/255.0f; mB=(float)b/255.0f;
 }
+
+void NColor::SetFromRGBA(udword _rgba)
+{
+	mA=((float)((_rgba&0xff000000)>>24))/255.0f;
+	mB=((float)((_rgba&0xff0000)>>16))/255.0f;
+	mG=((float)((_rgba&0xff00)>>8))/255.0f;
+	mR=((float)(_rgba&0xff))/255.0f;
+}
