@@ -62,7 +62,7 @@ NPropertyItem::~NPropertyItem()
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NUbyteProp, NPropertyItem);
+/*FIMPLEMENT_CLASS(NUbyteProp, NPropertyItem);
 
 void NUbyteProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
@@ -87,7 +87,7 @@ bool NUbyteProp::AddValue(sdword dwDelta)
 	if (dwVal<0)			dwVal = 0;
 	m_pvarValue->byVal = (ubyte)dwVal;
 	return true;
-}
+}*/
 
 
 //-----------------------------------------------------------------
@@ -206,111 +206,26 @@ bool NUFloatProp::AddValue(sdword dwDelta)
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NColorProp, NPropertyItem);
 
+void NColorProp::Init()
+{
+	NColor col;
+	col.SetFromRGBA(m_pvarValue->dwVal);
+
+	m_button.Create(col, NRect(0,0,0,0), m_pParent, 0);
+	m_button.OnChanged = FDelegate(this, (TDelegate)&NColorProp::OnValueChanged);
+}
+
 void NColorProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
-	NRGBA val;
-	val.dwCol = m_pvarValue->dwVal;
-
-	///////////////////////////////////////
-	//Display RGBA Values
-	NString cstr;
-	NRect rc(rcItem);
-	udword w = rc.Width()/5;
-
-	//Red
-	rc.right = rc.left + w;
-	cstr.Format("%d", val.r);
-	pdc->DrawString(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
-
-	//Green
-	rc.Move(w,0);
-	cstr.Format("%d",  val.g);
-	pdc->DrawString(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
-
-	//Blue
-	rc.Move(w,0);
-	cstr.Format("%d",  val.b);
-	pdc->DrawString(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
-
-	//Alpha
-	rc.Move(w,0);
-	cstr.Format("%d",  val.a);
-	pdc->DrawString(cstr.Buffer(), rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
-
-	///////////////////////////////////////
-	//Display Color Rect
-	NColor col( val.r,  val.g,  val.b, 255);
-	rc.left = rc.right;
-	rc.right = rcItem.right;
-	pdc->Draw3dRect(rc, RGBA(255,255,255,255), RGBA(0,0,0,255));
-	rc.Deflate(1,1);
-	pdc->FillSolidRect(rc, col);
-
+	m_button.SetWindowRect(rcItem);
 }
 
-
-bool NColorProp::BeginEdit(NRect& rcItem)
+void NColorProp::OnValueChanged(NObject* _psender)
 {
-	assert(m_pParent!=null);
-
-	//Color Picker
-	if (m_bFirst)
-	{
-		m_bFirst=false;
-		m_wndPicker.Create(m_pParent);
-		m_wndPicker.OnColorClick=FDelegate(this, (TDelegate)&NColorProp::OnColorClick);
-	}
-
-	NPoint pt(rcItem.left, rcItem.bottom);
-	m_pParent->ClientToScreen(pt);
-	m_wndPicker.TrackPopup(pt, NColor(m_pvarValue->dwVal));
-
-	return false;	//Not End of Edition
-}
-
-bool NColorProp::EndEdit(bool bSaveChanged)
-{
-	return true;
-}
-
-bool NColorProp::AddValue(sdword dwDelta)
-{
-	if (m_dwRGBEditingIdx<4)
-	{
-		NRGBA* pval = (NRGBA*) &m_pvarValue->dwVal;
-
-		//Propiation
-		sdword dwVal = (sdword)pval->col_array[m_dwRGBEditingIdx]+(sdword)dwDelta;
-		if (dwVal>255)		dwVal = 255;
-		if (dwVal<0)			dwVal = 0;
-		pval->col_array[m_dwRGBEditingIdx]=(ubyte)dwVal;
-	}
-	return true;
-}
-
-void NColorProp::Click(NPoint& pt, NRect& rcItem)
-{
-	NRect rc(rcItem);
-	int w = rc.Width()/6; // should be 5, but then the pointer misses controls - why?
-	rc.right = rc.left + w;
-
-	for (udword i=0; i<5; i++)
-	{
-		if (rc.Contain(pt))
-		{
-			m_dwRGBEditingIdx = i;
-			break;
-		}
-		rc.Move(w,0);
-	}
-
-}
-
-void NColorProp::OnColorClick(NObject* _psender)
-{
-	//TRACE("NColorProp::OnColorClick\n");
-	m_pvarValue->dwVal = m_wndPicker.GetClickedColor().GetRGBA();
-	//((NPropertiesCtrl*)m_pParent)->SaveRowEditing();
+	//Change field value
+	m_pvarValue->dwVal = m_button.GetPicker()->GetClickedColor().GetRGBA();
+	// Send Event
+	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperator*)m_pvarBloc->GetOwner());
 }
 
 
@@ -323,76 +238,54 @@ void NColorProp::OnColorClick(NObject* _psender)
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NUbyteComboProp, NPropertyItem);
 
+
+void NUbyteComboProp::Init()
+{
+	//Make menu items
+	NString str;
+	str = m_pvarBlocDesc->pszDefValue;
+
+	NString word;
+	udword i=3;
+	do
+	{
+		i = str.ExtractToken(i, word, ",]");
+		if (i!=-1)
+		{
+			m_carrayStringsList.AddItem(word);
+			i+=word.Length()+1;
+		}
+
+	} while (i!=-1);
+
+	//Create menu button
+	ubyte val = m_pvarValue->byVal;
+	word = "?";
+	if (val<(ubyte)m_carrayStringsList.Count())
+		word = m_carrayStringsList[val].Buffer();
+
+	m_button.Create(word.Buffer(), NRect(0,0,0,0), m_pParent, 0);
+	m_button.OnChanged = FDelegate(this, (TDelegate)&NUbyteComboProp::OnValueChanged);
+
+	//Add items to menu
+	for (udword i=0; i<m_carrayStringsList.Count(); i++)
+	{
+		m_button.GetMenu()->AddItem(m_carrayStringsList[i].Buffer(), i+1, 0);
+	}
+
+}
+
 void NUbyteComboProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
-	//Init
-	if (m_carrayStringsList.Count()==0)
-	{
-		NString str;
-		str = m_pvarBlocDesc->pszDefValue;
-
-		NString word;
-		udword i=3;
-		do
-		{
-			i = str.ExtractToken(i, word, ",]");
-			if (i!=-1)
-			{
-				m_carrayStringsList.AddItem(word);
-				i+=word.Length()+1;
-			}
-
-		} while (i!=-1);
-
-	}
-
-	//Draw
-	ubyte val = m_pvarValue->byVal;
-
-	if (val<(ubyte)m_carrayStringsList.Count())
-		m_strValue.Format("%s", 	m_carrayStringsList[val].Buffer());
-	else
-		m_strValue="?";
-
-	pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+	m_button.SetWindowRect(rcItem);
 }
 
-bool NUbyteComboProp::BeginEdit(NRect& rcItem)
+void NUbyteComboProp::OnValueChanged(NObject* _psender)
 {
-	assert(m_pParent!=null);
-
-	//Menu
-	if (m_wndMenu.GetItemsCount()==0)
-	{
-		m_wndMenu.Create("", m_pParent);
-		m_wndMenu.OnItemClick=FDelegate(this, (TDelegate)&NUbyteComboProp::OnMenuClick);
-		for (udword i=0; i<m_carrayStringsList.Count(); i++)
-		{
-			m_wndMenu.AddItem(m_carrayStringsList[i].Buffer(), i+1, 0);
-		}
-	}
-
-	NPoint pt(rcItem.left, rcItem.bottom);
-	m_pParent->ClientToScreen(pt);
-	m_wndMenu.TrackPopupMenu(pt, null);
-
-	return false;
-}
-
-bool NUbyteComboProp::EndEdit(bool bSaveChanged)
-{
-	return true;
-}
-
-void NUbyteComboProp::OnMenuClick(NObject* _psender)
-{
-	NMenuCtrl* pmenu = (NMenuCtrl*)_psender;
-	ubyte byVal = (ubyte)pmenu->GetClickedCmdID();
-	if (byVal!=0)
-		m_pvarValue->byVal = byVal-1;
-
-	//((NPropertiesCtrl*)m_pParent)->SaveRowEditing();
-
+	//Change value
+	m_pvarValue->byVal = m_button.GetMenu()->GetClickedCmdID()-1;
+	// Send Event
+	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperator*)m_pvarBloc->GetOwner());
 }
 
 
@@ -589,27 +482,27 @@ bool NStringProp::EndEdit(bool bSaveChanged)
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
-//										NIntProp class Implementation
+//										NUbyteProp class Implementation
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NIntProp, NPropertyItem)
+FIMPLEMENT_CLASS(NUbyteProp, NPropertyItem)
 
-void NIntProp::Init()
+void NUbyteProp::Init()
 {
 	m_slider.Create(m_pvarBlocDesc->pszName, NRect(0,0,0,0), m_pParent);
 	m_slider.SetRange(0.0f, 255.0f);	//###TOFIX###
 	m_slider.SetPos(m_pvarValue->byVal);
 	m_slider.SetStep(1.0f);	//###TOFIX###
-	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NIntProp::OnValueChanged);
+	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NUbyteProp::OnValueChanged);
 }
 
-void NIntProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
+void NUbyteProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	m_slider.SetWindowRect(rcItem);
 }
 
-void NIntProp::OnValueChanged(NObject* _psender)
+void NUbyteProp::OnValueChanged(NObject* _psender)
 {
 	//Change field value
 	m_pvarValue->byVal = (sdword)m_slider.GetPos();
