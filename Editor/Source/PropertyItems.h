@@ -77,16 +77,19 @@ public:
 //!	\class	NUbyteProp
 //! \brief	UByte Property Item
 //-----------------------------------------------------------------
-/*class NUbyteProp : public NPropertyItem
+class NUbyteProp : public NPropertyItem
 {
 public:
 	FDECLARE_CLASS();
 
+	virtual void		Init();
 	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
-	virtual bool		BeginEdit	(NRect& rcItem);
-	virtual bool		EndEdit		(bool bSaveChanged=true);
-	virtual	bool		AddValue(sdword dwDelta);
-};*/
+
+protected:
+	NSlideCtrl m_slider;
+	void OnValueChanged(NObject* _psender);
+};
+
 
 //-----------------------------------------------------------------
 //!	\class	NUwordProp
@@ -97,10 +100,12 @@ class NUwordProp : public NPropertyItem
 public:
 	FDECLARE_CLASS();
 
+	virtual void		Init();
 	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
-	virtual bool		BeginEdit	(NRect& rcItem);
-	virtual bool		EndEdit		(bool bSaveChanged=true);
-	virtual	bool		AddValue(sdword dwDelta);
+
+protected:
+	NSlideCtrl m_slider;
+	void OnValueChanged(NObject* _psender);
 };
 
 //-----------------------------------------------------------------
@@ -122,17 +127,21 @@ class NFloatProp : public NPropertyItem
 {
 public:
 	FDECLARE_CLASS();
+
+	virtual void		Init();
 	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
-	virtual bool		BeginEdit	(NRect& rcItem);
-	virtual bool		EndEdit		(bool bSaveChanged=true);
-	virtual	bool		AddValue(sdword dwDelta);
+
+protected:
+	NSlideCtrl m_slider;
+	void OnValueChanged(NObject* _psender);
 };
+
 
 //-----------------------------------------------------------------
 //!	\class	NUFloatProp
 //! \brief	Unsigned Float Property Item
 //-----------------------------------------------------------------
-class NUFloatProp : public NPropertyItem
+/*class NUFloatProp : public NPropertyItem
 {
 public:
 	FDECLARE_CLASS();
@@ -140,7 +149,7 @@ public:
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 	virtual	bool		AddValue(sdword dwDelta);
-};
+};*/
 
 //-----------------------------------------------------------------
 //!	\class	NColorProp
@@ -182,7 +191,7 @@ protected:
 //!	\class	NFileBrowserProp
 //! \brief	File browser Property Item
 //-----------------------------------------------------------------
-class NFileBrowserProp : public NPropertyItem
+/*class NFileBrowserProp : public NPropertyItem
 {
 public:
 	FDECLARE_CLASS();
@@ -190,7 +199,7 @@ public:
 	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
-};
+};*/
 
 //-----------------------------------------------------------------
 //!	\class	NUseStoredOpsProp
@@ -220,7 +229,7 @@ protected:
 //!	\class	NStringProp
 //! \brief	String Property Item
 //-----------------------------------------------------------------
-class NStringProp : public NPropertyItem
+/*class NStringProp : public NPropertyItem
 {
 public:
 	FDECLARE_CLASS();
@@ -229,21 +238,4 @@ public:
 	virtual bool		BeginEdit	(NRect& rcItem);
 	virtual bool		EndEdit		(bool bSaveChanged=true);
 };
-
-
-//-----------------------------------------------------------------
-//!	\class	NUbyteProp
-//! \brief	UByte Property Item
-//-----------------------------------------------------------------
-class NUbyteProp : public NPropertyItem
-{
-public:
-	FDECLARE_CLASS();
-
-	virtual void		Init();
-	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
-
-protected:
-	NSlideCtrl m_slider;
-	void OnValueChanged(NObject* _psender);
-};
+*/
