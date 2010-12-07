@@ -388,7 +388,7 @@ bool NColorPickerCtrl::Create(NGUIWnd* parent)
 	wc.pszText			= "";
 	wc.pwndParent		= parent;
 	wc.rcRect				= NRect(0,0,0,0);
-	wc.dwStyle			= NWS_VISIBLE;	//Or NWS_POPUP for trackpopup
+	wc.dwStyle			= NWS_VISIBLE|NWS_POPUP;	//Or NWS_POPUP for trackpopup
 	NGUIWnd::Create(wc);
 
 	return true;

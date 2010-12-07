@@ -62,32 +62,30 @@ NPropertyItem::~NPropertyItem()
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-/*FIMPLEMENT_CLASS(NUbyteProp, NPropertyItem);
+FIMPLEMENT_CLASS(NUbyteProp, NPropertyItem)
+
+void NUbyteProp::Init()
+{
+	m_slider.Create(m_pvarBlocDesc->pszName, NRect(0,0,0,0), m_pParent);
+	m_slider.SetRange(0.0f, 255.0f);	//###TOFIX###
+	m_slider.SetPos(m_pvarValue->byVal);
+	m_slider.SetStep(1.0f);	//###TOFIX###
+	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NUbyteProp::OnValueChanged);
+}
 
 void NUbyteProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
-	m_strValue.Format("%d", m_pvarValue->byVal);
-	pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+	m_slider.SetWindowRect(rcItem);
 }
 
-bool NUbyteProp::BeginEdit(NRect& rcItem)
+void NUbyteProp::OnValueChanged(NObject* _psender)
 {
- return false;
-}
+	//Change field value
+	m_pvarValue->byVal = (sdword)m_slider.GetPos();
 
-bool NUbyteProp::EndEdit(bool bSaveChanged)
-{
-	return false;
+	// Send Event
+	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperator*)m_pvarBloc->GetOwner());
 }
-
-bool NUbyteProp::AddValue(sdword dwDelta)
-{
-	sdword dwVal = (sdword)m_pvarValue->byVal + (sdword)dwDelta;
-	if (dwVal>255)		dwVal = 255;
-	if (dwVal<0)			dwVal = 0;
-	m_pvarValue->byVal = (ubyte)dwVal;
-	return true;
-}*/
 
 
 //-----------------------------------------------------------------
@@ -97,31 +95,29 @@ bool NUbyteProp::AddValue(sdword dwDelta)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NUwordProp, NPropertyItem);
+FIMPLEMENT_CLASS(NUwordProp, NPropertyItem)
+
+void NUwordProp::Init()
+{
+	m_slider.Create(m_pvarBlocDesc->pszName, NRect(0,0,0,0), m_pParent);
+	m_slider.SetRange(0.0f, 65535.0f);	//###TOFIX###
+	m_slider.SetPos(m_pvarValue->wVal);
+	m_slider.SetStep(1.0f);	//###TOFIX###
+	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NUwordProp::OnValueChanged);
+}
 
 void NUwordProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
-	m_strValue.Format("%d", m_pvarValue->wVal);
-	pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+	m_slider.SetWindowRect(rcItem);
 }
 
-bool NUwordProp::BeginEdit(NRect& rcItem)
+void NUwordProp::OnValueChanged(NObject* _psender)
 {
-	return false;
-}
+	//Change field value
+	m_pvarValue->wVal = (sdword)m_slider.GetPos();
 
-bool NUwordProp::EndEdit(bool bSaveChanged)
-{
-	return false;
-}
-
-bool NUwordProp::AddValue(sdword dwDelta)
-{
-	sdword dwVal = (sdword)m_pvarValue->wVal + (sdword)dwDelta;
-	if (dwVal>65535)	dwVal = 65535;
-	if (dwVal<0)			dwVal = 0;
-	m_pvarValue->wVal = (uword)dwVal;
-	return true;
+	// Send Event
+	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperator*)m_pvarBloc->GetOwner());
 }
 
 
@@ -132,69 +128,31 @@ bool NUwordProp::AddValue(sdword dwDelta)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NFloatProp, NPropertyItem);
+FIMPLEMENT_CLASS(NFloatProp, NPropertyItem)
+
+void NFloatProp::Init()
+{
+	m_slider.Create(m_pvarBlocDesc->pszName, NRect(0,0,0,0), m_pParent);
+	m_slider.SetRange(-1.0f, 1.0f);	//###TOFIX###
+	m_slider.SetPos(m_pvarValue->fVal);
+	m_slider.SetStep(0.01f);	//###TOFIX###
+	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NFloatProp::OnValueChanged);
+}
 
 void NFloatProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
-	m_strValue.Format("%0.3f", m_pvarValue->fVal);
-	pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+	m_slider.SetWindowRect(rcItem);
 }
 
-bool NFloatProp::BeginEdit(NRect& rcItem)
+void NFloatProp::OnValueChanged(NObject* _psender)
 {
-	return false;
+	//Change field value
+	m_pvarValue->fVal = (sdword)m_slider.GetPos();
+
+	// Send Event
+	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperator*)m_pvarBloc->GetOwner());
 }
 
-bool NFloatProp::EndEdit(bool bSaveChanged)
-{
-	return false;
-}
-
-bool NFloatProp::AddValue(sdword dwDelta)
-{
-	m_pvarValue->fVal = m_pvarValue->fVal + ((float)dwDelta)/1000.0f;
-	m_pvarValue->fVal *= 10000;
-	m_pvarValue->fVal = floor(m_pvarValue->fVal + .5);
-	m_pvarValue->fVal /= 10000;
-	return true;
-}
-
-
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-//
-//										NUFloatProp class Implementation
-//
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NUFloatProp, NPropertyItem);
-
-void NUFloatProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
-{
-	m_strValue.Format("%0.3f", m_pvarValue->fVal);
-	pdc->DrawString(m_strValue.Buffer(), rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
-}
-
-bool NUFloatProp::BeginEdit(NRect& rcItem)
-{
-	return false;
-}
-
-bool NUFloatProp::EndEdit(bool bSaveChanged)
-{
-	return false;
-}
-
-bool NUFloatProp::AddValue(sdword dwDelta)
-{
-	m_pvarValue->fVal = m_pvarValue->fVal + ((float)dwDelta)/1000.0f;
-	m_pvarValue->fVal *= 10000;
-	m_pvarValue->fVal = floor(m_pvarValue->fVal + .5);
-	m_pvarValue->fVal /= 10000;
-	if(m_pvarValue->fVal < 0)
-		m_pvarValue->fVal = 0;
-	return true;
-}
 
 
 //-----------------------------------------------------------------
@@ -297,7 +255,7 @@ void NUbyteComboProp::OnValueChanged(NObject* _psender)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NFileBrowserProp, NPropertyItem);
+/*FIMPLEMENT_CLASS(NFileBrowserProp, NPropertyItem);
 
 void NFileBrowserProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
@@ -308,13 +266,13 @@ bool NFileBrowserProp::BeginEdit(NRect& rcItem)
 {
 	assert(m_pParent!=null);
 
-/*	NFileDialog dlg;
+	NFileDialog dlg;
 	dlg.Create("Choose a File to Load", m_pParent);
 	if (1==dlg.DoModal())
 	{
 		NString str = dlg.GetPathName(0);
 		strcpy_s(m_pvarValue->szVal, sizeof(m_pvarValue->szVal), str.Buffer());
-	}*/
+	}
 
 	return true;	//End of Edition
 }
@@ -323,7 +281,7 @@ bool NFileBrowserProp::EndEdit(bool bSaveChanged)
 {
 	return true;
 }
-
+*/
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -432,7 +390,7 @@ void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NStringProp, NPropertyItem);
+/*FIMPLEMENT_CLASS(NStringProp, NPropertyItem);
 
 void NStringProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
@@ -476,37 +434,4 @@ bool NStringProp::EndEdit(bool bSaveChanged)
 
 	return bSaveChanged;
 }
-
-
-
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-//
-//										NUbyteProp class Implementation
-//
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NUbyteProp, NPropertyItem)
-
-void NUbyteProp::Init()
-{
-	m_slider.Create(m_pvarBlocDesc->pszName, NRect(0,0,0,0), m_pParent);
-	m_slider.SetRange(0.0f, 255.0f);	//###TOFIX###
-	m_slider.SetPos(m_pvarValue->byVal);
-	m_slider.SetStep(1.0f);	//###TOFIX###
-	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NUbyteProp::OnValueChanged);
-}
-
-void NUbyteProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
-{
-	m_slider.SetWindowRect(rcItem);
-}
-
-void NUbyteProp::OnValueChanged(NObject* _psender)
-{
-	//Change field value
-	m_pvarValue->byVal = (sdword)m_slider.GetPos();
-
-	// Send Event
-	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperator*)m_pvarBloc->GetOwner());
-}
+*/
