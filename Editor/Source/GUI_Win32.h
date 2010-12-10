@@ -59,12 +59,13 @@ public:
 protected:
 	//Methods
 	static LRESULT CALLBACK StaticWndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
-	udword W32KeyCodeToFxGen(udword _w32keycode);
-	
+	NKey::Code W32KeyCodeToFxGen(WPARAM key, LPARAM flags);
+
 	//Datas
 	HDC m_hDC;
 	HWND m_hW32Wnd;
-//	NKey::Code m_keymap[NKey::Code.Count];
+
+
 };
 
 
