@@ -701,11 +701,11 @@ void NEditCtrl::OnPaint(N2DPainter* _ppainter)
 	//Cursor
 	if( m_dwSelectionTail == m_dwCursorPos )
 	{
-		udword px = m_dwCursorPos*(GetGUISubSystem()->GetFont()->m_h-1);
+		udword px = m_dwCursorPos*(GetGUISubSystem()->GetFont()->m_h-2);
 		_ppainter->DrawLine(px,0,px, rc.Height(), RGBA(255,141,15,255), 1);
 	} else {
-		udword pxs = nmin(m_dwCursorPos, m_dwSelectionTail)*(GetGUISubSystem()->GetFont()->m_h-1);
-		udword pxe = nmax(m_dwCursorPos, m_dwSelectionTail)*(GetGUISubSystem()->GetFont()->m_h-1);
+		udword pxs = nmin(m_dwCursorPos, m_dwSelectionTail)*(GetGUISubSystem()->GetFont()->m_h-2);
+		udword pxe = nmax(m_dwCursorPos, m_dwSelectionTail)*(GetGUISubSystem()->GetFont()->m_h-2);
 		NRect rc2(pxs, 0, pxe, rc.Height());
 		_ppainter->FillSolidRect(rc2, NColor(255,141,15,128));
 	}
@@ -716,6 +716,7 @@ void NEditCtrl::OnPaint(N2DPainter* _ppainter)
 //-----------------------------------------------------------------
 void NEditCtrl::OnLButtonUp(NPoint _pos)
 {
+	SetFocus();
 }
 //-----------------------------------------------------------------
 //!	\brief

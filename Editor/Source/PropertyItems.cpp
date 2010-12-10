@@ -292,7 +292,44 @@ bool NFileBrowserProp::EndEdit(bool bSaveChanged)
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NUseStoredOpsProp, NPropertyItem);
 
+void NUseStoredOpsProp::Init()
+{
+	char* pszName="";
+	NObject* pobj = m_pvarValue->pcRefObj;
+
+	//Display referenced object name (from varbloc)
+	if (pobj)
+	{
+		NVarsBloc* pbloc = pobj->GetFirstVarsBloc();
+		pbloc->GetValue(0, 0.0f, pszName);
+	}
+
+	//Create menu button
+	m_button.Create(pszName, NRect(0,0,0,0), m_pParent, 0);
+	m_button.OnChanged = FDelegate(this, (TDelegate)&NUseStoredOpsProp::OnValueChanged);
+
+	NTreeNode* pnode = NEditorGUI::GetInstance()->GetAsset()->GetRootGroup();
+	BuildMenu(pnode);
+}
+
+
 void NUseStoredOpsProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
+{
+	m_button.SetWindowRect(rcItem);
+}
+
+void NUseStoredOpsProp::OnValueChanged(NObject* _psender)
+{
+	//Change value
+	//m_pvarValue->byVal = m_button.GetMenu()->GetClickedCmdID()-1;
+	//###TODO###
+
+	// Send Event
+	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperator*)m_pvarBloc->GetOwner());
+}
+
+
+/*void NUseStoredOpsProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
 	NObject* pobj = m_pvarValue->pcRefObj;
 
@@ -341,18 +378,9 @@ void NUseStoredOpsProp::OnMenuClick(NObject* _psender)
 
 	//((NPropertiesCtrl*)m_pParent)->SaveRowEditing();
 }
-
+*/
 void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 {
-
-	if (m_wndMenu.GetItemsCount()==0)
-	{
-		m_wndMenu.Create("", m_pParent);
-		m_wndMenu.OnItemClick=FDelegate(this, (TDelegate)&NUseStoredOpsProp::OnMenuClick);
-	}	else {
-		m_wndMenu.DeleteAllItems();
-	}
-
 	//Parse alls Graphs in order to add 'NStoreOp'
 	NObjectArray& arrayObjs = _pnode->GetObjsArray();
 	udword dwCount = arrayObjs.Count();
@@ -361,7 +389,7 @@ void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 	{
 		NOpGraphModel* ppage = (NOpGraphModel*)arrayObjs[idx++];
 
-		NMenuCtrl* popMenu = m_wndMenu.CreatePopupMenu(ppage->GetName(), -1);
+		NMenuCtrl* popMenu = m_button.GetMenu()->CreatePopupMenu(ppage->GetName(), -1);
 
 		NObjectArray storedOp;
 		storedOp.SetManageDelete(false);
@@ -390,48 +418,27 @@ void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-/*FIMPLEMENT_CLASS(NStringProp, NPropertyItem);
+FIMPLEMENT_CLASS(NStringProp, NPropertyItem);
+
+void NStringProp::Init()
+{
+	m_edit.Create(m_pvarBlocDesc->pszName, NRect(0,0,0,0), m_pParent);
+	m_edit.SetText(m_pvarValue->szVal);
+
+	m_edit.OnEnter = FDelegate(this, (TDelegate)&NStringProp::OnValueChanged);
+}
 
 void NStringProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 {
-	pdc->DrawString(m_pvarValue->szVal, rcItem, NDT_VCENTER|NDT_SINGLELINE|NDT_END_ELLIPSIS, RGBA(0,0,0,255) );
+	m_edit.SetWindowRect(rcItem);
 }
 
-bool NStringProp::BeginEdit(NRect& rcItem)
+void NStringProp::OnValueChanged(NObject* _psender)
 {
-	assert(m_pParent!=null);
+	//Change field value
+	NString str = m_edit.GetText();
+	strcpy_s(m_pvarValue->szVal, sizeof(m_pvarValue->szVal), str.Buffer());
 
-	//Delete Old Control
-	if (m_pwNGraphicstrl)	delete m_pwNGraphicstrl;
-
-	//Create edit
-	NRect rcCB(rcItem);
-
-	NEditCtrl* pwNGraphicsB = new NEditCtrl;
-	pwNGraphicsB->Create("", rcCB, m_pParent);
-	m_pwNGraphicstrl = pwNGraphicsB;
-
-	pwNGraphicsB->SetText(m_pvarValue->szVal);
-	pwNGraphicsB->SetFocus();
-
-	return false;
+	// Send Event
+	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperator*)m_pvarBloc->GetOwner());
 }
-
-bool NStringProp::EndEdit(bool bSaveChanged)
-{
-	if (m_pwNGraphicstrl==null)		return false;
-
-	//Save changed
-	if (bSaveChanged)
-	{
-		NString str = ((NEditCtrl*)m_pwNGraphicstrl)->GetText();
-		strcpy_s(m_pvarValue->szVal, sizeof(m_pvarValue->szVal), str.Buffer());
-	}
-
-	//Destroy control
-	delete m_pwNGraphicstrl;
-	m_pwNGraphicstrl=null;
-
-	return bSaveChanged;
-}
-*/

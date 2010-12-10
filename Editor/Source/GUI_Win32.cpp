@@ -102,131 +102,6 @@ bool NW32Application::Init()
 	SetPixelFormat( m_hDC, ChoosePixelFormat ( m_hDC, &pfd) , &pfd );
 	wglMakeCurrent( m_hDC, wglCreateContext(m_hDC) );
 
-	/////////////////////////////////////////////
-	//Map VK keys
-/*	for (udword i=0; i<NK_LAST; ++i )
-		m_keymap[i] = NK_UNKNOWN;
-
-	m_keymap[VK_BACK] = NK_BACKSPACE;
-	m_keymap[VK_TAB] = NK_TAB;
-	m_keymap[VK_CLEAR] = NK_CLEAR;
-	m_keymap[VK_RETURN] = NK_RETURN;
-	m_keymap[VK_PAUSE] = NK_PAUSE;
-	m_keymap[VK_ESCAPE] = NK_ESCAPE;
-	m_keymap[VK_SPACE] = NK_SPACE;
-	m_keymap[VK_APOSTROPHE] = NK_QUOTE;
-	m_keymap[VK_COMMA] = NK_COMMA;
-	m_keymap[VK_MINUS] = NK_MINUS;
-	m_keymap[VK_PERIOD] = NK_PERIOD;
-	m_keymap[VK_SLASH] = NK_SLASH;
-	m_keymap[VK_0] = NK_0;
-	m_keymap[VK_1] = NK_1;
-	m_keymap[VK_2] = NK_2;
-	m_keymap[VK_3] = NK_3;
-	m_keymap[VK_4] = NK_4;
-	m_keymap[VK_5] = NK_5;
-	m_keymap[VK_6] = NK_6;
-	m_keymap[VK_7] = NK_7;
-	m_keymap[VK_8] = NK_8;
-	m_keymap[VK_9] = NK_9;
-	m_keymap[VK_SEMICOLON] = NK_SEMICOLON;
-	m_keymap[VK_EQUALS] = NK_EQUALS;
-	m_keymap[VK_LBRACKET] = NK_LEFTBRACKET;
-	m_keymap[VK_BACKSLASH] = NK_BACKSLASH;
-	m_keymap[VK_OEM_102] = NK_LESS;
-	m_keymap[VK_RBRACKET] = NK_RIGHTBRACKET;
-	m_keymap[VK_GRAVE] = NK_BACKQUOTE;
-	m_keymap[VK_BACKTICK] = NK_BACKQUOTE;
-	m_keymap[VK_A] = NK_a;
-	m_keymap[VK_B] = NK_b;
-	m_keymap[VK_C] = NK_c;
-	m_keymap[VK_D] = NK_d;
-	m_keymap[VK_E] = NK_e;
-	m_keymap[VK_F] = NK_f;
-	m_keymap[VK_G] = NK_g;
-	m_keymap[VK_H] = NK_h;
-	m_keymap[VK_I] = NK_i;
-	m_keymap[VK_J] = NK_j;
-	m_keymap[VK_K] = NK_k;
-	m_keymap[VK_L] = NK_l;
-	m_keymap[VK_M] = NK_m;
-	m_keymap[VK_N] = NK_n;
-	m_keymap[VK_O] = NK_o;
-	m_keymap[VK_P] = NK_p;
-	m_keymap[VK_Q] = NK_q;
-	m_keymap[VK_R] = NK_r;
-	m_keymap[VK_S] = NK_s;
-	m_keymap[VK_T] = NK_t;
-	m_keymap[VK_U] = NK_u;
-	m_keymap[VK_V] = NK_v;
-	m_keymap[VK_W] = NK_w;
-	m_keymap[VK_X] = NK_x;
-	m_keymap[VK_Y] = NK_y;
-	m_keymap[VK_Z] = NK_z;
-	m_keymap[VK_DELETE] = NK_DELETE;
-
-	m_keymap[VK_NUMPAD0] = NK_KP0;
-	m_keymap[VK_NUMPAD1] = NK_KP1;
-	m_keymap[VK_NUMPAD2] = NK_KP2;
-	m_keymap[VK_NUMPAD3] = NK_KP3;
-	m_keymap[VK_NUMPAD4] = NK_KP4;
-	m_keymap[VK_NUMPAD5] = NK_KP5;
-	m_keymap[VK_NUMPAD6] = NK_KP6;
-	m_keymap[VK_NUMPAD7] = NK_KP7;
-	m_keymap[VK_NUMPAD8] = NK_KP8;
-	m_keymap[VK_NUMPAD9] = NK_KP9;
-	m_keymap[VK_DECIMAL] = NK_KP_PERIOD;
-	m_keymap[VK_DIVIDE] = NK_KP_DIVIDE;
-	m_keymap[VK_MULTIPLY] = NK_KP_MULTIPLY;
-	m_keymap[VK_SUBTRACT] = NK_KP_MINUS;
-	m_keymap[VK_ADD] = NK_KP_PLUS;
-
-	m_keymap[VK_UP] = NK_UP;
-	m_keymap[VK_DOWN] = NK_DOWN;
-	m_keymap[VK_RIGHT] = NK_RIGHT;
-	m_keymap[VK_LEFT] = NK_LEFT;
-	m_keymap[VK_INSERT] = NK_INSERT;
-	m_keymap[VK_HOME] = NK_HOME;
-	m_keymap[VK_END] = NK_END;
-	m_keymap[VK_PRIOR] = NK_PAGEUP;
-	m_keymap[VK_NEXT] = NK_PAGEDOWN;
-
-	m_keymap[VK_F1] = NK_F1;
-	m_keymap[VK_F2] = NK_F2;
-	m_keymap[VK_F3] = NK_F3;
-	m_keymap[VK_F4] = NK_F4;
-	m_keymap[VK_F5] = NK_F5;
-	m_keymap[VK_F6] = NK_F6;
-	m_keymap[VK_F7] = NK_F7;
-	m_keymap[VK_F8] = NK_F8;
-	m_keymap[VK_F9] = NK_F9;
-	m_keymap[VK_F10] = NK_F10;
-	m_keymap[VK_F11] = NK_F11;
-	m_keymap[VK_F12] = NK_F12;
-	m_keymap[VK_F13] = NK_F13;
-	m_keymap[VK_F14] = NK_F14;
-	m_keymap[VK_F15] = NK_F15;
-
-	m_keymap[VK_NUMLOCK] = NK_NUMLOCK;
-	m_keymap[VK_CAPITAL] = NK_CAPSLOCK;
-	m_keymap[VK_SCROLL] = NK_SCROLLOCK;
-	m_keymap[VK_RSHIFT] = NK_RSHIFT;
-	m_keymap[VK_LSHIFT] = NK_LSHIFT;
-	m_keymap[VK_RCONTROL] = NK_RCTRL;
-	m_keymap[VK_LCONTROL] = NK_LCTRL;
-	m_keymap[VK_RMENU] = NK_RALT;
-	m_keymap[VK_LMENU] = NK_LALT;
-	m_keymap[VK_RWIN] = NK_RSUPER;
-	m_keymap[VK_LWIN] = NK_LSUPER;
-
-	m_keymap[VK_HELP] = NK_HELP;
-#ifdef VK_PRINT
-	m_keymap[VK_PRINT] = NK_PRINT;
-#endif
-	m_keymap[VK_SNAPSHOT] = NK_PRINT;
-	m_keymap[VK_CANCEL] = NK_BREAK;
-	m_keymap[VK_APPS] = NK_MENU;
-	*/
 	return true;
 }
 
@@ -359,16 +234,17 @@ LRESULT CALLBACK NW32Application::StaticWndProc(HWND hwnd, UINT msg, WPARAM wpar
 				break;
 
 			//Keyboard Messages
-			/*case WM_KEYDOWN:
-				dwKey = _this->W32KeyCodeToFxGen(wparam);
-				pgui->ProcessMsgs_KeyDown(dwKey);
+			case WM_KEYDOWN:
+				pgui->ProcessMsgs_KeyDown(_this->W32KeyCodeToFxGen(wparam, lparam) );
 				break;
 
 			case WM_KEYUP:
-				dwKey = _this->W32KeyCodeToFxGen(wparam);
-				pgui->ProcessMsgs_KeyUp(dwKey);
-				break;*/
+				pgui->ProcessMsgs_KeyUp(_this->W32KeyCodeToFxGen(wparam, lparam) );
+				break;
 
+			case WM_CHAR:
+				pgui->ProcessMsgs_Text(wparam);
+				break;
 		}
 
 	}
@@ -436,13 +312,124 @@ udword NW32Application::MessageBox(char* _pszText, udword _dwStyle)
 //-----------------------------------------------------------------
 //!	\brief	W32KeyCodeToFxGen
 //-----------------------------------------------------------------
-udword NW32Application::W32KeyCodeToFxGen(udword _w32keycode)
+NKey::Code NW32Application::W32KeyCodeToFxGen(WPARAM key, LPARAM flags)
 {
-	udword fxgenKey=0;
-	//udword fxgenKey = m_keymap[_w32keycode];
-	//TRACE("_w32keycode %d\n", _w32keycode);
-	//if (_w32keycode==VK_DELETE)	fxgenKey=VK_DELETE;
-	return fxgenKey;
+		switch (key)
+		{
+			// Check the scancode to distinguish between left and right shift
+		case VK_SHIFT :
+			{
+				static UINT lShift = MapVirtualKey(VK_LSHIFT, MAPVK_VK_TO_VSC);
+				UINT scancode = static_cast<UINT>((flags & (0xFF << 16)) >> 16);
+				return scancode == lShift ? NKey::Code::LShift : NKey::Code::RShift;
+			}
+
+			// Check the "extended" flag to distinguish between left and right alt
+		case VK_MENU : return (HIWORD(flags) & KF_EXTENDED) ? NKey::Code::RAlt : NKey::Code::LAlt;
+
+			// Check the "extended" flag to distinguish between left and right control
+		case VK_CONTROL : return (HIWORD(flags) & KF_EXTENDED) ? NKey::Code::RControl : NKey::Code::LControl;
+
+			// Other keys are reported properly
+		case VK_LWIN :       return NKey::Code::LSystem;
+		case VK_RWIN :       return NKey::Code::RSystem;
+		case VK_APPS :       return NKey::Code::Menu;
+		case VK_OEM_1 :      return NKey::Code::SemiColon;
+		case VK_OEM_2 :      return NKey::Code::Slash;
+		case VK_OEM_PLUS :   return NKey::Code::Equal;
+		case VK_OEM_MINUS :  return NKey::Code::Dash;
+		case VK_OEM_4 :      return NKey::Code::LBracket;
+		case VK_OEM_6 :      return NKey::Code::RBracket;
+		case VK_OEM_COMMA :  return NKey::Code::Comma;
+		case VK_OEM_PERIOD : return NKey::Code::Period;
+		case VK_OEM_7 :      return NKey::Code::Quote;
+		case VK_OEM_5 :      return NKey::Code::BackSlash;
+		case VK_OEM_3 :      return NKey::Code::Tilde;
+		case VK_ESCAPE :     return NKey::Code::Escape;
+		case VK_SPACE :      return NKey::Code::Space;
+		case VK_RETURN :     return NKey::Code::Return;
+		case VK_BACK :       return NKey::Code::Back;
+		case VK_TAB :        return NKey::Code::Tab;
+		case VK_PRIOR :      return NKey::Code::PageUp;
+		case VK_NEXT :       return NKey::Code::PageDown;
+		case VK_END :        return NKey::Code::End;
+		case VK_HOME :       return NKey::Code::Home;
+		case VK_INSERT :     return NKey::Code::Insert;
+		case VK_DELETE :     return NKey::Code::Delete;
+		case VK_ADD :        return NKey::Code::Add;
+		case VK_SUBTRACT :   return NKey::Code::Subtract;
+		case VK_MULTIPLY :   return NKey::Code::Multiply;
+		case VK_DIVIDE :     return NKey::Code::Divide;
+		case VK_PAUSE :      return NKey::Code::Pause;
+		case VK_F1 :         return NKey::Code::F1;
+		case VK_F2 :         return NKey::Code::F2;
+		case VK_F3 :         return NKey::Code::F3;
+		case VK_F4 :         return NKey::Code::F4;
+		case VK_F5 :         return NKey::Code::F5;
+		case VK_F6 :         return NKey::Code::F6;
+		case VK_F7 :         return NKey::Code::F7;
+		case VK_F8 :         return NKey::Code::F8;
+		case VK_F9 :         return NKey::Code::F9;
+		case VK_F10 :        return NKey::Code::F10;
+		case VK_F11 :        return NKey::Code::F11;
+		case VK_F12 :        return NKey::Code::F12;
+		case VK_F13 :        return NKey::Code::F13;
+		case VK_F14 :        return NKey::Code::F14;
+		case VK_F15 :        return NKey::Code::F15;
+		case VK_LEFT :       return NKey::Code::Left;
+		case VK_RIGHT :      return NKey::Code::Right;
+		case VK_UP :         return NKey::Code::Up;
+		case VK_DOWN :       return NKey::Code::Down;
+		case VK_NUMPAD0 :    return NKey::Code::Numpad0;
+		case VK_NUMPAD1 :    return NKey::Code::Numpad1;
+		case VK_NUMPAD2 :    return NKey::Code::Numpad2;
+		case VK_NUMPAD3 :    return NKey::Code::Numpad3;
+		case VK_NUMPAD4 :    return NKey::Code::Numpad4;
+		case VK_NUMPAD5 :    return NKey::Code::Numpad5;
+		case VK_NUMPAD6 :    return NKey::Code::Numpad6;
+		case VK_NUMPAD7 :    return NKey::Code::Numpad7;
+		case VK_NUMPAD8 :    return NKey::Code::Numpad8;
+		case VK_NUMPAD9 :    return NKey::Code::Numpad9;
+		case 'A' :           return NKey::Code::A;
+		case 'Z' :           return NKey::Code::Z;
+		case 'E' :           return NKey::Code::E;
+		case 'R' :           return NKey::Code::R;
+		case 'T' :           return NKey::Code::T;
+		case 'Y' :           return NKey::Code::Y;
+		case 'U' :           return NKey::Code::U;
+		case 'I' :           return NKey::Code::I;
+		case 'O' :           return NKey::Code::O;
+		case 'P' :           return NKey::Code::P;
+		case 'Q' :           return NKey::Code::Q;
+		case 'S' :           return NKey::Code::S;
+		case 'D' :           return NKey::Code::D;
+		case 'F' :           return NKey::Code::F;
+		case 'G' :           return NKey::Code::G;
+		case 'H' :           return NKey::Code::H;
+		case 'J' :           return NKey::Code::J;
+		case 'K' :           return NKey::Code::K;
+		case 'L' :           return NKey::Code::L;
+		case 'M' :           return NKey::Code::M;
+		case 'W' :           return NKey::Code::W;
+		case 'X' :           return NKey::Code::X;
+		case 'C' :           return NKey::Code::C;
+		case 'V' :           return NKey::Code::V;
+		case 'B' :           return NKey::Code::B;
+		case 'N' :           return NKey::Code::N;
+		case '0' :           return NKey::Code::Num0;
+		case '1' :           return NKey::Code::Num1;
+		case '2' :           return NKey::Code::Num2;
+		case '3' :           return NKey::Code::Num3;
+		case '4' :           return NKey::Code::Num4;
+		case '5' :           return NKey::Code::Num5;
+		case '6' :           return NKey::Code::Num6;
+		case '7' :           return NKey::Code::Num7;
+		case '8' :           return NKey::Code::Num8;
+		case '9' :           return NKey::Code::Num9;
+		}
+
+		return NKey::Code(0);
+
 }
 
 //-----------------------------------------------------------------

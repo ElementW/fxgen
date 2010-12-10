@@ -108,15 +108,6 @@ protected:
 	void OnValueChanged(NObject* _psender);
 };
 
-//-----------------------------------------------------------------
-//!	\class	NUdwordProp
-//! \brief	Udword Property Item
-//-----------------------------------------------------------------
-class NUdwordProp : public NPropertyItem
-{
-public:
-	//###TODO###
-};
 
 
 //-----------------------------------------------------------------
@@ -135,21 +126,6 @@ protected:
 	NSlideCtrl m_slider;
 	void OnValueChanged(NObject* _psender);
 };
-
-
-//-----------------------------------------------------------------
-//!	\class	NUFloatProp
-//! \brief	Unsigned Float Property Item
-//-----------------------------------------------------------------
-/*class NUFloatProp : public NPropertyItem
-{
-public:
-	FDECLARE_CLASS();
-	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
-	virtual bool		BeginEdit	(NRect& rcItem);
-	virtual bool		EndEdit		(bool bSaveChanged=true);
-	virtual	bool		AddValue(sdword dwDelta);
-};*/
 
 //-----------------------------------------------------------------
 //!	\class	NColorProp
@@ -210,18 +186,16 @@ class NUseStoredOpsProp : public NPropertyItem
 public:
 	FDECLARE_CLASS();
 
-	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
-	//virtual void		Click(NPoint& pt, NRect& rcItem);
-	virtual bool		BeginEdit	(NRect& rcItem);
-	virtual bool		EndEdit		(bool bSaveChanged=true);
+	virtual void	Init();
+	virtual	void	DrawItem(N2DPainter* pdc, NRect& rcItem);
 
 protected:
 	//Messages Notify
-	void OnMenuClick(NObject* _psender);
+	void OnValueChanged(NObject* _psender);
 	//Methods
 	void BuildMenu(NTreeNode* _pnode);
 	//Datas
-	NMenuCtrl	m_wndMenu;
+	NMenuButtonCtrl	m_button;
 };
 
 
@@ -229,13 +203,16 @@ protected:
 //!	\class	NStringProp
 //! \brief	String Property Item
 //-----------------------------------------------------------------
-/*class NStringProp : public NPropertyItem
+class NStringProp : public NPropertyItem
 {
 public:
 	FDECLARE_CLASS();
 
-	virtual	void		DrawItem(N2DPainter* pdc, NRect& rcItem);
-	virtual bool		BeginEdit	(NRect& rcItem);
-	virtual bool		EndEdit		(bool bSaveChanged=true);
+	virtual void	Init();
+	virtual	void	DrawItem(N2DPainter* pdc, NRect& rcItem);
+
+	NEditCtrl	m_edit;
+
+	void OnValueChanged(NObject* _psender);
 };
-*/
+
