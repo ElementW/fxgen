@@ -308,6 +308,7 @@ void NUseStoredOpsProp::Init()
 	m_button.Create(pszName, NRect(0,0,0,0), m_pParent, 0);
 	m_button.OnChanged = FDelegate(this, (TDelegate)&NUseStoredOpsProp::OnValueChanged);
 
+	//Buid menu's items
 	NTreeNode* pnode = NEditorGUI::GetInstance()->GetAsset()->GetRootGroup();
 	BuildMenu(pnode);
 }
@@ -321,8 +322,11 @@ void NUseStoredOpsProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 void NUseStoredOpsProp::OnValueChanged(NObject* _psender)
 {
 	//Change value
-	//m_pvarValue->byVal = m_button.GetMenu()->GetClickedCmdID()-1;
-	//###TODO###
+	NOperator* popSel = (NOperator*)m_button.GetMenu()->GetClickedCmdID();
+
+	//Affect selected 'stored operator'
+	if (popSel!=null)
+		m_pvarBloc->SetValue(m_dwvarIdx, 0.0f, popSel);
 
 	// Send Event
 	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperator*)m_pvarBloc->GetOwner());
@@ -366,18 +370,6 @@ bool NUseStoredOpsProp::EndEdit(bool bSaveChanged)
 {
 	return true;
 }
-
-void NUseStoredOpsProp::OnMenuClick(NObject* _psender)
-{
-	NMenuCtrl* pmenu = (NMenuCtrl*)_psender;
-	NOperator* popSel = (NOperator*)pmenu->GetClickedCmdID();
-
-	//Affect selected 'stored operator'
-	if (popSel!=null)
-		m_pvarBloc->SetValue(m_dwvarIdx, 0.0f, popSel);
-
-	//((NPropertiesCtrl*)m_pParent)->SaveRowEditing();
-}
 */
 void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 {
@@ -389,7 +381,7 @@ void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 	{
 		NOpGraphModel* ppage = (NOpGraphModel*)arrayObjs[idx++];
 
-		NMenuCtrl* popMenu = m_button.GetMenu()->CreatePopupMenu(ppage->GetName(), -1);
+		NMenuCtrl* popMenu = m_button.GetMenu();	//->CreatePopupMenu(ppage->GetName(), -1);
 
 		NObjectArray storedOp;
 		storedOp.SetManageDelete(false);

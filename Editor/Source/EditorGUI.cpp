@@ -73,9 +73,11 @@ void staticOperatorsProcessCB(udword _dwCurrentOp, udword _dwTotalOps)
 //-----------------------------------------------------------------
 NEditorGUI::NEditorGUI(void)
 {
+	gpeditorGUI				= this;
 	m_bExecuteLocked	= false;
 	m_popMarkedShow		= null;
 	m_fDetailFactor		= 1.0f;
+	m_pcurAsset				= null;
 }
 
 //-----------------------------------------------------------------

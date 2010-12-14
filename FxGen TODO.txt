@@ -3,6 +3,7 @@ TODO
 
 .Main ID
 	.Split Operator to OperatorNode and OperatorFx ?
+	.Add CommentNode
 
 .FxGenLib
 	.Rewrite animation processing (later)
@@ -26,6 +27,7 @@ TODO
 		.compile and compute asserts node graph (later add cache)
 	.add undo-redo
 	.add min-max properties limits
+	.managed string properties changed on key enter evt
 
 Version 0.7 alpha (Release: New FxGen Engine !)
 ----------------------------------
@@ -39,9 +41,9 @@ Version 0.7 alpha (Release: New FxGen Engine !)
 .GUILib
 	.Fixed Menu destruction crash
 	.Application Management Removed
-	.Win32 dependencies removed
+	.Win32 dependencies removed (now gui_win32.cpp in editor, TODO linux and OSX version)
 .Editor
-	.Replaced projets by assets
+	X Replaced projets by assets
 
 
 Version 0.6 alpha (Release: CrossPlatForm GUI !)
