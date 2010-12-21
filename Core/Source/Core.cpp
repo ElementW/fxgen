@@ -336,11 +336,11 @@ void NVarsBloc::SetValue(udword _idx, float _fTime, const char*	_val)
 //!	\param	_dwMapVarsCount		Mapped variables count
 //!	\param	_pmapVarsBlocDesc	Mapping variables bloc description
 //-----------------------------------------------------------------
-void NVarsBloc::SetMapVarBlocDesc(udword _dwMapVarsCount, NMapVarsBlocDesc* _pmapVarsBlocDesc)
+/*void NVarsBloc::SetMapVarBlocDesc(udword _dwMapVarsCount, NMapVarsBlocDesc* _pmapVarsBlocDesc)
 {
 	m_pcmapVarsBlocDesc = _pmapVarsBlocDesc;
 	m_dwMapVarsCount  = _dwMapVarsCount;
-}
+}*/
 
 //-----------------------------------------------------------------
 //!	\brief	Change a variable's value by indice

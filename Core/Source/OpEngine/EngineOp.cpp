@@ -177,9 +177,6 @@ bool NCompiledAsset::Load(NArchive* _l)
 //-----------------------------------------------------------------
 NEngineOp::NEngineOp()
 {
-	//m_pRootGroup		= new NTreeNode;
-	//m_pRootGroup->SetName("Root");
-
 	m_nCurContext		= 0;
 
 	gpengineOp			= this;
@@ -214,10 +211,6 @@ NEngineOp*	NEngineOp::GetInstance()
 void NEngineOp::Clear()
 {
 	m_bitmapsAlloc.Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
-
-	/*if (m_pRootGroup)		delete m_pRootGroup;
-	m_pRootGroup = new NTreeNode;
-	m_pRootGroup->SetName("Root");*/
 }
 
 //-----------------------------------------------------------------
@@ -356,9 +349,7 @@ void NEngineOp::Execute(float _ftime, NOperator* _popFinal, float _fDetailFactor
 {
 	if (_popFinal!=null)
 	{
-#ifdef THREADS_ENABLED
-		NMutexLock lock(m_bEngineLock);
-#endif
+
 		//Flag operators that need process calls
 		ComputeInvaliddOps(_popFinal);
 
@@ -527,31 +518,6 @@ void NEngineOp::InvalidateOp(NOperator* _pop)
 	ComputeInvaliddOps(_pop);
 }
 
-//-----------------------------------------------------------------
-//!	\brief	Invalidate all operators to force re-processing
-//-----------------------------------------------------------------
-/*void NEngineOp::InvalidateAllOps()
-{
-	NTreeNode* pnode = GetRootGroup();
-	_InvalidateAllOps(pnode);
-}
-
-void NEngineOp::_InvalidateAllOps(NTreeNode* _pnode)
-{
-	//Parse Alls Pages...
-	NObjectArray& arrayObjs = _pnode->GetObjsArray();
-	udword dwCount = arrayObjs.Count();
-	while (dwCount--)
-	{
-		NOpGraphModel* ppage = (NOpGraphModel*)arrayObjs[dwCount];
-		ppage->InvalidateAllOps();
-	}
-
-	_pnode = _pnode->GetSon();
-	if (_pnode)
-		_InvalidateAllOps(_pnode);
-}*/
-
 
 //-----------------------------------------------------------------
 //!	\brief	Return root operator from an operator
@@ -607,62 +573,6 @@ void NEngineOp::GetChannelValue(ubyte _byChannel, NVarValue& _outValue)
 }
 
 
-//-----------------------------------------------------------------
-//!	\brief	Load a project from a file
-//!	\param	_pszFullFileName	file name to load
-//!	\return	True if success
-//-----------------------------------------------------------------
-/*bool NEngineOp::LoadProject(const char* _pszFullFileName)
-{
-	//Open Archive
-	NFileStream fileStream;
-	if(!fileStream.Open(_pszFullFileName)) // non-existing file
-		return false;
-	NArchive ar(&fileStream);
-	if (!ar.Read())
-		return false;
-
-	//Clear Project
-	Clear();
-
-	//Load Flag (Graph,Compiled...)
-	udword dwFlag=0;	//###RESERVED###
-	ar>>dwFlag;
-
-	//Load Groups and Pages
-	return m_pRootGroup->Load(&ar);
-}*/
-
-//-----------------------------------------------------------------
-//!	\brief	Save project to file
-//!	\param	_pszFullFileName	file name for save
-//!	\return	True if success
-//-----------------------------------------------------------------
-/*bool NEngineOp::SaveProject(const char* _pszFullFileName)
-{
-	bool bRet = false;
-
-	//Open Archive
-  NFileStream fileStream;
-
-  if(!fileStream.Open(_pszFullFileName, true))
-	return false;
-
-  NArchive ar(&fileStream);
-	if (ar.PrepareSave())
-	{
-		//Save Flag (Graph,Compiled...)
-		udword dwFlag=0;	//###RESERVED###
-		ar<<dwFlag;
-
-		//Save Groups and Pages
-		m_pRootGroup->Save(&ar);
-
-		if (ar.FinalizeSave())			bRet = true;
-	}
-
-	return bRet;
-}*/
 
 //-----------------------------------------------------------------
 //!	\brief	Keep just final result medias in memory (bitmaps ...)

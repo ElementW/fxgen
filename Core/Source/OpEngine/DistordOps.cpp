@@ -60,7 +60,7 @@ NRotoZoomOp::NRotoZoomOp()
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(8, blocdescRotoZoomOp, 2);
 	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
-	m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescRotoZoomOp);
+	//m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescRotoZoomOp);
 
 }
 

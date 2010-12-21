@@ -38,13 +38,15 @@ Version 0.7 alpha (Release: New FxGen Engine !)
 	.Added an operators compiler process
 		.Take an operators graph in input then generate a linear operators calls for engine.
 	.Added memory manager (detect memory leaks in debug)
+	.optimize method NEngineOp::GetRootOperator()
 .GUILib
 	.Fixed Menu destruction crash
 	.Application Management Removed
 	.Win32 dependencies removed (now gui_win32.cpp in editor, TODO linux and OSX version)
+	.could Use SDL (window, thread...)!
 .Editor
 	X Replaced projets by assets
-
+	X NOpGraphModel and NAssetModel created
 
 Version 0.6 alpha (Release: CrossPlatForm GUI !)
 ----------------------------------

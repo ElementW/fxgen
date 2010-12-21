@@ -103,7 +103,7 @@ NStoreResultOp::NStoreResultOp()
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(2, blocdescStoreResultOp, 2);
 	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
-	m_pcvarsBloc->SetMapVarBlocDesc(1, mapblocdescStoreResultOp);
+	//m_pcvarsBloc->SetMapVarBlocDesc(1, mapblocdescStoreResultOp);
 }
 
 NStoreResultOp::~NStoreResultOp()

@@ -53,7 +53,7 @@ NFlatOp::NFlatOp()
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(3, blocdescFlatOp, 2);
 	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
-	m_pcvarsBloc->SetMapVarBlocDesc(1, mapblocdescFlatOp);
+	//m_pcvarsBloc->SetMapVarBlocDesc(1, mapblocdescFlatOp);
 
 }
 
@@ -125,7 +125,7 @@ NCloudOp::NCloudOp()
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(6, blocdescCloudOp, 2);
 	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
-	m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescCloudOp);
+	//m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescCloudOp);
 }
 
 udword NCloudOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
@@ -422,7 +422,7 @@ NGradientOp::NGradientOp()
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(6, blocdescGradientOp, 2);
 	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
-	m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescGradientOp);
+	//m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescGradientOp);
 }
 
 udword NGradientOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
@@ -526,7 +526,7 @@ NCellOp::NCellOp()
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(8, blocdescCellOp, 3);
 	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
-	m_pcvarsBloc->SetMapVarBlocDesc(10, mapblocdescCellOp);
+	//m_pcvarsBloc->SetMapVarBlocDesc(10, mapblocdescCellOp);
 }
 
 udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
