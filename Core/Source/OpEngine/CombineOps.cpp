@@ -91,7 +91,7 @@ NRectOp::NRectOp()
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(5, blocdescRectOp, 2);
 	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
-	m_pcvarsBloc->SetMapVarBlocDesc(5, mapblocdescRectOp);
+	//m_pcvarsBloc->SetMapVarBlocDesc(5, mapblocdescRectOp);
 }
 
 udword NRectOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
@@ -515,7 +515,7 @@ NGlowOp::NGlowOp()
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(7, blocdescGlowOp, 1);
 	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
-	m_pcvarsBloc->SetMapVarBlocDesc(7, mapblocdescGlowOp);
+	//m_pcvarsBloc->SetMapVarBlocDesc(7, mapblocdescGlowOp);
 }
 
 udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
@@ -629,7 +629,7 @@ NCrackOp::NCrackOp()
 {
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(7, blocdescCrackOp, 2);
-	m_pcvarsBloc->SetMapVarBlocDesc(5, mapblocdescCrackOp);
+	//m_pcvarsBloc->SetMapVarBlocDesc(5, mapblocdescCrackOp);
 
 }
 
