@@ -8,7 +8,8 @@ TODO
 .FxGenLib
 	.Rewrite animation processing (later)
 	.Add automatic version management for properties serialization
-		.remove SetMapVarBlocDesc and NMapVarsBlocDesc
+		X remove SetMapVarBlocDesc and NMapVarsBlocDesc
+		.Write automatic varmap as blender :-)
 	
 .Editor:GUI
 	X Review Properties control.

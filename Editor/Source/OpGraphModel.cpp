@@ -5,11 +5,29 @@
 //-----------------------------------------------------------------
 int SortOpsLeftToRight(const void *elem1, const void *elem2)
 {
-	NOperator* e1 = *(NOperator**)elem1;
-	NOperator* e2 = *(NOperator**)elem2;
+	NOperatorNode* e1 = *(NOperatorNode**)elem1;
+	NOperatorNode* e2 = *(NOperatorNode**)elem2;
 	if (e1->m_wPosX<e2->m_wPosX)	return +1;
 	if (e1->m_wPosX>e2->m_wPosX)	return -1;
 	return 0;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	duplicate this operator
+//!	\return object duplicated
+//!	\note		used for copy-cut-paste operations
+//-----------------------------------------------------------------
+NObject* NOperatorNode::Duplicate()
+{
+	NOperatorNode* pobj			= (NOperatorNode*)NObject::Duplicate();
+	//pobj->m_bInvalided	= true;
+	//pobj->m_byDepth			= 0;
+	pobj->m_wPosX				= m_wPosX;
+	pobj->m_wPosY				= m_wPosY;
+	pobj->m_wWidth			= m_wWidth;
+	//pobj->m_byInputs		= 0;
+
+	return pobj;
 }
 
 
@@ -184,8 +202,8 @@ void NOpGraphModel::ComputeLinks()
 	//Process all ops from stack
 	while (m_arrayOpsUnlinked.Count())
 	{
-		NOperator* pop = (NOperator*)m_arrayOpsUnlinked[0];
-		NOperator* popFinal = GetFinalOpFrom(pop);	//From Graphical position
+		NOperatorNode* pop = (NOperatorNode*)m_arrayOpsUnlinked[0];
+		NOperatorNode* popFinal = GetFinalOpFrom(pop);	//From Graphical position
 
 		m_pprevOp = null;
 		_ComputeLinks(popFinal, null, 0);
@@ -223,7 +241,7 @@ void NOpGraphModel::ComputeLinks()
 //! \note Recurse method used by ComputeLinks()
 //!				ComputeLinks scan operators from graphical position (bottom -> top)
 //-----------------------------------------------------------------
-void NOpGraphModel::_ComputeLinks(NOperator* _pop, NOperator* _pprevop, udword _dwCurDepth)
+void NOpGraphModel::_ComputeLinks(NOperatorNode* _pop, NOperatorNode* _pprevop, udword _dwCurDepth)
 {
 /*	if (_pprevop)
 		TRACE("\t_ComputeLinks %s PrevOP %s dwCurDepth %d\n", _pop->GetName(), _pprevop->GetName(), _dwCurDepth );
@@ -231,11 +249,11 @@ void NOpGraphModel::_ComputeLinks(NOperator* _pop, NOperator* _pprevop, udword _
 		TRACE("\t_ComputeLinks %s PrevOP -- dwCurDepth %d\n", _pop->GetName(), _dwCurDepth );*/
 
 	//Update current operator execution link
-	_pop->m_pnextOpToProcess = m_pprevOp;
-	_pop->m_pprevOpToProcess = null;
+	_pop->m_op->m_pnextOpToProcess = m_pprevOp->m_op;
+	_pop->m_op->m_pprevOpToProcess = null;
 
 	if (m_pprevOp)
-		m_pprevOp->m_pprevOpToProcess = _pop;
+		m_pprevOp->m_op->m_pprevOpToProcess = _pop->m_op;
 
 	m_pprevOp = _pop;
 
@@ -248,15 +266,15 @@ void NOpGraphModel::_ComputeLinks(NOperator* _pop, NOperator* _pprevop, udword _
 	NObjectArray	carray;
 	GetPrevOperators(_pop, carray);
 
-	_pop->m_byDepth		= (ubyte)_dwCurDepth;
-	_pop->m_byInputs	= (ubyte)carray.Count();
+	_pop->m_op->m_byDepth		= (ubyte)_dwCurDepth;
+	_pop->m_op->m_byInputs	= (ubyte)carray.Count();
 
 	_dwCurDepth+=carray.Count();
 
 	for (udword i=0 ;i<carray.Count(); i++)
 	{
 		_dwCurDepth--;
-		NOperator* pprevOp = (NOperator*)carray[i];
+		NOperatorNode* pprevOp = (NOperatorNode*)carray[i];
 
 		//Get next op from prev
 		NObjectArray	carray2;
@@ -278,7 +296,7 @@ void NOpGraphModel::_ComputeLinks(NOperator* _pop, NOperator* _pprevop, udword _
 //!
 //! \note Computed from graphical position
 //-----------------------------------------------------------------
-void NOpGraphModel::GetPrevOperators(NOperator* _pop, NObjectArray& _carrayPrevOpS)
+void NOpGraphModel::GetPrevOperators(NOperatorNode* _pop, NObjectArray& _carrayPrevOpS)
 {
 	int nTop		= _pop->m_wPosY;
 	int nLeft		= _pop->m_wPosX;
@@ -286,7 +304,7 @@ void NOpGraphModel::GetPrevOperators(NOperator* _pop, NObjectArray& _carrayPrevO
 
 	for (udword i=0; i<m_arrayOps.Count(); i++)
 	{
-		NOperator* pccurOP = (NOperator*)m_arrayOps[i];
+		NOperatorNode* pccurOP = (NOperatorNode*)m_arrayOps[i];
 		if ( pccurOP->m_wPosY+1 != nTop
 			||(nLeft<=pccurOP->m_wPosX && nRight<=pccurOP->m_wPosX)
 			||(nLeft>=(pccurOP->m_wPosX+pccurOP->m_wWidth) && nRight>=(pccurOP->m_wPosX+pccurOP->m_wWidth)))
@@ -308,7 +326,7 @@ void NOpGraphModel::GetPrevOperators(NOperator* _pop, NObjectArray& _carrayPrevO
 //!
 //! \note Computed from graphical position
 //-----------------------------------------------------------------
-void NOpGraphModel::GetNextOperators(NOperator* pop, NObjectArray& carrayNextOpS)
+void NOpGraphModel::GetNextOperators(NOperatorNode* pop, NObjectArray& carrayNextOpS)
 {
 	int nBottom	= pop->m_wPosY + 1;
 	int nLeft		= pop->m_wPosX;
@@ -316,7 +334,7 @@ void NOpGraphModel::GetNextOperators(NOperator* pop, NObjectArray& carrayNextOpS
 
 	for (udword i=0; i<m_arrayOps.Count(); i++)
 	{
-		NOperator* pccurOP = (NOperator*)m_arrayOps[i];
+		NOperatorNode* pccurOP = (NOperatorNode*)m_arrayOps[i];
 		if ( pccurOP->m_wPosY != nBottom
 			||(nLeft<=pccurOP->m_wPosX && nRight<=pccurOP->m_wPosX)
 			||(nLeft>=(pccurOP->m_wPosX+pccurOP->m_wWidth) && nRight>=(pccurOP->m_wPosX+pccurOP->m_wWidth)))
@@ -333,7 +351,7 @@ void NOpGraphModel::GetNextOperators(NOperator* pop, NObjectArray& carrayNextOpS
 //!	\param	_pop	operator
 //!	\return final operator
 //-----------------------------------------------------------------
-NOperator* NOpGraphModel::GetFinalOpFrom(NOperator* pop)
+NOperatorNode* NOpGraphModel::GetFinalOpFrom(NOperatorNode* pop)
 {
 	if (!pop)		return null;
 
@@ -343,7 +361,7 @@ NOperator* NOpGraphModel::GetFinalOpFrom(NOperator* pop)
 		carray.Clear();
 		GetNextOperators(pop, carray);
 		if (carray.Count()==0)	break;
-		pop=(NOperator*)carray[0];
+		pop=(NOperatorNode*)carray[0];
 	}
 
 	return pop;
@@ -369,9 +387,6 @@ void NOpGraphModel::GetOpsFromClassName(const char* _pszClassName, NObjectArray&
 //-----------------------------------------------------------------
 void NOpGraphModel::InvalidateAllOps()
 {
-#ifdef THREADS_ENABLED
-	NMutexLock lock(NEngineOp::GetInstance()->m_bEngineLock);
-#endif
 	for (udword i=0; i<m_arrayOps.Count(); i++)
 	{
 		NOperator* pccurOP = (NOperator*)m_arrayOps[i];

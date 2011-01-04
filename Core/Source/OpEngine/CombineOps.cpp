@@ -67,16 +67,6 @@ udword NNopOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NRectOp, NOperator);
 
-static NMapVarsBlocDesc mapblocdescRectOp[] =
-{
-	MAP(1, eudword,		"0",		""						)	//V1 => 0-Color
-	MAP(1, eubyte,		"1",		"*0.00390625"	)	//V1 => 1-X1
-	MAP(1, eubyte,		"2",		"*0.00390625"	)	//V1 => 2-Y1
-	MAP(1, eubyte,		"3",		"*0.00390625"	)	//V1 => 3-X2
-	MAP(1, eubyte,		"4",		"*0.00390625"	)	//V1 => 4-Y2
-};
-
-
 static NVarsBlocDesc blocdescRectOp[] =
 {
 	VAR(eudword,	true, "Color",	"-1",		"NColorProp")	//0
@@ -90,8 +80,6 @@ NRectOp::NRectOp()
 {
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(5, blocdescRectOp, 2);
-	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
-	//m_pcvarsBloc->SetMapVarBlocDesc(5, mapblocdescRectOp);
 }
 
 udword NRectOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
@@ -487,17 +475,6 @@ udword NAddOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NGlowOp, NOperator);
 
-static NMapVarsBlocDesc mapblocdescGlowOp[] =
-{
-	MAP(1, eudword,		"0",		""						)	//V1 => 0-Color
-	MAP(1, eubyte,		"1",		"*0.00390625"	)	//V1 => 1-CenterX
-	MAP(1, eubyte,		"2",		"*0.00390625"	)	//V1 => 2-CenterY
-	MAP(1, eubyte,		"3",		"*0.00390625"	)	//V1 => 3-RayX
-	MAP(1, eubyte,		"4",		"*0.00390625"	)	//V1 => 4-RayY
-	MAP(1, eubyte,		"5",		"*0.0078125"	)	//V1 => 5-Alpha
-	MAP(1, eubyte,		"6",		"*0.0078125"	)	//V1 => 6-Gamma
-};
-
 static NVarsBlocDesc blocdescGlowOp[] =
 {
 	VAR(eudword,	true, "Color",		"-1",			"NColorProp")	//0
@@ -514,8 +491,6 @@ NGlowOp::NGlowOp()
 {
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(7, blocdescGlowOp, 1);
-	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
-	//m_pcvarsBloc->SetMapVarBlocDesc(7, mapblocdescGlowOp);
 }
 
 udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
@@ -605,15 +580,6 @@ udword NGlowOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NCrackOp, NOperator);
 
-static NMapVarsBlocDesc mapblocdescCrackOp[] =
-{
-	MAP(1, eudword,		"0",		""						)	//V1 => 0-Color
-	MAP(1, eubyte,		"1",		""						)	//V1 => 1-Count
-	MAP(1, eubyte,		"2",		""						)	//V1 => 2-Variation
-	MAP(1, eubyte,		"3",		""						)	//V1 => 3-Length
-	MAP(1, euword,		"4",		""						)	//V1 => 4-Seed
-};
-
 static NVarsBlocDesc blocdescCrackOp[] =
 {
 	VAR(eudword,	true, "Color",			"-1",		"NColorProp")	//0
@@ -629,8 +595,6 @@ NCrackOp::NCrackOp()
 {
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(7, blocdescCrackOp, 2);
-	//m_pcvarsBloc->SetMapVarBlocDesc(5, mapblocdescCrackOp);
-
 }
 
 udword NCrackOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)

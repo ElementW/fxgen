@@ -60,23 +60,6 @@ NOperator::~NOperator()
  NEngineOp::GetInstance()->GetBitmapGarbage()->RemoveEntry(&m_pObj);
 }
 
-//-----------------------------------------------------------------
-//!	\brief	duplicate this operator
-//!	\return object duplicated
-//!	\note		used for copy-cut-paste operations
-//-----------------------------------------------------------------
-NObject* NOperator::Duplicate()
-{
-	NOperator* pobj			= (NOperator*)NObject::Duplicate();
-	pobj->m_bInvalided	= true;
-	pobj->m_byDepth			= 0;
-	pobj->m_wPosX				= m_wPosX;
-	pobj->m_wPosY				= m_wPosY;
-	pobj->m_wWidth			= m_wWidth;
-	pobj->m_byInputs		= 0;
-
-	return pobj;
-}
 
 
 //-----------------------------------------------------------------

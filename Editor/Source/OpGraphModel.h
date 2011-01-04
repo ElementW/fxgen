@@ -1,10 +1,32 @@
 #pragma once
 #include "CoreLibPkg.h"
 
+//-----------------------------------------------------------------
+//!	\class		NOperatorNode
+//!	\brief		operator node contain one operator
+//!	\note			TODO base class NOpNodebase for all nodes in OpeperatorCtrl (comment...)
+//-----------------------------------------------------------------
+class NOperatorNode : public NObject
+{
+public:
+	NOperatorNode();
+	virtual ~NOperatorNode();
+
+	virtual NObject* Duplicate();			//!< Duplicate this object (used for copy-paste)
+
+	//Serialization
+	virtual	bool Save(NArchive* _s);	//!< Save object
+	virtual	bool Load(NArchive* _l);	//!< Load object
+
+	//Datas
+	sword	m_wPosX, m_wPosY;			//!< Position (grid unit)
+	sword	m_wWidth;							//!< Width (grid unit)
+	NOperator* m_op;						//!< Operator associed with this node
+};
 
 //-----------------------------------------------------------------
 //!	\class		NOpGraphModel
-//!	\brief		operators graph model
+//!	\brief		operators node graph model
 //-----------------------------------------------------------------
 class  NOpGraphModel : public NObject
 {
@@ -19,29 +41,29 @@ public:
 	virtual	bool Load(NArchive* _l);	//!< Load object
 
 	udword			GetOpsCount()							{ return m_arrayOps.Count();					}
-	NOperator*	GetOpFromIdx(udword _idx)	{ return (NOperator*)m_arrayOps[_idx];}
+	NOperatorNode*	GetOpFromIdx(udword _idx)	{ return (NOperatorNode*)m_arrayOps[_idx];}
 
-	udword			AddOp(NOperator* _pop);
+	udword			AddOp(NOperatorNode* _pop);
 	void				DeleteAllOps();
-	udword			DeleteOp(NOperator* _pop);
-	void				MoveOp(NOperator* _pop, sword _x, sword _y);
+	udword			DeleteOp(NOperatorNode* _pop);
+	void				MoveOp(NOperatorNode* _pop, sword _x, sword _y);
 	void				InvalidateAllOps();
 
-	//Methodes de recherche
+	//Methods search
 	void GetOpsFromClassName(const char* _pszClassName, NObjectArray& _carray);
 
-	//Methodes pour la generation des liens entre les ops
+	//Methods for graph compilation
 	void ComputeLinks();
-	void _ComputeLinks(NOperator* _pop, NOperator* _pprevop, udword _dwCurDepth);
+	void _ComputeLinks(NOperatorNode* _pop, NOperatorNode* _pprevop, udword _dwCurDepth);
 
-	void GetPrevOperators(NOperator* _pop, NObjectArray& _carrayPrevOpS);
-	void GetNextOperators(NOperator* _pop, NObjectArray& _carrayNextOpS);
-	NOperator* GetFinalOpFrom(NOperator* _pop);
+	void GetPrevOperators(NOperatorNode* _pop, NObjectArray& _carrayPrevOpS);
+	void GetNextOperators(NOperatorNode* _pop, NObjectArray& _carrayNextOpS);
+	NOperator* GetFinalOpFrom(NOperatorNode* _pop);
 
 	//Datas	GUI
 	NObjectArray	m_arrayOps;						//!< Operators array
 
 	//Datas for compilation and linkage
-	NOperator*		m_pprevOp;
+	NOperatorNode*		m_pprevOp;
 	NObjectArray	m_arrayOpsUnlinked;		//!< Operators unlinked array
 };

@@ -59,11 +59,11 @@ public:
 	virtual ~NOperator();
 
 	//Methods
-	virtual NObject* Duplicate();						//!< Duplicate this object (used for copy-paste)
 	virtual	udword GetColor()	= 0;				//!< Operator color
 	virtual const char* GetName()				{ return ""; }			//!< Operator's Name
 	virtual const char* GetCategory()		{ return "Misc"; }	//!< Operator's Category
 	virtual const char* GetUserName()		{ return null; }		//!< Operator's User Name
+
 	//Serialization
 	virtual	bool Save(NArchive* _s);	//!< Save object
 	virtual	bool Load(NArchive* _l);	//!< Load object
@@ -71,9 +71,6 @@ public:
 	//Processing methods
 	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor) = 0;	//!< object processing (texture, mesh ...)
 
-	//Datas GUI
-	sword	m_wPosX, m_wPosY;			//!< Position (grid unit)
-	sword	m_wWidth;							//!< Width (grid unit)
 
 	//Datas Execution
 	ubyte	m_byDepth;						//!< Depth in tree
