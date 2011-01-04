@@ -191,19 +191,6 @@ struct NVarsBlocDesc
 	const char*			pszCLASSGUI;	//!< Graphic control for editing
 };
 
-//-----------------------------------------------------------------
-//!	\struct NMapVarsBlocDesc
-//! \brief	Mapping Variable description for variable bloc
-//-----------------------------------------------------------------
-struct NMapVarsBlocDesc
-{
-	ubyte					byVersion;			//!< Bloc Version
-	eVarType			eType;					//!< Type of variables (eubyte, euword ...)
-	const char*		pszMapping;			//!< ie (">2>3") => transfert this old variable bloc version
-																//!								to new variable bloc index 2 and 3
-	const char*		pszExpression;	//!< value conversion (* or +)
-																//!  ie ("*2.0") to multiply by 2.0
-};
 
 
 //-----------------------------------------------------------------
@@ -222,7 +209,6 @@ public:
 
 	//Methods
 	void	Init(udword _dwVarsCount, NVarsBlocDesc* _pvarsBlocDesc, NObject* _powner, ubyte _byVersion);
-	void	SetMapVarBlocDesc(udword _dwVarsCount, NMapVarsBlocDesc* _pmapVarsBlocDesc);
 
 	udword					Count()				{ return m_dwVarsCount;			}
 	NVarsBlocDesc*	GetBlocDesc()	{ return m_pcvarsblocDesc;	}
@@ -250,10 +236,10 @@ public:
 
 protected:
 	//Methods
-	void DoVarBlocVersion_Mapping(NArchive* _l, ubyte _byVersion);
-	void MapValueTo(double _val, udword _idx, const char* _pszExpression);
-	void MapValueTo(NObject* _val, udword _idx);
-	void MapValueTo(const char* _val, udword _idx);
+	//void DoVarBlocVersion_Mapping(NArchive* _l, ubyte _byVersion);
+	//void MapValueTo(double _val, udword _idx, const char* _pszExpression);
+	//void MapValueTo(NObject* _val, udword _idx);
+	//void MapValueTo(const char* _val, udword _idx);
 
 	//Datas
 	NObject*						m_powner;						//!< Object that contain this varsbloc
@@ -261,9 +247,6 @@ protected:
 	udword							m_dwVarsCount;			//!< Values Count
 	NVarValue*					m_paVarsValues;			//!< Values array
 	ubyte								m_byVersion;				//!< Bloc version (for serialization)
-
-	NMapVarsBlocDesc*	m_pcmapVarsBlocDesc;
-	udword				m_dwMapVarsCount;	//!< Map Values Count
 
 	NVarsBloc*					m_pcnextVarsBloc;		//!< Pointer on next variables bloc
 

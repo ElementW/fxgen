@@ -87,10 +87,6 @@ udword NStoreOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NStoreResultOp, NOperator);
 
-static NMapVarsBlocDesc mapblocdescStoreResultOp[] =
-{
-	MAP(1, estring,	"0", "" )	//V1 => 0-name
-};
 
 static NVarsBlocDesc blocdescStoreResultOp[] =
 {
@@ -102,8 +98,6 @@ NStoreResultOp::NStoreResultOp()
 {
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(2, blocdescStoreResultOp, 2);
-	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
-	//m_pcvarsBloc->SetMapVarBlocDesc(1, mapblocdescStoreResultOp);
 }
 
 NStoreResultOp::~NStoreResultOp()

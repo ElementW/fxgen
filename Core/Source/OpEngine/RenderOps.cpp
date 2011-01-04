@@ -35,11 +35,6 @@
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NFlatOp, NOperator);
 
-static NMapVarsBlocDesc mapblocdescFlatOp[] =
-{
-	MAP(1,	eudword,		"2",		""	)	//V1 => 0-Color
-};
-
 static NVarsBlocDesc blocdescFlatOp[] =
 {
 	VAR(eubyte,	false, "Width",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
@@ -52,9 +47,6 @@ NFlatOp::NFlatOp()
 {
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(3, blocdescFlatOp, 2);
-	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
-	//m_pcvarsBloc->SetMapVarBlocDesc(1, mapblocdescFlatOp);
-
 }
 
 udword NFlatOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
@@ -102,14 +94,6 @@ udword NFlatOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NCloudOp, NOperator);
 
-static NMapVarsBlocDesc mapblocdescCloudOp[] =
-{
-	MAP(1, eudword,		"2", "")	//V1 => 0-Color 0
-	MAP(1, eudword,		"3", "")	//V1 => 1-Color 1
-	MAP(1, eubyte,		"4", "")	//V1 => 2-Amp
-	MAP(1, euword,		"5", "")	//V1 => 3-Seed
-};
-
 static NVarsBlocDesc blocdescCloudOp[] =
 {
 	VAR(eubyte,	false, "Width",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
@@ -124,8 +108,6 @@ NCloudOp::NCloudOp()
 {
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(6, blocdescCloudOp, 2);
-	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
-	//m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescCloudOp);
 }
 
 udword NCloudOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
@@ -399,14 +381,6 @@ void NCloudOp::Normalize()
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NGradientOp, NOperator);
 
-static NMapVarsBlocDesc mapblocdescGradientOp[] =
-{
-	MAP(1, eudword,	"2", "" )	//V1 => 0-A
-	MAP(1, eudword,	"3", "" ) //V1 => 1-B
-	MAP(1, eudword,	"4", "" ) //V1 => 2-C
-	MAP(1, eudword,	"5", "" ) //V1 => 3-D
-};
-
 static NVarsBlocDesc blocdescGradientOp[] =
 {
 	VAR(eubyte,	false, "Width",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
@@ -421,8 +395,6 @@ NGradientOp::NGradientOp()
 {
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(6, blocdescGradientOp, 2);
-	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
-	//m_pcvarsBloc->SetMapVarBlocDesc(4, mapblocdescGradientOp);
 }
 
 udword NGradientOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
@@ -495,20 +467,6 @@ udword NGradientOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NCellOp, NOperator);
 
-static NMapVarsBlocDesc mapblocdescCellOp[] =
-{
-	MAP(1, eubyte,	"2", "" )	//V1 => 0-Regularity
-	MAP(1, eubyte,	"3", "" )	//V1 => 1-Density
-	MAP(1, eudword, "4", "" )	//V1 => 2-Color
-	MAP(1, euword,	"5", "" )	//V1 => 3-Seed
-	MAP(2, eubyte,	"0", "" )	//V1 => 0-Width
-	MAP(2, eubyte,	"1", "" )	//V1 => 1-Height
-	MAP(2, eubyte,	"2", "" )	//V1 => 2-Regularity
-	MAP(2, eubyte, 	"3", "" )	//V1 => 3-Density
-	MAP(2, eudword,	"4", "" )	//V1 => 4-Color
-	MAP(2, euword,	"5", "" )	//V1 => 5-Seed
-};
-
 static NVarsBlocDesc blocdescCellOp[] =
 {
 	VAR(eubyte,	false, "Width",			"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
@@ -525,8 +483,6 @@ NCellOp::NCellOp()
 {
 	//Create variables bloc
 	m_pcvarsBloc = AddVarsBloc(8, blocdescCellOp, 3);
-	//To Keep compatibility with oldier blocs versions (will be removed after alpha)
-	//m_pcvarsBloc->SetMapVarBlocDesc(10, mapblocdescCellOp);
 }
 
 udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)

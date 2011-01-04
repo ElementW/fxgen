@@ -72,7 +72,6 @@ NVarsBloc::NVarsBloc()
 	m_pcnextVarsBloc	= null;
 	m_pcvarsblocDesc	= null;
 	m_dwVarsCount			= 0;
-	m_dwMapVarsCount	= 0;
 }
 
 //-----------------------------------------------------------------
@@ -131,7 +130,7 @@ bool NVarsBloc::Load(NArchive* _l)
 
 	if (m_byVersion!=byFileVersion && byFileVersion!=0)
 	{
-		DoVarBlocVersion_Mapping(_l, byFileVersion);
+		//DoVarBlocVersion_Mapping(_l, byFileVersion);
 	} else {
 		*_l>>m_dwVarsCount;
 		for (udword i=0; i<m_dwVarsCount; i++)
@@ -346,7 +345,7 @@ void NVarsBloc::SetValue(udword _idx, float _fTime, const char*	_val)
 //!	\brief	Change a variable's value by indice
 //!	\param	_byVersion		File version (different to this)
 //-----------------------------------------------------------------
-void NVarsBloc::DoVarBlocVersion_Mapping(NArchive* _l, ubyte _byVersion)
+/*void NVarsBloc::DoVarBlocVersion_Mapping(NArchive* _l, ubyte _byVersion)
 {
 	udword dwOldVarsCount;
 	*_l>>dwOldVarsCount;
@@ -478,7 +477,7 @@ void NVarsBloc::MapValueTo(const char* _val, udword _idx)
 	assert(pdesc->eType==estring);
 	strcpy_s(pval->szVal, sizeof(pval->szVal), _val);
 }
-
+*/
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
