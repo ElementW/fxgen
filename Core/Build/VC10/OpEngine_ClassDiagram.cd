@@ -14,7 +14,7 @@
       <FileName>C:\temp\Download\Perso\FxGen\FxGen\Core\Source\Core.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="NOperator" Collapsed="true">
+  <Class Name="NOperatorFx" Collapsed="true">
     <Position X="5.25" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAgIEIAIQAAAAIAwAEAAIAAAAAoMjAAAAJEACABAA=</HashCode>

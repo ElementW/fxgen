@@ -33,7 +33,7 @@
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NBlurOp, NOperator);
+FIMPLEMENT_CLASS(NBlurOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescBlurOp[] =
 {
@@ -49,7 +49,7 @@ NBlurOp::NBlurOp()
 	m_pcvarsBloc = AddVarsBloc(4, blocdescBlurOp, 3);
 }
 
-udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NBlurOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -283,7 +283,7 @@ udword NBlurOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NColorsOp, NOperator);
+FIMPLEMENT_CLASS(NColorsOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescColorsOp[] =
 {
@@ -303,7 +303,7 @@ NColorsOp::NColorsOp()
 	m_pcvarsBloc = AddVarsBloc(6, blocdescColorsOp, 3);
 }
 
-udword NColorsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NColorsOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -439,7 +439,7 @@ ubyte NColorsOp::ToRGB1(float rm1, float rm2, float rh)
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NLightOp, NOperator);
+FIMPLEMENT_CLASS(NLightOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescLightOp[] =
 {
@@ -463,7 +463,7 @@ NLightOp::NLightOp()
 
 }
 
-udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NLightOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//Two inputs (texture, normal)
 	if (m_byInputs!=2)		return (udword)-1;
@@ -587,7 +587,7 @@ udword NLightOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NNormalsOp, NOperator);
+FIMPLEMENT_CLASS(NNormalsOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescNormalsOp[] =
 {
@@ -602,7 +602,7 @@ NNormalsOp::NNormalsOp()
 
 }
 
-udword NNormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NNormalsOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -710,7 +710,7 @@ udword NNormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NAbnormalsOp, NOperator);
+FIMPLEMENT_CLASS(NAbnormalsOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescAbnormalsOp[] =
 {
@@ -733,7 +733,7 @@ NAbnormalsOp::NAbnormalsOp()
 
 }
 
-udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NAbnormalsOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//One or two inputs
 	if (m_byInputs!=1 && m_byInputs!=2)		return (udword)-1;
@@ -845,7 +845,7 @@ udword NAbnormalsOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NSlopeMagnitudeOp, NOperator);
+FIMPLEMENT_CLASS(NSlopeMagnitudeOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescNSlopeMagnitudeOp[] =
 {
@@ -860,7 +860,7 @@ NSlopeMagnitudeOp::NSlopeMagnitudeOp()
 
 }
 
-udword NSlopeMagnitudeOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NSlopeMagnitudeOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -974,9 +974,9 @@ udword NSlopeMagnitudeOp::Process(float _ftime, NOperator** _pOpsInts, float _fD
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NInvertOp, NOperator);
+FIMPLEMENT_CLASS(NInvertOp, NOperatorFx);
 
-udword NInvertOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NInvertOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//One input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -1021,7 +1021,7 @@ udword NInvertOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NThresholdOp, NOperator);
+FIMPLEMENT_CLASS(NThresholdOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescThresholdOp[] =
 {
@@ -1058,7 +1058,7 @@ static inline ubyte compressIntensity(ubyte intensity, float ratio, ubyte thresh
   }
 }
 
-udword NThresholdOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NThresholdOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//One input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -1160,11 +1160,11 @@ udword NThresholdOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetail
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NAlphaOp, NOperator);
+FIMPLEMENT_CLASS(NAlphaOp, NOperatorFx);
 
 NAlphaOp::NAlphaOp(){}
 
-udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NAlphaOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//One input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -1211,7 +1211,7 @@ udword NAlphaOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NSegmentOp, NOperator);
+FIMPLEMENT_CLASS(NSegmentOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescSegmentOp[] =
 {
@@ -1224,7 +1224,7 @@ NSegmentOp::NSegmentOp()
 	m_pcvarsBloc = AddVarsBloc(1, blocdescSegmentOp, 1);
 }
 
-udword NSegmentOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NSegmentOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//Two inputs
 	if (m_byInputs!=2)		return (udword)-1;
@@ -1323,7 +1323,7 @@ udword NSegmentOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NDilateOp, NOperator);
+FIMPLEMENT_CLASS(NDilateOp, NOperatorFx);
 
 
 static NVarsBlocDesc blocdescDilateOp[] =
@@ -1337,7 +1337,7 @@ NDilateOp::NDilateOp()
 	m_pcvarsBloc = AddVarsBloc(1, blocdescDilateOp, 1);
 }
 
-udword NDilateOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NDilateOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//One input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -1415,7 +1415,7 @@ udword NDilateOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NAlphaMaskOp, NOperator);
+FIMPLEMENT_CLASS(NAlphaMaskOp, NOperatorFx);
 
 
 static NVarsBlocDesc blocdescAlphaMaskOp[] =
@@ -1430,7 +1430,7 @@ NAlphaMaskOp::NAlphaMaskOp()
 	m_pcvarsBloc = AddVarsBloc(1, blocdescAlphaMaskOp, 1);
 }
 
-udword NAlphaMaskOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NAlphaMaskOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//One or two Inputs
 	if (m_byInputs !=1 && m_byInputs != 2)		return (udword)-1;

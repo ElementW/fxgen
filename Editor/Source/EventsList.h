@@ -18,11 +18,11 @@
 #define EVENTSLIST_H
 
 //Operator window
-#define EVT_OPSELECTED			1		// param1=NOperator*			param2=
-#define EVT_OPDELETING			2		// param1=NOperator*			param2=
+#define EVT_OPSELECTED			1		// param1=NOperatorFx*			param2=
+#define EVT_OPDELETING			2		// param1=NOperatorFx*			param2=
 
 //Viewport Window
-#define EVT_RENDER					4		// param1=NOperator*			param2=float* ftime
+#define EVT_RENDER					4		// param1=NOperatorFx*			param2=float* ftime
 
 
 //Project

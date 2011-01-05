@@ -2,8 +2,8 @@ TODO
 -------------
 
 .Main ID
-	.Split Operator to OperatorNode and OperatorFx ?
-	.Add CommentNode
+	X Split Operator class to OperatorNode(designer) and OperatorFx(runtime)
+	.Add CommentNode (later)
 
 .FxGenLib
 	.Rewrite animation processing (later)
@@ -20,7 +20,7 @@ TODO
 	X Button
 		X add style: menu and color
 	.Viewport
-		.manage resource display
+		...
 	.add a thread for working process (operatorfx computing, compilation)
 	.add assets manager
 		.add an assets directory (an assert is just an fxgen designer project)

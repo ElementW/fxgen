@@ -391,7 +391,7 @@ void NEditorGUI::OnSaveAssetAs()
 //!	\param	_ftime	time
 //!	\return	Operator result
 //-----------------------------------------------------------------
-NOperator* NEditorGUI::Execute(float _ftime)
+NOperatorNode* NEditorGUI::Execute(float _ftime)
 {
 
 	//TODO Put this code into another thread...
@@ -402,7 +402,8 @@ NOperator* NEditorGUI::Execute(float _ftime)
 		//m_wndProgress.TrackPopup(NPoint(256,256), RGBA(240,100,0,190));
 
 		//Process operators
-		NEngineOp::GetInstance()->Execute(_ftime, m_popMarkedShow, m_fDetailFactor, staticOperatorsProcessCB);
+		if (m_popMarkedShow!=null)
+			NEngineOp::GetInstance()->Execute(_ftime, m_popMarkedShow->m_op, m_fDetailFactor, staticOperatorsProcessCB);
 
 		//Rendering
 		EVT_EXECUTE(EVT_RENDER, (udword)m_popMarkedShow, (udword)&_ftime);
@@ -420,13 +421,13 @@ NOperator* NEditorGUI::Execute(float _ftime)
 //!	\brief	Show an operator to viewport
 //!	\param	pop		operator to show
 //-----------------------------------------------------------------
-void NEditorGUI::MarkShowOperator(NOperator* _pop)
+void NEditorGUI::MarkShowOperator(NOperatorNode* _pop)
 {
 	m_popMarkedShow = _pop;
 
 	//###DEBUG###
 	//float ftime = (float)GetTickCount() * 60.0f / 1000.0f;
-	//NOperator* pop = Execute(ftime);
+	//NOperatorNode* pop = Execute(ftime);
 
 }
 
@@ -434,7 +435,7 @@ void NEditorGUI::MarkShowOperator(NOperator* _pop)
 //!	\brief	Delete an operator
 //!	\param	pop		operator to delete
 //-----------------------------------------------------------------
-void NEditorGUI::DeletingOperator(NOperator* _pop)
+void NEditorGUI::DeletingOperator(NOperatorNode* _pop)
 {
 	m_bExecuteLocked = true;
 
@@ -450,7 +451,7 @@ void NEditorGUI::DeletingOperator(NOperator* _pop)
 //!	\brief	operator Deleted
 //!	\param	pop		operator deleted
 //-----------------------------------------------------------------
-void NEditorGUI::DeletedOperator(NOperator* pop)
+void NEditorGUI::DeletedOperator(NOperatorNode* pop)
 {
 	m_bExecuteLocked = false;
 }
@@ -459,7 +460,7 @@ void NEditorGUI::DeletedOperator(NOperator* pop)
 //!	\brief	operator properties changed
 //!	\param	pop		operator
 //-----------------------------------------------------------------
-void NEditorGUI::EmitPropertiesChanged(NOperator* pop)
+void NEditorGUI::EmitPropertiesChanged(NOperatorFx* pop)
 {
 	//Invalidate operator
 	NEngineOp::GetInstance()->InvalidateOp(pop);

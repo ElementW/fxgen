@@ -30,7 +30,7 @@
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NStoreOp, NOperator);
+FIMPLEMENT_CLASS(NStoreOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescStoreOp[] =
 {
@@ -54,7 +54,7 @@ const char* NStoreOp::GetUserName()
 	return pszname;
 }
 
-udword NStoreOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NStoreOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -85,7 +85,7 @@ udword NStoreOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NStoreResultOp, NOperator);
+FIMPLEMENT_CLASS(NStoreResultOp, NOperatorFx);
 
 
 static NVarsBlocDesc blocdescStoreResultOp[] =
@@ -112,7 +112,7 @@ const char* NStoreResultOp::GetUserName()
 }
 
 
-udword NStoreResultOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NStoreResultOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -153,7 +153,7 @@ NBitmap* NStoreResultOp::GetBitmap()
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NLoadOp, NOperator);
+FIMPLEMENT_CLASS(NLoadOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescLoadOp[] =
 {
@@ -169,7 +169,7 @@ NLoadOp::NLoadOp()
 const char* NLoadOp::GetUserName()
 {
 		//Get Variables Values
-	NOperator* popRef;
+	NOperatorFx* popRef;
 	m_pcvarsBloc->GetValue(0, 0, (NObject*&)popRef);
 
 	//Process
@@ -179,7 +179,7 @@ const char* NLoadOp::GetUserName()
 	return "";
 }
 
-udword NLoadOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NLoadOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	if (m_byInputs!=0)	//Load operator must'n have one input !
 		return (udword)-1;
@@ -188,7 +188,7 @@ udword NLoadOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get Variables Values
-	NOperator* popRef;
+	NOperatorFx* popRef;
 	m_pcvarsBloc->GetValue(0, _ftime, (NObject*&)popRef);
 
 	//Process
@@ -217,7 +217,7 @@ udword NLoadOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NChannelAnimFX1Op, NOperator);
+FIMPLEMENT_CLASS(NChannelAnimFX1Op, NOperatorFx);
 
 static NVarsBlocDesc blocdescChanAnimFX1Op[] =
 {
@@ -235,7 +235,7 @@ NChannelAnimFX1Op::NChannelAnimFX1Op()
 	m_pcvarsBloc = AddVarsBloc(6, blocdescChanAnimFX1Op, 1);
 }
 
-udword NChannelAnimFX1Op::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NChannelAnimFX1Op::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	if (m_byInputs!=0)
 	{

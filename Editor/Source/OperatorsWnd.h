@@ -34,10 +34,10 @@ public:
 
 	//Methods
 	virtual	bool Create(const char* name, const NRect& rect, NGUIWnd* parent);
-	virtual void OnMarkShowOperator(NOperator* pop);
+	virtual void OnMarkShowOperator(NOperatorNode* pop);
 
-	virtual void OnDeletingOperator(NOperator* pop);
-	virtual void OnDeletedOperator(NOperator* pop);
+	virtual void OnDeletingOperator(NOperatorNode* pop);
+	virtual void OnDeletedOperator(NOperatorNode* pop);
 
 	//Methods Debug
 	void Dump();

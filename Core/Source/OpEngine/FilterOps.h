@@ -29,7 +29,7 @@
 //                   Prototypes
 //-----------------------------------------------------------------
 //NObject
-//	NOperator
+//	NOperatorFx
 //		NBlurOp
 //		NColorsOp
 //		NLightOp
@@ -42,7 +42,7 @@
 //!	\class		NBlurOp
 //!	\brief		Blur filtering
 //-----------------------------------------------------------------
-class CORELIB_API NBlurOp : public NOperator
+class CORELIB_API NBlurOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -55,14 +55,14 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }		//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 //-----------------------------------------------------------------
 //!	\class		NColorsOp
 //!	\brief		Colors filtering
 //-----------------------------------------------------------------
-class CORELIB_API NColorsOp : public NOperator
+class CORELIB_API NColorsOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -75,7 +75,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 
@@ -83,7 +83,7 @@ public:
 //!	\class		NLightOp
 //!	\brief		Lighting rendering
 //-----------------------------------------------------------------
-class CORELIB_API NLightOp : public NOperator
+class CORELIB_API NLightOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -96,7 +96,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 
@@ -104,7 +104,7 @@ public:
 //!	\class		NNormalsOp
 //!	\brief		Compute 2D Normals
 //-----------------------------------------------------------------
-class CORELIB_API NNormalsOp : public NOperator
+class CORELIB_API NNormalsOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -117,14 +117,14 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 //-----------------------------------------------------------------
 //!	\class		NAbnormalsOp
 //!	\brief		Rotate normal vectors
 //-----------------------------------------------------------------
-class CORELIB_API NAbnormalsOp : public NOperator
+class CORELIB_API NAbnormalsOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -137,14 +137,14 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 //-----------------------------------------------------------------
 //!	\class		NNormalsOp
 //!	\brief		Compute 2D Normals
 //-----------------------------------------------------------------
-class CORELIB_API NSlopeMagnitudeOp : public NOperator
+class CORELIB_API NSlopeMagnitudeOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -157,7 +157,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 
@@ -165,7 +165,7 @@ public:
 //!	\class		NInvertOp
 //!	\brief		Inverts an image
 //-----------------------------------------------------------------
-class CORELIB_API NInvertOp : public NOperator
+class CORELIB_API NInvertOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -176,14 +176,14 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 //-----------------------------------------------------------------
 //!	\class		NThresholdOp
 //!	\brief		Cuts all color information above or below a threshold
 //-----------------------------------------------------------------
-class CORELIB_API NThresholdOp : public NOperator
+class CORELIB_API NThresholdOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -196,14 +196,14 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 //-----------------------------------------------------------------
 //!	\class		NAlphaOp
 //!	\brief		Create alpha channel from RGB bitmap source
 //-----------------------------------------------------------------
-class CORELIB_API NAlphaOp : public NOperator
+class CORELIB_API NAlphaOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -216,14 +216,14 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 //-----------------------------------------------------------------
 //!	\class		NSegmentOp
 //!	\brief		Unifies color on joint segments
 //-----------------------------------------------------------------
-class CORELIB_API NSegmentOp : public NOperator
+class CORELIB_API NSegmentOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -236,7 +236,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 
@@ -244,7 +244,7 @@ public:
 //!	\class		NDilate
 //!	\brief		Expands colored areas
 //-----------------------------------------------------------------
-class CORELIB_API NDilateOp : public NOperator
+class CORELIB_API NDilateOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -257,7 +257,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 
@@ -265,7 +265,7 @@ public:
 //!	\class		NAlphaMaskOp
 //!	\brief		Create monochrome image from alpha channel
 //-----------------------------------------------------------------
-class CORELIB_API NAlphaMaskOp : public NOperator
+class CORELIB_API NAlphaMaskOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -278,7 +278,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 #endif //FILTEROPS_H

@@ -49,7 +49,7 @@ NLayoutDock::NLayoutDock()
 	pst->dwIdxWndSelected	= -1;
 	m_arrayItems.AddItem(pst);
 
-	dwTabHeight = 24;
+	m_dwTabHeight = 18;
 }
 
 //-----------------------------------------------------------------
@@ -109,7 +109,7 @@ void NLayoutDock::OnPaint(N2DPainter* _ppainter)
 		if (nCount==0)	continue;
 
 		lrc = pLayout->rc;
-		lrc.bottom=lrc.top+dwTabHeight;
+		lrc.bottom=lrc.top+m_dwTabHeight;
 
 		//if (pLayout->dwIdxWndSelected!=-1)
 		//Display tabs
@@ -290,7 +290,7 @@ void NLayoutDock::RecalLayout()
 		if (nCount==0)	continue;
 
 		lrc = pLayout->rc;
-		lrc.top+=dwTabHeight;
+		lrc.top+=m_dwTabHeight;
 
 		if (pLayout->dwIdxWndSelected!=-1)
 		{

@@ -33,7 +33,7 @@
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NFlatOp, NOperator);
+FIMPLEMENT_CLASS(NFlatOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescFlatOp[] =
 {
@@ -49,7 +49,7 @@ NFlatOp::NFlatOp()
 	m_pcvarsBloc = AddVarsBloc(3, blocdescFlatOp, 2);
 }
 
-udword NFlatOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NFlatOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//No Inputs!
 	if (m_byInputs!=0)		return (udword)-1;
@@ -92,7 +92,7 @@ udword NFlatOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NCloudOp, NOperator);
+FIMPLEMENT_CLASS(NCloudOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescCloudOp[] =
 {
@@ -110,7 +110,7 @@ NCloudOp::NCloudOp()
 	m_pcvarsBloc = AddVarsBloc(6, blocdescCloudOp, 2);
 }
 
-udword NCloudOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NCloudOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//No Inputs
 	if (m_byInputs!=0)		return (udword)-1;
@@ -379,7 +379,7 @@ void NCloudOp::Normalize()
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NGradientOp, NOperator);
+FIMPLEMENT_CLASS(NGradientOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescGradientOp[] =
 {
@@ -397,7 +397,7 @@ NGradientOp::NGradientOp()
 	m_pcvarsBloc = AddVarsBloc(6, blocdescGradientOp, 2);
 }
 
-udword NGradientOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NGradientOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//No Inputs!
 	if (m_byInputs!=0)		return (udword)-1;
@@ -465,7 +465,7 @@ udword NGradientOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NCellOp, NOperator);
+FIMPLEMENT_CLASS(NCellOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescCellOp[] =
 {
@@ -485,7 +485,7 @@ NCellOp::NCellOp()
 	m_pcvarsBloc = AddVarsBloc(8, blocdescCellOp, 3);
 }
 
-udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NCellOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//No Inputs
 	if (m_byInputs!=0)		return (udword)-1;
@@ -625,7 +625,7 @@ udword NCellOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFacto
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NNoiseOp, NOperator);
+FIMPLEMENT_CLASS(NNoiseOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescNoiseOp[] =
 {
@@ -642,7 +642,7 @@ NNoiseOp::NNoiseOp()
 	m_pcvarsBloc = AddVarsBloc(4, blocdescNoiseOp, 1);
 }
 
-udword NNoiseOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NNoiseOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//No Inputs!
 	if (m_byInputs!=0)		return (udword)-1;
@@ -695,7 +695,7 @@ udword NNoiseOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFact
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-/*FIMPLEMENT_CLASS(NVectorOp, NOperator);
+/*FIMPLEMENT_CLASS(NVectorOp, NOperatorFx);
 
 static void* vgvmAlloc( size_t size )
 {
@@ -737,7 +737,7 @@ void NVectorOp::SetVectorData(ubyte* _data, udword _length)
 
 bool NVectorOp::Save(NArchive* _s)
 {
-	if(!NOperator::Save(_s))
+	if(!NOperatorFx::Save(_s))
 		return false;
 	*_s << (udword)m_pProgram->getSize();
 	_s->PutData(m_pProgram->getBuffer(), m_pProgram->getSize());
@@ -746,7 +746,7 @@ bool NVectorOp::Save(NArchive* _s)
 
 bool NVectorOp::Load(NArchive* _l)
 {
-	NOperator::Load(_l);
+	NOperatorFx::Load(_l);
 	udword size;
 	*_l >> size;
 	if(size > 0)
@@ -759,7 +759,7 @@ bool NVectorOp::Load(NArchive* _l)
         return true;
 }
 
-udword NVectorOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NVectorOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//No Inputs!
 	if (m_byInputs!=0)		return (udword)-1;

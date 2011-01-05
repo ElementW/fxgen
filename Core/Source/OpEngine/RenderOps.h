@@ -30,7 +30,7 @@
 //                   Prototypes
 //-----------------------------------------------------------------
 //NObject
-//	NOperator
+//	NOperatorFx
 //		NFlatOp
 //		NCloudOp
 //		NGradientOp
@@ -41,7 +41,7 @@
 //!	\class		NFlatOp
 //!	\brief		Flat rendering
 //-----------------------------------------------------------------
-class CORELIB_API NFlatOp : public NOperator
+class CORELIB_API NFlatOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -54,14 +54,14 @@ public:
 	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 //-----------------------------------------------------------------
 //!	\class		NCloudOp
 //!	\brief		Render clouds
 //-----------------------------------------------------------------
-class CORELIB_API NCloudOp : public NOperator
+class CORELIB_API NCloudOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -74,7 +74,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 
 	//Methods
 	void	Cloud(ubyte byoctaves, float fampMod);
@@ -94,7 +94,7 @@ public:
 //!	\class		NGradientOp
 //!	\brief		Four corners gradient rendering
 //-----------------------------------------------------------------
-class CORELIB_API NGradientOp : public NOperator
+class CORELIB_API NGradientOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -107,7 +107,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Render"; }		//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 
 };
 
@@ -115,7 +115,7 @@ public:
 //!	\class		NCellOp
 //!	\brief		Render cells
 //-----------------------------------------------------------------
-class CORELIB_API NCellOp : public NOperator
+class CORELIB_API NCellOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -128,14 +128,14 @@ public:
 	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 //-----------------------------------------------------------------
 //!	\class		NNoiseOp
 //!	\brief		Render noise
 //-----------------------------------------------------------------
-class CORELIB_API NNoiseOp : public NOperator
+class CORELIB_API NNoiseOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -148,14 +148,14 @@ public:
 	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 //-----------------------------------------------------------------
 //!	\class		NVectorOp
 //!	\brief		Render vector graphics
 //-----------------------------------------------------------------
-/*class CORELIB_API NVectorOp : public NOperator
+/*class CORELIB_API NVectorOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -171,7 +171,7 @@ public:
 	void			SetVectorData(ubyte* _data, udword _length);
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 
 private:
 	//Serialization

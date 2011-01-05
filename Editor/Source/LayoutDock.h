@@ -106,7 +106,7 @@ protected:
 
 	//Datas
 	NArray<SLayoutItem*>	m_arrayItems;
-	udword dwTabHeight;
+	udword m_dwTabHeight;
 
 protected:
 	//Win32 Events

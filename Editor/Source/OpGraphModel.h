@@ -21,7 +21,7 @@ public:
 	//Datas
 	sword	m_wPosX, m_wPosY;			//!< Position (grid unit)
 	sword	m_wWidth;							//!< Width (grid unit)
-	NOperator* m_op;						//!< Operator associed with this node
+	NOperatorFx* m_op;						//!< Operator associed with this node
 };
 
 //-----------------------------------------------------------------
@@ -58,7 +58,7 @@ public:
 
 	void GetPrevOperators(NOperatorNode* _pop, NObjectArray& _carrayPrevOpS);
 	void GetNextOperators(NOperatorNode* _pop, NObjectArray& _carrayNextOpS);
-	NOperator* GetFinalOpFrom(NOperatorNode* _pop);
+	NOperatorNode* GetFinalOpFrom(NOperatorNode* _pop);
 
 	//Datas	GUI
 	NObjectArray	m_arrayOps;						//!< Operators array

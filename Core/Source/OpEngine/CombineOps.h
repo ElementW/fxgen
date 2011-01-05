@@ -28,7 +28,7 @@
 //                   Prototypes
 //-----------------------------------------------------------------
 //NObject
-//	NOperator
+//	NOperatorFx
 //		NNopOp
 //		NRectOp
 //		NPixelsOp
@@ -41,7 +41,7 @@
 //!	\class		NNopOp
 //!	\brief		Nop operator
 //-----------------------------------------------------------------
-class CORELIB_API NNopOp : public NOperator
+class CORELIB_API NNopOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -52,7 +52,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Misc"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 
@@ -60,7 +60,7 @@ public:
 //!	\class		NRectOp
 //!	\brief		Rectangle rendering
 //-----------------------------------------------------------------
-class CORELIB_API NRectOp : public NOperator
+class CORELIB_API NRectOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -73,7 +73,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 
@@ -81,7 +81,7 @@ public:
 //!	\class		NPixelsOp
 //!	\brief		Pixels rendering
 //-----------------------------------------------------------------
-class CORELIB_API NPixelsOp : public NOperator
+class CORELIB_API NPixelsOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -94,14 +94,14 @@ public:
 	virtual const char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 //-----------------------------------------------------------------
 //!	\class		NAddOp
 //!	\brief		Add bitmaps
 //-----------------------------------------------------------------
-class CORELIB_API NAddOp : public NOperator
+class CORELIB_API NAddOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -114,14 +114,14 @@ public:
 	virtual const char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 //-----------------------------------------------------------------
 //!	\class		NGlowOp
 //!	\brief		Glow rendering
 //-----------------------------------------------------------------
-class CORELIB_API NGlowOp : public NOperator
+class CORELIB_API NGlowOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -135,7 +135,7 @@ public:
 
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 
 };
 
@@ -143,7 +143,7 @@ public:
 //!	\class		NCrackOp
 //!	\brief		Compute cracked bitmap
 //-----------------------------------------------------------------
-class CORELIB_API NCrackOp : public NOperator
+class CORELIB_API NCrackOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -156,7 +156,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 
 	//Methods
 	float myfRandom();
@@ -168,7 +168,7 @@ public:
 //!	\class		NLerpOp
 //!	\brief		Cuts all color information above or below a threshold
 //-----------------------------------------------------------------
-class CORELIB_API NLerpOp : public NOperator
+class CORELIB_API NLerpOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -181,7 +181,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 #endif //COMBINEOPS_H

@@ -27,7 +27,7 @@
 //-----------------------------------------------------------------
 //									Prototypes
 //-----------------------------------------------------------------
-class NOperator;
+class NOperatorFx;
 
 class NPropertyItem;
 	class NUbyteProp;
