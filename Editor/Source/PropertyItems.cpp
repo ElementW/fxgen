@@ -84,7 +84,7 @@ void NUbyteProp::OnValueChanged(NObject* _psender)
 	m_pvarValue->byVal = (sdword)m_slider.GetPos();
 
 	// Send Event
-	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperator*)m_pvarBloc->GetOwner());
+	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperatorFx*)m_pvarBloc->GetOwner());
 }
 
 
@@ -117,7 +117,7 @@ void NUwordProp::OnValueChanged(NObject* _psender)
 	m_pvarValue->wVal = (sdword)m_slider.GetPos();
 
 	// Send Event
-	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperator*)m_pvarBloc->GetOwner());
+	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperatorFx*)m_pvarBloc->GetOwner());
 }
 
 
@@ -150,7 +150,7 @@ void NFloatProp::OnValueChanged(NObject* _psender)
 	m_pvarValue->fVal = (sdword)m_slider.GetPos();
 
 	// Send Event
-	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperator*)m_pvarBloc->GetOwner());
+	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperatorFx*)m_pvarBloc->GetOwner());
 }
 
 
@@ -183,7 +183,7 @@ void NColorProp::OnValueChanged(NObject* _psender)
 	//Change field value
 	m_pvarValue->dwVal = m_button.GetPicker()->GetClickedColor().GetRGBA();
 	// Send Event
-	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperator*)m_pvarBloc->GetOwner());
+	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperatorFx*)m_pvarBloc->GetOwner());
 }
 
 
@@ -243,7 +243,7 @@ void NUbyteComboProp::OnValueChanged(NObject* _psender)
 	//Change value
 	m_pvarValue->byVal = m_button.GetMenu()->GetClickedCmdID()-1;
 	// Send Event
-	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperator*)m_pvarBloc->GetOwner());
+	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperatorFx*)m_pvarBloc->GetOwner());
 }
 
 
@@ -322,14 +322,14 @@ void NUseStoredOpsProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 void NUseStoredOpsProp::OnValueChanged(NObject* _psender)
 {
 	//Change value
-	NOperator* popSel = (NOperator*)m_button.GetMenu()->GetClickedCmdID();
+	NOperatorFx* popSel = (NOperatorFx*)m_button.GetMenu()->GetClickedCmdID();
 
 	//Affect selected 'stored operator'
 	if (popSel!=null)
 		m_pvarBloc->SetValue(m_dwvarIdx, 0.0f, popSel);
 
 	// Send Event
-	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperator*)m_pvarBloc->GetOwner());
+	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperatorFx*)m_pvarBloc->GetOwner());
 }
 
 
@@ -389,7 +389,7 @@ void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 
 		for (udword i=0; i<storedOp.Count(); i++)
 		{
-			NOperator* pop = (NOperator*)storedOp[i];
+			NOperatorFx* pop = (NOperatorFx*)storedOp[i];
 			if (strlen(pop->GetUserName())!=0)
 				popMenu->AddItem(pop->GetUserName(), (udword)pop, 0);
 		}
@@ -432,5 +432,5 @@ void NStringProp::OnValueChanged(NObject* _psender)
 	strcpy_s(m_pvarValue->szVal, sizeof(m_pvarValue->szVal), str.Buffer());
 
 	// Send Event
-	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperator*)m_pvarBloc->GetOwner());
+	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperatorFx*)m_pvarBloc->GetOwner());
 }

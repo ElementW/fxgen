@@ -30,8 +30,8 @@ class NOperatorsWnd;
 class NAssetWnd;
 class NAssetsWnd;
 
-//class NOperator;
 class NAssetModel;
+class NOperatorNode;
 
 //-----------------------------------------------------------------
 //!	\class		NEditorGUI
@@ -49,12 +49,13 @@ public:
 	static	NEditorGUI* GetInstance();
 
 	//Methods
-	void MarkShowOperator(NOperator* pop);	//!< Set final Operator to mark final result
-	void DeletingOperator(NOperator* pop);	//!< Notif deleting operator
-	void DeletedOperator(NOperator* pop);		//!< Notif deleted operator
-	void EmitPropertiesChanged(NOperator* pop);
+	void MarkShowOperator(NOperatorNode* pop);	//!< Set final Operator to mark final result
+	void DeletingOperator(NOperatorNode* pop);	//!< Notif deleting operator
+	void DeletedOperator(NOperatorNode* pop);		//!< Notif deleted operator
 
-	NOperator* Execute(float _ftime);
+	void EmitPropertiesChanged(NOperatorFx* pop);
+
+	NOperatorNode* Execute(float _ftime);
 
 	void LoadAsset(NString path);
 	void SaveAsset(NString path = "");
@@ -82,7 +83,7 @@ protected:
 	bool							m_bExecuteLocked;	//!< Lock-Unlock operators execution
 	NOperatorsWnd*		m_opswnd;					//!< Operators Window
 	NAssetWnd*				m_passetswnd;			//!< Assets window
-	NOperator*				m_popMarkedShow;	//!< Operator marked show for final result
+	NOperatorNode*				m_popMarkedShow;	//!< Operator marked show for final result
 	NString						projectname;
 	float							m_fDetailFactor;
 	NMenuCtrl					m_wndFileMenu;

@@ -24,6 +24,7 @@
 
 #include "EditorApp.h"
 #include "EventsList.h"
+#include "OpGraphModel.h"
 
 //-----------------------------------------------------------------
 //                   Defines
@@ -95,8 +96,8 @@ bool NViewportsWnd::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 //-----------------------------------------------------------------
 EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnOPDeleting)
 {
-	NOperator* pop = (NOperator*)dwParam1;
-	if (pop->m_pObj==m_pcurObject)
+	NOperatorNode* pop = (NOperatorNode*)dwParam1;
+	if (pop->m_op->m_pObj==m_pcurObject)
 	{
 		m_pcurObject=null;
 	}
@@ -109,12 +110,12 @@ EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnOPDeleting)
 //-----------------------------------------------------------------
 EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnRender)
 {
-	NOperator* pop = (NOperator*)dwParam1;
-	if (pop==null || pop->m_pObj==null || (pop!=null && pop->m_bError))
+	NOperatorNode* pop = (NOperatorNode*)dwParam1;
+	if (pop==null || pop->m_op->m_pObj==null || (pop!=null && pop->m_op->m_bError))
 	{
 		m_pcurObject = null;
 	} else {
-		m_pcurObject = pop->m_pObj;
+		m_pcurObject = pop->m_op->m_pObj;
 	}
 
 	RedrawWindow();
@@ -387,7 +388,7 @@ void NViewportsWnd::OnPaint(N2DPainter *_ppainter)
 
 	_ppainter->FillSolidRect(rc, RGBA(115,115,115,255));
 
-	NOperator* pop = (NOperator*)m_pcurObject;
+	NOperatorNode* pop = (NOperatorNode*)m_pcurObject;
 
 	////////////////////////////////////////
 	//No operator valid
@@ -397,7 +398,7 @@ void NViewportsWnd::OnPaint(N2DPainter *_ppainter)
 		//_ppainter->FillSolidRect(rc, RGBA(255,115,115,115));
 		if (pop==null)
 			_ppainter->DrawString("Select an operator by double clicking on it", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(200,255,200,255) );
-		else if (pop && pop->m_bError)
+		else if (pop && pop->m_op->m_bError)
 			_ppainter->DrawString("Invalid links !", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(200,255,200,255) );
 
 	////////////////////////////////////////

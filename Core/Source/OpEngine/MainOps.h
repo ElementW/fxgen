@@ -32,7 +32,7 @@ class NBitmap;
 //!	\class		NStoreOp
 //!	\brief		Store operator
 //-----------------------------------------------------------------
-class CORELIB_API NStoreOp : public NOperator
+class CORELIB_API NStoreOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -47,7 +47,7 @@ public:
 	virtual const char*		GetUserName();											//!< Operator's User Name
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 
 };
 
@@ -55,7 +55,7 @@ public:
 //!	\class		NStoreResultOp
 //!	\brief		Store final result operator
 //-----------------------------------------------------------------
-class CORELIB_API NStoreResultOp : public NOperator
+class CORELIB_API NStoreResultOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -73,7 +73,7 @@ public:
 	NBitmap* GetBitmap();
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 
 };
 
@@ -81,7 +81,7 @@ public:
 //!	\class		NLoadOp
 //!	\brief		Load a stored operator
 //-----------------------------------------------------------------
-class CORELIB_API NLoadOp : public NOperator
+class CORELIB_API NLoadOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -95,7 +95,7 @@ public:
 	virtual const char*		GetUserName();											//!< Operator's User Name
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 
 };
 
@@ -104,7 +104,7 @@ public:
 //!	\class		NChannelAnimFX1Op
 //!	\brief		Channel animation operator
 //-----------------------------------------------------------------
-class CORELIB_API NChannelAnimFX1Op : public NOperator
+class CORELIB_API NChannelAnimFX1Op : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -117,7 +117,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Animation"; }		//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 
 };
 

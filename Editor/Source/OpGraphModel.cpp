@@ -13,6 +13,33 @@ int SortOpsLeftToRight(const void *elem1, const void *elem2)
 }
 
 //-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//							NOperatorNode class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+
+
+//-----------------------------------------------------------------
+//!	\brief	Constructor
+//-----------------------------------------------------------------
+NOperatorNode::NOperatorNode()
+{
+	m_op = null;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Destructor
+//-----------------------------------------------------------------
+NOperatorNode::~NOperatorNode()
+{
+	if (m_op!=null)
+		NDELETE(m_op, NOperatorFx);
+
+}
+
+//-----------------------------------------------------------------
 //!	\brief	duplicate this operator
 //!	\return object duplicated
 //!	\note		used for copy-cut-paste operations
@@ -27,7 +54,46 @@ NObject* NOperatorNode::Duplicate()
 	pobj->m_wWidth			= m_wWidth;
 	//pobj->m_byInputs		= 0;
 
+	pobj->m_op = (NOperatorFx*)m_op->Duplicate();
+
 	return pobj;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Save object into archive
+//!	\param	s archive
+//!	\return True if success
+//-----------------------------------------------------------------
+bool NOperatorNode::Save(NArchive* _s)
+{
+	NObject::Save(_s);
+
+	*_s<<m_wPosX;
+	*_s<<m_wPosY;
+	*_s<<m_wWidth;
+
+	_s->PutClass(m_op);
+
+	return true;
+}
+
+
+//-----------------------------------------------------------------
+//!	\brief	Load object from archive
+//!	\param	l archive
+//!	\return True if success
+//-----------------------------------------------------------------
+bool NOperatorNode::Load(NArchive* _l)
+{
+	NObject::Load(_l);
+
+	*_l>>m_wPosX;
+	*_l>>m_wPosY;
+	*_l>>m_wWidth;
+
+	m_op = (NOperatorFx*)_l->GetClass();
+	
+	return true;
 }
 
 
@@ -98,11 +164,11 @@ bool NOpGraphModel::Load(NArchive* _l)
 //!	\return operator index
 //!	\note Links between operators are recomputed
 //-----------------------------------------------------------------
-udword NOpGraphModel::AddOp(NOperator* _pop)
+udword NOpGraphModel::AddOp(NOperatorNode* _pop)
 {
 	udword idx = m_arrayOps.AddItem(_pop);
 
-	_pop->m_bInvalided = true;
+	_pop->m_op->m_bInvalided = true;
 
 	//Recomputing links
 	ComputeLinks();
@@ -117,7 +183,7 @@ udword NOpGraphModel::AddOp(NOperator* _pop)
 //!	\return operator index
 //!	\note Links between operators are recomputed
 //-----------------------------------------------------------------
-udword NOpGraphModel::DeleteOp(NOperator* _pop)
+udword NOpGraphModel::DeleteOp(NOperatorNode* _pop)
 {
 	//Invalidate linked operators
 	NObjectArray	carray;
@@ -125,9 +191,9 @@ udword NOpGraphModel::DeleteOp(NOperator* _pop)
 
 	for ( udword i=0; i<carray.Count(); i++)
 	{
-		NOperator* pop = (NOperator*)carray[i];
-		pop->m_bInvalided = true;
-		pop->m_pprevOpToProcess = null;
+		NOperatorNode* pop = (NOperatorNode*)carray[i];
+		pop->m_op->m_bInvalided = true;
+		pop->m_op->m_pprevOpToProcess = null;
 	}
 
 	//Remove From Array
@@ -162,12 +228,12 @@ void NOpGraphModel::DeleteAllOps()
 //!
 //!	\note Links between operators are recomputed
 //-----------------------------------------------------------------
-void NOpGraphModel::MoveOp(NOperator* _pop, sword _x, sword _y)
+void NOpGraphModel::MoveOp(NOperatorNode* _pop, sword _x, sword _y)
 {
 	//Invalidate moved operator
-	_pop->m_bInvalided				= true;
-	_pop->m_pnextOpToProcess	= null;
-	_pop->m_pprevOpToProcess	= null;
+	_pop->m_op->m_bInvalided				= true;
+	_pop->m_op->m_pnextOpToProcess	= null;
+	_pop->m_op->m_pprevOpToProcess	= null;
 
 	//Invalidate linked operators
 	NObjectArray	carray;
@@ -175,9 +241,9 @@ void NOpGraphModel::MoveOp(NOperator* _pop, sword _x, sword _y)
 
 	for ( udword i=0; i<carray.Count(); i++)
 	{
-		NOperator* pop = (NOperator*)carray[i];
-		pop->m_pprevOpToProcess = null;
-		pop->m_bInvalided				= true;
+		NOperatorNode* pop = (NOperatorNode*)carray[i];
+		pop->m_op->m_pprevOpToProcess = null;
+		pop->m_op->m_bInvalided				= true;
 	}
 
 	//Move Operator
@@ -217,7 +283,7 @@ void NOpGraphModel::ComputeLinks()
 	while(m_arrayOpsUnlinked.Count())
 	{
 		TRACE("SubGraph:\n");
-		NOperator* pop = (NOperator*)m_arrayOpsUnlinked[0];
+		NOperatorFx* pop = (NOperatorFx*)m_arrayOpsUnlinked[0];
 
 		while (pop)
 		{
@@ -249,7 +315,11 @@ void NOpGraphModel::_ComputeLinks(NOperatorNode* _pop, NOperatorNode* _pprevop, 
 		TRACE("\t_ComputeLinks %s PrevOP -- dwCurDepth %d\n", _pop->GetName(), _dwCurDepth );*/
 
 	//Update current operator execution link
-	_pop->m_op->m_pnextOpToProcess = m_pprevOp->m_op;
+	if (m_pprevOp!=null)
+		_pop->m_op->m_pnextOpToProcess = m_pprevOp->m_op;
+	else
+		_pop->m_op->m_pnextOpToProcess = null;
+
 	_pop->m_op->m_pprevOpToProcess = null;
 
 	if (m_pprevOp)
@@ -376,7 +446,7 @@ void NOpGraphModel::GetOpsFromClassName(const char* _pszClassName, NObjectArray&
 {
 	for (udword i=0; i<m_arrayOps.Count(); i++)
 	{
-		NOperator* pccurOP = (NOperator*)m_arrayOps[i];
+		NOperatorFx* pccurOP = (NOperatorFx*)m_arrayOps[i];
 		if (strcmp(pccurOP->GetRTClass()->m_pszClassName, _pszClassName) == 0)
 			_carray.AddItem(pccurOP);
 	}
@@ -389,7 +459,7 @@ void NOpGraphModel::InvalidateAllOps()
 {
 	for (udword i=0; i<m_arrayOps.Count(); i++)
 	{
-		NOperator* pccurOP = (NOperator*)m_arrayOps[i];
+		NOperatorFx* pccurOP = (NOperatorFx*)m_arrayOps[i];
 		pccurOP->m_bInvalided			= true;
 		pccurOP->m_dwLastUsedTime	= 0;
 	}

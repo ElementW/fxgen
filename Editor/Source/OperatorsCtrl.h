@@ -31,6 +31,10 @@
 #define GB_BLOCSELCOLOR			RGBA(200,200,240,255)
 #define GB_MARKEDSHOWCOLOR	RGBA(0,200,0,255)
 
+//-----------------------------------------------------------------
+// 			Prototypes
+//-----------------------------------------------------------------
+class NOperatorNode;
 
 //-----------------------------------------------------------------
 //!	\class		NOperatorsCtrl
@@ -50,31 +54,31 @@ public:
 
 	void	PlaceOperator(const char* _pszClassName);
 
-	void	SelectOperator(NOperator* pop);
+	void	SelectOperator(NOperatorNode* pop);
 	void	DeleteOperatorsSelected();
 
 	void	Update();	//!< MAJ de l'affichage
 	void	Update(float _ftime);
 
-	virtual void	OnMarkShowOperator(NOperator* pop);			//OVERLOAD
-	virtual void	OnDeletingOperator(NOperator* pop)	{}	//OVERRIDE
-	virtual void	OnDeletedOperator(NOperator* pop)		{}	//OVERRIDE
+	virtual void	OnMarkShowOperator(NOperatorNode* pop);			//OVERLOAD
+	virtual void	OnDeletingOperator(NOperatorNode* pop)	{}	//OVERRIDE
+	virtual void	OnDeletedOperator(NOperatorNode* pop)		{}	//OVERRIDE
 
 	//Members Access
-	NOperator*	GetMarkedShowOperator()		{ return m_popMarkedShow; }
+	NOperatorNode*	GetMarkedShowOperator()		{ return m_popMarkedShow; }
 
 protected:
 	// Internal methods
-	NOperator*	AddOperator(sword x, sword y, sword w, const char* _pszClassName);
-	void				DeleteOperator(NOperator* pop);
+	NOperatorNode*	AddOperator(sword x, sword y, sword w, const char* _pszClassName);
+	void				DeleteOperator(NOperatorNode* pop);
 	void				Reset();
 
-	NOperator*	GetOperatorAt(NPoint& pt, bool& bResizeZone);
+	NOperatorNode*	GetOperatorAt(NPoint& pt, bool& bResizeZone);
 	void				UpdateCursor(NPoint& pt);
 	void				SelectOperatorsIntoRect(NRect& rc);
-	void				GetOperatorRect(NOperator* _pop, NRect& _rc);
+	void				GetOperatorRect(NOperatorNode* _pop, NRect& _rc);
 
-	void				DisplayOperator(N2DPainter* _pdc, NOperator* _pop);
+	void				DisplayOperator(N2DPainter* _pdc, NOperatorNode* _pop);
 
 	bool				IsMovedSelOperatorsCollide(sdword _dwoffsetX, sdword _dwoffsetY);
 	bool				IsOpRectCollide(NRect _rcItemTest, bool _bExcludeSel);
@@ -87,7 +91,7 @@ protected:
 	void ClearClipboard();
 
 	//Selection Methods
-	bool				IsOperatorSelected(NOperator* pcbloc);
+	bool				IsOperatorSelected(NOperatorNode* pcbloc);
 
 	//Cursor Methods
 	void				DisplayCursor(N2DPainter* _pdc);
@@ -105,9 +109,9 @@ protected:
 
 	//Datas Operators
 	NOpGraphModel*			m_popsGraph;						//!< Page used for editing
-	NArray<NOperator*>	m_carrayOpsSelected;	//!< Operators selected
-	NArray<NOperator*>	m_carrayOpsClipboard;	//!< Operators in clipboard
-	NOperator	*m_popMarkedSelected, *m_popMarkedShow;
+	NArray<NOperatorNode*>	m_carrayOpsSelected;	//!< Operators selected
+	NArray<NOperatorNode*>	m_carrayOpsClipboard;	//!< Operators in clipboard
+	NOperatorNode	*m_popMarkedSelected, *m_popMarkedShow;
 	float								m_fupdateTime;
 	NRect	m_rcAllOperators;	//!< Operators zone
 

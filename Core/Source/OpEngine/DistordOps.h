@@ -29,7 +29,7 @@
 //                   Prototypes
 //-----------------------------------------------------------------
 //NObject
-//	NOperator
+//	NOperatorFx
 //		NRotoZoomOp
 //		NDistortOp
 //		NWarpOp
@@ -40,7 +40,7 @@
 //!	\class		NRotoZoomOp
 //!	\brief		RotoZoom filtering
 //-----------------------------------------------------------------
-class CORELIB_API NRotoZoomOp : public NOperator
+class CORELIB_API NRotoZoomOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -55,14 +55,14 @@ public:
 
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 //-----------------------------------------------------------------
 //!	\class		NDistordOp
 //!	\brief		Distort filtering
 //-----------------------------------------------------------------
-class CORELIB_API NDistortOp : public NOperator
+class CORELIB_API NDistortOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -75,7 +75,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 
 };
 
@@ -83,7 +83,7 @@ public:
 //!	\class		NVortexOp
 //!	\brief		Twirls the input
 //-----------------------------------------------------------------
-class CORELIB_API NVortexOp : public NOperator
+class CORELIB_API NVortexOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -96,7 +96,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 
 };
 
@@ -104,7 +104,7 @@ public:
 //!	\class		NLookupOp
 //!	\brief		Use one input as lookup coordinates in another
 //-----------------------------------------------------------------
-class CORELIB_API NLookupOp : public NOperator
+class CORELIB_API NLookupOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -117,7 +117,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 
 };
 
@@ -125,7 +125,7 @@ public:
 //!	\class		NCraterOp
 //!	\brief		Render noise
 //-----------------------------------------------------------------
-class NCraterOp : public NOperator
+class NCraterOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -138,7 +138,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
 };
 
 
@@ -146,7 +146,7 @@ public:
 //!	\class		NCraterSphereOp
 //!	\brief		Render noise
 //-----------------------------------------------------------------
-class NCraterSphereOp : public NOperator
+class NCraterSphereOp : public NOperatorFx
 {
 public:
 	FDECLARE_CLASS();
@@ -159,7 +159,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Distord"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts);
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts);
 };
 */
 

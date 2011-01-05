@@ -32,7 +32,7 @@
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NRotoZoomOp, NOperator);
+FIMPLEMENT_CLASS(NRotoZoomOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescRotoZoomOp[] =
 {
@@ -57,7 +57,7 @@ NRotoZoomOp::~NRotoZoomOp()
 {
 }
 
-udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NRotoZoomOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -207,7 +207,7 @@ udword NRotoZoomOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailF
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NDistortOp, NOperator);
+FIMPLEMENT_CLASS(NDistortOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescDistortOp[] =
 {
@@ -221,7 +221,7 @@ NDistortOp::NDistortOp()
 
 }
 
-udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NDistortOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//Two inputs (texture, normal)
 	if (m_byInputs!=2)		return (udword)-1;
@@ -335,7 +335,7 @@ udword NDistortOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFa
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NVortexOp, NOperator);
+FIMPLEMENT_CLASS(NVortexOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescVortexOp[] =
 {
@@ -354,7 +354,7 @@ NVortexOp::NVortexOp()
 
 }
 
-udword NVortexOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NVortexOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//Only one Input
 	if (m_byInputs!=1)              return (udword)-1;
@@ -479,13 +479,13 @@ udword NVortexOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFac
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NLookupOp, NOperator);
+FIMPLEMENT_CLASS(NLookupOp, NOperatorFx);
 
 NLookupOp::NLookupOp()
 {
 }
 
-udword NLookupOp::Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor)
+udword NLookupOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
 {
 	//Two inputs (texture, texcoords)
 	if (m_byInputs!=2) return (udword)-1;

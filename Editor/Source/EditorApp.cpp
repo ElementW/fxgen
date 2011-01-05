@@ -246,7 +246,7 @@ void NFxGenApp::Update()
 	if (ftime-m_fOldTime>1.0f)
 	{
 		//Execute operators rendering
-		NOperator* pop = pfrm->Execute(ftime);
+		pfrm->Execute(ftime);
 
 	}
 

@@ -74,11 +74,11 @@ void NOperatorsWnd::InitCtxMenu()
 	m_wndMenu.OnItemClick=FDelegate(this, (TDelegate)&NOperatorsWnd::OnMenuItemClick);
 
 	//Create Operators list sorted by category
-	NRTClass* prtc = NRTClass::GetFirstClassBySuperClass("NOperator");
+	NRTClass* prtc = NRTClass::GetFirstClassBySuperClass("NOperatorFx");
 	while (prtc)
 	{
 		//Create operator in order to get operator name and categorie
-		NOperator* pop = (NOperator*)prtc->m_pCreateCB();
+		NOperatorFx* pop = (NOperatorFx*)prtc->m_pCreateCB();
 
 		//Search if category already exist in menu
 		NMenuCtrl* popMenu = null;
@@ -107,7 +107,7 @@ void NOperatorsWnd::InitCtxMenu()
 		delete pop;
 
 		//Next RTC
-		prtc = NRTClass::GetNextClassBySuperClass("NOperator", prtc);
+		prtc = NRTClass::GetNextClassBySuperClass("NOperatorFx", prtc);
 	}
 
 }
@@ -137,7 +137,7 @@ void NOperatorsWnd::OnMenuItemClick(NObject* _psender)
 //-----------------------------------------------------------------
 //!	\brief	An operator is marked show
 //-----------------------------------------------------------------
-void NOperatorsWnd::OnMarkShowOperator(NOperator* pop)
+void NOperatorsWnd::OnMarkShowOperator(NOperatorNode* pop)
 {
 	NOperatorsCtrl::OnMarkShowOperator(pop);
 
@@ -150,7 +150,7 @@ void NOperatorsWnd::OnMarkShowOperator(NOperator* pop)
 //-----------------------------------------------------------------
 //!	\brief	An operator is deleting
 //-----------------------------------------------------------------
-void NOperatorsWnd::OnDeletingOperator(NOperator* pop)
+void NOperatorsWnd::OnDeletingOperator(NOperatorNode* pop)
 {
 	NFxGenApp* papp = (NFxGenApp*)GetApp();
 	NEditorGUI* pfrm = (NEditorGUI*)papp->GetMainWnd();
@@ -160,7 +160,7 @@ void NOperatorsWnd::OnDeletingOperator(NOperator* pop)
 //-----------------------------------------------------------------
 //!	\brief	An operator is deleted
 //-----------------------------------------------------------------
-void NOperatorsWnd::OnDeletedOperator(NOperator* pop)
+void NOperatorsWnd::OnDeletedOperator(NOperatorNode* pop)
 {
 	NFxGenApp* papp = (NFxGenApp*)GetApp();
 	NEditorGUI* pfrm = (NEditorGUI*)papp->GetMainWnd();

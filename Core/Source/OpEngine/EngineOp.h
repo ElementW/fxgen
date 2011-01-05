@@ -37,7 +37,7 @@
 //                   Prototypes
 //-----------------------------------------------------------------
 class NObject;
-	class NOperator;
+	class NOperatorFx;
 		class	NStoreResultOp;
 	class NOpGraphModel;
 	class NEngineOp;
@@ -48,15 +48,14 @@ class NObject;
 typedef	void (__cdecl FXGEN_OPSPROCESSCB)(udword _dwCurrentOp, udword _dwTotalOps);
 
 //-----------------------------------------------------------------
-//!	\class		NOperator
+//!	\class		NOperatorFx
 //!	\brief		Base class for an operator
-//!	\note			TODO will been split in NOperatorFX(Engine) and NOperatorNode(Designer)
 //-----------------------------------------------------------------
-class CORELIB_API NOperator :	public NObject
+class CORELIB_API NOperatorFx :	public NObject
 {
 public:
-	NOperator();
-	virtual ~NOperator();
+	NOperatorFx();
+	virtual ~NOperatorFx();
 
 	//Methods
 	virtual	udword GetColor()	= 0;				//!< Operator color
@@ -69,7 +68,7 @@ public:
 	virtual	bool Load(NArchive* _l);	//!< Load object
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperator** _pOpsInts, float _fDetailFactor) = 0;	//!< object processing (texture, mesh ...)
+	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor) = 0;	//!< object processing (texture, mesh ...)
 
 
 	//Datas Execution
@@ -82,8 +81,8 @@ public:
 	bool				m_bParsed;					//!< Operators scan optimization
 	float				m_fProcessedTime;		//!< Time for last process() call
 	NObject*		m_pObj;							//!< Object generated (Texture, Mesh ...)
-	NOperator*	m_pnextOpToProcess;	//!< Next operator to execute
-	NOperator*	m_pprevOpToProcess;	//!< Previous operator executed
+	NOperatorFx*	m_pnextOpToProcess;	//!< Next operator to execute
+	NOperatorFx*	m_pprevOpToProcess;	//!< Previous operator executed
 
 	// Variables Bloc
 	NVarsBloc* m_pcvarsBloc;
@@ -137,8 +136,8 @@ public:
 
 	//Editor Execution
 	//void InvalidateAllOps();
-	void InvalidateOp(NOperator* _pop);
-	void Execute(float _ftime, NOperator* _popFinal, float _fDetailFactor=1.0f, FXGEN_OPSPROCESSCB* _cbProcess=NULL);
+	void InvalidateOp(NOperatorFx* _pop);
+	void Execute(float _ftime, NOperatorFx* _popFinal, float _fDetailFactor=1.0f, FXGEN_OPSPROCESSCB* _cbProcess=NULL);
 
 	//Editor Channels methods
 	void SetChannelValue(ubyte _byChannel, NVarValue& _value);
@@ -155,15 +154,15 @@ protected:
 	//Internal Methods	
 	//void GetFinalOps(NTreeNode* _pnodeFrom, NObjectArray& _finalsOp, bool _bRecurse);	//###TOMOVE### to compiler
 	//void _GetFinalOps(NTreeNode* _pnode, NObjectArray& _finalsOp, bool _bRecurse); //###TOMOVE### to compiler
-	void ClearParsedOpsFlags(NOperator* _pop); //###TOMOVE### to compiler
+	void ClearParsedOpsFlags(NOperatorFx* _pop); //###TOMOVE### to compiler
 	//void _InvalidateAllOps(NTreeNode* _pnode); //###TOMOVE### to compiler
-	NOperator* GetRootOperator(NOperator* _pop); //###TOMOVE### to compiler
+	NOperatorFx* GetRootOperator(NOperatorFx* _pop); //###TOMOVE### to compiler
 
 	//Methods for execution
-	void _Execute(float _fTime, NOperator* _popFinal, float _fDetailFactor);
-	void ComputeInvaliddOps(NOperator* _popFinal);
-	void _ComputeInvaliddOps(NOperator* _pop);
-	void _ComputeToProcessOpsCount(NOperator* _popFinal);
+	void _Execute(float _fTime, NOperatorFx* _popFinal, float _fDetailFactor);
+	void ComputeInvaliddOps(NOperatorFx* _popFinal);
+	void _ComputeInvaliddOps(NOperatorFx* _pop);
+	void _ComputeToProcessOpsCount(NOperatorFx* _popFinal);
 
 	//Datas
 	//NTreeNode* m_pRootGroup;							//!< Root	Groups	//###TOMOVE### to compiler and replace by CompiledAsset
@@ -171,9 +170,9 @@ protected:
 	NVarValue  m_achannels[MAX_CHANNELS];	//!< Values for animation channels
 
 	//Datas for compilation and execution
-	NOperator*	m_aStacks[MAX_CONTEXTS][MAX_DEPTH];	//!< Inputs Stack for operators process
+	NOperatorFx*	m_aStacks[MAX_CONTEXTS][MAX_DEPTH];	//!< Inputs Stack for operators process
 	udword			m_nCurContext;				//!< indice (see m_aStacks[m_nCurContext, dwCurLevel])
-	NOperator*	m_popFinal;
+	NOperatorFx*	m_popFinal;
 	bool				m_bError;							//!< Error while process
 	udword			m_dwTotalProcessOpsCount, m_dwCurProcessOpsCount;
 	FXGEN_OPSPROCESSCB* m_cbOpsProcess;

@@ -110,7 +110,7 @@ void NOperatorsCtrl::OnPaint(N2DPainter* _ppainter)
 	{
 		for (udword i=0; i<m_popsGraph->GetOpsCount(); i++)
 		{
-			NOperator* pop = m_popsGraph->GetOpFromIdx(i);
+			NOperatorNode* pop = m_popsGraph->GetOpFromIdx(i);
 			DisplayOperator(_ppainter, pop);
 		}
 
@@ -137,7 +137,7 @@ void NOperatorsCtrl::OnPaint(N2DPainter* _ppainter)
 }
 
 
-void NOperatorsCtrl::DisplayOperator(N2DPainter* _pdc, NOperator* _pop)
+void NOperatorsCtrl::DisplayOperator(N2DPainter* _pdc, NOperatorNode* _pop)
 {
 	//Operator's Zone
 	NRect rcBloc;
@@ -159,12 +159,12 @@ void NOperatorsCtrl::DisplayOperator(N2DPainter* _pdc, NOperator* _pop)
 	//_pdc->FillSolidRect(rcShadow, RGBA(0,0,0) );
 
 	//Background color
-	_pdc->GradientVRect(rcBloc, RGBA(220, 220, 220,255), _pop->GetColor());
+	_pdc->GradientVRect(rcBloc, RGBA(220, 220, 220,255), _pop->m_op->GetColor());
 
 	//Operator's Caption
 	NRect rcCap(rcBloc);
 	rcCap.bottom=rcCap.top+3;
-	if (!_pop->m_bError)		_pdc->FillSolidRect(rcCap, _pop->GetColor());
+	if (!_pop->m_op->m_bError)		_pdc->FillSolidRect(rcCap, _pop->m_op->GetColor());
 	else										_pdc->FillSolidRect(rcCap, RGBA(255,0,0,255));
 
 	//Operator marked show
@@ -183,8 +183,8 @@ void NOperatorsCtrl::DisplayOperator(N2DPainter* _pdc, NOperator* _pop)
 	else													_pdc->Draw3dRect(rcBloc,RGBA(255,255,255,255),RGBA(0,0,0,255));
 
 	//Operator's Name
-	const char* pszname = _pop->GetUserName();
-	if (pszname==null || (strlen(pszname)==0))		pszname=_pop->GetName();
+	const char* pszname = _pop->m_op->GetUserName();
+	if (pszname==null || (strlen(pszname)==0))		pszname=_pop->m_op->GetName();
 
 	_pdc->DrawString(pszname, rcBloc, NDT_SINGLELINE|NDT_HCENTER|NDT_END_ELLIPSIS|NDT_VCENTER, RGBA(0,0,0,255) );
 
@@ -195,9 +195,9 @@ void NOperatorsCtrl::DisplayOperator(N2DPainter* _pdc, NOperator* _pop)
 	_pdc->Draw3dRect(rcResize, RGBA(255,220,220,220), RGBA(0,0,0,255));
 
 	//Operator Invalid or Processed
-	if (_pop->m_bInvalided || _pop->m_fProcessedTime==m_fupdateTime)
+	if (_pop->m_op->m_bInvalided || _pop->m_op->m_fProcessedTime==m_fupdateTime)
 	{
-		DWORD dwSeed = _pop->m_fProcessedTime;
+		DWORD dwSeed = _pop->m_op->m_fProcessedTime;
 		udword y = rcResize.top + (dwSeed % rcResize.Height());
 		_pdc->DrawLine(rcResize.left, y, rcResize.right, y, RGBA(0,0,0,255), 1);
 	}
@@ -222,7 +222,7 @@ void NOperatorsCtrl::DisplayCursor(N2DPainter* _pdc)
 
 		for (udword i=0; i<m_carrayOpsSelected.Count(); i++)
 		{
-			NOperator* pop = m_carrayOpsSelected[i];
+			NOperatorNode* pop = m_carrayOpsSelected[i];
 
 			//New position
 			sdword x = pop->m_wPosX+dwOffsetX;
@@ -235,15 +235,15 @@ void NOperatorsCtrl::DisplayCursor(N2DPainter* _pdc)
 			rc.bottom	= (sdword) (rc.top  + (1 * GB_GRIDUNIT * m_fScaleY));
 
 			//Background color
-			_pdc->GradientVRect(rc, RGBA(255,255,190,190), pop->GetColor());
+			_pdc->GradientVRect(rc, RGBA(255,255,190,190), pop->m_op->GetColor());
 
 			//Operator's Caption
 			NRect rcCap(rc);
 			rcCap.bottom=rcCap.top+3;
-			_pdc->FillSolidRect(rcCap, pop->GetColor());
+			_pdc->FillSolidRect(rcCap, pop->m_op->GetColor());
 
 			//Operator's Name
-			const char* pszname = pop->GetUserName();
+			const char* pszname = pop->m_op->GetUserName();
 			if (pszname==null || (strlen(pszname)==0))		pszname=pop->GetName();
 			_pdc->DrawString(pszname, rc, NDT_SINGLELINE|NDT_HCENTER|NDT_END_ELLIPSIS|NDT_VCENTER, RGBA(0,0,0,255) );
 
@@ -291,7 +291,7 @@ void NOperatorsCtrl::DisplayOperatorsMap(N2DPainter* _pdc)
 	//Display operators
 	for (udword i=0; i<m_popsGraph->GetOpsCount() ; i++)
 	{
-		NOperator* pop = m_popsGraph->GetOpFromIdx(i);
+		NOperatorNode* pop = m_popsGraph->GetOpFromIdx(i);
 
 		NRect rcBlock;
 		rcBlock.left		= (sdword) ((( pop->m_wPosX * GB_GRIDUNIT) ) * fScaleX);
@@ -300,7 +300,7 @@ void NOperatorsCtrl::DisplayOperatorsMap(N2DPainter* _pdc)
 		rcBlock.bottom	= (sdword) (rcBlock.top  + (1 * GB_GRIDUNIT * fScaleY));
 		rcBlock.Move(rc.left, rc.top);
 		//Just Background color
-		_pdc->GradientVRect(rcBlock, RGBA(255,255,190,190), pop->GetColor());
+		_pdc->GradientVRect(rcBlock, RGBA(255,255,190,190), pop->m_op->GetColor());
 
 	}
 
@@ -339,7 +339,7 @@ void NOperatorsCtrl::OnLButtonDown(NPoint point)
 
 	//Operator Selected
 	bool bResizeZone;
-	NOperator* pstBloc = GetOperatorAt(point, bResizeZone);
+	NOperatorNode* pstBloc = GetOperatorAt(point, bResizeZone);
 
 //	if (!(flags&NKey::RControl))	//###TOFIX###
 	{
@@ -410,7 +410,7 @@ void NOperatorsCtrl::OnLButtonUp(NPoint point)
 			{
 				for (udword i=0; i<m_carrayOpsSelected.Count(); i++)
 				{
-					NOperator* pop = m_carrayOpsSelected[i];
+					NOperatorNode* pop = m_carrayOpsSelected[i];
 					m_popsGraph->MoveOp(pop, sword(pop->m_wPosX+dwOffsetX), sword(pop->m_wPosY+ dwOffsetY));
 				}
 			}
@@ -426,7 +426,7 @@ void NOperatorsCtrl::OnLButtonUp(NPoint point)
 
 		for (udword i=0; i<m_carrayOpsSelected.Count(); i++)
 		{
-			NOperator* pop = m_carrayOpsSelected[i];
+			NOperatorNode* pop = m_carrayOpsSelected[i];
 			m_popsGraph->MoveOp(pop, pop->m_wPosX, pop->m_wPosY);	//###TOFIX###
 		}
 
@@ -458,7 +458,7 @@ void NOperatorsCtrl::OnLButtonDblClk(NPoint point)
 
 	//Select operator
 	bool bResizeZone;
-	NOperator* pstBloc = GetOperatorAt(point, bResizeZone);
+	NOperatorNode* pstBloc = GetOperatorAt(point, bResizeZone);
 	SelectOperator(pstBloc);
 
 	//Mark operator as "show"
@@ -507,7 +507,7 @@ void NOperatorsCtrl::OnMouseMove(NPoint point )
 
 		for (udword i=0; i<m_carrayOpsSelected.Count(); i++)
 		{
-			NOperator* pop = m_carrayOpsSelected[i];
+			NOperatorNode* pop = m_carrayOpsSelected[i];
 			pop->m_wWidth+= (sword)dwOffsetW;
 			if (pop->m_wWidth<1)		pop->m_wWidth=1;
 		}
@@ -602,7 +602,7 @@ void NOperatorsCtrl::UpdateCursor(NPoint& pt)
 
 	//Sous un op
 	//###WIN32### TOFIX
-/*	NOperator* pop = GetOperatorAt(pt, bResizeZone);
+/*	NOperatorNode* pop = GetOperatorAt(pt, bResizeZone);
 	if (pop)
 	{
 		//In Operator resizable zone
@@ -643,7 +643,7 @@ void NOperatorsCtrl::PlaceOperator(const char* _pszClassName)
 	if(!IsOpRectCollide(rcItemAdd, false))
 	{
 		//Place New Operator
-		NOperator* pop = AddOperator((sword)m_dwCursorX,(sword)m_dwCursorY,dwWidth,_pszClassName);
+		NOperatorNode* pop = AddOperator((sword)m_dwCursorX,(sword)m_dwCursorY,dwWidth,_pszClassName);
 
 		//clear selection
 		SelectOperator(null);
@@ -655,30 +655,35 @@ void NOperatorsCtrl::PlaceOperator(const char* _pszClassName)
 }
 
 
-NOperator* NOperatorsCtrl::AddOperator(sword x, sword y, sword w, const char* _pszClassName)
+NOperatorNode* NOperatorsCtrl::AddOperator(sword x, sword y, sword w, const char* _pszClassName)
 {
 	if (m_popsGraph==null)		return null;
 
 	//Create operator
-	NOperator* pop = (NOperator*)NRTClass::CreateByName(_pszClassName);
+	NOperatorNode* popnode = null;
+
+	NOperatorFx* pop = (NOperatorFx*)NRTClass::CreateByName(_pszClassName);
 	if (pop)
 	{
+		popnode = new NOperatorNode();
+
 		//Init
-		pop->m_wPosX			= x;
-		pop->m_wPosY			= y;
-		pop->m_wWidth			= w;
-		pop->m_byDepth		= 0;
+		popnode->m_wPosX			= x;
+		popnode->m_wPosY			= y;
+		popnode->m_wWidth			= w;
+		popnode->m_op					= pop;
+/*		pop->m_byDepth		= 0;
 		pop->m_byInputs		= 0;
-		pop->m_bInvalided	= true;
+		pop->m_bInvalided	= true;*/
 
 		//Add operator
-		m_popsGraph->AddOp(pop);
+		m_popsGraph->AddOp(popnode);
 	}
-	return pop;
+	return popnode;
 }
 
 
-void NOperatorsCtrl::DeleteOperator(NOperator* pop)
+void NOperatorsCtrl::DeleteOperator(NOperatorNode* pop)
 {
 
 	if (pop==m_popMarkedShow)				m_popMarkedShow=null;
@@ -720,7 +725,7 @@ void NOperatorsCtrl::DeleteOperatorsSelected()
 }
 
 
-NOperator* NOperatorsCtrl::GetOperatorAt(NPoint& pt, bool& bResizeZone)
+NOperatorNode* NOperatorsCtrl::GetOperatorAt(NPoint& pt, bool& bResizeZone)
 {
 	bResizeZone = false;
 
@@ -728,7 +733,7 @@ NOperator* NOperatorsCtrl::GetOperatorAt(NPoint& pt, bool& bResizeZone)
 	{
 		for (udword i=0; i<m_popsGraph->GetOpsCount() ; i++)
 		{
-			NOperator* pop = m_popsGraph->GetOpFromIdx(i);
+			NOperatorNode* pop = m_popsGraph->GetOpFromIdx(i);
 			NRect rcItem;
 			GetOperatorRect(pop, rcItem);
 			if (rcItem.Contain(pt))
@@ -748,7 +753,7 @@ NOperator* NOperatorsCtrl::GetOperatorAt(NPoint& pt, bool& bResizeZone)
 }
 
 
-void NOperatorsCtrl::SelectOperator(NOperator* pop)
+void NOperatorsCtrl::SelectOperator(NOperatorNode* pop)
 {
 	if (pop==null)
 	{
@@ -776,7 +781,7 @@ void NOperatorsCtrl::SelectOperatorsIntoRect(NRect& rc)
 
 	for (udword i=0; i<m_popsGraph->GetOpsCount(); i++)
 	{
-		NOperator* pop = m_popsGraph->GetOpFromIdx(i);
+		NOperatorNode* pop = m_popsGraph->GetOpFromIdx(i);
 		NRect rcItem;
 		GetOperatorRect(pop, rcItem);
 		if (!rc.IsIntersected(rcItem))
@@ -787,7 +792,7 @@ void NOperatorsCtrl::SelectOperatorsIntoRect(NRect& rc)
 }
 
 
-bool NOperatorsCtrl::IsOperatorSelected(NOperator* pop)
+bool NOperatorsCtrl::IsOperatorSelected(NOperatorNode* pop)
 {
 	for (udword i=0; i<m_carrayOpsSelected.Count(); i++)
 		if (m_carrayOpsSelected[i] == pop)
@@ -797,7 +802,7 @@ bool NOperatorsCtrl::IsOperatorSelected(NOperator* pop)
 }
 
 
-void NOperatorsCtrl::OnMarkShowOperator(NOperator* pop)
+void NOperatorsCtrl::OnMarkShowOperator(NOperatorNode* pop)
 {
 	m_popMarkedShow = pop;
 }
@@ -814,7 +819,7 @@ void NOperatorsCtrl::Update(float _ftime)
 //	Update();	//###GUI### to add later
 }
 
-void NOperatorsCtrl::GetOperatorRect(NOperator* _pop, NRect& _rc)
+void NOperatorsCtrl::GetOperatorRect(NOperatorNode* _pop, NRect& _rc)
 {
 	_rc.left		= (sdword) ((( _pop->m_wPosX * GB_GRIDUNIT) + m_fPosX) * m_fScaleX);
 	_rc.top			= (sdword) ((( _pop->m_wPosY * GB_GRIDUNIT) + m_fPosY) * m_fScaleY);
@@ -830,8 +835,8 @@ void NOperatorsCtrl::CopyOperatorsSelectedToClipboard()
 	for (udword i=0; i<m_carrayOpsSelected.Count(); i++)
 	{
 		//Duplicate operator
-		NOperator* popOriginal = m_carrayOpsSelected[i];
-		NOperator* popClone = (NOperator*)popOriginal->Duplicate();
+		NOperatorNode* popOriginal = m_carrayOpsSelected[i];
+		NOperatorNode* popClone = (NOperatorNode*)popOriginal->Duplicate();
 		//Add to Array
 		m_carrayOpsClipboard.AddItem( popClone );
 	}
@@ -849,7 +854,7 @@ void NOperatorsCtrl::PasteOperatorsFromClipboard()
 	//Paste operators
 	for (udword i=0; i<m_carrayOpsClipboard.Count(); i++)
 	{
-		NOperator* pop = (NOperator*)m_carrayOpsClipboard[i]->Duplicate();
+		NOperatorNode* pop = (NOperatorNode*)m_carrayOpsClipboard[i]->Duplicate();
 
 		//Init
 		pop->m_wPosX			= sword(pop->m_wPosX+dwOffsetX);
@@ -879,7 +884,7 @@ bool NOperatorsCtrl::IsMovedSelOperatorsCollide(sdword _dwoffsetX, sdword _dwoff
 
 	for (udword i=0; i<m_carrayOpsSelected.Count(); i++)
 	{
-		NOperator* popSel = m_carrayOpsSelected[i];
+		NOperatorNode* popSel = m_carrayOpsSelected[i];
 
 		//Compute asked operator rect
 		NRect rcItemSel;
@@ -904,7 +909,7 @@ bool NOperatorsCtrl::IsOpRectCollide(NRect _rcItemTest, bool _bExcludeSel)
 	{
 		for (udword i=0; i<m_popsGraph->GetOpsCount() ; i++)
 		{
-			NOperator* pop = m_popsGraph->GetOpFromIdx(i);
+			NOperatorNode* pop = m_popsGraph->GetOpFromIdx(i);
 
 			if (_bExcludeSel && m_carrayOpsSelected.Find(pop)!=-1)	continue;
 

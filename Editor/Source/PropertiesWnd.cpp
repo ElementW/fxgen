@@ -19,6 +19,7 @@
 //			Includes
 //-----------------------------------------------------------------
 #include "PropertiesWnd.h"
+#include "OpGraphModel.h"
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -74,7 +75,9 @@ void NPropertiesWnd::OnPropertiesChanged()
 //-----------------------------------------------------------------
 EVT_IMPLEMENT_HANDLER(NPropertiesWnd, OnOPSelChanged)
 {
-	m_pcurOp = (NOperator*)dwParam1;
+	NOperatorNode* pnode = (NOperatorNode*)dwParam1;
+	if (pnode!=null)		m_pcurOp = pnode->m_op;
+	else								m_pcurOp = null;
 	DisplayObjectProperties((NObject*)m_pcurOp);
 	Update();
 
