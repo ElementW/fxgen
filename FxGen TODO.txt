@@ -3,7 +3,10 @@ TODO
 
 .Main ID
 	X Split Operator class to OperatorNode(designer) and OperatorFx(runtime)
+	.Make Link between assert
+	 .add Module management into NArchive PutMappedClass())
 	.Add CommentNode (later)
+	.Add custom OperatorNode classes for visual editing
 
 .FxGenLib
 	.Rewrite animation processing (later)
@@ -26,8 +29,8 @@ TODO
 		.add an assets directory (an assert is just an fxgen designer project)
 		.load assets list from directory then add them to treeview
 		.compile and compute asserts node graph (later add cache)
-	.add undo-redo
-	.add min-max properties limits
+	.add undo-redo (later)
+	X add min-max properties limits
 	.managed string properties changed on key enter evt
 
 Version 0.7 alpha (Release: New FxGen Engine !)

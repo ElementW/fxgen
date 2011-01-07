@@ -882,7 +882,8 @@ void NSlideCtrl::OnPaint(N2DPainter* _ppainter)
 	if (m_fMin<m_fMax)
 	{
 		NRect rcRange(rc);
-		rcRange.right = (sdword)((m_fPos * (float)rcRange.Width()) / (m_fMax-m_fMin));
+		rcRange.Deflate(1,1);
+		rcRange.right = (sdword)(((m_fPos-m_fMin) * (float)rcRange.Width()) / (m_fMax-m_fMin));
 		//Display cursor to drag value
 		_ppainter->FillSolidRect(rcRange, NColor(0,128,255,255));
 
@@ -996,8 +997,10 @@ void NSlideCtrl::OnMouseMove(NPoint point )
 
 	if (m_bMovingCursor)
 	{
-		float fRanged = (m_fMax-m_fMin)* m_fStep;
+		float fRanged = (m_fMax-m_fMin)* (1.0f/m_fStep);
 		m_fPos = (float)point.x * fRanged / (float)rc.Width();
+		m_fPos*=m_fStep;
+		m_fPos+=m_fMin;
 
 		m_fPos = max(m_fPos, m_fMin);
 		m_fPos = min(m_fPos, m_fMax);

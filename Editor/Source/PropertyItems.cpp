@@ -67,9 +67,9 @@ FIMPLEMENT_CLASS(NUbyteProp, NPropertyItem)
 void NUbyteProp::Init()
 {
 	m_slider.Create(m_pvarBlocDesc->pszName, NRect(0,0,0,0), m_pParent);
-	m_slider.SetRange(0.0f, 255.0f);	//###TOFIX###
+	m_slider.SetRange(m_pvarBlocDesc->fMin, m_pvarBlocDesc->fMax);
+	m_slider.SetStep(m_pvarBlocDesc->fStep);
 	m_slider.SetPos(m_pvarValue->byVal);
-	m_slider.SetStep(1.0f);	//###TOFIX###
 	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NUbyteProp::OnValueChanged);
 }
 
@@ -100,9 +100,9 @@ FIMPLEMENT_CLASS(NUwordProp, NPropertyItem)
 void NUwordProp::Init()
 {
 	m_slider.Create(m_pvarBlocDesc->pszName, NRect(0,0,0,0), m_pParent);
-	m_slider.SetRange(0.0f, 65535.0f);	//###TOFIX###
+	m_slider.SetRange(m_pvarBlocDesc->fMin, m_pvarBlocDesc->fMax);
+	m_slider.SetStep(m_pvarBlocDesc->fStep);
 	m_slider.SetPos(m_pvarValue->wVal);
-	m_slider.SetStep(1.0f);	//###TOFIX###
 	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NUwordProp::OnValueChanged);
 }
 
@@ -133,9 +133,9 @@ FIMPLEMENT_CLASS(NFloatProp, NPropertyItem)
 void NFloatProp::Init()
 {
 	m_slider.Create(m_pvarBlocDesc->pszName, NRect(0,0,0,0), m_pParent);
-	m_slider.SetRange(-1.0f, 1.0f);	//###TOFIX###
+	m_slider.SetRange(m_pvarBlocDesc->fMin, m_pvarBlocDesc->fMax);
+	m_slider.SetStep(m_pvarBlocDesc->fStep);
 	m_slider.SetPos(m_pvarValue->fVal);
-	m_slider.SetStep(0.01f);	//###TOFIX###
 	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NFloatProp::OnValueChanged);
 }
 

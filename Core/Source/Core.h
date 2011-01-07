@@ -130,13 +130,8 @@ public:
 	extern NObject* class_name##CB()	{ return new class_name(); }\
 	NRTClass	class_name::m_RTClass((RTCLASS_HANDLER*)&class_name##CB, #class_name, #superclass_name, GetModuleName() );
 
-
 //Variables
-#define		VAR(type,	bCanBeAnimate, pszName,	pszDefValue, pszCLASSGUI) { type,	bCanBeAnimate, pszName,	pszDefValue, pszCLASSGUI },
-#define		MAP(version, type, pszMapping,	pszExpression )	{ version,	type, pszMapping,	pszExpression },
-
-
-
+#define		VAR(type,	bCanBeAnimate, pszName,	pszDefValue, pszCLASSGUI, fmin, fmax, fstep) { type,	bCanBeAnimate, pszName,	pszDefValue, pszCLASSGUI, fmin, fmax, fstep },
 
 //-----------------------------------------------------------------
 //!	\enum		eVarType
@@ -184,11 +179,13 @@ struct NVarsBlocDesc
 {
 	eVarType	eType;					//!< Type of variables (eubyte, euword ...)
 	bool			bCanBeAnimate;	//!< True if this variables can be animate
-
 	//Variables for Editing ...
 	const char*			pszName;
 	const char*			pszDefValue;	//!< One or more for combo-box edition
 	const char*			pszCLASSGUI;	//!< Graphic control for editing
+	float						fMin;		//!< Minimun value
+	float						fMax;		//!< Maximun value
+	float						fStep;	//!< Step
 };
 
 

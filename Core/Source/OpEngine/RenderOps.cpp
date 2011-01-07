@@ -37,16 +37,16 @@ FIMPLEMENT_CLASS(NFlatOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescFlatOp[] =
 {
-	VAR(eubyte,	false, "Width",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
-	VAR(eubyte,	false, "Height",	"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//1
-	VAR(eudword,	true, "Color",	"4278190080", "NColorProp")	//2
+	VAR(eubyte,	false, "Width",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp", 0.0f, 0.0f, 0.0f)	//0
+	VAR(eubyte,	false, "Height",	"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp", 0.0f, 0.0f, 0.0f)	//1
+	VAR(eudword,	true, "Color",	"4278190080", "NColorProp", 0.0f, 0.0f, 0.0f)	//2
 };
 
 
 NFlatOp::NFlatOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(3, blocdescFlatOp, 2);
+	m_pcvarsBloc = AddVarsBloc(3, blocdescFlatOp, 1);
 }
 
 udword NFlatOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
@@ -96,18 +96,18 @@ FIMPLEMENT_CLASS(NCloudOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescCloudOp[] =
 {
-	VAR(eubyte,	false, "Width",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
-	VAR(eubyte,	false, "Height",	"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//1
-	VAR(eudword,	true, "Color 0",		"4278190080",		"NColorProp")	//2
-	VAR(eudword,	true, "Color 1",		"-1",		"NColorProp")	//3
-	VAR(eubyte,		true, "Amp",				"128",	"NUbyteProp") //4	//###TEST###
-	VAR(euword,		true, "Seed",				"5412",	"NUwordProp") //5
+	VAR(eubyte,	false, "Width",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp", 0.0f, 0.0f, 0.0f)	//0
+	VAR(eubyte,	false, "Height",	"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp", 0.0f, 0.0f, 0.0f)	//1
+	VAR(eudword,	true, "Color 0",		"4278190080",		"NColorProp", 0.0f, 0.0f, 0.0f)	//2
+	VAR(eudword,	true, "Color 1",		"-1",		"NColorProp", 0.0f, 0.0f, 0.0f)	//3
+	VAR(eubyte,		true, "Amp",				"128",	"NUbyteProp", 0.0f, 255.0f, 1.0f) //4	//###TEST###
+	VAR(euword,		true, "Seed",				"5412",	"NUwordProp", 0.0f, 65535.0f, 1.0f) //5
 };
 
 NCloudOp::NCloudOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(6, blocdescCloudOp, 2);
+	m_pcvarsBloc = AddVarsBloc(6, blocdescCloudOp, 1);
 }
 
 udword NCloudOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
@@ -383,18 +383,18 @@ FIMPLEMENT_CLASS(NGradientOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescGradientOp[] =
 {
-	VAR(eubyte,	false, "Width",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
-	VAR(eubyte,	false, "Height",	"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//1
-	VAR(eudword,	true, "A",	"4294901760", "NColorProp")	//2	blue
-	VAR(eudword,	true, "B",	"4278255360",		"NColorProp")	//3 green
-	VAR(eudword,	true, "C",	"4278190335",			"NColorProp")	//4 red
-	VAR(eudword,	true, "D",	"4294967040", "NColorProp")	//5 blue light
+	VAR(eubyte,	false, "Width",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp", 0.0f, 0.0f, 0.0f)	//0
+	VAR(eubyte,	false, "Height",	"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp", 0.0f, 0.0f, 0.0f)	//1
+	VAR(eudword,	true, "A",	"4294901760", "NColorProp", 0.0f, 0.0f, 0.0f)	//2	blue
+	VAR(eudword,	true, "B",	"4278255360",		"NColorProp", 0.0f, 0.0f, 0.0f)	//3 green
+	VAR(eudword,	true, "C",	"4278190335",			"NColorProp", 0.0f, 0.0f, 0.0f)	//4 red
+	VAR(eudword,	true, "D",	"4294967040", "NColorProp", 0.0f, 0.0f, 0.0f)	//5 blue light
 };
 
 NGradientOp::NGradientOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(6, blocdescGradientOp, 2);
+	m_pcvarsBloc = AddVarsBloc(6, blocdescGradientOp, 1);
 }
 
 udword NGradientOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
@@ -469,20 +469,20 @@ FIMPLEMENT_CLASS(NCellOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescCellOp[] =
 {
-	VAR(eubyte,	false, "Width",			"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
-	VAR(eubyte,	false, "Height",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//1
-	VAR(eubyte,	true, 	"Regularity",	"128",	"NUbyteProp")	//2
-	VAR(eubyte,	true, 	"Density",		"8",		"NUbyteProp")	//3
-	VAR(eudword,true, 	"Color",		"-1",		"NColorProp")	//4
-	VAR(euword,	true, 	"Seed",			"5412",	"NUwordProp") //5
-	VAR(eubyte,	true, 	"Mode",			"0,[Grid,Chessboard]", "NUbyteComboProp")	//6
-	VAR(eubyte,	true, 	"Pattern",			"0,[Both,Cross,Cone]", "NUbyteComboProp")	//6
+	VAR(eubyte,	false, "Width",			"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp", 0.0f, 0.0f, 0.0f)	//0
+	VAR(eubyte,	false, "Height",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp", 0.0f, 0.0f, 0.0f)	//1
+	VAR(eubyte,	true, 	"Regularity",	"128",	"NUbyteProp", 0.0f, 255.0f, 1.0f)	//2
+	VAR(eubyte,	true, 	"Density",		"8",		"NUbyteProp", 0.0f, 255.0f, 1.0f)	//3
+	VAR(eudword,true, 	"Color",		"-1",		"NColorProp", 0.0f, 0.0f, 0.0f)	//4
+	VAR(euword,	true, 	"Seed",			"5412",	"NUwordProp", 0.0f, 65535.0f, 1.0f) //5
+	VAR(eubyte,	true, 	"Mode",			"0,[Grid,Chessboard]", "NUbyteComboProp", 0.0f, 0.0f, 0.0f)	//6
+	VAR(eubyte,	true, 	"Pattern",			"0,[Both,Cross,Cone]", "NUbyteComboProp", 0.0f, 0.0f, 0.0f)	//6
 };
 
 NCellOp::NCellOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(8, blocdescCellOp, 3);
+	m_pcvarsBloc = AddVarsBloc(8, blocdescCellOp, 1);
 }
 
 udword NCellOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
@@ -629,10 +629,10 @@ FIMPLEMENT_CLASS(NNoiseOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescNoiseOp[] =
 {
-	VAR(eubyte,	false, "Width",		"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
-	VAR(eubyte,	false, "Height",	"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//1
-	VAR(eudword,	true, "Color",	"-1", "NColorProp")	//2
-	VAR(euword,		true, "Seed",				"5412",	"NUwordProp") //3
+	VAR(eubyte,		false,	"Width",	"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp", 0.0f, 0.0f, 0.0f)	//0
+	VAR(eubyte,		false,	"Height",	"8,[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp", 0.0f, 0.0f, 0.0f)	//1
+	VAR(eudword,	true,		"Color",	"-1", "NColorProp", 0.0f, 0.0f, 0.0f)	//2
+	VAR(euword,		true,		"Seed",		"5412",	"NUwordProp", 0.0f, 65535.0f, 1.0f) //3
 };
 
 

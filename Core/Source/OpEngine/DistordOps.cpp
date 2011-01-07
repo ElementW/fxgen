@@ -36,20 +36,20 @@ FIMPLEMENT_CLASS(NRotoZoomOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescRotoZoomOp[] =
 {
-	VAR(eubyte,	false, "Set Width",		"0,[0 (Default),1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//0
-	VAR(eubyte,	false, "Set Height",	"0,[0 (Default),1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp")	//1
-	VAR(efloat,		true, "CenterX",	"0.5",		"NFloatProp")	//2
-	VAR(efloat,		true, "CenterY",	"0.5",		"NFloatProp")	//3
-	VAR(efloat,		true, "Rotate",		"0.0",		"NFloatProp")	//4
-	VAR(efloat,		true, "ZoomX",		"1.0",		"NFloatProp")	//5
-	VAR(efloat,		true, "ZoomY",		"1.0",		"NFloatProp")	//6
-	VAR(eubyte,		true, "Wrap",			"1,[0 (Off), 1 (On)]",	"NUbyteComboProp")	//7
+	VAR(eubyte,	false, "Set Width",		"0,[0 (Default),1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp",0.0f, 0.0f, 0.0f)	//0
+	VAR(eubyte,	false, "Set Height",	"0,[0 (Default),1,2,4,8,16,32,64,128,256,512,1024,2048,4096]", "NUbyteComboProp",0.0f, 0.0f, 0.0f)	//1
+	VAR(efloat,		true, "CenterX",	"0.5",		"NFloatProp",-1.0f, 1.0f, 0.001f)	//2
+	VAR(efloat,		true, "CenterY",	"0.5",		"NFloatProp",-1.0f, 1.0f, 0.001f)	//3
+	VAR(efloat,		true, "Rotate",		"0.0",		"NFloatProp",-1.0f, 1.0f, 0.001f)	//4
+	VAR(efloat,		true, "ZoomX",		"1.0",		"NFloatProp",-1.0f, 1.0f, 0.001f)	//5
+	VAR(efloat,		true, "ZoomY",		"1.0",		"NFloatProp",-1.0f, 1.0f, 0.001f)	//6
+	VAR(eubyte,		true, "Wrap",			"1,[0 (Off), 1 (On)]",	"NUbyteComboProp",0.0f, 0.0f, 0.0f)	//7
 };
 
 NRotoZoomOp::NRotoZoomOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(8, blocdescRotoZoomOp, 2);
+	m_pcvarsBloc = AddVarsBloc(8, blocdescRotoZoomOp, 1);
 
 }
 
@@ -211,7 +211,7 @@ FIMPLEMENT_CLASS(NDistortOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescDistortOp[] =
 {
-	VAR(eudword,	true, "Power",	"0", "NUbyteProp")	//0
+	VAR(eudword,	true, "Power",	"0", "NUbyteProp", 0.0f, 255.0f, 1.0f)	//0
 };
 
 NDistortOp::NDistortOp()
@@ -339,11 +339,11 @@ FIMPLEMENT_CLASS(NVortexOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescVortexOp[] =
 {
-	VAR(efloat,             true, "CenterX",        "0.5",          "NFloatProp")   //0
-	VAR(efloat,             true, "CenterY",        "0.5",          "NFloatProp")   //1
-	VAR(efloat,             true, "RayX",           "0.5",          "NFloatProp")   //2
-	VAR(efloat,             true, "RayY",           "0.5",          "NFloatProp")   //3
-	VAR(efloat,             true, "Twist",      "1.28",             "NFloatProp")   //4
+	VAR(efloat,  true, "CenterX",  "0.5",  "NFloatProp", -1.0f, 1.0f, 0.001f)   //0
+	VAR(efloat,  true, "CenterY",  "0.5",  "NFloatProp", -1.0f, 1.0f, 0.001f)   //1
+	VAR(efloat,  true, "RayX",     "0.5",  "NFloatProp", -1.0f, 1.0f, 0.001f)   //2
+	VAR(efloat,  true, "RayY",     "0.5",  "NFloatProp", -1.0f, 1.0f, 0.001f)   //3
+	VAR(efloat,  true, "Twist",    "1.28", "NFloatProp", -100.0f, 100.0f, 0.001f)   //4
 };
 
 
