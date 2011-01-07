@@ -33,8 +33,8 @@ FIMPLEMENT_CLASS(NController, NObject);
 
 static NVarsBlocDesc blocdescControllersOp[] =
 {
-	VAR(eubyte,	false, "Channel",			"0",								"NUbyteProp")	//0
-	VAR(efloat,	false, "Factor",			"1.0",							"NFloatProp")	//1
+	VAR(eubyte,	false, "Channel",	"0",		"NUbyteProp", 0.0f, 255.0f, 1.0f)	//0
+	VAR(efloat,	false, "Factor",	"1.0",	"NFloatProp", 0.0f, 100.0f, 0.1f)	//1
 };
 
 //-----------------------------------------------------------------

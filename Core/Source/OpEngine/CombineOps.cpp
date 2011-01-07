@@ -69,17 +69,17 @@ FIMPLEMENT_CLASS(NRectOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescRectOp[] =
 {
-	VAR(eudword,	true, "Color",	"-1",		"NColorProp")	//0
-	VAR(efloat,		true, "x1",			"0.0",	"NFloatProp")	//1
-	VAR(efloat,		true, "y1",			"0.0",	"NFloatProp")	//2
-	VAR(efloat,		true, "x2",			"0.5",	"NFloatProp")	//3
-	VAR(efloat,		true, "y2",			"0.5",	"NFloatProp")	//4
+	VAR(eudword,	true, "Color",	"-1",		"NColorProp", 0.0f, 0.0f, 0.0f)	//0
+	VAR(efloat,		true, "x1",			"0.0",	"NFloatProp", -1.0f, 1.0f, 0.001f)	//1
+	VAR(efloat,		true, "y1",			"0.0",	"NFloatProp", -1.0f, 1.0f, 0.001f)	//2
+	VAR(efloat,		true, "x2",			"0.5",	"NFloatProp", -1.0f, 1.0f, 0.001f)	//3
+	VAR(efloat,		true, "y2",			"0.5",	"NFloatProp", -1.0f, 1.0f, 0.001f)	//4
 };
 
 NRectOp::NRectOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(5, blocdescRectOp, 2);
+	m_pcvarsBloc = AddVarsBloc(5, blocdescRectOp, 1);
 }
 
 udword NRectOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
@@ -145,9 +145,9 @@ FIMPLEMENT_CLASS(NPixelsOp,NOperatorFx);
 
 static NVarsBlocDesc blocdescPixelsOp[] =
 {
-	VAR(eudword,	true, "Color",	"-1",			"NColorProp")	//0
-	VAR(euword,		true, "Seed",		"5412",		"NUwordProp")	//1
-	VAR(eubyte,		true, "Count",	"128",		"NUbyteProp")	//2
+	VAR(eudword,	true, "Color",	"-1",			"NColorProp", 0.0f, 0.0f, 0.0f )	//0
+	VAR(euword,		true, "Seed",		"5412",		"NUwordProp", 0.0f, 65535.0f, 1.0f)	//1
+	VAR(eubyte,		true, "Count",	"128",		"NUbyteProp", 0.0f, 255.0f, 1.0f)	//2
 };
 
 NPixelsOp::NPixelsOp()
@@ -209,8 +209,8 @@ FIMPLEMENT_CLASS(NAddOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescAddOp[] =
 {
-	VAR(eubyte,		false, "Mode",				"8,[Add Clamp,Add Wrap,Sub Clamp,Sub Wrap,Multiply,Multiply x2,Blend,Alpha,Layer]", "NUbyteComboProp")	//0
-	VAR(eudword,	true,	 "RGB Percent",	"-1" , "NColorProp")			//1
+	VAR(eubyte,		false, "Mode",				"8,[Add Clamp,Add Wrap,Sub Clamp,Sub Wrap,Multiply,Multiply x2,Blend,Alpha,Layer]", "NUbyteComboProp", 0.0f, 0.0f, 0.0f)	//0
+	VAR(eudword,	true,	 "RGB Percent",	"-1" , "NColorProp", 0.0f, 0.0f, 0.0f)			//1
 };
 
 NAddOp::NAddOp()
@@ -477,13 +477,13 @@ FIMPLEMENT_CLASS(NGlowOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescGlowOp[] =
 {
-	VAR(eudword,	true, "Color",		"-1",			"NColorProp")	//0
-	VAR(efloat,		true, "CenterX",	"0.5",		"NFloatProp")	//1
-	VAR(efloat,		true, "CenterY",	"0.5",		"NFloatProp")	//2
-	VAR(efloat,		true, "RayX",			"0.5",		"NFloatProp")	//3
-	VAR(efloat,		true, "RayY",			"0.5",		"NFloatProp")	//4
-	VAR(efloat,		true, "Alpha",		"1.0",		"NFloatProp")	//5
-	VAR(efloat,		true, "Gamma",		"1.0",		"NFloatProp")	//6
+	VAR(eudword,	true, "Color",		"-1",			"NColorProp", 0.0f, 0.0f, 0.0f)	//0
+	VAR(efloat,		true, "CenterX",	"0.5",		"NFloatProp", -1.0f, 1.0f, 0.001f)	//1
+	VAR(efloat,		true, "CenterY",	"0.5",		"NFloatProp", -1.0f, 1.0f, 0.001f)	//2
+	VAR(efloat,		true, "RayX",			"0.5",		"NFloatProp", -1.0f, 1.0f, 0.001f)	//3
+	VAR(efloat,		true, "RayY",			"0.5",		"NFloatProp", -1.0f, 1.0f, 0.001f)	//4
+	VAR(efloat,		true, "Alpha",		"1.0",		"NFloatProp", 0.0f, 1.0f, 0.001f)	//5
+	VAR(efloat,		true, "Gamma",		"1.0",		"NFloatProp", 0.0f, 1.0f, 0.001f)	//6
 };
 
 
@@ -582,19 +582,19 @@ FIMPLEMENT_CLASS(NCrackOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescCrackOp[] =
 {
-	VAR(eudword,	true, "Color",			"-1",		"NColorProp")	//0
-	VAR(euword,		true, "Count",			"100",	"NUwordProp") //1
-	VAR(eubyte,		true, "Variation",	"64",		"NUbyteProp") //2
-	VAR(eubyte,		true, "Length",			"255",	"NUbyteProp") //3
-	VAR(euword,		true, "Seed",				"5412",	"NUwordProp") //4
-	VAR(eubyte,		true, "Length decision", "0,[Random,Constant,Normal based]",	"NUbyteComboProp") //5
-	VAR(eubyte,		true, "High quality", "0,[Off,Alpha,Subpixel]",	"NUbyteComboProp") //6
+	VAR(eudword,	true, "Color",			"-1",		"NColorProp", 0.0f, 0.0f, 0.0f)	//0
+	VAR(euword,		true, "Count",			"100",	"NUwordProp", 0.0f, 65535.0f, 1.0f) //1
+	VAR(eubyte,		true, "Variation",	"64",		"NUbyteProp", 0.0f, 255.0f, 1.0f) //2
+	VAR(eubyte,		true, "Length",			"255",	"NUbyteProp", 0.0f, 255.0f, 1.0f) //3
+	VAR(euword,		true, "Seed",				"5412",	"NUwordProp", 0.0f, 65535.0f, 1.0f) //4
+	VAR(eubyte,		true, "Length decision", "0,[Random,Constant,Normal based]",	"NUbyteComboProp", 0.0f, 0.0f, 0.0f) //5
+	VAR(eubyte,		true, "High quality", "0,[Off,Alpha,Subpixel]",	"NUbyteComboProp", 0.0f, 0.0f, 0.0f) //6
 };
 
 NCrackOp::NCrackOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(7, blocdescCrackOp, 2);
+	m_pcvarsBloc = AddVarsBloc(7, blocdescCrackOp, 1);
 }
 
 udword NCrackOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)

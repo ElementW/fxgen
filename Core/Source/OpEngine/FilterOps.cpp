@@ -37,16 +37,16 @@ FIMPLEMENT_CLASS(NBlurOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescBlurOp[] =
 {
-	VAR(efloat,		true, "Width",		"0.01",		"NFloatProp")	//0
-	VAR(efloat,		true, "Height",		"0.01",		"NFloatProp")	//1
-	VAR(eubyte,		true, "Amplify",	"16",		"NUbyteProp")	//2
-	VAR(eubyte,		false, "Type",	"0,[Box,Gaussian]",	"NUbyteComboProp")	//3
+	VAR(efloat,		true, "Width",		"0.01",		"NFloatProp", 0.0f, 100.0f, 0.001f)	//0
+	VAR(efloat,		true, "Height",		"0.01",		"NFloatProp", 0.0f, 100.0f, 0.001f)	//1
+	VAR(eubyte,		true, "Amplify",	"16",		"NUbyteProp", 0.0f, 255.0f, 1.0f)	//2
+	VAR(eubyte,		false, "Type",	"0,[Box,Gaussian]",	"NUbyteComboProp", 0.0f, 0.0f, 0.0f)	//3
 };
 
 NBlurOp::NBlurOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(4, blocdescBlurOp, 3);
+	m_pcvarsBloc = AddVarsBloc(4, blocdescBlurOp, 1);
 }
 
 udword NBlurOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
@@ -287,20 +287,19 @@ FIMPLEMENT_CLASS(NColorsOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescColorsOp[] =
 {
-	//eubyte,		false,	"Mode",				"0,[RGB,HLS]",	"NUbyteComboProp",	//0
-	VAR(eudword,	true,		"Color Base",			"0",					"NColorProp")				//0
-	VAR(eudword,	true,		"Color Percent",		"-1",					"NColorProp")				//1
-	VAR(eubyte,		true,		"Brithness",			"127",					"NUbyteProp")				//2
-	VAR(eubyte,		true,		"Contrast",				"127",					"NUbyteProp")				//3
-	VAR(eubyte,		true,		"Saturation",			"127",					"NUbyteProp")				//4
-	VAR(eubyte,		true,		"Alpha",				"127",					"NUbyteProp")				//5
+	VAR(eudword,	true,		"Color Base",			"0",					"NColorProp", 0.0f, 0.0f, 0.0f)				//0
+	VAR(eudword,	true,		"Color Percent",		"-1",					"NColorProp", 0.0f, 0.0f, 0.0f)				//1
+	VAR(eubyte,		true,		"Brithness",			"127",					"NUbyteProp", 0.0f, 255.0f, 1.0f)				//2
+	VAR(eubyte,		true,		"Contrast",				"127",					"NUbyteProp", 0.0f, 255.0f, 1.0f)				//3
+	VAR(eubyte,		true,		"Saturation",			"127",					"NUbyteProp", 0.0f, 255.0f, 1.0f)				//4
+	VAR(eubyte,		true,		"Alpha",				"127",					"NUbyteProp", 0.0f, 255.0f, 1.0f)				//5
 };
 
 
 NColorsOp::NColorsOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(6, blocdescColorsOp, 3);
+	m_pcvarsBloc = AddVarsBloc(6, blocdescColorsOp, 1);
 }
 
 udword NColorsOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
@@ -443,16 +442,16 @@ FIMPLEMENT_CLASS(NLightOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescLightOp[] =
 {
-	VAR(eudword,	true, "Ambiant",		"0",				"NColorProp")	//0
-	VAR(eudword,	true, "Diffuse",		"8421504",	"NColorProp")	//1
-	VAR(eudword,	true, "Specular",		"-1",				"NColorProp")	//2
+	VAR(eudword,	true, "Ambiant",		"0",				"NColorProp", 0.0f, 0.0f, 0.0f)	//0
+	VAR(eudword,	true, "Diffuse",		"8421504",	"NColorProp", 0.0f, 0.0f, 0.0f)	//1
+	VAR(eudword,	true, "Specular",		"-1",				"NColorProp", 0.0f, 0.0f, 0.0f)	//2
 
-	VAR(eubyte,		true, "PosX",				"255",			"NUbyteProp")	//3
-	VAR(eubyte,		true, "PosY",				"255",			"NUbyteProp")	//4
-	VAR(eubyte,		true, "PosZ",				"127",			"NUbyteProp")	//5
+	VAR(eubyte,		true, "PosX",				"255",			"NUbyteProp", 0.0f, 255.0f, 1.0f)	//3
+	VAR(eubyte,		true, "PosY",				"255",			"NUbyteProp", 0.0f, 255.0f, 1.0f)	//4
+	VAR(eubyte,		true, "PosZ",				"127",			"NUbyteProp", 0.0f, 255.0f, 1.0f)	//5
 
-	VAR(eubyte,		true, "Specular power",		"0",			"NUbyteProp")	//6
-	VAR(eubyte,		true, "Bump power",				"0",			"NUbyteProp")	//7
+	VAR(eubyte,		true, "Specular power",		"0",			"NUbyteProp", 0.0f, 255.0f, 1.0f)	//6
+	VAR(eubyte,		true, "Bump power",				"0",			"NUbyteProp", 0.0f, 255.0f, 1.0f)	//7
 };
 
 
@@ -534,12 +533,13 @@ udword NLightOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFa
 			n.normalize();
 
 			//compute the dot product between normal and light dir
-			float fdot;
+			float fdot, fdot2;
 			dot(fdot, n, light);
 			if (fdot<0.0f)	fdot=0.0f;
 
 			//Add bump on normal
 			fdot*=fBumpPower;
+			fdot2 = fdot*fdot;
 
 			/*float fdotSpec=0.0;
 			if (dot > 0.0) {
@@ -551,13 +551,9 @@ udword NLightOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFa
 			}*/
 
 			// Color = ambient + dif*dot + dot^2 * spec
-			sdword r	= (sdword) (Ambiant.r + (fdot*Diffuse.r) + (fdot*fdot*Specular.r*fSpecularPower));
-			sdword g	= (sdword) (Ambiant.g + (fdot*Diffuse.g) + (fdot*fdot*Specular.g*fSpecularPower));
-			sdword b	= (sdword) (Ambiant.b + (fdot*Diffuse.b) + (fdot*fdot*Specular.b*fSpecularPower));
-
-			//sdword r	= pPxSrc->r + (fdot * pPxSrc->r);
-			//sdword g	= pPxSrc->g + (fdot * pPxSrc->g);
-			//sdword b	= pPxSrc->b + (fdot * pPxSrc->b);
+			sdword r	= (sdword) (Ambiant.r + (fdot*Diffuse.r) + (fdot2*Specular.r*fSpecularPower));
+			sdword g	= (sdword) (Ambiant.g + (fdot*Diffuse.g) + (fdot2*Specular.g*fSpecularPower));
+			sdword b	= (sdword) (Ambiant.b + (fdot*Diffuse.b) + (fdot2*Specular.b*fSpecularPower));
 
 			//Summ
 			r = (pPxSrc->r + r) / 2;
@@ -591,7 +587,7 @@ FIMPLEMENT_CLASS(NNormalsOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescNormalsOp[] =
 {
-	VAR(eudword,	true, "Amplify",	"64", "NUbyteProp")	//0
+	VAR(eudword,	true, "Amplify",	"64", "NUbyteProp", 0.0f, 255.0f, 1.0f)	//0
 };
 
 
@@ -714,15 +710,15 @@ FIMPLEMENT_CLASS(NAbnormalsOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescAbnormalsOp[] =
 {
-	VAR(eubyte,	false, "Rotation",	"", "")	//0
-	VAR(efloat,	true, "w",	"0.0", "NFloatProp")	//1 "1.0" is full angle
-	VAR(efloat,	true, "x",	"0.0", "NFloatProp")	//2
-	VAR(efloat,	true, "y",	"0.0", "NFloatProp")	//3
-	VAR(efloat,	true, "z",	"1.0", "NFloatProp")	//4
-	VAR(eubyte,	false, "Options",	"", "")	//5
-	VAR(eubyte,	true, "Sensitivity",	"127", "NUbyteProp")	//6
-	VAR(eubyte,	true, "Compensation",	"0,[Normal,Height,Quaternion]", "NUbyteComboProp")	//7
-	VAR(eubyte,	true, "Mirror",	"0,[None,X : YZ,Y : XZ,X+Y : Z]", "NUbyteComboProp")	//8
+	VAR(eubyte,	false, "Rotation",	"0.0", "NUbyteProp", 0.0f, 255.0f, 1.0f)	//0
+	VAR(efloat,	true, "w",	"0.0", "NFloatProp", 0.0f, 1.0f, 0.001f)	//1 "1.0" is full angle
+	VAR(efloat,	true, "x",	"0.0", "NFloatProp", -1.0f, 1.0f, 0.001f)	//2
+	VAR(efloat,	true, "y",	"0.0", "NFloatProp", -1.0f, 1.0f, 0.001f)	//3
+	VAR(efloat,	true, "z",	"1.0", "NFloatProp", -1.0f, 1.0f, 0.001f)	//4
+	VAR(eubyte,	false, "Options",	"0.0", "NUbyteProp",0.0f, 255.0f, 1.0f)	//5
+	VAR(eubyte,	true, "Sensitivity",	"127", "NUbyteProp",0.0f, 255.0f, 1.0f)	//6
+	VAR(eubyte,	true, "Compensation",	"0,[Normal,Height,Quaternion]", "NUbyteComboProp",0.0f, 0.0f, 0.0f)	//7
+	VAR(eubyte,	true, "Mirror",	"0,[None,X : YZ,Y : XZ,X+Y : Z]", "NUbyteComboProp",0.0f, 0.0f, 0.0f)	//8
 };
 
 
@@ -849,7 +845,7 @@ FIMPLEMENT_CLASS(NSlopeMagnitudeOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescNSlopeMagnitudeOp[] =
 {
-	VAR(eudword,	true, "Amplify",	"64", "NUbyteProp")	//0
+	VAR(eudword,	true, "Amplify",	"64", "NUbyteProp",0.0f, 255.0f, 1.0f)	//0
 };
 
 
@@ -1025,9 +1021,9 @@ FIMPLEMENT_CLASS(NThresholdOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescThresholdOp[] =
 {
-	VAR(eubyte,		true, "Threshold",	"128",	"NUbyteProp")	//0
-	VAR(eubyte,		true, "Ratio",	"128",		"NUbyteProp")	//1
-	VAR(eubyte,		false, "Mode",				"0,[Expand Downwards, Expand Upwards, Compress Below, Compress Above]", "NUbyteComboProp")	//2
+	VAR(eubyte,		true, "Threshold",	"128",	"NUbyteProp",0.0f, 255.0f, 1.0f)	//0
+	VAR(eubyte,		true, "Ratio",	"128",		"NUbyteProp",0.0f, 255.0f, 1.0f)	//1
+	VAR(eubyte,		false, "Mode",				"0,[Expand Downwards, Expand Upwards, Compress Below, Compress Above]", "NUbyteComboProp",0.0f, 0.0f, 0.0f)	//2
 };
 
 NThresholdOp::NThresholdOp()
@@ -1215,7 +1211,7 @@ FIMPLEMENT_CLASS(NSegmentOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescSegmentOp[] =
 {
-	VAR(eubyte,		true, "Threshold",	"128",	"NUbyteProp")	//0
+	VAR(eubyte,		true, "Threshold",	"128",	"NUbyteProp",0.0f, 255.0f, 1.0f)	//0
 };
 
 NSegmentOp::NSegmentOp()
@@ -1328,7 +1324,7 @@ FIMPLEMENT_CLASS(NDilateOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescDilateOp[] =
 {
-	VAR(eubyte,		true, "Iterations",	"10",	"NUbyteProp")	//0
+	VAR(eubyte,		true, "Iterations",	"10",	"NUbyteProp",0.0f, 255.0f, 1.0f)	//0
 };
 
 NDilateOp::NDilateOp()
@@ -1420,7 +1416,7 @@ FIMPLEMENT_CLASS(NAlphaMaskOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescAlphaMaskOp[] =
 {
-	VAR(eubyte,		true, "Color Alpha Mask",			"0,[0 (Off), 1 (On)]",	"NUbyteComboProp")	//7
+	VAR(eubyte,		true, "Color Alpha Mask",			"0,[0 (Off), 1 (On)]",	"NUbyteComboProp",0.0f, 0.0f, 0.0f)	//7
 };
 
 

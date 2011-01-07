@@ -34,7 +34,7 @@ FIMPLEMENT_CLASS(NStoreOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescStoreOp[] =
 {
-	VAR(estring,	false, "Name", "",	"NStringProp")	//0
+	VAR(estring,	false, "Name", "",	"NStringProp", 0.0f, 0.0f, 0.0f)	//0
 };
 
 NStoreOp::NStoreOp()
@@ -90,14 +90,14 @@ FIMPLEMENT_CLASS(NStoreResultOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescStoreResultOp[] =
 {
-	VAR(estring,	false, "Name", "",	"NStringProp")	//0
-	VAR(eubyte,	false, "Type", "0,[Preview,Diffuse,Normal,Specular,Height]",	"NUbyteComboProp")	//1
+	VAR(estring,	false, "Name", "",	"NStringProp", 0.0f, 0.0f, 0.0f)	//0
+	VAR(eubyte,	false, "Type", "0,[Preview,Diffuse,Normal,Specular,Height]",	"NUbyteComboProp", 0.0f, 0.0f, 0.0f)	//1
 };
 
 NStoreResultOp::NStoreResultOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(2, blocdescStoreResultOp, 2);
+	m_pcvarsBloc = AddVarsBloc(2, blocdescStoreResultOp, 1);
 }
 
 NStoreResultOp::~NStoreResultOp()
@@ -157,7 +157,7 @@ FIMPLEMENT_CLASS(NLoadOp, NOperatorFx);
 
 static NVarsBlocDesc blocdescLoadOp[] =
 {
-	VAR(erefobj,	false, "Load",	"0", "NUseStoredOpsProp")	//0
+	VAR(erefobj,	false, "Load",	"0", "NUseStoredOpsProp", 0.0f, 0.0f, 0.0f)	//0
 };
 
 NLoadOp::NLoadOp()
@@ -221,12 +221,12 @@ FIMPLEMENT_CLASS(NChannelAnimFX1Op, NOperatorFx);
 
 static NVarsBlocDesc blocdescChanAnimFX1Op[] =
 {
-	VAR(eubyte,	false, "Channel",			"0",								"NUbyteProp")	//0
-	VAR(eubyte,	false, "Type",				"0,[Linear,Sine]",	"NUbyteComboProp")	//1
-	VAR(efloat,	true, "Start Value",	"0.0",							"NFloatProp")	//2
-	VAR(efloat,	true, "End Value",		"1.0",							"NFloatProp")	//3
-	VAR(efloat,	true, "Factor",				"1.0",							"NFloatProp")	//4
-	VAR(eubyte,	true, "Repeat",				"0",								"NUbyteProp")	//5
+	VAR(eubyte,	false, "Channel",			"0",								"NUbyteProp", 0.0f, 0.0f, 0.0f)	//0
+	VAR(eubyte,	false, "Type",				"0,[Linear,Sine]",	"NUbyteComboProp", 0.0f, 0.0f, 0.0f)	//1
+	VAR(efloat,	true, "Start Value",	"0.0",							"NFloatProp", -1.0f, 1.0f, 0.001f)	//2
+	VAR(efloat,	true, "End Value",		"1.0",							"NFloatProp", -1.0f, 1.0f, 0.001f)	//3
+	VAR(efloat,	true, "Factor",				"1.0",							"NFloatProp", 0.0f, 1000.0f, 0.001f)	//4
+	VAR(eubyte,	true, "Repeat",				"0",								"NUbyteProp", 0.0f, 255.0f, 1.0f)	//5
 };
 
 NChannelAnimFX1Op::NChannelAnimFX1Op()
