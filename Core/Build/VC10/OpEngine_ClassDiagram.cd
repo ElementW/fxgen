@@ -1,32 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="NEngineOp">
-    <Position X="2.5" Y="0.5" Width="1.5" />
+    <Position X="0.5" Y="0.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>gAAAAAASJBAQAAQoQAACJxCBEACAGEABAgAkESBAAgA=</HashCode>
-      <FileName>c:\temp\download\perso\fxgen\fxgen\core\source\opengine\engineop.h</FileName>
+      <HashCode>gAAAAAACJBAAAAQIQAAAIwCBFACAGEAAAgAgEQBAAgA=</HashCode>
+      <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\OpEngine\EngineOp.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="NObject" Collapsed="true">
+  <Class Name="NObject">
     <Position X="5.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAIQwIAAAAAEBCgAASIAQEACgAIAIAAAABAYQAAABCA=</HashCode>
-      <FileName>C:\temp\Download\Perso\FxGen\FxGen\Core\Source\Core.h</FileName>
+      <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\Core.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="NOperatorFx" Collapsed="true">
-    <Position X="5.25" Y="2.5" Width="1.5" />
+  <Class Name="NCompiledAsset">
+    <Position X="3" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAgIEIAIQAAAAIAwAEAAIAAAAAoMjAAAAJEACABAA=</HashCode>
-      <FileName>c:\temp\download\perso\fxgen\fxgen\core\source\opengine\engineop.h</FileName>
+      <HashCode>AAAAgIAAAAAAAAAAAAAAAAAAAAAAIAQAAAABAAAAACA=</HashCode>
+      <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\OpEngine\EngineOp.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="NOpGraphModel">
-    <Position X="8.25" Y="1.75" Width="1.5" />
+  <Class Name="NBitmap" Collapsed="true">
+    <Position X="7.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAgIFACAAAASAAASBAhAgCAgAAICCAQAAAACAIAAA=</HashCode>
-      <FileName>c:\temp\download\perso\fxgen\fxgen\core\source\opengine\engineop.h</FileName>
+      <HashCode>AAABAAAAIAAAASAAAAAIgABAAAAAAABAAAAAAEAAgAA=</HashCode>
+      <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\OpEngine\Bitmap.h</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="NVarsBloc">
+    <Position X="7.75" Y="3" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAgIIAMIAAAgBAiQCAAAQQAAAwAAABABACgAAAAAA=</HashCode>
+      <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\Core.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NOperatorFx">
+    <Position X="3" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAgIEIAIAAAAAIgwAAAAIAAAAAgADAAAAJEACCBAA=</HashCode>
+      <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\OpEngine\EngineOp.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="NVarsBlocDesc">
+    <Position X="10.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAACAAAQABAgAAEAAAAgAAgAAAA=</HashCode>
+      <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\Core.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="NVarValue">
+    <Position X="10.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\Core.h</FileName>
+    </TypeIdentifier>
+  </Struct>
   <Font Name="Tahoma" Size="8.25" />
 </ClassDiagram>

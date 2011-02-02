@@ -20,9 +20,6 @@
 //									Includes
 //-----------------------------------------------------------------
 #include "CoreLibPkg.h"
-/*#include "Core.h"
-#include "GUI.h"
-#include "StandardsCtrl.h"*/
 
 //-----------------------------------------------------------------
 //									Prototypes
@@ -67,7 +64,7 @@ protected:
 public:
 	NVarsBloc*			m_pvarBloc;			//!< Variable bloc
 	NVarsBlocDesc*	m_pvarBlocDesc;	//!< Variable Description
-	NVarValue*			m_pvarValue;		//!< Variable Value Ptr	//###TOREMOVE### see m_dwvarIdx
+	//NVarValue*			m_pvarValue;		//!< Variable Value Ptr	//###TOREMOVE### see m_dwvarIdx
 	udword					m_dwvarIdx;			//!< Variable indice in bloc
 
 	NGUIWnd*			m_pParent;				//!< Parent windows (ie CPropertiesCtrl)

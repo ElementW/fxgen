@@ -269,10 +269,12 @@ void NOpGraphModel::ComputeLinks()
 	while (m_arrayOpsUnlinked.Count())
 	{
 		NOperatorNode* pop = (NOperatorNode*)m_arrayOpsUnlinked[0];
+
+		NOperatorNode* popStart = GetStartOpFrom(pop);	//From Graphical position
 		NOperatorNode* popFinal = GetFinalOpFrom(pop);	//From Graphical position
 
 		m_pprevOp = null;
-		_ComputeLinks(popFinal, null, 0);
+		_ComputeLinks(popStart, popFinal, null, 0);
 	}
 
 	/////////////////////////////////////////////////////
@@ -300,6 +302,7 @@ void NOpGraphModel::ComputeLinks()
 //-----------------------------------------------------------------
 //!	\brief	Compute links between operators
 //!
+//!	\param	__popStart	start operator
 //!	\param	_pop				current operator
 //!	\param	_pprevop		previous operator
 //!	\param	_dwCurDepth	current depth in tree
@@ -307,7 +310,7 @@ void NOpGraphModel::ComputeLinks()
 //! \note Recurse method used by ComputeLinks()
 //!				ComputeLinks scan operators from graphical position (bottom -> top)
 //-----------------------------------------------------------------
-void NOpGraphModel::_ComputeLinks(NOperatorNode* _pop, NOperatorNode* _pprevop, udword _dwCurDepth)
+void NOpGraphModel::_ComputeLinks(NOperatorNode* _popStart, NOperatorNode* _pop, NOperatorNode* _pprevop, udword _dwCurDepth)
 {
 /*	if (_pprevop)
 		TRACE("\t_ComputeLinks %s PrevOP %s dwCurDepth %d\n", _pop->GetName(), _pprevop->GetName(), _dwCurDepth );
@@ -321,6 +324,10 @@ void NOpGraphModel::_ComputeLinks(NOperatorNode* _pop, NOperatorNode* _pprevop, 
 		_pop->m_op->m_pnextOpToProcess = null;
 
 	_pop->m_op->m_pprevOpToProcess = null;
+
+	_pop->m_op->m_proot = null;
+	if (_popStart)
+		_pop->m_op->m_proot = _popStart->m_op;
 
 	if (m_pprevOp)
 		m_pprevOp->m_op->m_pprevOpToProcess = _pop->m_op;
@@ -352,7 +359,7 @@ void NOpGraphModel::_ComputeLinks(NOperatorNode* _pop, NOperatorNode* _pprevop, 
 
 		//Compute previous operators
 		if (carray2[0] == _pop)
-			_ComputeLinks(pprevOp, _pop, _dwCurDepth);
+			_ComputeLinks(_popStart, pprevOp, _pop, _dwCurDepth);
 	}
 
 }
@@ -413,6 +420,27 @@ void NOpGraphModel::GetNextOperators(NOperatorNode* pop, NObjectArray& carrayNex
 		carrayNextOpS.AddItem(pccurOP);
 	}
 
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Return start operator from graphical position
+//!	\param	_pop	operator
+//!	\return final operator
+//-----------------------------------------------------------------
+NOperatorNode* NOpGraphModel::GetStartOpFrom(NOperatorNode* _pop)
+{
+	if (!_pop)		return null;
+
+	NObjectArray	carray;
+	for(;;)
+	{
+		carray.Clear();
+		GetPrevOperators(_pop, carray);
+		if (carray.Count()==0)	break;
+		_pop=(NOperatorNode*)carray[0];
+	}
+
+	return _pop;
 }
 
 

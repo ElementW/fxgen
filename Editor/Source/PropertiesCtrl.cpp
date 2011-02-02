@@ -177,7 +177,8 @@ void NPropertiesCtrl::OnPaint(N2DPainter* _ppainter)
 
 			//Check if value can be animated
 			bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc->bCanBeAnimate;
-			bool bAnimated		 = prd->pItem->m_pvarValue->pcCtrlObj!=null;
+			//bool bAnimated		 = prd->pItem->m_pvarValue->pcCtrlObj!=null;
+			bool bAnimated = prd->pItem->m_pvarBloc->IsValueAnimated(prd->pItem->m_dwvarIdx);
 
 			//Display Right Part
 			rcRow.left = rcRow.right;
@@ -415,7 +416,6 @@ void NPropertiesCtrl::_DisplayObjectProperties(NObject* _pobj, udword _dwDepth)
 	while (pbloc)
 	{
 		NVarsBlocDesc*	pblocdesc	= pbloc->GetBlocDesc();
-		NVarValue*			pvalues		= pbloc->GetValues();
 
 		//Add a Group for this bloc
 		AddGroup(_pobj->GetName(), _dwDepth);	//##TOFIX### variable bloc name
@@ -424,7 +424,7 @@ void NPropertiesCtrl::_DisplayObjectProperties(NObject* _pobj, udword _dwDepth)
 		for (udword i=0; i<pbloc->Count(); i++)
 		{
 			//Add a row for each vars
-			AddVarProperties(pbloc, pblocdesc+i, pvalues+i, i, _dwDepth+1);
+			AddVarProperties(pbloc, pblocdesc+i, i, _dwDepth+1);
 		}
 
 		//pblocdesc=pblocdesc->	//###TOFIX### Next Bloc
@@ -444,13 +444,12 @@ void NPropertiesCtrl::_DisplayAnimationObjectProperties(NObject* _pobj, udword _
 	while (pbloc)
 	{
 		NVarsBlocDesc*	pblocdesc	= pbloc->GetBlocDesc();
-		NVarValue*			pvalues		= pbloc->GetValues();
 
 		//Parse Vars for this bloc
 		for (udword i=0; i<pbloc->Count(); i++)
 		{
 			//Animation for this variable?
-			NObject* pctrlObj = pvalues[i].pcCtrlObj;
+			NObject* pctrlObj = pbloc->GetValueControler(i);
 			if (pctrlObj!=null)
 			{
 				NString str;
@@ -490,7 +489,7 @@ udword NPropertiesCtrl::AddGroup(const char* pszName, udword _dwDepth)
 //-----------------------------------------------------------------
 //!	\brief	Add a var property
 //-----------------------------------------------------------------
-udword NPropertiesCtrl::AddVarProperties(NVarsBloc* _pvarBloc, NVarsBlocDesc* _pvarBlocDesc, NVarValue* _pvarValue, udword _dwvarIdx, udword _dwDepth)
+udword NPropertiesCtrl::AddVarProperties(NVarsBloc* _pvarBloc, NVarsBlocDesc* _pvarBlocDesc, udword _dwvarIdx, udword _dwDepth)
 {
 	NRowDesc				rd;
 	rd.strName			= _pvarBlocDesc->pszName;
@@ -509,7 +508,6 @@ udword NPropertiesCtrl::AddVarProperties(NVarsBloc* _pvarBloc, NVarsBlocDesc* _p
 
 		rd.pItem->m_pvarBloc			= _pvarBloc;
 		rd.pItem->m_pvarBlocDesc	= _pvarBlocDesc;
-		rd.pItem->m_pvarValue			= _pvarValue;
 		rd.pItem->m_dwvarIdx			= _dwvarIdx;
 
 		rd.pItem->Init();
@@ -700,10 +698,12 @@ bool NPropertiesCtrl::IsAnimButtonUnderPoint(NPoint& _pt)
 //-----------------------------------------------------------------
 void NPropertiesCtrl::AddRemoveAnimControlToRow(udword _dwRowIdx)
 {
-	NRowDesc* prd = &m_carrayRowsDesc[_dwRowIdx];
-	//bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc[prd->pItem->m_dwvarIdx].bCanBeAnimate;
+	/*NRowDesc* prd = &m_carrayRowsDesc[_dwRowIdx];
+
 	bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc->bCanBeAnimate;
-	if (bCanBeAnimate && prd->pItem->m_pvarValue->pcCtrlObj==null)
+	bool bIsAnimate = prd->pItem->m_pvarBloc->IsAnimated(prd->pItem->m_dwvarIdx);
+
+	if (bCanBeAnimate && !bIsAnimate)
 	{
 		prd->pItem->m_pvarValue->pcCtrlObj = new NController();
 		DisplayObjectProperties(m_pobj);
@@ -714,7 +714,7 @@ void NPropertiesCtrl::AddRemoveAnimControlToRow(udword _dwRowIdx)
 	}
 
 	//Send Message
-	OnPropertiesChanged();
+	OnPropertiesChanged();*/
 
 }
 

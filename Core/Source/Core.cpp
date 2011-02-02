@@ -236,6 +236,26 @@ bool NVarsBloc::IsAnimated()
 	return false;
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Return true if variable is animated
+//!	\return	True if variable is animated
+//-----------------------------------------------------------------
+bool NVarsBloc::IsValueAnimated(udword _idx)
+{
+	NVarValue* pval = m_paVarsValues + _idx;
+	if (pval->pcCtrlObj!=null)			return true;
+	return false;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Return controler for a value
+//!	\return	Return NObject* for controler
+//-----------------------------------------------------------------
+NObject* NVarsBloc::GetValueControler(udword _idx)
+{
+	NVarValue* pval = m_paVarsValues + _idx;
+	return pval->pcCtrlObj;
+}
 
 //-----------------------------------------------------------------
 //!	\brief	Return variable's value by indice
@@ -574,8 +594,6 @@ bool NObject::Load(NArchive* _l)
 //!	\brief	Duplicate this object
 //!	\return	Object duplicated pointer
 //-----------------------------------------------------------------
-
-
 NObject* NObject::Duplicate()
 {
 	NObject* pobjClone = NRTClass::CreateByName( GetRTClass()->m_pszClassName );
@@ -589,7 +607,7 @@ NObject* NObject::Duplicate()
 		NVarsBloc* pcurvarblocClone = pobjClone->m_pcfirstVarsBloc;
 		while (pcurvarbloc)
 		{
-			memcpy(pcurvarblocClone->GetValues(), pcurvarbloc->GetValues(), pcurvarbloc->Count() * sizeof(NVarValue));
+			memcpy(pcurvarblocClone->m_paVarsValues, pcurvarbloc->m_paVarsValues, pcurvarbloc->Count() * sizeof(NVarValue));
 			pcurvarbloc = m_pcfirstVarsBloc->m_pcnextVarsBloc;
 			pcurvarblocClone = pobjClone->m_pcfirstVarsBloc->m_pcnextVarsBloc;
 		}

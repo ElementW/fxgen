@@ -1,5 +1,34 @@
+SVN
+--------------
+.Removed NVarValue direct access
+.NOperatorFx GetRoot optimized
+
 TODO
 -------------
+now 'load' operators could reference differents assets
+	.see own to managed NObject serialization if present into another asset !
+	.into NArchive add archives dependences !
+
+.if C# designer version
+	.expose C++ NEngineOp, NCompiledAsset, NOperatorFx
+	.add methods to C++ OpEngine
+		.GetOpDescCount()
+		.GetOpDescList()	=> struct OpDesc  { categorie, color, name, valuesCount, astOpValues... }
+							=> struct OpValueDesc { Type, min, max, ... }
+		.LoadAsset(filename)
+		.UnLoadAsset(filename)
+		.GetAssetsCount()
+		.GetAssetsList() (see C# collection)
+
+	.add methods to C++ OperatorFx
+		.struct OpValue = GetValue(idx)
+		.SetValue(idx, OpValue)
+	.make C# properties control
+		.access NOperatorFx properties from => OperatorFx::GetValue(idx)
+	.NCompiledAsset
+		.Load/Save binary
+		.GetUsedOperatorsFxCount()	=> stats
+		.
 
 .Main ID
 	X Split Operator class to OperatorNode(designer) and OperatorFx(runtime)
@@ -14,7 +43,7 @@ TODO
 		X remove SetMapVarBlocDesc and NMapVarsBlocDesc
 		.Write automatic varmap as blender :-)
 	
-.Editor:GUI
+.Editor:GUI (maybe a c# version)
 	X Review Properties control.
 		X Add variables limits into properties items
 		X Add slider control
