@@ -41,7 +41,6 @@ NPropertyItem::NPropertyItem()
 	m_pwNGraphicstrl= null;
 	m_pvarBloc			= null;
 	m_pvarBlocDesc	= null;
-	m_pvarValue			= null;
 	m_pParent				= null;
 	m_dwvarIdx			= 0;
 }
@@ -66,10 +65,13 @@ FIMPLEMENT_CLASS(NUbyteProp, NPropertyItem)
 
 void NUbyteProp::Init()
 {
+	ubyte byVal;
+	m_pvarBloc->GetValue(m_dwvarIdx, 0.0f, byVal);
+
 	m_slider.Create(m_pvarBlocDesc->pszName, NRect(0,0,0,0), m_pParent);
 	m_slider.SetRange(m_pvarBlocDesc->fMin, m_pvarBlocDesc->fMax);
 	m_slider.SetStep(m_pvarBlocDesc->fStep);
-	m_slider.SetPos(m_pvarValue->byVal);
+	m_slider.SetPos(byVal);
 	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NUbyteProp::OnValueChanged);
 }
 
@@ -81,7 +83,7 @@ void NUbyteProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 void NUbyteProp::OnValueChanged(NObject* _psender)
 {
 	//Change field value
-	m_pvarValue->byVal = (sdword)m_slider.GetPos();
+	m_pvarBloc->SetValue(m_dwvarIdx, 0.0f, (ubyte)m_slider.GetPos());
 
 	// Send Event
 	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperatorFx*)m_pvarBloc->GetOwner());
@@ -99,10 +101,13 @@ FIMPLEMENT_CLASS(NUwordProp, NPropertyItem)
 
 void NUwordProp::Init()
 {
+	uword wVal;
+	m_pvarBloc->GetValue(m_dwvarIdx, 0.0f, wVal);
+
 	m_slider.Create(m_pvarBlocDesc->pszName, NRect(0,0,0,0), m_pParent);
 	m_slider.SetRange(m_pvarBlocDesc->fMin, m_pvarBlocDesc->fMax);
 	m_slider.SetStep(m_pvarBlocDesc->fStep);
-	m_slider.SetPos(m_pvarValue->wVal);
+	m_slider.SetPos(wVal);
 	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NUwordProp::OnValueChanged);
 }
 
@@ -114,7 +119,7 @@ void NUwordProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 void NUwordProp::OnValueChanged(NObject* _psender)
 {
 	//Change field value
-	m_pvarValue->wVal = (sdword)m_slider.GetPos();
+	m_pvarBloc->SetValue(m_dwvarIdx, 0.0f, (uword)m_slider.GetPos());
 
 	// Send Event
 	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperatorFx*)m_pvarBloc->GetOwner());
@@ -132,10 +137,13 @@ FIMPLEMENT_CLASS(NFloatProp, NPropertyItem)
 
 void NFloatProp::Init()
 {
+	float fVal;
+	m_pvarBloc->GetValue(m_dwvarIdx, 0.0f, fVal);
+
 	m_slider.Create(m_pvarBlocDesc->pszName, NRect(0,0,0,0), m_pParent);
 	m_slider.SetRange(m_pvarBlocDesc->fMin, m_pvarBlocDesc->fMax);
 	m_slider.SetStep(m_pvarBlocDesc->fStep);
-	m_slider.SetPos(m_pvarValue->fVal);
+	m_slider.SetPos(fVal);
 	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NFloatProp::OnValueChanged);
 }
 
@@ -147,7 +155,7 @@ void NFloatProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 void NFloatProp::OnValueChanged(NObject* _psender)
 {
 	//Change field value
-	m_pvarValue->fVal = (sdword)m_slider.GetPos();
+	m_pvarBloc->SetValue(m_dwvarIdx, 0.0f, m_slider.GetPos());
 
 	// Send Event
 	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperatorFx*)m_pvarBloc->GetOwner());
@@ -166,8 +174,11 @@ FIMPLEMENT_CLASS(NColorProp, NPropertyItem);
 
 void NColorProp::Init()
 {
+	udword dwVal;
+	m_pvarBloc->GetValue(m_dwvarIdx, 0.0f, dwVal);
+
 	NColor col;
-	col.SetFromRGBA(m_pvarValue->dwVal);
+	col.SetFromRGBA(dwVal);
 
 	m_button.Create(col, NRect(0,0,0,0), m_pParent, 0);
 	m_button.OnChanged = FDelegate(this, (TDelegate)&NColorProp::OnValueChanged);
@@ -181,7 +192,9 @@ void NColorProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 void NColorProp::OnValueChanged(NObject* _psender)
 {
 	//Change field value
-	m_pvarValue->dwVal = m_button.GetPicker()->GetClickedColor().GetRGBA();
+	m_pvarBloc->SetValue(m_dwvarIdx, 0.0f,  m_button.GetPicker()->GetClickedColor().GetRGBA());
+
+
 	// Send Event
 	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperatorFx*)m_pvarBloc->GetOwner());
 }
@@ -199,6 +212,9 @@ FIMPLEMENT_CLASS(NUbyteComboProp, NPropertyItem);
 
 void NUbyteComboProp::Init()
 {
+	ubyte byVal;
+	m_pvarBloc->GetValue(m_dwvarIdx, 0.0f, byVal);
+
 	//Make menu items
 	NString str;
 	str = m_pvarBlocDesc->pszDefValue;
@@ -217,7 +233,7 @@ void NUbyteComboProp::Init()
 	} while (i!=-1);
 
 	//Create menu button
-	ubyte val = m_pvarValue->byVal;
+	ubyte val = byVal;
 	word = "?";
 	if (val<(ubyte)m_carrayStringsList.Count())
 		word = m_carrayStringsList[val].Buffer();
@@ -241,7 +257,8 @@ void NUbyteComboProp::DrawItem(N2DPainter* pdc, NRect& rcItem)
 void NUbyteComboProp::OnValueChanged(NObject* _psender)
 {
 	//Change value
-	m_pvarValue->byVal = m_button.GetMenu()->GetClickedCmdID()-1;
+	m_pvarBloc->SetValue(m_dwvarIdx, 0.0f,  (ubyte)(m_button.GetMenu()->GetClickedCmdID()-1));
+
 	// Send Event
 	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperatorFx*)m_pvarBloc->GetOwner());
 }
@@ -294,8 +311,10 @@ FIMPLEMENT_CLASS(NUseStoredOpsProp, NPropertyItem);
 
 void NUseStoredOpsProp::Init()
 {
+	NObject* pobj;
+	m_pvarBloc->GetValue(m_dwvarIdx, 0.0f, pobj);
+
 	char* pszName="";
-	NObject* pobj = m_pvarValue->pcRefObj;
 
 	//Display referenced object name (from varbloc)
 	if (pobj)
@@ -414,8 +433,11 @@ FIMPLEMENT_CLASS(NStringProp, NPropertyItem);
 
 void NStringProp::Init()
 {
+	char* psz;
+	m_pvarBloc->GetValue(m_dwvarIdx, 0.0f, psz);
+
 	m_edit.Create(m_pvarBlocDesc->pszName, NRect(0,0,0,0), m_pParent);
-	m_edit.SetText(m_pvarValue->szVal);
+	m_edit.SetText(psz);
 
 	m_edit.OnEnter = FDelegate(this, (TDelegate)&NStringProp::OnValueChanged);
 }
@@ -429,7 +451,7 @@ void NStringProp::OnValueChanged(NObject* _psender)
 {
 	//Change field value
 	NString str = m_edit.GetText();
-	strcpy_s(m_pvarValue->szVal, sizeof(m_pvarValue->szVal), str.Buffer());
+	m_pvarBloc->SetValue(m_dwvarIdx, 0.0f,  str.Buffer());
 
 	// Send Event
 	NEditorGUI::GetInstance()->EmitPropertiesChanged((NOperatorFx*)m_pvarBloc->GetOwner());

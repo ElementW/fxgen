@@ -54,10 +54,12 @@ public:
 
 	//Methods for graph compilation
 	void ComputeLinks();
-	void _ComputeLinks(NOperatorNode* _pop, NOperatorNode* _pprevop, udword _dwCurDepth);
+	void _ComputeLinks(NOperatorNode* _popStart, NOperatorNode* _pop, NOperatorNode* _pprevop, udword _dwCurDepth);
 
 	void GetPrevOperators(NOperatorNode* _pop, NObjectArray& _carrayPrevOpS);
 	void GetNextOperators(NOperatorNode* _pop, NObjectArray& _carrayNextOpS);
+
+	NOperatorNode* GetStartOpFrom(NOperatorNode* _pop);
 	NOperatorNode* GetFinalOpFrom(NOperatorNode* _pop);
 
 	//Datas	GUI

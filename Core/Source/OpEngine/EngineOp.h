@@ -48,6 +48,17 @@ class NObject;
 typedef	void (__cdecl FXGEN_OPSPROCESSCB)(udword _dwCurrentOp, udword _dwTotalOps);
 
 //-----------------------------------------------------------------
+//!	\class		NOperatorDescFx
+//!	\brief		Operator description
+//-----------------------------------------------------------------
+struct CORELIB_API NOperatorDescFx
+{
+	const char* pszName;
+	const char* pszCategorie;
+	udword			dwColor;
+};
+
+//-----------------------------------------------------------------
 //!	\class		NOperatorFx
 //!	\brief		Base class for an operator
 //-----------------------------------------------------------------
@@ -83,6 +94,7 @@ public:
 	NObject*		m_pObj;							//!< Object generated (Texture, Mesh ...)
 	NOperatorFx*	m_pnextOpToProcess;	//!< Next operator to execute
 	NOperatorFx*	m_pprevOpToProcess;	//!< Previous operator executed
+	NOperatorFx*	m_proot;	//!< Root Operator
 
 	// Variables Bloc
 	NVarsBloc* m_pcvarsBloc;
@@ -143,12 +155,15 @@ public:
 	void SetChannelValue(ubyte _byChannel, NVarValue& _value);
 	void GetChannelValue(ubyte _byChannel, NVarValue& _outValue);
 
-	//Editor Membres access
-	//NTreeNode*			GetRootGroup()				{ return m_pRootGroup;		}
+	//Editor Members access
 	NObjectGarbage* GetBitmapGarbage()		{ return &m_bitmapsAlloc; }
 
 	//Editor Operators Resources management
 	void GetBitmap(NObject** _ppobj, ubyte _byObjType=OBJRES_TYPE_INTERMEDIATE);
+
+	//TODO Operators Description
+	//udword GetOperatorDescFx(NOperatorFxDesc*
+
 
 protected:
 	//Internal Methods	

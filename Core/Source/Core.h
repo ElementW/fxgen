@@ -151,7 +151,7 @@ enum eVarType
 
 //-----------------------------------------------------------------
 //!	\struct NVarValue
-//! \brief	A variable value desription
+//! \brief	A variable value description
 //-----------------------------------------------------------------
 struct NVarValue
 {
@@ -188,8 +188,6 @@ struct NVarsBlocDesc
 	float						fStep;	//!< Step
 };
 
-
-
 //-----------------------------------------------------------------
 //!	\class	NVarsBloc Core.h
 //!	\brief	Bloc of variables
@@ -209,9 +207,10 @@ public:
 
 	udword					Count()				{ return m_dwVarsCount;			}
 	NVarsBlocDesc*	GetBlocDesc()	{ return m_pcvarsblocDesc;	}
-	NVarValue*			GetValues()		{ return m_paVarsValues;		}
 
 	bool	IsAnimated();	//!< return true if one variable is animated
+
+	bool	IsValueAnimated(udword _idx);	//!< return true if one variable is animated
 
 	void	RemoveVarsRef(NObject* _pobj);	//!< Remove a referenced object from variables (erefobj)
 
@@ -230,6 +229,7 @@ public:
 	void	SetValue(udword _idx, float _fTime, const char*			_val);	//!< Change variable value
 
 	NObject *GetOwner() { return m_powner; }
+	NObject *GetValueControler(udword _idx);
 
 protected:
 	//Methods

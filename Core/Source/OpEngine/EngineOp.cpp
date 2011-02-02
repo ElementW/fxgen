@@ -49,6 +49,7 @@ NOperatorFx::NOperatorFx()
 	m_bError = false;
 	m_byDepth = 0;
 	m_byInputs = 0;
+	m_proot = null;
 }
 
 //-----------------------------------------------------------------
@@ -70,10 +71,6 @@ bool NOperatorFx::Save(NArchive* _s)
 {
 	NObject::Save(_s);
 
-	//*_s<<m_wPosX;
-	//*_s<<m_wPosY;
-	//*_s<<m_wWidth;
-
 	return true;
 }
 
@@ -86,10 +83,6 @@ bool NOperatorFx::Save(NArchive* _s)
 bool NOperatorFx::Load(NArchive* _l)
 {
 	NObject::Load(_l);
-
-	//*_l>>m_wPosX;
-	//*_l>>m_wPosY;
-	//*_l>>m_wWidth;
 
 	return true;
 }
@@ -510,14 +503,14 @@ void NEngineOp::InvalidateOp(NOperatorFx* _pop)
 NOperatorFx* NEngineOp::GetRootOperator(NOperatorFx* pop)
 {
 	if (pop==null)		return null;
+	return pop->m_proot;
 
-	NOperatorFx* pccurOP = pop;
+	/*NOperatorFx* pccurOP = pop;
 	while (pccurOP->m_pprevOpToProcess)
 	{
 		pccurOP = pccurOP->m_pprevOpToProcess;
 	}
-
-	return pccurOP;
+	return pccurOP;*/
 }
 
 //-----------------------------------------------------------------
