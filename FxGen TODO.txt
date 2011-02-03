@@ -2,6 +2,8 @@ SVN
 --------------
 .Removed NVarValue direct access
 .NOperatorFx GetRoot optimized
+.NVarsBloc::GetBlocDesc Removed
+.NVarsBloc::GetValueDesc Added
 
 TODO
 -------------

@@ -226,7 +226,7 @@ void NVarsBloc::RemoveVarsRef(NObject* _pobj)
 //!	\brief	Return true if one variable is animated
 //!	\return	True if one variable is animated
 //-----------------------------------------------------------------
-bool NVarsBloc::IsAnimated()
+bool NVarsBloc::IsOneValueAnimated()
 {
 	for (udword i=0; i<m_dwVarsCount; i++)
 	{
@@ -249,12 +249,21 @@ bool NVarsBloc::IsValueAnimated(udword _idx)
 
 //-----------------------------------------------------------------
 //!	\brief	Return controler for a value
-//!	\return	Return NObject* for controler
+//!	\return	NObject* for controler
 //-----------------------------------------------------------------
 NObject* NVarsBloc::GetValueControler(udword _idx)
 {
 	NVarValue* pval = m_paVarsValues + _idx;
 	return pval->pcCtrlObj;
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Return value's description
+//!	\return	NVarsBlocDesc* for a value
+//-----------------------------------------------------------------
+NVarsBlocDesc* NVarsBloc::GetValueDesc(udword _idx)
+{
+	return m_pcvarsblocDesc+_idx;
 }
 
 //-----------------------------------------------------------------

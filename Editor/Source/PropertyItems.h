@@ -63,7 +63,7 @@ protected:
 	NGUIWnd*	m_pwNGraphicstrl;			//!< Control used for item edition
 public:
 	NVarsBloc*			m_pvarBloc;			//!< Variable bloc
-	NVarsBlocDesc*	m_pvarBlocDesc;	//!< Variable Description
+	//NVarsBlocDesc*	m_pvarBlocDesc;	//!< Variable Description
 	//NVarValue*			m_pvarValue;		//!< Variable Value Ptr	//###TOREMOVE### see m_dwvarIdx
 	udword					m_dwvarIdx;			//!< Variable indice in bloc
 

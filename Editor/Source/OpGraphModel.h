@@ -9,6 +9,8 @@
 class NOperatorNode : public NObject
 {
 public:
+	FDECLARE_CLASS();
+
 	NOperatorNode();
 	virtual ~NOperatorNode();
 

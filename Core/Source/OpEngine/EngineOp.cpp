@@ -406,7 +406,7 @@ void NEngineOp::_Execute(float _ftime, NOperatorFx* _popFinal, float _fDetailFac
 				m_dwCurProcessOpsCount++;
 			}
 
-			if (pccurOP->m_pcvarsBloc && pccurOP->m_pcvarsBloc->IsAnimated())
+			if (pccurOP->m_pcvarsBloc && pccurOP->m_pcvarsBloc->IsOneValueAnimated())
 				pccurOP->m_bInvalided = true;
 			else
 				pccurOP->m_bInvalided = false;
