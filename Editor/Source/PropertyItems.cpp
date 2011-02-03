@@ -40,7 +40,6 @@ NPropertyItem::NPropertyItem()
 {
 	m_pwNGraphicstrl= null;
 	m_pvarBloc			= null;
-	m_pvarBlocDesc	= null;
 	m_pParent				= null;
 	m_dwvarIdx			= 0;
 }
@@ -68,9 +67,11 @@ void NUbyteProp::Init()
 	ubyte byVal;
 	m_pvarBloc->GetValue(m_dwvarIdx, 0.0f, byVal);
 
-	m_slider.Create(m_pvarBlocDesc->pszName, NRect(0,0,0,0), m_pParent);
-	m_slider.SetRange(m_pvarBlocDesc->fMin, m_pvarBlocDesc->fMax);
-	m_slider.SetStep(m_pvarBlocDesc->fStep);
+	NVarsBlocDesc* pbd = m_pvarBloc->GetValueDesc(m_dwvarIdx);
+
+	m_slider.Create(pbd->pszName, NRect(0,0,0,0), m_pParent);
+	m_slider.SetRange(pbd->fMin, pbd->fMax);
+	m_slider.SetStep(pbd->fStep);
 	m_slider.SetPos(byVal);
 	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NUbyteProp::OnValueChanged);
 }
@@ -103,10 +104,11 @@ void NUwordProp::Init()
 {
 	uword wVal;
 	m_pvarBloc->GetValue(m_dwvarIdx, 0.0f, wVal);
+	NVarsBlocDesc* pbd = m_pvarBloc->GetValueDesc(m_dwvarIdx);
 
-	m_slider.Create(m_pvarBlocDesc->pszName, NRect(0,0,0,0), m_pParent);
-	m_slider.SetRange(m_pvarBlocDesc->fMin, m_pvarBlocDesc->fMax);
-	m_slider.SetStep(m_pvarBlocDesc->fStep);
+	m_slider.Create(pbd->pszName, NRect(0,0,0,0), m_pParent);
+	m_slider.SetRange(pbd->fMin, pbd->fMax);
+	m_slider.SetStep(pbd->fStep);
 	m_slider.SetPos(wVal);
 	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NUwordProp::OnValueChanged);
 }
@@ -139,10 +141,10 @@ void NFloatProp::Init()
 {
 	float fVal;
 	m_pvarBloc->GetValue(m_dwvarIdx, 0.0f, fVal);
-
-	m_slider.Create(m_pvarBlocDesc->pszName, NRect(0,0,0,0), m_pParent);
-	m_slider.SetRange(m_pvarBlocDesc->fMin, m_pvarBlocDesc->fMax);
-	m_slider.SetStep(m_pvarBlocDesc->fStep);
+	NVarsBlocDesc* pbd = m_pvarBloc->GetValueDesc(m_dwvarIdx);
+	m_slider.Create(pbd->pszName, NRect(0,0,0,0), m_pParent);
+	m_slider.SetRange(pbd->fMin, pbd->fMax);
+	m_slider.SetStep(pbd->fStep);
 	m_slider.SetPos(fVal);
 	m_slider.OnValueChanged = FDelegate(this, (TDelegate)&NFloatProp::OnValueChanged);
 }
@@ -216,8 +218,10 @@ void NUbyteComboProp::Init()
 	m_pvarBloc->GetValue(m_dwvarIdx, 0.0f, byVal);
 
 	//Make menu items
+	NVarsBlocDesc* pbd = m_pvarBloc->GetValueDesc(m_dwvarIdx);
+
 	NString str;
-	str = m_pvarBlocDesc->pszDefValue;
+	str = pbd->pszDefValue;
 
 	NString word;
 	udword i=3;
@@ -436,7 +440,8 @@ void NStringProp::Init()
 	char* psz;
 	m_pvarBloc->GetValue(m_dwvarIdx, 0.0f, psz);
 
-	m_edit.Create(m_pvarBlocDesc->pszName, NRect(0,0,0,0), m_pParent);
+	NVarsBlocDesc* pbd = m_pvarBloc->GetValueDesc(m_dwvarIdx);
+	m_edit.Create(pbd->pszName, NRect(0,0,0,0), m_pParent);
 	m_edit.SetText(psz);
 
 	m_edit.OnEnter = FDelegate(this, (TDelegate)&NStringProp::OnValueChanged);

@@ -144,9 +144,7 @@ enum eVarType
 	eudword,
 	efloat,
 	estring,
-	erefobj//,
-//	erefobj2		// This 'Hack' will allow loading and saving
-//					// L_ImageRenderer, L_Curve and L_Terrace
+	erefobj
 };
 
 //-----------------------------------------------------------------
@@ -205,11 +203,9 @@ public:
 	//Methods
 	void	Init(udword _dwVarsCount, NVarsBlocDesc* _pvarsBlocDesc, NObject* _powner, ubyte _byVersion);
 
-	udword					Count()				{ return m_dwVarsCount;			}
-	NVarsBlocDesc*	GetBlocDesc()	{ return m_pcvarsblocDesc;	}
+	udword Count()				{ return m_dwVarsCount;			}
 
-	bool	IsAnimated();	//!< return true if one variable is animated
-
+	bool	IsOneValueAnimated();	//!< return true if one variable is animated
 	bool	IsValueAnimated(udword _idx);	//!< return true if one variable is animated
 
 	void	RemoveVarsRef(NObject* _pobj);	//!< Remove a referenced object from variables (erefobj)
@@ -228,8 +224,10 @@ public:
 	void	SetValue(udword _idx, float _fTime, NObject*	_val);	//!< Change variable value
 	void	SetValue(udword _idx, float _fTime, const char*			_val);	//!< Change variable value
 
+	//Members Access
 	NObject *GetOwner() { return m_powner; }
 	NObject *GetValueControler(udword _idx);
+	NVarsBlocDesc* GetValueDesc(udword _idx);
 
 protected:
 	//Methods

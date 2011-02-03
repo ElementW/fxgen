@@ -854,7 +854,8 @@ void NOperatorsCtrl::PasteOperatorsFromClipboard()
 	//Paste operators
 	for (udword i=0; i<m_carrayOpsClipboard.Count(); i++)
 	{
-		NOperatorNode* pop = (NOperatorNode*)m_carrayOpsClipboard[i]->Duplicate();
+		NOperatorNode* popOriginal = m_carrayOpsClipboard[i];
+		NOperatorNode* pop = (NOperatorNode*)popOriginal->Duplicate();
 
 		//Init
 		pop->m_wPosX			= sword(pop->m_wPosX+dwOffsetX);

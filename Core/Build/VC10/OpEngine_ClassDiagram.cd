@@ -31,7 +31,7 @@
   <Class Name="NVarsBloc">
     <Position X="7.75" Y="3" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAgIIAMIAAAgBAiQCAAAQQAAAwAAABABACgAAAAAA=</HashCode>
+      <HashCode>AACAgIIAMIAAAoAACQCAAAQQAAAwAAABABACgAAAAAA=</HashCode>
       <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\Core.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -41,6 +41,9 @@
       <HashCode>EAAAgIEIAIAAAAAIgwAAAAIAAAAAgADAAAAJEACCBAA=</HashCode>
       <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\OpEngine\EngineOp.h</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="m_pcvarsBloc" />
+    </ShowAsAssociation>
   </Class>
   <Struct Name="NVarsBlocDesc">
     <Position X="10.5" Y="3" Width="1.5" />

@@ -176,7 +176,7 @@ void NPropertiesCtrl::OnPaint(N2DPainter* _ppainter)
 			prd->rcItem = rcRow;
 
 			//Check if value can be animated
-			bool bCanBeAnimate = prd->pItem->m_pvarBlocDesc->bCanBeAnimate;
+			bool bCanBeAnimate = prd->pItem->m_pvarBloc->GetValueDesc(i)->bCanBeAnimate;
 			//bool bAnimated		 = prd->pItem->m_pvarValue->pcCtrlObj!=null;
 			bool bAnimated = prd->pItem->m_pvarBloc->IsValueAnimated(prd->pItem->m_dwvarIdx);
 
@@ -415,7 +415,7 @@ void NPropertiesCtrl::_DisplayObjectProperties(NObject* _pobj, udword _dwDepth)
 
 	while (pbloc)
 	{
-		NVarsBlocDesc*	pblocdesc	= pbloc->GetBlocDesc();
+		//NVarsBlocDesc*	pblocdesc	= pbloc->GetBlocDesc();
 
 		//Add a Group for this bloc
 		AddGroup(_pobj->GetName(), _dwDepth);	//##TOFIX### variable bloc name
@@ -424,7 +424,7 @@ void NPropertiesCtrl::_DisplayObjectProperties(NObject* _pobj, udword _dwDepth)
 		for (udword i=0; i<pbloc->Count(); i++)
 		{
 			//Add a row for each vars
-			AddVarProperties(pbloc, pblocdesc+i, i, _dwDepth+1);
+			AddVarProperties(pbloc, i, _dwDepth+1);
 		}
 
 		//pblocdesc=pblocdesc->	//###TOFIX### Next Bloc
@@ -443,7 +443,7 @@ void NPropertiesCtrl::_DisplayAnimationObjectProperties(NObject* _pobj, udword _
 
 	while (pbloc)
 	{
-		NVarsBlocDesc*	pblocdesc	= pbloc->GetBlocDesc();
+		//NVarsBlocDesc*	pblocdesc	= pbloc->GetBlocDesc();
 
 		//Parse Vars for this bloc
 		for (udword i=0; i<pbloc->Count(); i++)
@@ -453,7 +453,7 @@ void NPropertiesCtrl::_DisplayAnimationObjectProperties(NObject* _pobj, udword _
 			if (pctrlObj!=null)
 			{
 				NString str;
-				str.Format("Animation %s", pblocdesc[i].pszName );
+				str.Format("Animation %s", pbloc->GetValueDesc(i)->pszName );
 				pctrlObj->SetName(str.Buffer());	//##TOFIX### variable bloc name
 
 				//Display properties for this controler
@@ -489,10 +489,10 @@ udword NPropertiesCtrl::AddGroup(const char* pszName, udword _dwDepth)
 //-----------------------------------------------------------------
 //!	\brief	Add a var property
 //-----------------------------------------------------------------
-udword NPropertiesCtrl::AddVarProperties(NVarsBloc* _pvarBloc, NVarsBlocDesc* _pvarBlocDesc, udword _dwvarIdx, udword _dwDepth)
+udword NPropertiesCtrl::AddVarProperties(NVarsBloc* _pvarBloc, udword _dwvarIdx, udword _dwDepth)
 {
 	NRowDesc				rd;
-	rd.strName			= _pvarBlocDesc->pszName;
+	rd.strName			= _pvarBloc->GetValueDesc(_dwvarIdx)->pszName;
 	rd.bExpanded		= true;
 	rd.dwDepth			= _dwDepth;
 
@@ -501,13 +501,12 @@ udword NPropertiesCtrl::AddVarProperties(NVarsBloc* _pvarBloc, NVarsBlocDesc* _p
 
 	//pparentRow?rd.dwDepth = pparentRow->dwDepth+1:0;
 
-	rd.pItem = (NPropertyItem*)NRTClass::CreateByName(_pvarBlocDesc->pszCLASSGUI);
+	rd.pItem = (NPropertyItem*)NRTClass::CreateByName(_pvarBloc->GetValueDesc(_dwvarIdx)->pszCLASSGUI);
 	if (rd.pItem)
 	{
 		rd.pItem->m_pParent				= this;
 
 		rd.pItem->m_pvarBloc			= _pvarBloc;
-		rd.pItem->m_pvarBlocDesc	= _pvarBlocDesc;
 		rd.pItem->m_dwvarIdx			= _dwvarIdx;
 
 		rd.pItem->Init();
