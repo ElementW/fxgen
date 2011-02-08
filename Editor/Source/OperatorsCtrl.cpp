@@ -598,7 +598,7 @@ void NOperatorsCtrl::OnKeyUp(udword dwchar)
 
 void NOperatorsCtrl::UpdateCursor(NPoint& pt)
 {
-	bool bResizeZone;
+//	bool bResizeZone;
 
 	//Sous un op
 	//###WIN32### TOFIX

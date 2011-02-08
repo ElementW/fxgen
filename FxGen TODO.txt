@@ -4,6 +4,7 @@ SVN
 .NOperatorFx GetRoot optimized
 .NVarsBloc::GetBlocDesc Removed
 .NVarsBloc::GetValueDesc Added
+.Add operators compilation phase
 
 TODO
 -------------
@@ -38,6 +39,7 @@ now 'load' operators could reference differents assets
 	 .add Module management into NArchive PutMappedClass())
 	.Add CommentNode (later)
 	.Add custom OperatorNode classes for visual editing
+	.Add Optimisation methods to NCompiledAsset in order to remove unused fx
 
 .FxGenLib
 	.Rewrite animation processing (later)

@@ -396,8 +396,10 @@ bool NUseStoredOpsProp::EndEdit(bool bSaveChanged)
 */
 void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 {
+	//TODO Fx to Node
+
 	//Parse alls Graphs in order to add 'NStoreOp'
-	NObjectArray& arrayObjs = _pnode->GetObjsArray();
+/*	NObjectArray& arrayObjs = _pnode->GetObjsArray();
 	udword dwCount = arrayObjs.Count();
 	udword idx=0;
 	while (dwCount--)
@@ -422,7 +424,7 @@ void NUseStoredOpsProp::BuildMenu(NTreeNode* _pnode)
 	_pnode = _pnode->GetSon();
 	if (_pnode)
 		BuildMenu(_pnode);
-
+*/
 }
 
 

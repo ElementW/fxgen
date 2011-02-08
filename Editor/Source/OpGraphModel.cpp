@@ -1,3 +1,4 @@
+#include "AssetModel.h"
 #include "OpGraphModel.h"
 
 //-----------------------------------------------------------------
@@ -27,6 +28,7 @@ FIMPLEMENT_CLASS(NOperatorNode, NObject);
 NOperatorNode::NOperatorNode()
 {
 	m_op = null;
+	m_pprevOpToProcess = m_pnextOpToProcess = NULL;
 }
 
 //-----------------------------------------------------------------
@@ -112,7 +114,8 @@ FIMPLEMENT_CLASS(NOpGraphModel, NObject);
 NOpGraphModel::NOpGraphModel()
 {
 	m_pprevOp = null;
-	m_arrayOps.SetManageDelete(true);
+	m_passet = null;
+	m_arrayNodes.SetManageDelete(true);
 }
 
 //-----------------------------------------------------------------
@@ -120,6 +123,14 @@ NOpGraphModel::NOpGraphModel()
 //-----------------------------------------------------------------
 NOpGraphModel::~NOpGraphModel()
 {
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Attach to asset
+//-----------------------------------------------------------------
+void NOpGraphModel::AttachToAsset(NAssetModel* _passet)
+{
+	m_passet = _passet;
 }
 
 //-----------------------------------------------------------------
@@ -132,7 +143,7 @@ bool NOpGraphModel::Save(NArchive* _s)
 	NObject::Save(_s);
 
 	//Save Operators array
-	m_arrayOps.Save(_s);
+	m_arrayNodes.Save(_s);
 
 	return true;
 }
@@ -148,7 +159,7 @@ bool NOpGraphModel::Load(NArchive* _l)
 	NObject::Load(_l);
 
 	//Load Operators array
-	if (!m_arrayOps.Load(_l))
+	if (!m_arrayNodes.Load(_l))
 		return false;
 
 	//Links
@@ -166,7 +177,7 @@ bool NOpGraphModel::Load(NArchive* _l)
 //-----------------------------------------------------------------
 udword NOpGraphModel::AddOp(NOperatorNode* _pop)
 {
-	udword idx = m_arrayOps.AddItem(_pop);
+	udword idx = m_arrayNodes.AddItem(_pop);
 
 	_pop->m_op->m_bInvalided = true;
 
@@ -193,14 +204,14 @@ udword NOpGraphModel::DeleteOp(NOperatorNode* _pop)
 	{
 		NOperatorNode* pop = (NOperatorNode*)carray[i];
 		pop->m_op->m_bInvalided = true;
-		pop->m_op->m_pprevOpToProcess = null;
+		pop->m_pprevOpToProcess = null;
 	}
 
 	//Remove From Array
-	udword idx = m_arrayOps.Find(_pop);
+	udword idx = m_arrayNodes.Find(_pop);
 	if (idx!=(udword)-1)
 	{
-		m_arrayOps.RemoveItem(idx);
+		m_arrayNodes.RemoveItem(idx);
 		delete _pop;
 	}
 
@@ -216,7 +227,7 @@ udword NOpGraphModel::DeleteOp(NOperatorNode* _pop)
 //-----------------------------------------------------------------
 void NOpGraphModel::DeleteAllOps()
 {
-	m_arrayOps.Clear();
+	m_arrayNodes.Clear();
 }
 
 //-----------------------------------------------------------------
@@ -232,8 +243,8 @@ void NOpGraphModel::MoveOp(NOperatorNode* _pop, sword _x, sword _y)
 {
 	//Invalidate moved operator
 	_pop->m_op->m_bInvalided				= true;
-	_pop->m_op->m_pnextOpToProcess	= null;
-	_pop->m_op->m_pprevOpToProcess	= null;
+	_pop->m_pnextOpToProcess	= null;
+	_pop->m_pprevOpToProcess	= null;
 
 	//Invalidate linked operators
 	NObjectArray	carray;
@@ -242,7 +253,7 @@ void NOpGraphModel::MoveOp(NOperatorNode* _pop, sword _x, sword _y)
 	for ( udword i=0; i<carray.Count(); i++)
 	{
 		NOperatorNode* pop = (NOperatorNode*)carray[i];
-		pop->m_op->m_pprevOpToProcess = null;
+		pop->m_pprevOpToProcess = null;
 		pop->m_op->m_bInvalided				= true;
 	}
 
@@ -257,13 +268,13 @@ void NOpGraphModel::MoveOp(NOperatorNode* _pop, sword _x, sword _y)
 
 
 //-----------------------------------------------------------------
-//!	\brief	Compute links between operators
+//!	\brief	Compute links between operators node
 //-----------------------------------------------------------------
 void NOpGraphModel::ComputeLinks()
 {
 	//Create stack for unlinked operators
 	m_arrayOpsUnlinked.Clear();
-	m_arrayOpsUnlinked.AddArray(m_arrayOps);
+	m_arrayOpsUnlinked.AddArray(m_arrayNodes);
 
 	//Process all ops from stack
 	while (m_arrayOpsUnlinked.Count())
@@ -277,10 +288,16 @@ void NOpGraphModel::ComputeLinks()
 		_ComputeLinks(popStart, popFinal, null, 0);
 	}
 
+	//Recompile Asset
+	if (m_passet)
+	{
+		m_passet->CompileAsset();
+	}
+
 	/////////////////////////////////////////////////////
 	//										###Debug###
 	/*m_arrayOpsUnlinked.Clear();
-	m_arrayOpsUnlinked.AddArray(m_arrayOps);
+	m_arrayOpsUnlinked.AddArray(m_arrayNodes);
 
 	while(m_arrayOpsUnlinked.Count())
 	{
@@ -319,18 +336,18 @@ void NOpGraphModel::_ComputeLinks(NOperatorNode* _popStart, NOperatorNode* _pop,
 
 	//Update current operator execution link
 	if (m_pprevOp!=null)
-		_pop->m_op->m_pnextOpToProcess = m_pprevOp->m_op;
+		_pop->m_pnextOpToProcess = m_pprevOp;
 	else
-		_pop->m_op->m_pnextOpToProcess = null;
+		_pop->m_pnextOpToProcess = null;
 
-	_pop->m_op->m_pprevOpToProcess = null;
+	_pop->m_pprevOpToProcess = null;
 
-	_pop->m_op->m_proot = null;
+	/*_pop->m_op->m_proot = null;
 	if (_popStart)
-		_pop->m_op->m_proot = _popStart->m_op;
+		_pop->m_op->m_proot = _popStart->m_op;*/
 
 	if (m_pprevOp)
-		m_pprevOp->m_op->m_pprevOpToProcess = _pop->m_op;
+		m_pprevOp->m_pprevOpToProcess = _pop;
 
 	m_pprevOp = _pop;
 
@@ -379,9 +396,9 @@ void NOpGraphModel::GetPrevOperators(NOperatorNode* _pop, NObjectArray& _carrayP
 	int nLeft		= _pop->m_wPosX;
 	int nRight	= _pop->m_wPosX + _pop->m_wWidth;
 
-	for (udword i=0; i<m_arrayOps.Count(); i++)
+	for (udword i=0; i<m_arrayNodes.Count(); i++)
 	{
-		NOperatorNode* pccurOP = (NOperatorNode*)m_arrayOps[i];
+		NOperatorNode* pccurOP = (NOperatorNode*)m_arrayNodes[i];
 		if ( pccurOP->m_wPosY+1 != nTop
 			||(nLeft<=pccurOP->m_wPosX && nRight<=pccurOP->m_wPosX)
 			||(nLeft>=(pccurOP->m_wPosX+pccurOP->m_wWidth) && nRight>=(pccurOP->m_wPosX+pccurOP->m_wWidth)))
@@ -409,9 +426,9 @@ void NOpGraphModel::GetNextOperators(NOperatorNode* pop, NObjectArray& carrayNex
 	int nLeft		= pop->m_wPosX;
 	int nRight	= pop->m_wPosX + pop->m_wWidth;
 
-	for (udword i=0; i<m_arrayOps.Count(); i++)
+	for (udword i=0; i<m_arrayNodes.Count(); i++)
 	{
-		NOperatorNode* pccurOP = (NOperatorNode*)m_arrayOps[i];
+		NOperatorNode* pccurOP = (NOperatorNode*)m_arrayNodes[i];
 		if ( pccurOP->m_wPosY != nBottom
 			||(nLeft<=pccurOP->m_wPosX && nRight<=pccurOP->m_wPosX)
 			||(nLeft>=(pccurOP->m_wPosX+pccurOP->m_wWidth) && nRight>=(pccurOP->m_wPosX+pccurOP->m_wWidth)))
@@ -470,24 +487,24 @@ NOperatorNode* NOpGraphModel::GetFinalOpFrom(NOperatorNode* pop)
 //!	\param	_pszClassName	class name
 //!	\param	_carray	operators returned
 //-----------------------------------------------------------------
-void NOpGraphModel::GetOpsFromClassName(const char* _pszClassName, NObjectArray& _carray)
+/*void NOpGraphModel::GetOpsFromClassName(const char* _pszClassName, NObjectArray& _carray)
 {
-	for (udword i=0; i<m_arrayOps.Count(); i++)
+	for (udword i=0; i<m_arrayNodes.Count(); i++)
 	{
-		NOperatorFx* pccurOP = (NOperatorFx*)m_arrayOps[i];
+		NOperatorFx* pccurOP = (NOperatorFx*)m_arrayNodes[i];
 		if (strcmp(pccurOP->GetRTClass()->m_pszClassName, _pszClassName) == 0)
 			_carray.AddItem(pccurOP);
 	}
-}
+}*/
 
 //-----------------------------------------------------------------
 //!	\brief	Invalidate all operators to force re-processing
 //-----------------------------------------------------------------
 void NOpGraphModel::InvalidateAllOps()
 {
-	for (udword i=0; i<m_arrayOps.Count(); i++)
+	for (udword i=0; i<m_arrayNodes.Count(); i++)
 	{
-		NOperatorFx* pccurOP = (NOperatorFx*)m_arrayOps[i];
+		NOperatorFx* pccurOP = (NOperatorFx*)m_arrayNodes[i];
 		pccurOP->m_bInvalided			= true;
 		pccurOP->m_dwLastUsedTime	= 0;
 	}

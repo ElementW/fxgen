@@ -2,6 +2,11 @@
 #include "CoreLibPkg.h"
 
 //-----------------------------------------------------------------
+//	Prototypes
+//-----------------------------------------------------------------
+class NAssetModel;
+
+//-----------------------------------------------------------------
 //!	\class		NOperatorNode
 //!	\brief		operator node contain one operator
 //!	\note			TODO base class NOpNodebase for all nodes in OpeperatorCtrl (comment...)
@@ -24,6 +29,9 @@ public:
 	sword	m_wPosX, m_wPosY;			//!< Position (grid unit)
 	sword	m_wWidth;							//!< Width (grid unit)
 	NOperatorFx* m_op;						//!< Operator associed with this node
+
+	NOperatorNode* m_pprevOpToProcess;	//!< Nodes Links
+	NOperatorNode* m_pnextOpToProcess;	//!< Nodes Links
 };
 
 //-----------------------------------------------------------------
@@ -38,12 +46,15 @@ public:
 	NOpGraphModel();
 	virtual ~NOpGraphModel();
 
+	//Methods
+	void AttachToAsset(NAssetModel* _passet);
+
 	//Serialization
 	virtual	bool Save(NArchive* _s);	//!< Save object
 	virtual	bool Load(NArchive* _l);	//!< Load object
 
-	udword			GetOpsCount()							{ return m_arrayOps.Count();					}
-	NOperatorNode*	GetOpFromIdx(udword _idx)	{ return (NOperatorNode*)m_arrayOps[_idx];}
+	udword			GetOpsCount()							{ return m_arrayNodes.Count();					}
+	NOperatorNode*	GetOpFromIdx(udword _idx)	{ return (NOperatorNode*)m_arrayNodes[_idx];}
 
 	udword			AddOp(NOperatorNode* _pop);
 	void				DeleteAllOps();
@@ -52,7 +63,7 @@ public:
 	void				InvalidateAllOps();
 
 	//Methods search
-	void GetOpsFromClassName(const char* _pszClassName, NObjectArray& _carray);
+	//void GetOpsFromClassName(const char* _pszClassName, NObjectArray& _carray);
 
 	//Methods for graph compilation
 	void ComputeLinks();
@@ -65,9 +76,10 @@ public:
 	NOperatorNode* GetFinalOpFrom(NOperatorNode* _pop);
 
 	//Datas	GUI
-	NObjectArray	m_arrayOps;						//!< Operators array
+	NObjectArray	m_arrayNodes;						//!< Operators nodes array
 
 	//Datas for compilation and linkage
 	NOperatorNode*		m_pprevOp;
 	NObjectArray	m_arrayOpsUnlinked;		//!< Operators unlinked array
+	NAssetModel* m_passet;
 };

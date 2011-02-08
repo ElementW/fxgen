@@ -17,7 +17,15 @@ public:
 	//virtual	bool Save(NArchive* _s);	//!< Save object
 	//virtual	bool Load(NArchive* _l);	//!< Load object
 
+	void CompileAsset();
 
 protected:
+	//Methods
+	void _CompileAsset(NTreeNode* _pParent);
+	void ComputeOpsSequences();
+
+	//Datas
 	NTreeNode* m_pRootGroup;							//!< Root	Groups
+	NCompiledAsset m_comp;		//!< Compiled Asset for Engine
+	NObjectArray m_arrayOpsUnlinked;
 };

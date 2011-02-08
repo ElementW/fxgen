@@ -105,3 +105,104 @@ NAssetModel::~NAssetModel(void)
 
 	return bRet;
 }*/
+
+//-----------------------------------------------------------------
+//!	\brief	Compile graph for engine asset
+//-----------------------------------------------------------------
+void NAssetModel::CompileAsset()
+{
+	m_comp.Clear();
+	m_arrayOpsUnlinked.Clear();
+
+	//Parse all operators nodes and make compiled asset
+	if (m_pRootGroup!=null)
+		_CompileAsset(m_pRootGroup);
+
+	//Compute Compiled version
+	ComputeOpsSequences();
+}
+
+void NAssetModel::_CompileAsset(NTreeNode* _pParent)
+{
+	//Sons
+	NTreeNode* pnode = _pParent->GetSon();
+	while (pnode)
+	{
+		//For each GrapModel...
+		m_arrayOpsUnlinked.AddArray(pnode->GetObjsArray());
+
+		//Objects array
+		/*NObjectArray& array = pnode->GetObjsArray();
+		for (udword i=0; i<array.Count(); i++)
+		{
+			NOperatorNode* pnode = (NOperatorNode*)array[i];
+			m_comp.AddOpFx(pnode->m_op, 
+
+		}*/
+
+		//Son Nodes
+		_CompileAsset(pnode);
+
+		//Next brothers nodes
+		pnode = pnode->GetBrother();
+	}
+
+}
+
+void NAssetModel::ComputeOpsSequences()
+{
+
+	//Create stack for not processed operators
+	
+	//m_arrayOpsUnlinked.AddArray(m_arrayOps);
+
+	///////////////////////////////////////////////////////
+	//Process all ops from stack
+	while (m_arrayOpsUnlinked.Count())
+	{
+		NOperatorNode* pop = (NOperatorNode*)m_arrayOpsUnlinked[0];
+
+		//Search Start
+		NOperatorNode* pStartOP = pop;
+		while (pStartOP->m_pprevOpToProcess)
+			pStartOP = pStartOP->m_pprevOpToProcess;
+
+		//Parse while End
+		NOperatorNode* pEndOP = pStartOP;
+		do
+		{
+			//CompileOperator(pstSeq, pEndOP);
+			NOperatorFx *prev = null;
+			if (pEndOP->m_pprevOpToProcess)
+				prev = pEndOP->m_pprevOpToProcess->m_op;
+
+			bool bOutput=false;
+			if (pEndOP->m_op->GetUserName() && strlen(pEndOP->m_op->GetUserName())!=0)
+				bOutput=true;
+
+			m_comp.AddOpFx(pEndOP->m_op, pStartOP->m_op, prev, bOutput);
+
+			pEndOP = pEndOP->m_pnextOpToProcess;
+
+			//Break on store operator
+			/*if (pEndOP && pEndOP->pszStoredName && strlen(pEndOP->pszStoredName)!=0)
+			{
+				//Remove it from unlinked
+				udword dwIdx = m_arrayOpsUnlinked.Find(pEndOP);
+				if (dwIdx!=(udword)-1)
+					m_arrayOpsUnlinked.RemoveItem(dwIdx);		
+
+				break;
+			}*/
+		} while (pEndOP);
+
+		//Set Sequence Name For Debug
+		/*if (pEndOP && pEndOP->pszStoredName && strlen(pEndOP->pszStoredName)!=0)
+			strcpy(pstSeq->szName, pEndOP->pszStoredName);
+		else
+			strcpy(pstSeq->szName, "Not Stored!");*/
+
+
+	}
+
+}
