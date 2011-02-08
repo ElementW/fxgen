@@ -92,18 +92,22 @@ public:
 	bool				m_bParsed;					//!< Operators scan optimization
 	float				m_fProcessedTime;		//!< Time for last process() call
 	NObject*		m_pObj;							//!< Object generated (Texture, Mesh ...)
-	NOperatorFx*	m_pnextOpToProcess;	//!< Next operator to execute
-	NOperatorFx*	m_pprevOpToProcess;	//!< Previous operator executed
+
+protected:
 	NOperatorFx*	m_proot;	//!< Root Operator
+	NOperatorFx*	m_pnextOpToProcess;	//!< Next operator to execute
 
 	// Variables Bloc
 	NVarsBloc* m_pcvarsBloc;
+
+	friend class NEngineOp;
+	friend class NCompiledAsset;
 };
 
 
 //-----------------------------------------------------------------
 //!	\class		NCompiledAsset
-//!	\brief		
+//!	\brief		asset precessed by engine
 //-----------------------------------------------------------------
 class CORELIB_API NCompiledAsset :	public NObject
 {
@@ -116,12 +120,15 @@ public:
 	virtual	bool Load(NArchive* _l);	//!< Load object
 
 	//Methods
-	//NStoreResultOp* GetFinalOpByName(pszName)	//Name => Graph:FinalOutput
+	//NStoreResultOp* GetOutputOpByName(pszName)	//Name => Graph:FinalOutput
+
+	void Clear();	//!< Clear this assets
+	void AddOpFx(NOperatorFx* _ops, NOperatorFx* _opRoot, NOperatorFx* _opPrev, bool _bAsOutput);
 
 protected:
 	//Datas
 	NObjectArray	m_arrayOps;				//!< Operators array
-	NObjectArray	m_arrayFinalOps;	//!< Final Operators array
+	NObjectArray	m_arrayOutputOps;	//!< Output Operators array
 };
 
 
@@ -164,6 +171,12 @@ public:
 	//TODO Operators Description
 	//udword GetOperatorDescFx(NOperatorFxDesc*
 
+	//TODO Assets management
+	//LoadAsset(name)
+	//UnLoadAsset(name)
+	//IsAssetLoaded(name)
+	//AssetsCount
+	//NCompiledAsset* GetAsset(idx)
 
 protected:
 	//Internal Methods	
@@ -194,6 +207,8 @@ protected:
 
 	//Garbages for media (bitmaps ...)
 	NObjectGarbage	m_bitmapsAlloc;
+
+	friend class NOperatorFx;
 };
 
 #endif //ENGINEOP_H

@@ -42,7 +42,7 @@ NEngineOp* gpengineOp = null;
 NOperatorFx::NOperatorFx()
 {
 	m_pObj = null;
-	m_pnextOpToProcess = m_pprevOpToProcess= null;
+	m_pnextOpToProcess = null;
 	m_bInvalided = true;
 	m_pcvarsBloc = null;
 	
@@ -101,6 +101,8 @@ bool NOperatorFx::Load(NArchive* _l)
 //-----------------------------------------------------------------
 NCompiledAsset::NCompiledAsset()
 {
+	m_arrayOps.SetManageDelete(false);
+	m_arrayOutputOps.SetManageDelete(false);
 }
 
 //-----------------------------------------------------------------
@@ -138,6 +140,33 @@ bool NCompiledAsset::Load(NArchive* _l)
 	return true;
 }
 
+//-----------------------------------------------------------------
+//!	\brief	Clear all operators
+//-----------------------------------------------------------------
+void NCompiledAsset::Clear()
+{
+	m_arrayOps.Clear();
+	m_arrayOutputOps.Clear();
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Add operator to asset
+//-----------------------------------------------------------------
+void NCompiledAsset::AddOpFx(NOperatorFx* _ops, NOperatorFx* _opRoot, NOperatorFx* _opPrev, bool _bAsOutput)
+{
+	if (_opPrev!=null)
+		_opPrev->m_pnextOpToProcess = _ops;
+
+	m_arrayOps.AddItem(_ops);
+	_ops->m_proot							= _opRoot;
+	_ops->m_pnextOpToProcess	= null;
+
+	if (_bAsOutput)
+	{
+		m_arrayOutputOps.AddItem(_ops);
+	}
+
+}
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
@@ -504,13 +533,6 @@ NOperatorFx* NEngineOp::GetRootOperator(NOperatorFx* pop)
 {
 	if (pop==null)		return null;
 	return pop->m_proot;
-
-	/*NOperatorFx* pccurOP = pop;
-	while (pccurOP->m_pprevOpToProcess)
-	{
-		pccurOP = pccurOP->m_pprevOpToProcess;
-	}
-	return pccurOP;*/
 }
 
 //-----------------------------------------------------------------

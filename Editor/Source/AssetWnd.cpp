@@ -210,6 +210,7 @@ void NAssetWnd::AddGraph()
 	NObjectArray& array = pnodeFolder->GetObjsArray();
 
 	NOpGraphModel* pgraph = new NOpGraphModel;
+	pgraph->AttachToAsset(m_popsAsset);
 	pgraph->SetName("Graph");
 	array.AddItem(pgraph);
 
