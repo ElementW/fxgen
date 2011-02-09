@@ -40,6 +40,7 @@ NAssetModel::NAssetModel(void)
 	//Create a Default Graph
 	NOpGraphModel* pgraph = NNEW(NOpGraphModel);
 	pgraph->SetName("Untitled Graph");
+	pgraph->AttachToAsset(this);
 	pNewNode->GetObjsArray().AddItem(pgraph);
 
 }
@@ -128,17 +129,22 @@ void NAssetModel::_CompileAsset(NTreeNode* _pParent)
 	NTreeNode* pnode = _pParent->GetSon();
 	while (pnode)
 	{
-		//For each GrapModel...
-		m_arrayOpsUnlinked.AddArray(pnode->GetObjsArray());
-
-		//Objects array
-		/*NObjectArray& array = pnode->GetObjsArray();
+		//For each GrapModels...
+		NObjectArray& array = pnode->GetObjsArray();
 		for (udword i=0; i<array.Count(); i++)
 		{
-			NOperatorNode* pnode = (NOperatorNode*)array[i];
-			m_comp.AddOpFx(pnode->m_op, 
+			NOpGraphModel* pmodel = (NOpGraphModel*)array[i];
 
-		}*/
+			//For each nodes
+			udword dwCount = pmodel->GetNodesCount();
+			for (udword j=0; j<dwCount; j--)
+			{
+				NOperatorNode* node = pmodel->GetNodeFromIdx(j);
+				m_arrayOpsUnlinked.AddItem(node);
+			}
+
+
+		}
 
 		//Son Nodes
 		_CompileAsset(pnode);

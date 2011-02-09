@@ -123,7 +123,7 @@ public:
 	//NStoreResultOp* GetOutputOpByName(pszName)	//Name => Graph:FinalOutput
 
 	void Clear();	//!< Clear this assets
-	void AddOpFx(NOperatorFx* _ops, NOperatorFx* _opRoot, NOperatorFx* _opPrev, bool _bAsOutput);
+	void AddOpFx(NOperatorFx* _op, NOperatorFx* _opRoot, NOperatorFx* _opPrev, bool _bAsOutput);
 
 protected:
 	//Datas

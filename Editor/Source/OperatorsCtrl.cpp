@@ -108,9 +108,9 @@ void NOperatorsCtrl::OnPaint(N2DPainter* _ppainter)
 
 	if (m_popsGraph!=null)
 	{
-		for (udword i=0; i<m_popsGraph->GetOpsCount(); i++)
+		for (udword i=0; i<m_popsGraph->GetNodesCount(); i++)
 		{
-			NOperatorNode* pop = m_popsGraph->GetOpFromIdx(i);
+			NOperatorNode* pop = m_popsGraph->GetNodeFromIdx(i);
 			DisplayOperator(_ppainter, pop);
 		}
 
@@ -289,9 +289,9 @@ void NOperatorsCtrl::DisplayOperatorsMap(N2DPainter* _pdc)
 	fScaleY = ((float)h/(float)m_rcAllOperators.Height())* m_fScaleY;
 
 	//Display operators
-	for (udword i=0; i<m_popsGraph->GetOpsCount() ; i++)
+	for (udword i=0; i<m_popsGraph->GetNodesCount() ; i++)
 	{
-		NOperatorNode* pop = m_popsGraph->GetOpFromIdx(i);
+		NOperatorNode* pop = m_popsGraph->GetNodeFromIdx(i);
 
 		NRect rcBlock;
 		rcBlock.left		= (sdword) ((( pop->m_wPosX * GB_GRIDUNIT) ) * fScaleX);
@@ -731,9 +731,9 @@ NOperatorNode* NOperatorsCtrl::GetOperatorAt(NPoint& pt, bool& bResizeZone)
 
 	if (m_popsGraph)
 	{
-		for (udword i=0; i<m_popsGraph->GetOpsCount() ; i++)
+		for (udword i=0; i<m_popsGraph->GetNodesCount() ; i++)
 		{
-			NOperatorNode* pop = m_popsGraph->GetOpFromIdx(i);
+			NOperatorNode* pop = m_popsGraph->GetNodeFromIdx(i);
 			NRect rcItem;
 			GetOperatorRect(pop, rcItem);
 			if (rcItem.Contain(pt))
@@ -779,9 +779,9 @@ void NOperatorsCtrl::SelectOperatorsIntoRect(NRect& rc)
 
 	m_carrayOpsSelected.Clear();
 
-	for (udword i=0; i<m_popsGraph->GetOpsCount(); i++)
+	for (udword i=0; i<m_popsGraph->GetNodesCount(); i++)
 	{
-		NOperatorNode* pop = m_popsGraph->GetOpFromIdx(i);
+		NOperatorNode* pop = m_popsGraph->GetNodeFromIdx(i);
 		NRect rcItem;
 		GetOperatorRect(pop, rcItem);
 		if (!rc.IsIntersected(rcItem))
@@ -908,9 +908,9 @@ bool NOperatorsCtrl::IsOpRectCollide(NRect _rcItemTest, bool _bExcludeSel)
 {
 	if (m_popsGraph)
 	{
-		for (udword i=0; i<m_popsGraph->GetOpsCount() ; i++)
+		for (udword i=0; i<m_popsGraph->GetNodesCount() ; i++)
 		{
-			NOperatorNode* pop = m_popsGraph->GetOpFromIdx(i);
+			NOperatorNode* pop = m_popsGraph->GetNodeFromIdx(i);
 
 			if (_bExcludeSel && m_carrayOpsSelected.Find(pop)!=-1)	continue;
 
