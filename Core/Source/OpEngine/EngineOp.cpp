@@ -152,18 +152,18 @@ void NCompiledAsset::Clear()
 //-----------------------------------------------------------------
 //!	\brief	Add operator to asset
 //-----------------------------------------------------------------
-void NCompiledAsset::AddOpFx(NOperatorFx* _ops, NOperatorFx* _opRoot, NOperatorFx* _opPrev, bool _bAsOutput)
+void NCompiledAsset::AddOpFx(NOperatorFx* _op, NOperatorFx* _opRoot, NOperatorFx* _opPrev, bool _bAsOutput)
 {
 	if (_opPrev!=null)
-		_opPrev->m_pnextOpToProcess = _ops;
+		_opPrev->m_pnextOpToProcess = _op;
 
-	m_arrayOps.AddItem(_ops);
-	_ops->m_proot							= _opRoot;
-	_ops->m_pnextOpToProcess	= null;
+	m_arrayOps.AddItem(_op);
+	_op->m_proot							= _opRoot;
+	_op->m_pnextOpToProcess	= null;
 
 	if (_bAsOutput)
 	{
-		m_arrayOutputOps.AddItem(_ops);
+		m_arrayOutputOps.AddItem(_op);
 	}
 
 }

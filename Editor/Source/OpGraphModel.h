@@ -53,8 +53,8 @@ public:
 	virtual	bool Save(NArchive* _s);	//!< Save object
 	virtual	bool Load(NArchive* _l);	//!< Load object
 
-	udword			GetOpsCount()							{ return m_arrayNodes.Count();					}
-	NOperatorNode*	GetOpFromIdx(udword _idx)	{ return (NOperatorNode*)m_arrayNodes[_idx];}
+	udword					GetNodesCount()							{ return m_arrayNodes.Count();							}
+	NOperatorNode*	GetNodeFromIdx(udword _idx)	{ return (NOperatorNode*)m_arrayNodes[_idx];}
 
 	udword			AddOp(NOperatorNode* _pop);
 	void				DeleteAllOps();
@@ -62,6 +62,7 @@ public:
 	void				MoveOp(NOperatorNode* _pop, sword _x, sword _y);
 	void				InvalidateAllOps();
 
+protected:
 	//Methods search
 	//void GetOpsFromClassName(const char* _pszClassName, NObjectArray& _carray);
 
@@ -74,6 +75,7 @@ public:
 
 	NOperatorNode* GetStartOpFrom(NOperatorNode* _pop);
 	NOperatorNode* GetFinalOpFrom(NOperatorNode* _pop);
+
 
 	//Datas	GUI
 	NObjectArray	m_arrayNodes;						//!< Operators nodes array
