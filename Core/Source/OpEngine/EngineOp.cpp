@@ -50,6 +50,7 @@ NOperatorFx::NOperatorFx()
 	m_byDepth = 0;
 	m_byInputs = 0;
 	m_proot = null;
+	m_fProcessedTime = 0.0f;
 }
 
 //-----------------------------------------------------------------
@@ -169,6 +170,16 @@ void NCompiledAsset::AddOpFx(NOperatorFx* _op, NOperatorFx* _opRoot, NOperatorFx
 }
 
 //-----------------------------------------------------------------
+//!	\brief	Return output
+//-----------------------------------------------------------------
+NOperatorFx* NCompiledAsset::GetOutput(udword _idx)
+{
+	if (_idx>m_arrayOutputOps.Count())	return null;
+
+	return (NOperatorFx*)m_arrayOutputOps[_idx];
+}
+
+//-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
 //							NEngineOp class implementation
@@ -185,9 +196,14 @@ NEngineOp::NEngineOp()
 
 	gpengineOp			= this;
 
-	m_bitmapsAlloc.SetManagedClass( "NBitmap" );
+	m_bitmapsAlloc.SetManagedClass( "N2DBitmap" );
 
 	memset(&m_achannels, 0, sizeof(m_achannels));
+
+	m_dwOpsDescCount = 0;
+	m_dwOpsDescSize = 0;
+	m_pOpsDesc = null;
+	MakeOpsDescTable();
 }
 
 //-----------------------------------------------------------------
@@ -195,6 +211,11 @@ NEngineOp::NEngineOp()
 //-----------------------------------------------------------------
 NEngineOp::~NEngineOp()
 {
+	if (m_pOpsDesc)
+	{
+		NMemFree(m_pOpsDesc);
+	}
+
 }
 
 //-----------------------------------------------------------------
@@ -209,10 +230,10 @@ NEngineOp*	NEngineOp::GetInstance()
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Clear current project
+//!	\brief	Clear Cached resources
 //! \note	Warning clear delete generated medias (bitmaps...)
 //-----------------------------------------------------------------
-void NEngineOp::Clear()
+void NEngineOp::ClearCache()
 {
 	m_bitmapsAlloc.Compact(OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED|OBJRES_TYPE_FINALSTORED,0);
 }
@@ -613,12 +634,12 @@ void NEngineOp::CompactMemory(ubyte _byTypeMask/*=OBJRES_TYPE_INTERMEDIATE|OBJRE
 //! \param	_idx	operator indice
 //! \return	Bitmap Ptr if success else null
 //-----------------------------------------------------------------
-NBitmap* NEngineOp::GetFinalResultBitmapByIdx(udword _idx)
+N2DBitmap* NEngineOp::GetFinalResultBitmapByIdx(udword _idx)
 {
 	if (_idx<m_arrayFinalsOp.Count())
 	{
 		NOperatorFx* pop = (NOperatorFx*)m_arrayFinalsOp[_idx];
-		NBitmap* bmp = (NBitmap*)pop->m_pObj;
+		N2DBitmap* bmp = (N2DBitmap*)pop->m_pObj;
 		bmp->SetName(pop->GetUserName());
 		return bmp;
 	}
@@ -689,4 +710,51 @@ void NEngineOp::ProcessFinalResult(NStoreResultOp* _pFinalResultOp, float _ftime
 {
 	if (_pFinalResultOp)
 		Execute(_ftime, (NOperatorFx*)_pFinalResultOp, _fDetailFactor, _cbOpsProcess);
+}
+
+//-----------------------------------------------------------------
+//	\brief	Create operators descriptions cache
+//-----------------------------------------------------------------
+void NEngineOp::MakeOpsDescTable()
+{
+	m_dwOpsDescCount = 0;
+	m_dwOpsDescSize = 64;
+	m_pOpsDesc = (NOperatorDescFx*)NMemAlloc(m_dwOpsDescSize * sizeof(NOperatorDescFx));
+
+	//Create Operators list sorted by category
+	NRTClass* prtc = NRTClass::GetFirstClassBySuperClass("NOperatorFx");
+	while (prtc)
+	{
+		//Create operator in order to get operator name and categorie
+		NOperatorFx* pop = (NOperatorFx*)prtc->m_pCreateCB();
+
+		//Add new operator
+		m_pOpsDesc[m_dwOpsDescCount].dwColor				= pop->GetColor();
+		m_pOpsDesc[m_dwOpsDescCount].pszRTClassName = prtc->m_pszClassName;
+		strncpy(m_pOpsDesc[m_dwOpsDescCount].szCategorie, pop->GetCategory(), MAX_NAMELEN);
+		strncpy(m_pOpsDesc[m_dwOpsDescCount].szName, pop->GetName(), MAX_NAMELEN);
+
+		m_dwOpsDescCount++;
+		if (m_dwOpsDescCount>m_dwOpsDescSize)
+		{
+			m_dwOpsDescSize+=64;
+			m_pOpsDesc = (NOperatorDescFx*)NMemRealloc(m_pOpsDesc, m_dwOpsDescSize);
+		}
+
+		//Delete operator
+		delete pop;
+
+		//Next RTC
+		prtc = NRTClass::GetNextClassBySuperClass("NOperatorFx", prtc);
+	}
+
+}
+
+//-----------------------------------------------------------------
+//	\brief	Return an operators description
+//-----------------------------------------------------------------
+NOperatorDescFx* NEngineOp::GetOpsDesc(udword _idx)
+{
+	if (_idx>m_dwOpsDescCount)		return false;
+	return &m_pOpsDesc[_idx];
 }

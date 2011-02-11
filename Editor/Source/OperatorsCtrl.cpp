@@ -164,7 +164,7 @@ void NOperatorsCtrl::DisplayOperator(N2DPainter* _pdc, NOperatorNode* _pop)
 	//Operator's Caption
 	NRect rcCap(rcBloc);
 	rcCap.bottom=rcCap.top+3;
-	if (!_pop->m_op->m_bError)		_pdc->FillSolidRect(rcCap, _pop->m_op->GetColor());
+	if (!_pop->m_op->ProcessError())		_pdc->FillSolidRect(rcCap, _pop->m_op->GetColor());
 	else										_pdc->FillSolidRect(rcCap, RGBA(255,0,0,255));
 
 	//Operator marked show
@@ -195,9 +195,9 @@ void NOperatorsCtrl::DisplayOperator(N2DPainter* _pdc, NOperatorNode* _pop)
 	_pdc->Draw3dRect(rcResize, RGBA(255,220,220,220), RGBA(0,0,0,255));
 
 	//Operator Invalid or Processed
-	if (_pop->m_op->m_bInvalided || _pop->m_op->m_fProcessedTime==m_fupdateTime)
+	if (_pop->m_op->IsInvalid() || _pop->m_op->LastProcessTime()==m_fupdateTime)
 	{
-		DWORD dwSeed = _pop->m_op->m_fProcessedTime;
+		DWORD dwSeed = _pop->m_op->LastProcessTime();
 		udword y = rcResize.top + (dwSeed % rcResize.Height());
 		_pdc->DrawLine(rcResize.left, y, rcResize.right, y, RGBA(0,0,0,255), 1);
 	}
@@ -672,9 +672,6 @@ NOperatorNode* NOperatorsCtrl::AddOperator(sword x, sword y, sword w, const char
 		popnode->m_wPosY			= y;
 		popnode->m_wWidth			= w;
 		popnode->m_op					= pop;
-/*		pop->m_byDepth		= 0;
-		pop->m_byInputs		= 0;
-		pop->m_bInvalided	= true;*/
 
 		//Add operator
 		m_popsGraph->AddOp(popnode);

@@ -29,15 +29,15 @@
 
 
 //-----------------------------------------------------------------
-//!	\class	NBitmap
+//!	\class	N2DBitmap
 //!	\brief	Bitmap resource type
 //-----------------------------------------------------------------
-class CORELIB_API NBitmap : public NObject
+class CORELIB_API N2DBitmap : public NObject
 {
 public:
 	//Constructor-Destructor
-					NBitmap();
-	virtual	~NBitmap();
+					N2DBitmap();
+	virtual	~N2DBitmap();
 
 	FDECLARE_CLASS();
 

@@ -72,7 +72,7 @@ udword NFlatOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFac
 	//Bitmap instance
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 	pDst->SetSize(w,h);
 	NRGBA* pPxDst = pDst->GetPixels();
 
@@ -138,7 +138,7 @@ udword NCloudOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFa
 	//Bitmap instance
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
-	NBitmap* pDst	= (NBitmap*)m_pObj;
+	N2DBitmap* pDst	= (N2DBitmap*)m_pObj;
 	pDst->SetSize(w,h);
 	NRGBA* pPxDst	= pDst->GetPixels();
 
@@ -420,7 +420,7 @@ udword NGradientOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetai
 
 	//Bitmap instance
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 	pDst->SetSize(w,h);
 	NRGBA* pPxDst = pDst->GetPixels();
 
@@ -516,7 +516,7 @@ udword NCellOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFac
 
 	//Bitmap instance
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 	pDst->SetSize(w,h);
 	NRGBA* pPxDst = pDst->GetPixels();
 	NRGBAArray arrDst(pPxDst,w,h);
@@ -669,7 +669,7 @@ udword NNoiseOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFa
 	//Bitmap instance
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 	pDst->SetSize(w,h);
 	NRGBA* pPxDst = pDst->GetPixels();
 
@@ -779,7 +779,7 @@ udword NVectorOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailF
 	//Bitmap instance
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 	pDst->SetSize(w,h);
 	NRGBA* pPxDst = pDst->GetPixels();
 

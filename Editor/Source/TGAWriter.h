@@ -17,4 +17,4 @@
 //-----------------------------------------------------------------
 #pragma once
 
-void WriteTGA(NBitmap* _bmp, NString _path = "", NString _suffix = "");
+void WriteTGA(N2DBitmap* _bmp, NString _path = "", NString _suffix = "");

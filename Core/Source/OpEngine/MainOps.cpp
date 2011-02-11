@@ -63,8 +63,8 @@ udword NStoreOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFa
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj, OBJRES_TYPE_STORED);
 
 	//Get input texture
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
@@ -121,8 +121,8 @@ udword NStoreResultOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDe
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj, OBJRES_TYPE_FINALSTORED);
 
 	//Get input texture
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
@@ -134,13 +134,13 @@ udword NStoreResultOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDe
 	return 0;
 }
 
-NBitmap* NStoreResultOp::GetBitmap()
+N2DBitmap* NStoreResultOp::GetBitmap()
 {
-	NBitmap* pbmp = null;
+	N2DBitmap* pbmp = null;
 	if (m_pObj!=null)
 	{
-		if (strcmp(m_pObj->GetRTClass()->m_pszClassName, "NBitmap") == 0)
-			pbmp = (NBitmap*)m_pObj;
+		if (strcmp(m_pObj->GetRTClass()->m_pszClassName, "N2DBitmap") == 0)
+			pbmp = (N2DBitmap*)m_pObj;
 	}
 
 	return pbmp;
@@ -192,10 +192,10 @@ udword NLoadOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFac
 	m_pcvarsBloc->GetValue(0, _ftime, (NObject*&)popRef);
 
 	//Process
-	if (popRef && popRef->m_pObj)
+	if (popRef && popRef->GetResource())
 	{
-		NBitmap* pSrc = (NBitmap*)popRef->m_pObj;
-		NBitmap* pDst = (NBitmap*)m_pObj;
+		N2DBitmap* pSrc = (N2DBitmap*)popRef->GetResource();
+		N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 		udword w = pSrc->GetWidth();
 		udword h = pSrc->GetHeight();
@@ -239,7 +239,7 @@ udword NChannelAnimFX1Op::Process(float _ftime, NOperatorFx** _pOpsInts, float _
 {
 	if (m_byInputs!=0)
 	{
-		NObject* pSrc = (NObject*)(*_pOpsInts)->m_pObj;
+		NObject* pSrc = (NObject*)(*_pOpsInts)->GetResource();
 		m_pObj = pSrc;
 	}
 

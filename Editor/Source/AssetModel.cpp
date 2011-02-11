@@ -188,6 +188,11 @@ void NAssetModel::ComputeOpsSequences()
 
 			m_comp.AddOpFx(pEndOP->m_op, pStartOP->m_op, prev, bOutput);
 
+			//Remove it from unlinked
+			udword dwIdx = m_arrayOpsUnlinked.Find(pEndOP);
+			if (dwIdx!=(udword)-1)
+				m_arrayOpsUnlinked.RemoveItem(dwIdx);		
+
 			pEndOP = pEndOP->m_pnextOpToProcess;
 
 			//Break on store operator

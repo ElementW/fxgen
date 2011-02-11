@@ -49,12 +49,9 @@ NOperatorNode::~NOperatorNode()
 NObject* NOperatorNode::Duplicate()
 {
 	NOperatorNode* pobj			= (NOperatorNode*)NObject::Duplicate();
-	//pobj->m_bInvalided	= true;
-	//pobj->m_byDepth			= 0;
 	pobj->m_wPosX				= m_wPosX;
 	pobj->m_wPosY				= m_wPosY;
 	pobj->m_wWidth			= m_wWidth;
-	//pobj->m_byInputs		= 0;
 
 	pobj->m_op = (NOperatorFx*)m_op->Duplicate();
 
@@ -179,7 +176,7 @@ udword NOpGraphModel::AddOp(NOperatorNode* _pop)
 {
 	udword idx = m_arrayNodes.AddItem(_pop);
 
-	_pop->m_op->m_bInvalided = true;
+	_pop->m_op->Invalidate();
 
 	//Recomputing links
 	ComputeLinks();
@@ -203,7 +200,7 @@ udword NOpGraphModel::DeleteOp(NOperatorNode* _pop)
 	for ( udword i=0; i<carray.Count(); i++)
 	{
 		NOperatorNode* pop = (NOperatorNode*)carray[i];
-		pop->m_op->m_bInvalided = true;
+		pop->m_op->Invalidate();
 		pop->m_pprevOpToProcess = null;
 	}
 
@@ -242,7 +239,8 @@ void NOpGraphModel::DeleteAllOps()
 void NOpGraphModel::MoveOp(NOperatorNode* _pop, sword _x, sword _y)
 {
 	//Invalidate moved operator
-	_pop->m_op->m_bInvalided				= true;
+	_pop->m_op->Invalidate();
+
 	_pop->m_pnextOpToProcess	= null;
 	_pop->m_pprevOpToProcess	= null;
 
@@ -254,7 +252,7 @@ void NOpGraphModel::MoveOp(NOperatorNode* _pop, sword _x, sword _y)
 	{
 		NOperatorNode* pop = (NOperatorNode*)carray[i];
 		pop->m_pprevOpToProcess = null;
-		pop->m_op->m_bInvalided				= true;
+		pop->m_op->Invalidate();
 	}
 
 	//Move Operator
@@ -360,8 +358,8 @@ void NOpGraphModel::_ComputeLinks(NOperatorNode* _popStart, NOperatorNode* _pop,
 	NObjectArray	carray;
 	GetPrevOperators(_pop, carray);
 
-	_pop->m_op->m_byDepth		= (ubyte)_dwCurDepth;
-	_pop->m_op->m_byInputs	= (ubyte)carray.Count();
+	_pop->m_op->SetDepth((ubyte)_dwCurDepth);
+	_pop->m_op->SetInputsCount((ubyte)carray.Count());
 
 	_dwCurDepth+=carray.Count();
 
@@ -505,8 +503,8 @@ void NOpGraphModel::InvalidateAllOps()
 	for (udword i=0; i<m_arrayNodes.Count(); i++)
 	{
 		NOperatorFx* pccurOP = (NOperatorFx*)m_arrayNodes[i];
-		pccurOP->m_bInvalided			= true;
-		pccurOP->m_dwLastUsedTime	= 0;
+		pccurOP->Invalidate();
+		pccurOP->m_dwLastUsedTime	= 0;	//???
 	}
 }
 

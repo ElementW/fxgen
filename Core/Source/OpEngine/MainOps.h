@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------
 //                   Prototypes
 //-----------------------------------------------------------------
-class NBitmap;
+class N2DBitmap;
 
 //-----------------------------------------------------------------
 //!	\class		NStoreOp
@@ -70,7 +70,7 @@ public:
 	virtual const char*		GetUserName();														//!< Operator's User Name
 
 	//Bitmap Access
-	NBitmap* GetBitmap();
+	N2DBitmap* GetBitmap();
 
 	//Processing methods
 	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);

@@ -41,8 +41,8 @@ udword NNopOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFact
 	if (m_byInputs!=1)		return (udword)-1;
 
 	//Get input texture
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
 	pDst->SetSize(w,h);
@@ -91,8 +91,8 @@ udword NRectOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFac
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
 	pDst->SetSize(w,h);
@@ -166,8 +166,8 @@ udword NPixelsOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailF
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
 	pDst->SetSize(w,h);
@@ -227,11 +227,11 @@ udword NAddOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFact
 	//Bitmap instance
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
 
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 	pDst->SetSize(w, h);	//Rk. Texture size for AddOp is the first input operator's size
 
 
@@ -254,7 +254,7 @@ udword NAddOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFact
 	for (udword i=1; i<(udword)m_byInputs; i++)
 	{
 		_pOpsInts++;
-		NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
+		N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
 		if (pSrc==null)		break;
 
 		NRGBA* pPxSrc = pSrc->GetPixels();
@@ -502,8 +502,8 @@ udword NGlowOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFac
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	sdword w = pSrc->GetWidth();
 	sdword h = pSrc->GetHeight();
@@ -606,8 +606,8 @@ udword NCrackOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFa
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst	= (NBitmap*)m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst	= (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
@@ -618,7 +618,7 @@ udword NCrackOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFa
 	if(m_byInputs==2)
 	{
 		_pOpsInts++;
-		NBitmap* pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
+		N2DBitmap* pNorm = (N2DBitmap*)(*_pOpsInts)->GetResource();
 
 		if(pNorm->GetWidth() < w || pNorm->GetHeight() < h)
 			return (udword)-1; // insufficient size
@@ -725,9 +725,9 @@ udword NLerpOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFac
 	if (m_byInputs!=3)		return (udword)-1;
 
 	//Get input textures
-	NBitmap* pSrc1 = (NBitmap*)(*(_pOpsInts+0))->m_pObj;
-	NBitmap* pSrc2 = (NBitmap*)(*(_pOpsInts+1))->m_pObj;
-	NBitmap* pBlend = (NBitmap*)(*(_pOpsInts+2))->m_pObj;
+	N2DBitmap* pSrc1 = (N2DBitmap*)(*(_pOpsInts+0))->GetResource();
+	N2DBitmap* pSrc2 = (N2DBitmap*)(*(_pOpsInts+1))->GetResource();
+	N2DBitmap* pBlend = (N2DBitmap*)(*(_pOpsInts+2))->GetResource();
 
 	// Same inputs W and H sizes
 	udword w = pSrc1->GetWidth();
@@ -739,7 +739,7 @@ udword NLerpOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFac
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Set Bitmap Size
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 	pDst->SetSize(w,h);
 
 	//Process

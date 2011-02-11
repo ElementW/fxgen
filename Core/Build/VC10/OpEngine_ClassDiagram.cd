@@ -3,7 +3,7 @@
   <Class Name="NEngineOp">
     <Position X="0.5" Y="0.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>gAAAAAACJBAAAAQIQAAAIwCBFACAGEAAAgAgEQBAAgA=</HashCode>
+      <HashCode>gAAIAAAKpBCAAARIQAACIwCBFACAGEAAAgAgGQAAAgA=</HashCode>
       <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\OpEngine\EngineOp.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -15,16 +15,16 @@
     </TypeIdentifier>
   </Class>
   <Class Name="NCompiledAsset">
-    <Position X="3" Y="1.5" Width="1.5" />
+    <Position X="3.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAgIAAAAAAAAAAAAAAAAAAAAAAIAQAAAABAAAAACA=</HashCode>
+      <HashCode>AAAAoIABAAAAAAAAEAAAAAAAAAAAIAQAAAABAABAAAA=</HashCode>
       <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\OpEngine\EngineOp.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="NBitmap" Collapsed="true">
-    <Position X="7.5" Y="1.75" Width="1.5" />
+  <Class Name="N2DBitmap" Collapsed="true">
+    <Position X="7.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAABAAAAIAAAASAAAAAIgABAAAAAAABAAAAAAEAAgAA=</HashCode>
+      <HashCode>AAABAAAAIAAAASAAAAAIAABAAIAAAAAAAIAAAEAAgAA=</HashCode>
       <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\OpEngine\Bitmap.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -36,9 +36,9 @@
     </TypeIdentifier>
   </Class>
   <Class Name="NOperatorFx">
-    <Position X="3" Y="4" Width="1.5" />
+    <Position X="3.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>EAAAgIEIAIAAAAAIgwAAAAIAAAAAgADAAAAJEACCBAA=</HashCode>
+      <HashCode>kAAAgIEcAogAAAAIgwAAAAIAAAAAiADAAAAJGAACBAA=</HashCode>
       <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\OpEngine\EngineOp.h</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
