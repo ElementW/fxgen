@@ -66,8 +66,8 @@ udword NRotoZoomOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetai
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	udword tw = pSrc->GetWidth();
 	udword th = pSrc->GetHeight();
@@ -227,8 +227,8 @@ udword NDistortOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetail
 	if (m_byInputs!=2)		return (udword)-1;
 
 	//Get input Texture and Normal
-	NBitmap* pSrc		= (NBitmap*)(*(_pOpsInts+0))->m_pObj;
-	NBitmap* pNorm	= (NBitmap*)(*(_pOpsInts+1))->m_pObj;
+	N2DBitmap* pSrc		= (N2DBitmap*)(*(_pOpsInts+0))->GetResource();
+	N2DBitmap* pNorm	= (N2DBitmap*)(*(_pOpsInts+1))->GetResource();
 
 	// Same inputs W and H sizes
 	udword w = pSrc->GetWidth();
@@ -240,7 +240,7 @@ udword NDistortOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetail
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Set Texture size
-	NBitmap* pDst	= (NBitmap*)m_pObj;
+	N2DBitmap* pDst	= (N2DBitmap*)m_pObj;
 	pDst->SetSize(w, h);
 
 
@@ -363,8 +363,8 @@ udword NVortexOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailF
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	sdword w = pSrc->GetWidth();
 	sdword h = pSrc->GetHeight();
@@ -491,8 +491,8 @@ udword NLookupOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailF
 	if (m_byInputs!=2) return (udword)-1;
 
 	//Get input Texture and TexCoords
-	NBitmap* pSrc = (NBitmap*)(*(_pOpsInts+0))->m_pObj;
-	NBitmap* pTexCoords = (NBitmap*)(*(_pOpsInts+1))->m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*(_pOpsInts+0))->GetResource();
+	N2DBitmap* pTexCoords = (N2DBitmap*)(*(_pOpsInts+1))->GetResource();
 
 	udword w = pTexCoords->GetWidth();
 	udword h = pTexCoords->GetHeight();
@@ -506,7 +506,7 @@ udword NLookupOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailF
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Set Texture size
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 	pDst->SetSize(w, h);
 
 	/////////////////////////////////////////

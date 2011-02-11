@@ -25,16 +25,16 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
-//							NBitmap class implementation
+//							N2DBitmap class implementation
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NBitmap, NObject);
+FIMPLEMENT_CLASS(N2DBitmap, NObject);
 
 //-----------------------------------------------------------------
 //!	\brief	Constructor
 //-----------------------------------------------------------------
-NBitmap::NBitmap() : NObject()
+N2DBitmap::N2DBitmap() : NObject()
 {
 	m_dwWidth=m_dwHeight=0;
 	m_pbyPixels=null;
@@ -45,7 +45,7 @@ NBitmap::NBitmap() : NObject()
 //-----------------------------------------------------------------
 //!	\brief	Destructor
 //-----------------------------------------------------------------
-NBitmap::~NBitmap()
+N2DBitmap::~N2DBitmap()
 {
 	if (m_pbyPixels)			NMemFree(m_pbyPixels);
 }
@@ -55,7 +55,7 @@ NBitmap::~NBitmap()
 //!	\param	_w	Width
 //!	\param	_h	Height
 //-----------------------------------------------------------------
-void NBitmap::SetSize(udword _w, udword _h)
+void N2DBitmap::SetSize(udword _w, udword _h)
 {
 	if (_w!=m_dwWidth || _h!=m_dwHeight)
 	{
@@ -96,7 +96,7 @@ void NBitmap::SetSize(udword _w, udword _h)
 ////!	\param	_w	Width
 ////!	\param	_h	Height
 ////-----------------------------------------------------------------
-//void NBitmap::saveBMP(char *filename)
+//void N2DBitmap::saveBMP(char *filename)
 //{
 //	NRGBA* pdata = m_pbyPixels;
 //

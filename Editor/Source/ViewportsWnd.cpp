@@ -97,7 +97,7 @@ bool NViewportsWnd::Create(const char* name, const NRect& rect, NGUIWnd* parent)
 EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnOPDeleting)
 {
 	NOperatorNode* pop = (NOperatorNode*)dwParam1;
-	if (pop->m_op->m_pObj==m_pcurObject)
+	if (pop->m_op->GetResource()==m_pcurObject)
 	{
 		m_pcurObject=null;
 	}
@@ -111,11 +111,11 @@ EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnOPDeleting)
 EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnRender)
 {
 	NOperatorNode* pop = (NOperatorNode*)dwParam1;
-	if (pop==null || pop->m_op->m_pObj==null || (pop!=null && pop->m_op->m_bError))
+	if (pop==null || pop->m_op->GetResource()==null || (pop!=null && pop->m_op->ProcessError()))
 	{
 		m_pcurObject = null;
 	} else {
-		m_pcurObject = pop->m_op->m_pObj;
+		m_pcurObject = pop->m_op->GetResource();
 	}
 
 	RedrawWindow();
@@ -125,14 +125,14 @@ EVT_IMPLEMENT_HANDLER(NViewportsWnd, OnRender)
 
 //-----------------------------------------------------------------
 //!	\brief	Display a texture from NObject*
-//!	\param	pobj	Bitmap pointeur (NBitmap*)
+//!	\param	pobj	Bitmap pointeur (N2DBitmap*)
 //-----------------------------------------------------------------
 void NViewportsWnd::DisplayTexture(NObject* pobj)
 {
 	//if (m_dwTextureID==0)		return;
 
 	//Copy Pixels to Texture
-	NBitmap* ptex = (NBitmap*)pobj;
+	N2DBitmap* ptex = (N2DBitmap*)pobj;
 
 	if (ptex->GetWidth()!=m_dwTexWidth || ptex->GetHeight()!=m_dwTexHeight)
 	{
@@ -398,14 +398,14 @@ void NViewportsWnd::OnPaint(N2DPainter *_ppainter)
 		//_ppainter->FillSolidRect(rc, RGBA(255,115,115,115));
 		if (pop==null)
 			_ppainter->DrawString("Select an operator by double clicking on it", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(200,255,200,255) );
-		else if (pop && pop->m_op->m_bError)
+		else if (pop && pop->m_op->ProcessError())
 			_ppainter->DrawString("Invalid links !", rc, NDT_HCENTER|NDT_VCENTER|NDT_SINGLELINE, RGBA(200,255,200,255) );
 
 	////////////////////////////////////////
 	//Display operator
 	} else {
 
-		if (strcmp(m_pcurObject->GetRTClass()->m_pszClassName, "NBitmap") == 0)
+		if (strcmp(m_pcurObject->GetRTClass()->m_pszClassName, "N2DBitmap") == 0)
 			DisplayTexture(m_pcurObject);
 	}
 	
@@ -512,7 +512,7 @@ void NViewportsWnd::OnMenuItemClick(NObject* _psender)
 
 		case ID_EXPORT:
 		{
-			/*if (m_pcurObject != null && strcmp(m_pcurObject->GetRTClass()->m_pszClassName, "NBitmap") == 0)
+			/*if (m_pcurObject != null && strcmp(m_pcurObject->GetRTClass()->m_pszClassName, "N2DBitmap") == 0)
 			{
 				//Save File Dialog
 				NFileDialog dlg;
@@ -520,7 +520,7 @@ void NViewportsWnd::OnMenuItemClick(NObject* _psender)
 				if (dlg.DoModal())
 				{
 					NString str = dlg.GetPathName();
-					WriteTGA((NBitmap*)m_pcurObject, str);
+					WriteTGA((N2DBitmap*)m_pcurObject, str);
 				}
 			}*/
 			break;

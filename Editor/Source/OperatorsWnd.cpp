@@ -74,11 +74,11 @@ void NOperatorsWnd::InitCtxMenu()
 	m_wndMenu.OnItemClick=FDelegate(this, (TDelegate)&NOperatorsWnd::OnMenuItemClick);
 
 	//Create Operators list sorted by category
-	NRTClass* prtc = NRTClass::GetFirstClassBySuperClass("NOperatorFx");
-	while (prtc)
+	udword dwCount = NEngineOp::GetInstance()->GetOpsDescCount();
+	printf("<%d> Operators types in engine", dwCount);
+	for (udword i=0; i<dwCount; i++)
 	{
-		//Create operator in order to get operator name and categorie
-		NOperatorFx* pop = (NOperatorFx*)prtc->m_pCreateCB();
+		NOperatorDescFx* pd =	NEngineOp::GetInstance()->GetOpsDesc(i);
 
 		//Search if category already exist in menu
 		NMenuCtrl* popMenu = null;
@@ -87,7 +87,7 @@ void NOperatorsWnd::InitCtxMenu()
 		for (j = 0; j < count; j++)
 		{
 			NMEItemDesc* pitem = m_wndMenu.GetItemDesc(j);
-			if (pitem->strName == NString(pop->GetCategory()))
+			if (pitem->strName == NString(pd->szCategorie))
 			{
 				popMenu = m_wndMenu.GetPopupMenu(j);
 				break;
@@ -97,17 +97,11 @@ void NOperatorsWnd::InitCtxMenu()
 		//Create category if it doesn't exist
 		if (popMenu==null)
 		{
-			popMenu = m_wndMenu.CreatePopupMenu(pop->GetCategory(), -1);
+			popMenu = m_wndMenu.CreatePopupMenu(pd->szCategorie, -1);
 		}
 
 		//Add new operator
-		popMenu->AddItem(pop->GetName(), (udword)prtc->m_pszClassName, 0);
-
-		//Delete operator
-		delete pop;
-
-		//Next RTC
-		prtc = NRTClass::GetNextClassBySuperClass("NOperatorFx", prtc);
+		popMenu->AddItem(pd->szName, (udword)pd->pszRTClassName, 0);
 	}
 
 }

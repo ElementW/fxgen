@@ -53,8 +53,9 @@ typedef	void (__cdecl FXGEN_OPSPROCESSCB)(udword _dwCurrentOp, udword _dwTotalOp
 //-----------------------------------------------------------------
 struct CORELIB_API NOperatorDescFx
 {
-	const char* pszName;
-	const char* pszCategorie;
+	const char*	pszRTClassName;
+	char	szName[MAX_NAMELEN];
+	char	szCategorie[MAX_NAMELEN];
 	udword			dwColor;
 };
 
@@ -81,21 +82,27 @@ public:
 	//Processing methods
 	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor) = 0;	//!< object processing (texture, mesh ...)
 
+	//Members access
+	NObject*		GetResource()			{ return m_pObj;				}
+	bool				IsInvalid()				{ return m_bInvalided;	}
+	void				Invalidate()			{ m_bInvalided=true;		}
+	float				LastProcessTime()	{ return m_fProcessedTime;	}
+	bool				ProcessError()		{ return m_bError;	}
 
-	//Datas Execution
-	ubyte	m_byDepth;						//!< Depth in tree
-	ubyte	m_byInputs;						//!< Input Operators numbers
+	void				SetDepth(ubyte _byDepth)					{  m_byDepth=_byDepth;		}
+	void				SetInputsCount(ubyte _byInputs)		{ m_byInputs = _byInputs;	}
 
-	//Datas RT
-	bool				m_bInvalided;				//!< Invalid operator (must be processed for result)
-	bool				m_bError;						//!< Error while process
-	bool				m_bParsed;					//!< Operators scan optimization
-	float				m_fProcessedTime;		//!< Time for last process() call
-	NObject*		m_pObj;							//!< Object generated (Texture, Mesh ...)
 
 protected:
+	NObject*			m_pObj;		//!< Object generated (Texture, Mesh ...)
 	NOperatorFx*	m_proot;	//!< Root Operator
 	NOperatorFx*	m_pnextOpToProcess;	//!< Next operator to execute
+	float					m_fProcessedTime;		//!< Time for last process() call
+	bool					m_bInvalided;				//!< Invalid operator (must be processed for result)
+	bool					m_bError;						//!< Error while process
+	bool					m_bParsed;					//!< Operators scan optimization
+	ubyte					m_byDepth;					//!< Depth in tree
+	ubyte					m_byInputs;					//!< Input Operators numbers
 
 	// Variables Bloc
 	NVarsBloc* m_pcvarsBloc;
@@ -120,7 +127,8 @@ public:
 	virtual	bool Load(NArchive* _l);	//!< Load object
 
 	//Methods
-	//NStoreResultOp* GetOutputOpByName(pszName)	//Name => Graph:FinalOutput
+	udword GetOutputsCount()		{ return m_arrayOutputOps.Count(); }
+	NOperatorFx* GetOutput(udword _idx);
 
 	void Clear();	//!< Clear this assets
 	void AddOpFx(NOperatorFx* _op, NOperatorFx* _opRoot, NOperatorFx* _opPrev, bool _bAsOutput);
@@ -147,14 +155,12 @@ public:
 	static	NEngineOp* GetInstance();
 
 	//API Methods
-	void	Clear();
+	void	ClearCache();	//!< Clear cached resources
 
-	//void	GetFinalsResultsList(NObjectArray& _carray, const char* _pszFromGroup=NULL, bool _bRecurse=true);
 	void	ProcessFinalResult(NStoreResultOp* _pFinalResultOp, float _ftime, float _fDetailFactor=1.0f, FXGEN_OPSPROCESSCB* _cbOpsProcess=NULL);
 	void	CompactMemory(ubyte _byTypeMask=OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED);
 
 	//Editor Execution
-	//void InvalidateAllOps();
 	void InvalidateOp(NOperatorFx* _pop);
 	void Execute(float _ftime, NOperatorFx* _popFinal, float _fDetailFactor=1.0f, FXGEN_OPSPROCESSCB* _cbProcess=NULL);
 
@@ -166,10 +172,11 @@ public:
 	NObjectGarbage* GetBitmapGarbage()		{ return &m_bitmapsAlloc; }
 
 	//Editor Operators Resources management
-	void GetBitmap(NObject** _ppobj, ubyte _byObjType=OBJRES_TYPE_INTERMEDIATE);
+	void GetBitmap(NObject** _ppobj, ubyte _byObjType=OBJRES_TYPE_INTERMEDIATE);	//!< Return bitmap* associated with an object
 
-	//TODO Operators Description
-	//udword GetOperatorDescFx(NOperatorFxDesc*
+	//Operators Description
+	udword GetOpsDescCount()									{ return m_dwOpsDescCount; }
+	NOperatorDescFx* GetOpsDesc(udword _idx);
 
 	//TODO Assets management
 	//LoadAsset(name)
@@ -180,11 +187,8 @@ public:
 
 protected:
 	//Internal Methods	
-	//void GetFinalOps(NTreeNode* _pnodeFrom, NObjectArray& _finalsOp, bool _bRecurse);	//###TOMOVE### to compiler
-	//void _GetFinalOps(NTreeNode* _pnode, NObjectArray& _finalsOp, bool _bRecurse); //###TOMOVE### to compiler
 	void ClearParsedOpsFlags(NOperatorFx* _pop); //###TOMOVE### to compiler
-	//void _InvalidateAllOps(NTreeNode* _pnode); //###TOMOVE### to compiler
-	NOperatorFx* GetRootOperator(NOperatorFx* _pop); //###TOMOVE### to compiler
+	NOperatorFx* GetRootOperator(NOperatorFx* _pop); //###TOMOVE### to compiledAsset
 
 	//Methods for execution
 	void _Execute(float _fTime, NOperatorFx* _popFinal, float _fDetailFactor);
@@ -192,10 +196,16 @@ protected:
 	void _ComputeInvaliddOps(NOperatorFx* _pop);
 	void _ComputeToProcessOpsCount(NOperatorFx* _popFinal);
 
-	//Datas
-	//NTreeNode* m_pRootGroup;							//!< Root	Groups	//###TOMOVE### to compiler and replace by CompiledAsset
+	//Methods for operators description
+	void MakeOpsDescTable();
 
+	//Datas
 	NVarValue  m_achannels[MAX_CHANNELS];	//!< Values for animation channels
+
+	//Datas for operators description
+	NOperatorDescFx*	m_pOpsDesc;
+	udword						m_dwOpsDescCount;
+	udword						m_dwOpsDescSize;
 
 	//Datas for compilation and execution
 	NOperatorFx*	m_aStacks[MAX_CONTEXTS][MAX_DEPTH];	//!< Inputs Stack for operators process

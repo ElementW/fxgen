@@ -58,8 +58,8 @@ udword NBlurOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFac
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 	sdword w = pSrc->GetWidth();
 	sdword h = pSrc->GetHeight();
 	pDst->SetSize(w,h);
@@ -311,8 +311,8 @@ udword NColorsOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailF
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
@@ -471,10 +471,10 @@ udword NLightOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFa
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input Texture and Normal
-	NBitmap* pSrc	= (NBitmap*)(*_pOpsInts)->m_pObj;
+	N2DBitmap* pSrc	= (N2DBitmap*)(*_pOpsInts)->GetResource();
 	_pOpsInts++;
-	NBitmap* pNorm = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst	= (NBitmap*)m_pObj;
+	N2DBitmap* pNorm = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst	= (N2DBitmap*)m_pObj;
 
 
 	sdword w = pSrc->GetWidth();
@@ -608,8 +608,8 @@ udword NNormalsOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetail
 
 	//////////////////////////////////////////
 	//Get input texture
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
@@ -739,8 +739,8 @@ udword NAbnormalsOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDeta
 
 	//////////////////////////////////////////
 	//Get input texture
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	udword width = pSrc->GetWidth();
 	udword height = pSrc->GetHeight();
@@ -770,7 +770,7 @@ udword NAbnormalsOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDeta
 	if(m_byInputs==2)
 	{
 		_pOpsInts++;
-		NBitmap* pQuat = (NBitmap*)(*_pOpsInts)->m_pObj;
+		N2DBitmap* pQuat = (N2DBitmap*)(*_pOpsInts)->GetResource();
 
 		if(pQuat->GetWidth() < width || pQuat->GetHeight() < height)
 			return (udword)-1; // insufficient size
@@ -866,8 +866,8 @@ udword NSlopeMagnitudeOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _
 
 	//////////////////////////////////////////
 	//Get input texture
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
@@ -981,8 +981,8 @@ udword NInvertOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailF
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	// Init
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst	= (NBitmap*)m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst	= (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
@@ -1063,8 +1063,8 @@ udword NThresholdOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDeta
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	// Init
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst	= (NBitmap*)m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst	= (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
@@ -1169,8 +1169,8 @@ udword NAlphaOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFa
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
@@ -1229,10 +1229,10 @@ udword NSegmentOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetail
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	// Init
-	NBitmap* pSrc1 = (NBitmap*)(*_pOpsInts)->m_pObj;
+	N2DBitmap* pSrc1 = (N2DBitmap*)(*_pOpsInts)->GetResource();
 	_pOpsInts++;
-	NBitmap* pSrc2 = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst	= (NBitmap*)m_pObj;
+	N2DBitmap* pSrc2 = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst	= (N2DBitmap*)m_pObj;
 
 	udword w = pSrc1->GetWidth();
 	udword h = pSrc1->GetHeight();
@@ -1342,8 +1342,8 @@ udword NDilateOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailF
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	// Init
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst = (NBitmap*)m_pObj;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
@@ -1435,9 +1435,9 @@ udword NAlphaMaskOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDeta
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	// Init
-	NBitmap* pSrc = (NBitmap*)(*_pOpsInts)->m_pObj;
-	NBitmap* pDst = (NBitmap*)m_pObj;
-	NBitmap* pAlpha = null;
+	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
+	N2DBitmap* pAlpha = null;
 
 	udword w = pSrc->GetWidth();
 	udword h = pSrc->GetHeight();
@@ -1453,7 +1453,7 @@ udword NAlphaMaskOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDeta
 
 	if(m_byInputs == 2)
 	{
-		pAlpha = (NBitmap*)(*++_pOpsInts)->m_pObj;
+		pAlpha = (N2DBitmap*)(*++_pOpsInts)->GetResource();
 
 		if(pAlpha->GetWidth() < w || pAlpha->GetHeight() < h)
 			return (udword)-1; // insufficient alpha channel size

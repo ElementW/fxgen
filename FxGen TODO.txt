@@ -5,12 +5,17 @@ SVN
 .NVarsBloc::GetBlocDesc Removed
 .NVarsBloc::GetValueDesc Added
 .Add operators compilation phase
+.Engine added Operators description access
+.NOperatorFx variables in protected access (see now methods)
 
 TODO
 -------------
 now 'load' operators could reference differents assets
 	.see own to managed NObject serialization if present into another asset !
 	.into NArchive add archives dependences !
+
+move setDepth() and setInputs() from OperatorFx to NCompiledAsset...
+
 
 .if C# designer version
 	.expose C++ NEngineOp, NCompiledAsset, NOperatorFx
@@ -27,7 +32,7 @@ now 'load' operators could reference differents assets
 		.struct OpValue = GetValue(idx)
 		.SetValue(idx, OpValue)
 	.make C# properties control
-		.access NOperatorFx properties from => OperatorFx::GetValue(idx)
+		.access NOperatorFx properties from => Object::OperatorFx::GetValue(idx)
 	.NCompiledAsset
 		.Load/Save binary
 		.GetUsedOperatorsFxCount()	=> stats
@@ -39,7 +44,7 @@ now 'load' operators could reference differents assets
 	 .add Module management into NArchive PutMappedClass())
 	.Add CommentNode (later)
 	.Add custom OperatorNode classes for visual editing
-	.Add Optimisation methods to NCompiledAsset in order to remove unused fx
+	.Add Optimize() methods to NCompiledAsset in order to remove unused fx
 
 .FxGenLib
 	.Rewrite animation processing (later)
@@ -75,7 +80,7 @@ Version 0.7 alpha (Release: New FxGen Engine !)
 	.Added an operators compiler process
 		.Take an operators graph in input then generate a linear operators calls for engine.
 	.Added memory manager (detect memory leaks in debug)
-	.optimize method NEngineOp::GetRootOperator()
+	.optimized method NEngineOp::GetRootOperator()
 .GUILib
 	.Fixed Menu destruction crash
 	.Application Management Removed
