@@ -22,6 +22,7 @@
 //-----------------------------------------------------------------
 #include "../../Include/CoreLib.h"
 #include "../Types.h"
+#include "EngineOp.h"
 
 //-----------------------------------------------------------------
 //                   Prototypes
@@ -32,7 +33,7 @@
 //!	\class	N2DBitmap
 //!	\brief	Bitmap resource type
 //-----------------------------------------------------------------
-class CORELIB_API N2DBitmap : public NObject
+class CORELIB_API N2DBitmap : public NResourceFx
 {
 public:
 	//Constructor-Destructor
@@ -48,8 +49,6 @@ public:
 	udword				GetWidth()			{ return m_dwWidth;			}
 	udword				GetHeight()			{ return m_dwHeight;		}
 	NRGBA*				GetPixels()			{ return m_pbyPixels;		}
-
-//	virtual void					saveBMP(char *filename);
 
 protected:
 	//Datas

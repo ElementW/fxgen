@@ -54,7 +54,7 @@ const char* NStoreOp::GetUserName()
 	return pszname;
 }
 
-udword NStoreOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NStoreOp::Process(float _ftime, SEngineState& _state)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -63,7 +63,7 @@ udword NStoreOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFa
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj, OBJRES_TYPE_STORED);
 
 	//Get input texture
-	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pSrc = (N2DBitmap*)_state.apInputs[0];
 	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
@@ -81,30 +81,30 @@ udword NStoreOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFa
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //
-//							NStoreResultOp class implementation
+//							NOutputOp class implementation
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(NStoreResultOp, NOperatorFx);
+FIMPLEMENT_CLASS(NOutputOp, NOperatorFx);
 
 
-static NVarsBlocDesc blocdescStoreResultOp[] =
+static NVarsBlocDesc blocdescOutputOp[] =
 {
 	VAR(estring,	false, "Name", "",	"NStringProp", 0.0f, 0.0f, 0.0f)	//0
 	VAR(eubyte,	false, "Type", "0,[Preview,Diffuse,Normal,Specular,Height]",	"NUbyteComboProp", 0.0f, 0.0f, 0.0f)	//1
 };
 
-NStoreResultOp::NStoreResultOp()
+NOutputOp::NOutputOp()
 {
 	//Create variables bloc
-	m_pcvarsBloc = AddVarsBloc(2, blocdescStoreResultOp, 1);
+	m_pcvarsBloc = AddVarsBloc(2, blocdescOutputOp, 1);
 }
 
-NStoreResultOp::~NStoreResultOp()
+NOutputOp::~NOutputOp()
 {
 }
 
-const char* NStoreResultOp::GetUserName()
+const char* NOutputOp::GetUserName()
 {
 	char* pszname;
 	m_pcvarsBloc->GetValue(0, 0, pszname);
@@ -112,7 +112,7 @@ const char* NStoreResultOp::GetUserName()
 }
 
 
-udword NStoreResultOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NOutputOp::Process(float _ftime, SEngineState& _state)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -121,7 +121,7 @@ udword NStoreResultOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDe
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj, OBJRES_TYPE_FINALSTORED);
 
 	//Get input texture
-	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pSrc = (N2DBitmap*)_state.apInputs[0];
 	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
@@ -134,7 +134,7 @@ udword NStoreResultOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDe
 	return 0;
 }
 
-N2DBitmap* NStoreResultOp::GetBitmap()
+N2DBitmap* NOutputOp::GetBitmap()
 {
 	N2DBitmap* pbmp = null;
 	if (m_pObj!=null)
@@ -179,7 +179,7 @@ const char* NLoadOp::GetUserName()
 	return "";
 }
 
-udword NLoadOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NLoadOp::Process(float _ftime, SEngineState& _state)
 {
 	if (m_byInputs!=0)	//Load operator must'n have one input !
 		return (udword)-1;
@@ -235,11 +235,11 @@ NChannelAnimFX1Op::NChannelAnimFX1Op()
 	m_pcvarsBloc = AddVarsBloc(6, blocdescChanAnimFX1Op, 1);
 }
 
-udword NChannelAnimFX1Op::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NChannelAnimFX1Op::Process(float _ftime, SEngineState& _state)
 {
 	if (m_byInputs!=0)
 	{
-		NObject* pSrc = (NObject*)(*_pOpsInts)->GetResource();
+		NResourceFx* pSrc = (NResourceFx*)_state.apInputs[0];
 		m_pObj = pSrc;
 	}
 

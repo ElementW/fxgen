@@ -29,17 +29,15 @@
 //
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-FIMPLEMENT_CLASS(N2DBitmap, NObject);
+FIMPLEMENT_CLASS(N2DBitmap, NResourceFx);
 
 //-----------------------------------------------------------------
 //!	\brief	Constructor
 //-----------------------------------------------------------------
-N2DBitmap::N2DBitmap() : NObject()
+N2DBitmap::N2DBitmap() : NResourceFx()
 {
 	m_dwWidth=m_dwHeight=0;
 	m_pbyPixels=null;
-	//m_dwWidth=m_dwHeight= 256;
-	//m_pbyPixels = (NRGBA*)NMemAlloc(m_dwWidth*m_dwHeight*sizeof(NRGBA));
 }
 
 //-----------------------------------------------------------------
@@ -91,40 +89,3 @@ void N2DBitmap::SetSize(udword _w, udword _h)
 
 }
 
-////-----------------------------------------------------------------
-////!	\brief	Change bitmap size
-////!	\param	_w	Width
-////!	\param	_h	Height
-////-----------------------------------------------------------------
-//void N2DBitmap::saveBMP(char *filename)
-//{
-//	NRGBA* pdata = m_pbyPixels;
-//
-//	noise::utils::Image *image = new noise::utils::Image( m_dwWidth, m_dwHeight );
-//
-//	for( int i = 0; i < m_dwHeight; i++ )
-//	{
-//		for( int j = 0; j < m_dwWidth; j++ )
-//		{
-//			image->SetValue( j, i,
-//				noise::utils::Color((*pdata).r,
-//									(*pdata).g,
-//									(*pdata).b,
-//									(*pdata).a));
-//
-//			*pdata++;
-//
-//		}
-//	}
-//
-//	noise::utils::WriterBMP writer;
-//
-//	std::string fname(filename);
-//	writer.SetDestFilename (fname);
-//	writer.SetSourceImage(*image);
-//
-//	writer.WriteDestFile();
-//
-//	delete image;
-//}
-//

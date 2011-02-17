@@ -169,19 +169,36 @@ bool NOpGraphModel::Load(NArchive* _l)
 //-----------------------------------------------------------------
 //!	\brief	Add an operator into page
 //!	\param	_pop	operator to add
-//!	\return operator index
+//!	\return operator node
 //!	\note Links between operators are recomputed
 //-----------------------------------------------------------------
-udword NOpGraphModel::AddOp(NOperatorNode* _pop)
+NOperatorNode* NOpGraphModel::AddOp(sword x, sword y, sword w, const char* _pszClassName)
 {
-	udword idx = m_arrayNodes.AddItem(_pop);
+	//Create operator
+	NOperatorNode* popnode = null;
 
-	_pop->m_op->Invalidate();
+	NOperatorFx* pop = (NOperatorFx*)NRTClass::CreateByName(_pszClassName);
+	if (pop)
+	{
+		popnode = new NOperatorNode();
 
-	//Recomputing links
-	ComputeLinks();
+		//Init
+		popnode->m_wPosX			= x;
+		popnode->m_wPosY			= y;
+		popnode->m_wWidth			= w;
+		popnode->m_op					= pop;
 
-	return idx;
+		m_arrayNodes.AddItem(popnode);
+
+		popnode->m_op->Invalidate();
+
+		//Recomputing links
+		ComputeLinks();
+
+	}
+
+
+	return popnode;
 }
 
 

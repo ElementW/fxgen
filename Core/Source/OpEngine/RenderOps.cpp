@@ -49,7 +49,7 @@ NFlatOp::NFlatOp()
 	m_pcvarsBloc = AddVarsBloc(3, blocdescFlatOp, 1);
 }
 
-udword NFlatOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NFlatOp::Process(float _ftime, SEngineState& _state)
 {
 	//No Inputs!
 	if (m_byInputs!=0)		return (udword)-1;
@@ -63,8 +63,8 @@ udword NFlatOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFac
 	m_pcvarsBloc->GetValue(1, 0, byVal);
 	udword h=1<<((udword)byVal);
 
-	w=(udword) ((float)w*_fDetailFactor);
-	h=(udword) ((float)h*_fDetailFactor);
+	w=(udword) ((float)w*_state.fDetailFactor);
+	h=(udword) ((float)h*_state.fDetailFactor);
 
 	NRGBA col;
 	m_pcvarsBloc->GetValue(2, _ftime, (udword&)col);
@@ -110,7 +110,7 @@ NCloudOp::NCloudOp()
 	m_pcvarsBloc = AddVarsBloc(6, blocdescCloudOp, 1);
 }
 
-udword NCloudOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NCloudOp::Process(float _ftime, SEngineState& _state)
 {
 	//No Inputs
 	if (m_byInputs!=0)		return (udword)-1;
@@ -132,8 +132,8 @@ udword NCloudOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFa
 	m_pcvarsBloc->GetValue(1, 0, byVal);
 	udword h=1<<((udword)byVal);
 
-	w=(udword) ((float)w*_fDetailFactor);
-	h=(udword) ((float)h*_fDetailFactor);
+	w=(udword) ((float)w*_state.fDetailFactor);
+	h=(udword) ((float)h*_state.fDetailFactor);
 
 	//Bitmap instance
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
@@ -397,7 +397,7 @@ NGradientOp::NGradientOp()
 	m_pcvarsBloc = AddVarsBloc(6, blocdescGradientOp, 1);
 }
 
-udword NGradientOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NGradientOp::Process(float _ftime, SEngineState& _state)
 {
 	//No Inputs!
 	if (m_byInputs!=0)		return (udword)-1;
@@ -409,8 +409,8 @@ udword NGradientOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetai
 	m_pcvarsBloc->GetValue(1, 0, byVal);
 	sdword h=1<<((udword)byVal);
 
-	w=(sdword) ((float)w*_fDetailFactor);
-	h=(sdword) ((float)h*_fDetailFactor);
+	w=(sdword) ((float)w*_state.fDetailFactor);
+	h=(sdword) ((float)h*_state.fDetailFactor);
 
 	NRGBA colA, colB, colC, colD;
 	m_pcvarsBloc->GetValue(2, _ftime, (udword&)colA);
@@ -485,7 +485,7 @@ NCellOp::NCellOp()
 	m_pcvarsBloc = AddVarsBloc(8, blocdescCellOp, 1);
 }
 
-udword NCellOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NCellOp::Process(float _ftime, SEngineState& _state)
 {
 	//No Inputs
 	if (m_byInputs!=0)		return (udword)-1;
@@ -497,8 +497,8 @@ udword NCellOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFac
 	m_pcvarsBloc->GetValue(1, 0, byVal);
 	udword h=1<<((udword)byVal);
 
-	w=(udword) ((float)w*_fDetailFactor);
-	h=(udword) ((float)h*_fDetailFactor);
+	w=(udword) ((float)w*_state.fDetailFactor);
+	h=(udword) ((float)h*_state.fDetailFactor);
 
 	ubyte byRegularity, byDensity, chessboard, pattern;
 	uword wSeed;
@@ -642,7 +642,7 @@ NNoiseOp::NNoiseOp()
 	m_pcvarsBloc = AddVarsBloc(4, blocdescNoiseOp, 1);
 }
 
-udword NNoiseOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NNoiseOp::Process(float _ftime, SEngineState& _state)
 {
 	//No Inputs!
 	if (m_byInputs!=0)		return (udword)-1;
@@ -656,8 +656,8 @@ udword NNoiseOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFa
 	m_pcvarsBloc->GetValue(1, 0, byVal);
 	udword h=1<<((udword)byVal);
 
-	w=(udword) ((float)w*_fDetailFactor);
-	h=(udword) ((float)h*_fDetailFactor);
+	w=(udword) ((float)w*_state.fDetailFactor);
+	h=(udword) ((float)h*_state.fDetailFactor);
 
 	NRGBA col;
 	m_pcvarsBloc->GetValue(2, _ftime, (udword&)col);
@@ -759,7 +759,7 @@ bool NVectorOp::Load(NArchive* _l)
         return true;
 }
 
-udword NVectorOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NVectorOp::Process(float _ftime, SEngineState& _state)
 {
 	//No Inputs!
 	if (m_byInputs!=0)		return (udword)-1;
@@ -773,8 +773,8 @@ udword NVectorOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailF
 	m_pcvarsBloc->GetValue(1, 0, byVal);
 	udword h=1<<((udword)byVal);
 
-	w=(udword) ((float)w*_fDetailFactor);
-	h=(udword) ((float)h*_fDetailFactor);
+	w=(udword) ((float)w*_state.fDetailFactor);
+	h=(udword) ((float)h*_state.fDetailFactor);
 
 	//Bitmap instance
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);

@@ -49,7 +49,7 @@ NBlurOp::NBlurOp()
 	m_pcvarsBloc = AddVarsBloc(4, blocdescBlurOp, 1);
 }
 
-udword NBlurOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NBlurOp::Process(float _ftime, SEngineState& _state)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -58,7 +58,7 @@ udword NBlurOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFac
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
-	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pSrc = (N2DBitmap*)_state.apInputs[0];
 	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 	sdword w = pSrc->GetWidth();
 	sdword h = pSrc->GetHeight();
@@ -77,8 +77,8 @@ udword NBlurOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFac
 	ubyte byPasses = byType == 1 ? 3 : 1;
 
 	//Radius: 0->0, 2->1, 255->127.5d
-	float radiusW= (float)fWidth * 127.5f * _fDetailFactor;
-	float radiusH= (float)fHeight * 127.5f * _fDetailFactor;
+	float radiusW= (float)fWidth * 127.5f * _state.fDetailFactor;
+	float radiusH= (float)fHeight * 127.5f * _state.fDetailFactor;
 
 	//Amplify
 	float amplify= (float)byAmplify;
@@ -173,7 +173,7 @@ udword NBlurOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFac
                 sum.r-=pPxSrc->r;
                 sum.g-=pPxSrc->g;
                 sum.b-=pPxSrc->b;
-				sum.a-=pPxSrc->a;
+								sum.a-=pPxSrc->a;
                 pPxSrc++;
 
                 NRGBA ac = pAccu[(x+bw)%w];
@@ -302,7 +302,7 @@ NColorsOp::NColorsOp()
 	m_pcvarsBloc = AddVarsBloc(6, blocdescColorsOp, 1);
 }
 
-udword NColorsOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NColorsOp::Process(float _ftime, SEngineState& _state)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -311,7 +311,7 @@ udword NColorsOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailF
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
-	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pSrc = (N2DBitmap*)_state.apInputs[0];
 	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
@@ -462,7 +462,7 @@ NLightOp::NLightOp()
 
 }
 
-udword NLightOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NLightOp::Process(float _ftime, SEngineState& _state)
 {
 	//Two inputs (texture, normal)
 	if (m_byInputs!=2)		return (udword)-1;
@@ -471,9 +471,8 @@ udword NLightOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFa
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input Texture and Normal
-	N2DBitmap* pSrc	= (N2DBitmap*)(*_pOpsInts)->GetResource();
-	_pOpsInts++;
-	N2DBitmap* pNorm = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pSrc	= (N2DBitmap*)_state.apInputs[0];
+	N2DBitmap* pNorm = (N2DBitmap*)_state.apInputs[1];
 	N2DBitmap* pDst	= (N2DBitmap*)m_pObj;
 
 
@@ -598,7 +597,7 @@ NNormalsOp::NNormalsOp()
 
 }
 
-udword NNormalsOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NNormalsOp::Process(float _ftime, SEngineState& _state)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -608,7 +607,7 @@ udword NNormalsOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetail
 
 	//////////////////////////////////////////
 	//Get input texture
-	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pSrc = (N2DBitmap*)_state.apInputs[0];
 	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
@@ -621,7 +620,7 @@ udword NNormalsOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetail
 	ubyte byAmp;
 	m_pcvarsBloc->GetValue(0, _ftime, byAmp);
 
-	float fAmp = (float)byAmp*_fDetailFactor / 64.0f; //[0<->4]
+	float fAmp = (float)byAmp*_state.fDetailFactor / 64.0f; //[0<->4]
 
 	//////////////////////////////////////////
 	// Creation des normales
@@ -729,7 +728,7 @@ NAbnormalsOp::NAbnormalsOp()
 
 }
 
-udword NAbnormalsOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NAbnormalsOp::Process(float _ftime, SEngineState& _state)
 {
 	//One or two inputs
 	if (m_byInputs!=1 && m_byInputs!=2)		return (udword)-1;
@@ -739,7 +738,7 @@ udword NAbnormalsOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDeta
 
 	//////////////////////////////////////////
 	//Get input texture
-	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pSrc = (N2DBitmap*)_state.apInputs[0];
 	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	udword width = pSrc->GetWidth();
@@ -769,8 +768,7 @@ udword NAbnormalsOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDeta
 
 	if(m_byInputs==2)
 	{
-		_pOpsInts++;
-		N2DBitmap* pQuat = (N2DBitmap*)(*_pOpsInts)->GetResource();
+		N2DBitmap* pQuat = (N2DBitmap*)_state.apInputs[1];
 
 		if(pQuat->GetWidth() < width || pQuat->GetHeight() < height)
 			return (udword)-1; // insufficient size
@@ -856,7 +854,7 @@ NSlopeMagnitudeOp::NSlopeMagnitudeOp()
 
 }
 
-udword NSlopeMagnitudeOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NSlopeMagnitudeOp::Process(float _ftime, SEngineState& _state)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -866,7 +864,7 @@ udword NSlopeMagnitudeOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _
 
 	//////////////////////////////////////////
 	//Get input texture
-	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pSrc = (N2DBitmap*)_state.apInputs[0];
 	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
@@ -972,7 +970,7 @@ udword NSlopeMagnitudeOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _
 //-----------------------------------------------------------------
 FIMPLEMENT_CLASS(NInvertOp, NOperatorFx);
 
-udword NInvertOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NInvertOp::Process(float _ftime, SEngineState& _state)
 {
 	//One input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -981,7 +979,7 @@ udword NInvertOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailF
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	// Init
-	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pSrc = (N2DBitmap*)_state.apInputs[0];
 	N2DBitmap* pDst	= (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
@@ -1054,7 +1052,7 @@ static inline ubyte compressIntensity(ubyte intensity, float ratio, ubyte thresh
   }
 }
 
-udword NThresholdOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NThresholdOp::Process(float _ftime, SEngineState& _state)
 {
 	//One input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -1063,7 +1061,7 @@ udword NThresholdOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDeta
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	// Init
-	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pSrc = (N2DBitmap*)_state.apInputs[0];
 	N2DBitmap* pDst	= (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
@@ -1160,7 +1158,7 @@ FIMPLEMENT_CLASS(NAlphaOp, NOperatorFx);
 
 NAlphaOp::NAlphaOp(){}
 
-udword NAlphaOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NAlphaOp::Process(float _ftime, SEngineState& _state)
 {
 	//One input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -1169,7 +1167,7 @@ udword NAlphaOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFa
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
-	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pSrc = (N2DBitmap*)_state.apInputs[0];
 	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
@@ -1220,7 +1218,7 @@ NSegmentOp::NSegmentOp()
 	m_pcvarsBloc = AddVarsBloc(1, blocdescSegmentOp, 1);
 }
 
-udword NSegmentOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NSegmentOp::Process(float _ftime, SEngineState& _state)
 {
 	//Two inputs
 	if (m_byInputs!=2)		return (udword)-1;
@@ -1229,9 +1227,8 @@ udword NSegmentOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetail
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	// Init
-	N2DBitmap* pSrc1 = (N2DBitmap*)(*_pOpsInts)->GetResource();
-	_pOpsInts++;
-	N2DBitmap* pSrc2 = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pSrc1 = (N2DBitmap*)_state.apInputs[0];
+	N2DBitmap* pSrc2 = (N2DBitmap*)_state.apInputs[1];
 	N2DBitmap* pDst	= (N2DBitmap*)m_pObj;
 
 	udword w = pSrc1->GetWidth();
@@ -1333,7 +1330,7 @@ NDilateOp::NDilateOp()
 	m_pcvarsBloc = AddVarsBloc(1, blocdescDilateOp, 1);
 }
 
-udword NDilateOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NDilateOp::Process(float _ftime, SEngineState& _state)
 {
 	//One input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -1342,7 +1339,7 @@ udword NDilateOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailF
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	// Init
-	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pSrc = (N2DBitmap*)_state.apInputs[0];
 	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	udword w = pSrc->GetWidth();
@@ -1426,7 +1423,7 @@ NAlphaMaskOp::NAlphaMaskOp()
 	m_pcvarsBloc = AddVarsBloc(1, blocdescAlphaMaskOp, 1);
 }
 
-udword NAlphaMaskOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NAlphaMaskOp::Process(float _ftime, SEngineState& _state)
 {
 	//One or two Inputs
 	if (m_byInputs !=1 && m_byInputs != 2)		return (udword)-1;
@@ -1435,7 +1432,7 @@ udword NAlphaMaskOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDeta
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	// Init
-	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pSrc = (N2DBitmap*)_state.apInputs[0];
 	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 	N2DBitmap* pAlpha = null;
 
@@ -1453,7 +1450,7 @@ udword NAlphaMaskOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDeta
 
 	if(m_byInputs == 2)
 	{
-		pAlpha = (N2DBitmap*)(*++_pOpsInts)->GetResource();
+		pAlpha = (N2DBitmap*)_state.apInputs[1];
 
 		if(pAlpha->GetWidth() < w || pAlpha->GetHeight() < h)
 			return (udword)-1; // insufficient alpha channel size

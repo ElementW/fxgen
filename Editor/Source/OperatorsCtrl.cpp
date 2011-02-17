@@ -658,25 +658,7 @@ void NOperatorsCtrl::PlaceOperator(const char* _pszClassName)
 NOperatorNode* NOperatorsCtrl::AddOperator(sword x, sword y, sword w, const char* _pszClassName)
 {
 	if (m_popsGraph==null)		return null;
-
-	//Create operator
-	NOperatorNode* popnode = null;
-
-	NOperatorFx* pop = (NOperatorFx*)NRTClass::CreateByName(_pszClassName);
-	if (pop)
-	{
-		popnode = new NOperatorNode();
-
-		//Init
-		popnode->m_wPosX			= x;
-		popnode->m_wPosY			= y;
-		popnode->m_wWidth			= w;
-		popnode->m_op					= pop;
-
-		//Add operator
-		m_popsGraph->AddOp(popnode);
-	}
-	return popnode;
+	return m_popsGraph->AddOp(x, y, w, _pszClassName);
 }
 
 
@@ -852,14 +834,16 @@ void NOperatorsCtrl::PasteOperatorsFromClipboard()
 	for (udword i=0; i<m_carrayOpsClipboard.Count(); i++)
 	{
 		NOperatorNode* popOriginal = m_carrayOpsClipboard[i];
-		NOperatorNode* pop = (NOperatorNode*)popOriginal->Duplicate();
+		/*NOperatorNode* pop = (NOperatorNode*)popOriginal->Duplicate();
 
 		//Init
 		pop->m_wPosX			= sword(pop->m_wPosX+dwOffsetX);
-		pop->m_wPosY			= sword(pop->m_wPosY+dwOffsetY);
+		pop->m_wPosY			= sword(pop->m_wPosY+dwOffsetY);*/
 
 		//Add operator
-		m_popsGraph->AddOp(pop);
+		//m_popsGraph->AddOp(sword(pop->m_wPosX+dwOffsetX), sword(pop->m_wPosY+dwOffsetY), pop->m_wWidth, );
+
+		//TODO PasteOperatorsFromClipboard
 	}
 
 	//m_carrayOpsClipboard.Clear();

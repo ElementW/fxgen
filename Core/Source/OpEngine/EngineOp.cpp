@@ -26,6 +26,30 @@
 //-----------------------------------------------------------------
 NEngineOp* gpengineOp = null;
 
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//
+//							NResourceFx class implementation
+//
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+
+//-----------------------------------------------------------------
+//!	\brief	Constructor
+//-----------------------------------------------------------------
+NResourceFx::NResourceFx()
+{
+
+}
+
+//-----------------------------------------------------------------
+//!	\brief	Destructor
+//-----------------------------------------------------------------
+NResourceFx::~NResourceFx()
+{
+
+}
+
 
 
 //-----------------------------------------------------------------
@@ -58,7 +82,7 @@ NOperatorFx::NOperatorFx()
 //-----------------------------------------------------------------
 NOperatorFx::~NOperatorFx()
 {
- NEngineOp::GetInstance()->GetBitmapGarbage()->RemoveEntry(&m_pObj);
+ NEngineOp::GetInstance()->GetBitmapGarbage()->RemoveEntry((NObject**)&m_pObj);
 }
 
 
@@ -151,18 +175,18 @@ void NCompiledAsset::Clear()
 }
 
 //-----------------------------------------------------------------
-//!	\brief	Add operator to asset
+//!	\brief	update link between operators
 //-----------------------------------------------------------------
-void NCompiledAsset::AddOpFx(NOperatorFx* _op, NOperatorFx* _opRoot, NOperatorFx* _opPrev, bool _bAsOutput)
+void NCompiledAsset::LinkFx(NOperatorFx* _op, NOperatorFx* _opRoot, NOperatorFx* _opPrev)
 {
 	if (_opPrev!=null)
 		_opPrev->m_pnextOpToProcess = _op;
 
 	m_arrayOps.AddItem(_op);
-	_op->m_proot							= _opRoot;
+	_op->m_proot						= _opRoot;
 	_op->m_pnextOpToProcess	= null;
 
-	if (_bAsOutput)
+	if (strcmp(_op->GetRTClass()->m_pszClassName, "NOutputOp")==0 )
 	{
 		m_arrayOutputOps.AddItem(_op);
 	}
@@ -250,10 +274,10 @@ void NEngineOp::ComputeInvaliddOps(NOperatorFx* _popFinal)
 
 	//Init
 	m_nCurContext = 0;
-	memset(m_aStacks, 0, sizeof(m_aStacks));
+	memset(m_aStates, 0, sizeof(m_aStates));
 
 	//Get Root operator
-	NOperatorFx* pcRootOP = GetRootOperator(_popFinal);
+	NOperatorFx* pcRootOP = _popFinal->m_proot;
 	//TRACE("Root operator for invalidation <%s>\n", pcRootOP->GetName());
 
 	//Clear Parsed Flags in order to optimize RefTarget that Must be invalided
@@ -284,7 +308,7 @@ void NEngineOp::_ComputeInvaliddOps(NOperatorFx* _pop)
 			{
 				//TRACE("RefTarget Must be invalided <%s> !\n", prefop->GetUserName());
 
-				NOperatorFx* pcrootOpToProcess = GetRootOperator(prefop);
+				NOperatorFx* pcrootOpToProcess = prefop->m_proot;
 				if (pcrootOpToProcess)
 				{
 					//TRACE(".Jumping To <%s> !\n", pcrootOpToProcess->GetName());
@@ -305,10 +329,12 @@ void NEngineOp::_ComputeInvaliddOps(NOperatorFx* _pop)
 
 		//Check if one inputs	is invalid
 		// if yes -> invalid current op
-		NOperatorFx** pOpsIns = &m_aStacks[m_nCurContext][pccurOP->m_byDepth];
+		//NOperatorFx** pOpsIns = &m_aStacks[m_nCurContext][pccurOP->m_byDepth];
 		for (ubyte i=0; i<pccurOP->m_byInputs; i++)
 		{
-			if (pOpsIns[i]->m_bInvalided)
+			NOperatorFx* pinput = m_aStates[m_nCurContext].apOpsLayers[i+(int)pccurOP->m_byDepth];
+			//if (pOpsIns[i]->m_bInvalided)
+			if (pinput->IsInvalid())
 			{
 				pccurOP->m_bInvalided=true;
 				//TRACE("\t%s Invalided\n", pccurOP->GetName());
@@ -330,7 +356,8 @@ void NEngineOp::_ComputeInvaliddOps(NOperatorFx* _pop)
 		}
 
 		//Update Stack
-		m_aStacks[m_nCurContext][pccurOP->m_byDepth] = pccurOP;
+		//m_aStacks[m_nCurContext][pccurOP->m_byDepth] = pccurOP;
+		m_aStates[m_nCurContext].apOpsLayers[(int)pccurOP->m_byDepth] = pccurOP;
 
 		pccurOP = pccurOP->m_pnextOpToProcess;
 	}
@@ -355,7 +382,7 @@ void NEngineOp::ClearParsedOpsFlags(NOperatorFx* _pop)
 		}
 
 		//Update Stack
-		m_aStacks[m_nCurContext][pccurOP->m_byDepth] = pccurOP;
+		m_aStates[m_nCurContext].apOpsLayers[pccurOP->m_byDepth] = pccurOP;
 
 		pccurOP = pccurOP->m_pnextOpToProcess;
 	}
@@ -386,18 +413,23 @@ void NEngineOp::Execute(float _ftime, NOperatorFx* _popFinal, float _fDetailFact
 		m_bError									= false;
 		m_cbOpsProcess						= _cbOpsProcess;
 
-		memset(m_aStacks, 0, sizeof(m_aStacks));
+		memset(m_aStates, 0, sizeof(m_aStates));
+
+		for (udword i=0; i<MAX_CONTEXTS; i++)
+		{
+			m_aStates[m_nCurContext].fDetailFactor = _fDetailFactor;
+		}
 
 		//Operators count if a callback is specified
 		if (m_cbOpsProcess!=NULL)
 		{
-			NOperatorFx* pcRootOP = GetRootOperator(_popFinal);
+			NOperatorFx* pcRootOP = _popFinal->m_proot;
 			ClearParsedOpsFlags(pcRootOP);
 			_ComputeToProcessOpsCount(_popFinal);
 		}
 
 		//Execute
-		_Execute(_ftime, _popFinal, _fDetailFactor);
+		_Execute(_ftime, _popFinal);
 	}
 
 }
@@ -406,15 +438,15 @@ void NEngineOp::Execute(float _ftime, NOperatorFx* _popFinal, float _fDetailFact
 //!	\brief	Execute this project from root and until final operator
 //!	\param	_ftime		time in ms
 //!	\param	_popFinal	final operator for result
-//!	\param	_fDetailFactor	Result Detail (Factor x0.5, x1 , x2)
 //!	\note		Invalid operators MUST have been computed first
 //-----------------------------------------------------------------
-void NEngineOp::_Execute(float _ftime, NOperatorFx* _popFinal, float _fDetailFactor)
+void NEngineOp::_Execute(float _ftime, NOperatorFx* _popFinal)
 {
 	if (_popFinal==null)		return;
+	udword i,j;
 
 	//Get Root operator
-	NOperatorFx* pccurOP = GetRootOperator(_popFinal);
+	NOperatorFx* pccurOP = _popFinal->m_proot;
 	//TRACE("Root operator for execute <%s>\n", pccurOP->GetName());
 
 	//Execute from root
@@ -422,19 +454,19 @@ void NEngineOp::_Execute(float _ftime, NOperatorFx* _popFinal, float _fDetailFac
 	{
 		//Process Referenced operators (refTarget) if marked invalid
 		udword dwRefCount = pccurOP->GetRefCount();
-		for (udword j=0; j<dwRefCount; j++)
+		for (j=0; j<dwRefCount; j++)
 		{
 			NOperatorFx* prefop = (NOperatorFx*)pccurOP->GetRef(j);
 			if (prefop->m_bInvalided)
 			{
 				//TRACE("RefTarget Must be executed <%s> !\n", prefop->GetName());
-				NOperatorFx* pcrootOpToProcess = GetRootOperator(prefop);
+				NOperatorFx* pcrootOpToProcess = prefop->m_proot;
 				if (pcrootOpToProcess)
 				{
 					//TRACE(".Jumping To <%s> !\n", pcrootOpToProcess->GetName());
 
 					m_nCurContext++;
-					_Execute(_ftime, prefop, _fDetailFactor);
+					_Execute(_ftime, prefop);
 					m_nCurContext--;
 				}
 			}
@@ -449,8 +481,14 @@ void NEngineOp::_Execute(float _ftime, NOperatorFx* _popFinal, float _fDetailFac
 				//TRACE("Process %d/%d\n", m_dwCurProcessOpsCount, m_dwTotalProcessOpsCount);
 				if (m_cbOpsProcess)		(*m_cbOpsProcess)(m_dwCurProcessOpsCount, m_dwTotalProcessOpsCount);
 
-				NOperatorFx** pOpsIns = &m_aStacks[m_nCurContext][pccurOP->m_byDepth];
-				if (pccurOP->Process(_ftime, pOpsIns, _fDetailFactor)==(udword)-1)
+				//Init for fast process
+				for (i=0; i<(udword)pccurOP->m_byInputs; i++)
+				{
+					m_aStates[m_nCurContext].apInputs[i] = m_aStates[m_nCurContext].apOpsLayers[(udword)pccurOP->m_byDepth + i]->GetResource();
+				}
+
+				//Process
+				if (pccurOP->Process(_ftime, m_aStates[m_nCurContext])==(udword)-1)
 					m_bError = true;
 
 				m_dwCurProcessOpsCount++;
@@ -470,7 +508,8 @@ void NEngineOp::_Execute(float _ftime, NOperatorFx* _popFinal, float _fDetailFac
 		pccurOP->m_bError = m_bError;
 
 		//Update Stack
-		m_aStacks[m_nCurContext][pccurOP->m_byDepth] = pccurOP;
+		m_aStates[m_nCurContext].apOpsLayers[pccurOP->m_byDepth] = pccurOP;
+		//m_aStacks[m_nCurContext][pccurOP->m_byDepth] = pccurOP;
 
 		pccurOP = pccurOP->m_pnextOpToProcess;
 	}
@@ -488,7 +527,7 @@ void NEngineOp::_ComputeToProcessOpsCount(NOperatorFx* _popFinal)
 	if (_popFinal==null)		return;
 
 	//Get Root operator
-	NOperatorFx* pccurOP = GetRootOperator(_popFinal);
+	NOperatorFx* pccurOP = _popFinal->m_proot;
 
 	//Execute from root
 	while (pccurOP && pccurOP != m_popFinal->m_pnextOpToProcess)
@@ -501,7 +540,7 @@ void NEngineOp::_ComputeToProcessOpsCount(NOperatorFx* _popFinal)
 			if (prefop->m_bInvalided && !prefop->m_bParsed)
 			{
 				//TRACE("RefTarget Must be executed <%s> !\n", prefop->GetName());
-				NOperatorFx* pcrootOpToProcess = GetRootOperator(prefop);
+				NOperatorFx* pcrootOpToProcess = prefop->m_proot;
 				if (pcrootOpToProcess)
 				{
 					//TRACE(".Jumping To <%s> !\n", pcrootOpToProcess->GetName());
@@ -522,7 +561,7 @@ void NEngineOp::_ComputeToProcessOpsCount(NOperatorFx* _popFinal)
 		}
 
 		//Update Stack
-		m_aStacks[m_nCurContext][pccurOP->m_byDepth] = pccurOP;
+		m_aStates[m_nCurContext].apOpsLayers[pccurOP->m_byDepth] = pccurOP;
 
 		pccurOP = pccurOP->m_pnextOpToProcess;
 	}
@@ -550,20 +589,20 @@ void NEngineOp::InvalidateOp(NOperatorFx* _pop)
 //!	\return root operator
 //!	\note		Links must have been computed first
 //-----------------------------------------------------------------
-NOperatorFx* NEngineOp::GetRootOperator(NOperatorFx* pop)
+/*NOperatorFx* NEngineOp::GetRootOperator(NOperatorFx* pop)
 {
 	if (pop==null)		return null;
 	return pop->m_proot;
-}
+}*/
 
 //-----------------------------------------------------------------
 //!	\brief	Return a bitmap from ressource management
 //!	\param	_ppobj			object pointeur
 //!	\param	_byObjType	object allocation type
 //-----------------------------------------------------------------
-void NEngineOp::GetBitmap(NObject** _ppobj, ubyte _byObjType)
+void NEngineOp::GetBitmap(NResourceFx** _ppobj, ubyte _byObjType)
 {
-	m_bitmapsAlloc.Asset(_ppobj, _byObjType);
+	m_bitmapsAlloc.Asset((NObject**)_ppobj, _byObjType);
 }
 
 //-----------------------------------------------------------------
@@ -681,13 +720,13 @@ N2DBitmap* NEngineOp::GetFinalResultBitmapByIdx(udword _idx)
 //-----------------------------------------------------------------
 /*void NEngineOp::GetFinalOps(NTreeNode* _pnodeFrom, NObjectArray& _finalsOp, bool _bRecurse)
 {
-	//Parse Alls Pages to add 'NStoreResultOp'
+	//Parse Alls Pages to add 'NOutputOp'
 	NObjectArray& arrayObjs = _pnodeFrom->GetObjsArray();
 	udword dwCount = arrayObjs.Count();
 	while (dwCount--)
 	{
 		NOpGraphModel* ppage = (NOpGraphModel*)arrayObjs[dwCount];
-		ppage->GetOpsFromClassName("NStoreResultOp", _finalsOp);
+		ppage->GetOpsFromClassName("NOutputOp", _finalsOp);
 	}
 
 	//Childs
@@ -706,11 +745,11 @@ N2DBitmap* NEngineOp::GetFinalResultBitmapByIdx(udword _idx)
 //!	\param	_fDetailFactor				Result Detail (Factor x0.5, x1 , x2)
 //!	\param	_cbOpsProcess				CallBack
 //-----------------------------------------------------------------
-void NEngineOp::ProcessFinalResult(NStoreResultOp* _pFinalResultOp, float _ftime, float _fDetailFactor, FXGEN_OPSPROCESSCB* _cbOpsProcess)
+/*void NEngineOp::ProcessFinalResult(NOutputOp* _pFinalResultOp, float _ftime, float _fDetailFactor, FXGEN_OPSPROCESSCB* _cbOpsProcess)
 {
 	if (_pFinalResultOp)
 		Execute(_ftime, (NOperatorFx*)_pFinalResultOp, _fDetailFactor, _cbOpsProcess);
-}
+}*/
 
 //-----------------------------------------------------------------
 //	\brief	Create operators descriptions cache

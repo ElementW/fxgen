@@ -52,7 +52,8 @@ public:
 	virtual const char*		GetCategory()	{ return "Misc"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
+	
 };
 
 
@@ -73,7 +74,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 
@@ -94,7 +95,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 //-----------------------------------------------------------------
@@ -114,7 +115,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 //-----------------------------------------------------------------
@@ -135,7 +136,7 @@ public:
 
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 
 };
 
@@ -156,7 +157,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 
 	//Methods
 	float myfRandom();
@@ -181,7 +182,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Combine"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 #endif //COMBINEOPS_H
