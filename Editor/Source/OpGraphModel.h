@@ -56,7 +56,7 @@ public:
 	udword					GetNodesCount()							{ return m_arrayNodes.Count();							}
 	NOperatorNode*	GetNodeFromIdx(udword _idx)	{ return (NOperatorNode*)m_arrayNodes[_idx];}
 
-	udword			AddOp(NOperatorNode* _pop);
+	NOperatorNode*			AddOp(sword x, sword y, sword w, const char* _pszClassName);
 	void				DeleteAllOps();
 	udword			DeleteOp(NOperatorNode* _pop);
 	void				MoveOp(NOperatorNode* _pop, sword _x, sword _y);

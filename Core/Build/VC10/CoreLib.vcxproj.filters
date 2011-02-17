@@ -5,14 +5,17 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="GUI">
-      <UniqueIdentifier>{bf846be8-a31a-48b4-bc6f-75484db83805}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Operator Engine">
       <UniqueIdentifier>{21c280a0-3d00-44cc-b76b-023f6707d1f3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Operators">
       <UniqueIdentifier>{b8355ebc-0065-4ef2-b739-999d4fa5089c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{6b8b8200-3480-429b-b06b-84a4217a6dc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI ###TOREMOVE###">
+      <UniqueIdentifier>{bf846be8-a31a-48b4-bc6f-75484db83805}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -35,22 +38,22 @@
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\EventsMgr.cpp">
-      <Filter>GUI</Filter>
+      <Filter>GUI ###TOREMOVE###</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Font.cpp">
-      <Filter>GUI</Filter>
+      <Filter>GUI ###TOREMOVE###</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\GUI.cpp">
-      <Filter>GUI</Filter>
+      <Filter>GUI ###TOREMOVE###</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\MenuCtrl.cpp">
-      <Filter>GUI</Filter>
+      <Filter>GUI ###TOREMOVE###</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\StandardsCtrl.cpp">
-      <Filter>GUI</Filter>
+      <Filter>GUI ###TOREMOVE###</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\StripBarCtrl.cpp">
-      <Filter>GUI</Filter>
+      <Filter>GUI ###TOREMOVE###</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\OpEngine\CombineOps.cpp">
       <Filter>Operators</Filter>
@@ -70,11 +73,11 @@
     <ClCompile Include="..\..\Source\OpEngine\Controllers.cpp">
       <Filter>Operator Engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\OpEngine\Bitmap.cpp">
-      <Filter>Operator Engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\OpEngine\EngineOp.cpp">
       <Filter>Operator Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\OpEngine\Bitmap.cpp">
+      <Filter>Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -100,25 +103,25 @@
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\EventsMgr.h">
-      <Filter>GUI</Filter>
+      <Filter>GUI ###TOREMOVE###</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Font.h">
-      <Filter>GUI</Filter>
+      <Filter>GUI ###TOREMOVE###</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\GUI.h">
-      <Filter>GUI</Filter>
+      <Filter>GUI ###TOREMOVE###</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\MenuCtrl.h">
-      <Filter>GUI</Filter>
+      <Filter>GUI ###TOREMOVE###</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\StandardsCtrl.h">
-      <Filter>GUI</Filter>
+      <Filter>GUI ###TOREMOVE###</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\StripBarCtrl.h">
-      <Filter>GUI</Filter>
+      <Filter>GUI ###TOREMOVE###</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Templates.h">
-      <Filter>GUI</Filter>
+      <Filter>GUI ###TOREMOVE###</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\CoreLib.h" />
     <ClInclude Include="..\..\Source\OpEngine\CombineOps.h">
@@ -139,14 +142,14 @@
     <ClInclude Include="..\..\Source\OpEngine\Controllers.h">
       <Filter>Operator Engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\OpEngine\Bitmap.h">
-      <Filter>Operator Engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\OpEngine\EngineOp.h">
       <Filter>Operator Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\OpEngine\RectangularArray.h">
       <Filter>Operator Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\OpEngine\Bitmap.h">
+      <Filter>Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

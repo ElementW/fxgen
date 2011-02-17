@@ -137,7 +137,7 @@ void NAssetModel::_CompileAsset(NTreeNode* _pParent)
 
 			//For each nodes
 			udword dwCount = pmodel->GetNodesCount();
-			for (udword j=0; j<dwCount; j--)
+			for (udword j=0; j<dwCount; j++)
 			{
 				NOperatorNode* node = pmodel->GetNodeFromIdx(j);
 				m_arrayOpsUnlinked.AddItem(node);
@@ -182,11 +182,11 @@ void NAssetModel::ComputeOpsSequences()
 			if (pEndOP->m_pprevOpToProcess)
 				prev = pEndOP->m_pprevOpToProcess->m_op;
 
-			bool bOutput=false;
+			/*bool bOutput=false;
 			if (pEndOP->m_op->GetUserName() && strlen(pEndOP->m_op->GetUserName())!=0)
-				bOutput=true;
+				bOutput=true;*/
 
-			m_comp.AddOpFx(pEndOP->m_op, pStartOP->m_op, prev, bOutput);
+			m_comp.LinkFx(pEndOP->m_op, pStartOP->m_op, prev);
 
 			//Remove it from unlinked
 			udword dwIdx = m_arrayOpsUnlinked.Find(pEndOP);

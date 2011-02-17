@@ -38,7 +38,7 @@
 //-----------------------------------------------------------------
 class NObject;
 	class NOperatorFx;
-		class	NStoreResultOp;
+		class	NOutputOp;
 	class NOpGraphModel;
 	class NEngineOp;
 
@@ -57,6 +57,30 @@ struct CORELIB_API NOperatorDescFx
 	char	szName[MAX_NAMELEN];
 	char	szCategorie[MAX_NAMELEN];
 	udword			dwColor;
+};
+
+//-----------------------------------------------------------------
+//!	\class		NResourceFx
+//!	\brief		Base class for an resource
+//-----------------------------------------------------------------
+class CORELIB_API NResourceFx :	public NObject
+{
+public:
+	NResourceFx();
+	virtual ~NResourceFx();
+};
+
+//-----------------------------------------------------------------
+//!	\class		SEngineState
+//!	\brief		Engine state
+//-----------------------------------------------------------------
+struct SEngineState
+{
+	float					fDetailFactor;
+	NResourceFx*	apInputs[MAX_DEPTH];
+
+	//Reserved Engine only
+	NOperatorFx*	apOpsLayers[MAX_DEPTH];
 };
 
 //-----------------------------------------------------------------
@@ -80,10 +104,10 @@ public:
 	virtual	bool Load(NArchive* _l);	//!< Load object
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor) = 0;	//!< object processing (texture, mesh ...)
+	virtual udword Process(float _ftime, SEngineState& _state) = 0;	//!< object processing (texture, mesh ...)
 
 	//Members access
-	NObject*		GetResource()			{ return m_pObj;				}
+	NResourceFx*		GetResource()			{ return m_pObj;				}
 	bool				IsInvalid()				{ return m_bInvalided;	}
 	void				Invalidate()			{ m_bInvalided=true;		}
 	float				LastProcessTime()	{ return m_fProcessedTime;	}
@@ -94,7 +118,7 @@ public:
 
 
 protected:
-	NObject*			m_pObj;		//!< Object generated (Texture, Mesh ...)
+	NResourceFx*	m_pObj;		//!< Object generated (Texture, Mesh ...)
 	NOperatorFx*	m_proot;	//!< Root Operator
 	NOperatorFx*	m_pnextOpToProcess;	//!< Next operator to execute
 	float					m_fProcessedTime;		//!< Time for last process() call
@@ -131,13 +155,18 @@ public:
 	NOperatorFx* GetOutput(udword _idx);
 
 	void Clear();	//!< Clear this assets
-	void AddOpFx(NOperatorFx* _op, NOperatorFx* _opRoot, NOperatorFx* _opPrev, bool _bAsOutput);
+	void LinkFx(NOperatorFx* _op, NOperatorFx* _opRoot, NOperatorFx* _opPrev);
+
+	//TODO creation...
+	//NOperatorFx* CreateFx(const char* _pszClassName);
+	//void DeleteFx(NOperatorFx* _op);
 
 protected:
 	//Datas
 	NObjectArray	m_arrayOps;				//!< Operators array
 	NObjectArray	m_arrayOutputOps;	//!< Output Operators array
 };
+
 
 
 //-----------------------------------------------------------------
@@ -157,14 +186,14 @@ public:
 	//API Methods
 	void	ClearCache();	//!< Clear cached resources
 
-	void	ProcessFinalResult(NStoreResultOp* _pFinalResultOp, float _ftime, float _fDetailFactor=1.0f, FXGEN_OPSPROCESSCB* _cbOpsProcess=NULL);
+	//void	ProcessOutput(NOutputOp* _pFinalResultOp, float _ftime, float _fDetailFactor=1.0f, FXGEN_OPSPROCESSCB* _cbOpsProcess=NULL);
 	void	CompactMemory(ubyte _byTypeMask=OBJRES_TYPE_INTERMEDIATE|OBJRES_TYPE_STORED);
 
-	//Editor Execution
+	//Execution
 	void InvalidateOp(NOperatorFx* _pop);
 	void Execute(float _ftime, NOperatorFx* _popFinal, float _fDetailFactor=1.0f, FXGEN_OPSPROCESSCB* _cbProcess=NULL);
 
-	//Editor Channels methods
+	//Channels methods
 	void SetChannelValue(ubyte _byChannel, NVarValue& _value);
 	void GetChannelValue(ubyte _byChannel, NVarValue& _outValue);
 
@@ -172,7 +201,7 @@ public:
 	NObjectGarbage* GetBitmapGarbage()		{ return &m_bitmapsAlloc; }
 
 	//Editor Operators Resources management
-	void GetBitmap(NObject** _ppobj, ubyte _byObjType=OBJRES_TYPE_INTERMEDIATE);	//!< Return bitmap* associated with an object
+	void GetBitmap(NResourceFx** _ppobj, ubyte _byObjType=OBJRES_TYPE_INTERMEDIATE);	//!< Return bitmap* associated with an object
 
 	//Operators Description
 	udword GetOpsDescCount()									{ return m_dwOpsDescCount; }
@@ -188,10 +217,9 @@ public:
 protected:
 	//Internal Methods	
 	void ClearParsedOpsFlags(NOperatorFx* _pop); //###TOMOVE### to compiler
-	NOperatorFx* GetRootOperator(NOperatorFx* _pop); //###TOMOVE### to compiledAsset
 
 	//Methods for execution
-	void _Execute(float _fTime, NOperatorFx* _popFinal, float _fDetailFactor);
+	void _Execute(float _fTime, NOperatorFx* _popFinal);
 	void ComputeInvaliddOps(NOperatorFx* _popFinal);
 	void _ComputeInvaliddOps(NOperatorFx* _pop);
 	void _ComputeToProcessOpsCount(NOperatorFx* _popFinal);
@@ -208,7 +236,10 @@ protected:
 	udword						m_dwOpsDescSize;
 
 	//Datas for compilation and execution
-	NOperatorFx*	m_aStacks[MAX_CONTEXTS][MAX_DEPTH];	//!< Inputs Stack for operators process
+	SEngineState m_aStates[MAX_CONTEXTS];
+
+	//NResourceFx*	m_aStacks[MAX_CONTEXTS][MAX_DEPTH];	//!< Inputs Stack for operators process
+
 	udword			m_nCurContext;				//!< indice (see m_aStacks[m_nCurContext, dwCurLevel])
 	NOperatorFx*	m_popFinal;
 	bool				m_bError;							//!< Error while process

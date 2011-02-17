@@ -54,7 +54,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 //-----------------------------------------------------------------
@@ -74,7 +74,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 
 	//Methods
 	void	Cloud(ubyte byoctaves, float fampMod);
@@ -107,7 +107,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Render"; }		//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 
 };
 
@@ -128,7 +128,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 //-----------------------------------------------------------------
@@ -148,7 +148,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Render"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 //-----------------------------------------------------------------
@@ -171,7 +171,7 @@ public:
 	void			SetVectorData(ubyte* _data, udword _length);
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 
 private:
 	//Serialization

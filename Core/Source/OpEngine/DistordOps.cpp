@@ -57,7 +57,7 @@ NRotoZoomOp::~NRotoZoomOp()
 {
 }
 
-udword NRotoZoomOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NRotoZoomOp::Process(float _ftime, SEngineState& _state)
 {
 	//Only one Input
 	if (m_byInputs!=1)		return (udword)-1;
@@ -66,7 +66,7 @@ udword NRotoZoomOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetai
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
-	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pSrc = (N2DBitmap*)_state.apInputs[0];
 	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	udword tw = pSrc->GetWidth();
@@ -82,14 +82,14 @@ udword NRotoZoomOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetai
 	if (byVal!=0)
 	{
 		w=1<<((udword)(byVal-1));
-		w=(udword) ((float)w*_fDetailFactor);
+		w=(udword) ((float)w*_state.fDetailFactor);
 	}
 
 	m_pcvarsBloc->GetValue(1, 0, byVal);
 	if (byVal!=0)
 	{
 		h=1<<((udword)(byVal-1));
-		h=(udword) ((float)h*_fDetailFactor);
+		h=(udword) ((float)h*_state.fDetailFactor);
 	}
 
 	pDst->SetSize(w, h);
@@ -221,14 +221,14 @@ NDistortOp::NDistortOp()
 
 }
 
-udword NDistortOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NDistortOp::Process(float _ftime, SEngineState& _state)
 {
 	//Two inputs (texture, normal)
 	if (m_byInputs!=2)		return (udword)-1;
 
 	//Get input Texture and Normal
-	N2DBitmap* pSrc		= (N2DBitmap*)(*(_pOpsInts+0))->GetResource();
-	N2DBitmap* pNorm	= (N2DBitmap*)(*(_pOpsInts+1))->GetResource();
+	N2DBitmap* pSrc		= (N2DBitmap*)_state.apInputs[0];
+	N2DBitmap* pNorm	= (N2DBitmap*)_state.apInputs[1];
 
 	// Same inputs W and H sizes
 	udword w = pSrc->GetWidth();
@@ -354,7 +354,7 @@ NVortexOp::NVortexOp()
 
 }
 
-udword NVortexOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NVortexOp::Process(float _ftime, SEngineState& _state)
 {
 	//Only one Input
 	if (m_byInputs!=1)              return (udword)-1;
@@ -363,7 +363,7 @@ udword NVortexOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailF
 	NEngineOp::GetInstance()->GetBitmap(&m_pObj);
 
 	//Get input texture
-	N2DBitmap* pSrc = (N2DBitmap*)(*_pOpsInts)->GetResource();
+	N2DBitmap* pSrc = (N2DBitmap*)_state.apInputs[0];
 	N2DBitmap* pDst = (N2DBitmap*)m_pObj;
 
 	sdword w = pSrc->GetWidth();
@@ -485,14 +485,14 @@ NLookupOp::NLookupOp()
 {
 }
 
-udword NLookupOp::Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor)
+udword NLookupOp::Process(float _ftime, SEngineState& _state)
 {
 	//Two inputs (texture, texcoords)
 	if (m_byInputs!=2) return (udword)-1;
 
 	//Get input Texture and TexCoords
-	N2DBitmap* pSrc = (N2DBitmap*)(*(_pOpsInts+0))->GetResource();
-	N2DBitmap* pTexCoords = (N2DBitmap*)(*(_pOpsInts+1))->GetResource();
+	N2DBitmap* pSrc = (N2DBitmap*)_state.apInputs[0];
+	N2DBitmap* pTexCoords = (N2DBitmap*)_state.apInputs[2];
 
 	udword w = pTexCoords->GetWidth();
 	udword h = pTexCoords->GetHeight();

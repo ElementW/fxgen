@@ -55,7 +55,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }		//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 //-----------------------------------------------------------------
@@ -75,7 +75,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 
@@ -96,7 +96,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 
@@ -117,7 +117,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 //-----------------------------------------------------------------
@@ -137,7 +137,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 //-----------------------------------------------------------------
@@ -157,7 +157,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 
@@ -176,7 +176,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 //-----------------------------------------------------------------
@@ -196,7 +196,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 //-----------------------------------------------------------------
@@ -216,7 +216,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 //-----------------------------------------------------------------
@@ -236,7 +236,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 
@@ -257,7 +257,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 
@@ -278,7 +278,7 @@ public:
 	virtual const char*		GetCategory()	{ return "Filter"; }	//!< Operator's Category
 
 	//Processing methods
-	virtual udword Process(float _ftime, NOperatorFx** _pOpsInts, float _fDetailFactor);
+	virtual udword Process(float _ftime, SEngineState& _state);
 };
 
 #endif //FILTEROPS_H

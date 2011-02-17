@@ -3,60 +3,71 @@
   <Class Name="NEngineOp">
     <Position X="0.5" Y="0.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>gAAIAAAKpBCAAARIQAACIwCBFACAGEAAAgAgGQAAAgA=</HashCode>
-      <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\OpEngine\EngineOp.h</FileName>
+      <HashCode>gAAIAAAKpBCAAARIAAACIwABFACAGEAAQgAgGQAAAgA=</HashCode>
+      <FileName>C:\Projects.Net\Perso\Merge\fxgen_svn\Core\Source\OpEngine\EngineOp.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="NObject">
     <Position X="5.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAIQwIAAAAAEBCgAASIAQEACgAIAIAAAABAYQAAABCA=</HashCode>
-      <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\Core.h</FileName>
+      <FileName>C:\Projects.Net\Perso\Merge\fxgen_svn\Core\Source\Core.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="NCompiledAsset">
     <Position X="3.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAoIABAAAAAAAAEAAAAAAAAAAAIAQAAAABAABAAAA=</HashCode>
-      <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\OpEngine\EngineOp.h</FileName>
+      <HashCode>AAAAoIABAAAAAAAAEAAAAAAAAAAAMAQAAAABAABAAAA=</HashCode>
+      <FileName>C:\Projects.Net\Perso\Merge\fxgen_svn\Core\Source\OpEngine\EngineOp.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="N2DBitmap" Collapsed="true">
-    <Position X="7.75" Y="0.5" Width="1.5" />
+    <Position X="9" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAABAAAAIAAAASAAAAAIAABAAIAAAAAAAIAAAEAAgAA=</HashCode>
-      <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\OpEngine\Bitmap.h</FileName>
+      <FileName>C:\Projects.Net\Perso\Merge\fxgen_svn\Core\Source\OpEngine\Bitmap.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="NVarsBloc">
-    <Position X="7.75" Y="3" Width="2.25" />
+    <Position X="7.5" Y="3" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AACAgIIAMIAAAoAACQCAAAQQAAAwAAABABACgAAAAAA=</HashCode>
-      <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\Core.h</FileName>
+      <FileName>C:\Projects.Net\Perso\Merge\fxgen_svn\Core\Source\Core.h</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="m_pcvarsblocDesc" />
+      <Field Name="m_paVarsValues" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="NOperatorFx">
     <Position X="3.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>kAAAgIEcAogAAAAIgwAAAAIAAAAAiADAAAAJGAACBAA=</HashCode>
-      <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\OpEngine\EngineOp.h</FileName>
+      <FileName>C:\Projects.Net\Perso\Merge\fxgen_svn\Core\Source\OpEngine\EngineOp.h</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="m_pcvarsBloc" />
     </ShowAsAssociation>
   </Class>
+  <Class Name="NResourceFx" Collapsed="true">
+    <Position X="9" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Projects.Net\Perso\Merge\fxgen_svn\Core\Source\OpEngine\EngineOp.h</FileName>
+    </TypeIdentifier>
+  </Class>
   <Struct Name="NVarsBlocDesc">
-    <Position X="10.5" Y="3" Width="1.5" />
+    <Position X="11" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAIAAAAAAAAAAAAAAAACAAAQABAgAAEAAAAgAAgAAAA=</HashCode>
-      <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\Core.h</FileName>
+      <FileName>C:\Projects.Net\Perso\Merge\fxgen_svn\Core\Source\Core.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="NVarValue">
-    <Position X="10.5" Y="5.5" Width="1.5" />
+    <Position X="11" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAA=</HashCode>
-      <FileName>C:\Temp\Download\Perso\Merge\fxgen_svn\Core\Source\Core.h</FileName>
+      <FileName>C:\Projects.Net\Perso\Merge\fxgen_svn\Core\Source\Core.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Font Name="Tahoma" Size="8.25" />
