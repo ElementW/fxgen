@@ -93,9 +93,9 @@ public:
 	NOperatorFx();
 	virtual ~NOperatorFx();
 
-	//Methods
+	//Methods	###TOMOVE### NEngineOp::RegisterOpFx()
 	virtual	udword GetColor()	= 0;				//!< Operator color
-	virtual const char* GetName()				{ return ""; }			//!< Operator's Name
+	virtual const char* GetName()				{ return ""; }			//!< Operator's Name 
 	virtual const char* GetCategory()		{ return "Misc"; }	//!< Operator's Category
 	virtual const char* GetUserName()		{ return null; }		//!< Operator's User Name
 
@@ -138,7 +138,7 @@ protected:
 
 //-----------------------------------------------------------------
 //!	\class		NCompiledAsset
-//!	\brief		asset precessed by engine
+//!	\brief		asset processed by engine
 //-----------------------------------------------------------------
 class CORELIB_API NCompiledAsset :	public NObject
 {
