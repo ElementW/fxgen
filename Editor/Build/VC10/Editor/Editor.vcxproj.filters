@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{70f84f0a-aed8-460f-ae41-4887d5be4415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win32 Platform">
+      <UniqueIdentifier>{2380b735-6672-40e6-bca8-47238752a294}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor Views">
+      <UniqueIdentifier>{071e97d0-af3e-4224-a543-1fded956e931}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Models">
+      <UniqueIdentifier>{3f8f1b04-9ba5-4395-aec7-5275597b1884}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base UI Wnds">
+      <UniqueIdentifier>{329dc849-646b-4ddb-898a-26b0bc56c147}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Source\EditorApp.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\EditorGUI.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FileChooserDialog.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\OperatorsWnd.cpp">
+      <Filter>Editor Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\PropertiesWnd.cpp">
+      <Filter>Editor Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\ViewportsWnd.cpp">
+      <Filter>Editor Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\LayoutDock.cpp">
+      <Filter>Base UI Wnds</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\PropertiesCtrl.cpp">
+      <Filter>Base UI Wnds</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\PropertyItems.cpp">
+      <Filter>Base UI Wnds</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\TreeNodeCtrl.cpp">
+      <Filter>Base UI Wnds</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Main.cpp" />
+    <ClCompile Include="..\..\..\Source\ViewportsCtrl.cpp">
+      <Filter>Base UI Wnds</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\OperatorsCtrl.cpp">
+      <Filter>Base UI Wnds</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\GUI_Win32.cpp">
+      <Filter>Win32 Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\AssetWnd.cpp">
+      <Filter>Editor Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\AssetModel.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\OpGraphModel.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Source\EditorApp.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\EditorGUI.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\EventsList.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FileChooserDialog.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\OperatorsWnd.h">
+      <Filter>Editor Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\ViewportsWnd.h">
+      <Filter>Editor Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\LayoutDock.h">
+      <Filter>Base UI Wnds</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\TreeNodeCtrl.h">
+      <Filter>Base UI Wnds</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\CoreLibPkg.h" />
+    <ClInclude Include="..\..\..\Source\ViewportsCtrl.h">
+      <Filter>Base UI Wnds</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\OperatorsCtrl.h">
+      <Filter>Base UI Wnds</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\GUI_Win32.h">
+      <Filter>Win32 Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\AssetWnd.h">
+      <Filter>Editor Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\AssetModel.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\OpGraphModel.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\FxGen TODO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="..\..\..\Source\PropertiesWnd.h">
+      <Filter>Editor Views</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\..\Source\PropertiesCtrl.h">
+      <Filter>Base UI Wnds</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\..\Source\PropertyItems.h">
+      <Filter>Base UI Wnds</Filter>
+    </CustomBuildStep>
+  </ItemGroup>
+</Project>
