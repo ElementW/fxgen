@@ -3,7 +3,7 @@
 //
 //									 FxGen synthesis texture generation
 //
-//	Author Johann Nadalutti (fxgen@free.fr)
+//	Author Johann Nadalutti (jnadalutti@gmail.com)
 //----------------------------------------------------------------- 
 //-----------------------------------------------------------------
 
