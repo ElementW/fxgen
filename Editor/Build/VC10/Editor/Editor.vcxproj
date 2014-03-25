@@ -40,9 +40,10 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\W32Bin\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\W32Bin\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)_D</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -89,7 +90,6 @@
     <ClCompile Include="..\..\..\Source\AssetModel.cpp" />
     <ClCompile Include="..\..\..\Source\EditorApp.cpp" />
     <ClCompile Include="..\..\..\Source\EditorGUI.cpp" />
-    <ClCompile Include="..\..\..\Source\FileChooserDialog.cpp" />
     <ClCompile Include="..\..\..\Source\GUI_Win32.cpp" />
     <ClCompile Include="..\..\..\Source\OperatorsCtrl.cpp" />
     <ClCompile Include="..\..\..\Source\OperatorsWnd.cpp" />
@@ -109,7 +109,6 @@
     <ClInclude Include="..\..\..\Source\EditorApp.h" />
     <ClInclude Include="..\..\..\Source\EditorGUI.h" />
     <ClInclude Include="..\..\..\Source\EventsList.h" />
-    <ClInclude Include="..\..\..\Source\FileChooserDialog.h" />
     <ClInclude Include="..\..\..\Source\GUI_Win32.h" />
     <ClInclude Include="..\..\..\Source\OperatorsCtrl.h" />
     <ClInclude Include="..\..\..\Source\OperatorsWnd.h" />

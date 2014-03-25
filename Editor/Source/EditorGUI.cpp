@@ -23,7 +23,6 @@
 #include "OperatorsWnd.h"
 #include "PropertiesWnd.h"
 #include "ViewportsWnd.h"
-#include "FileChooserDialog.h"
 #include "AssetWnd.h"
 
 #include "AssetModel.h"

@@ -24,9 +24,6 @@
     <ClCompile Include="..\..\..\Source\EditorGUI.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\FileChooserDialog.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Source\OperatorsWnd.cpp">
       <Filter>Editor Views</Filter>
     </ClCompile>
@@ -76,9 +73,6 @@
       <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\EventsList.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Source\FileChooserDialog.h">
       <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\OperatorsWnd.h">

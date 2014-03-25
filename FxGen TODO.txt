@@ -1,65 +1,24 @@
-SVN
---------------
-.Removed NVarValue direct access
-.NOperatorFx GetRoot optimized
-.NVarsBloc::GetBlocDesc Removed
-.NVarsBloc::GetValueDesc Added
-.Add operators compilation phase
-.Engine added Operators description access
-.NOperatorFx variables in protected access (see now methods)
-
 TODO
 -------------
 now 'load' operators could reference differents assets
 	.see own to managed NObject serialization if present into another asset !
 	.into NArchive add archives dependences !
 
-move setDepth() and setInputs() from OperatorFx to NCompiledAsset...
-
-
-.if C# designer version
-	.expose C++ NEngineOp, NCompiledAsset, NOperatorFx
-	.add methods to C++ OpEngine
-		.GetOpDescCount()
-		.GetOpDescList()	=> struct OpDesc  { categorie, color, name, valuesCount, astOpValues... }
-							=> struct OpValueDesc { Type, min, max, ... }
-		.LoadAsset(filename)
-		.UnLoadAsset(filename)
-		.GetAssetsCount()
-		.GetAssetsList() (see C# collection)
-
-	.add methods to C++ OperatorFx
-		.struct OpValue = GetValue(idx)
-		.SetValue(idx, OpValue)
-	.make C# properties control
-		.access NOperatorFx properties from => Object::OperatorFx::GetValue(idx)
-	.NCompiledAsset
-		.Load/Save binary
-		.GetUsedOperatorsFxCount()	=> stats
-		.
-
 .Main ID
-	X Split Operator class to OperatorNode(designer) and OperatorFx(runtime)
 	.Make Link between assert
-	 .add Module management into NArchive PutMappedClass())
 	.Add CommentNode (later)
 	.Add custom OperatorNode classes for visual editing
-	.Add Optimize() methods to NCompiledAsset in order to remove unused fx
 
 .FxGenLib
-	.Rewrite animation processing (later)
-	.Add automatic version management for properties serialization
-		X remove SetMapVarBlocDesc and NMapVarsBlocDesc
-		.Write automatic varmap as blender :-)
-	
-.Editor:GUI (maybe a c# version)
-	X Review Properties control.
-		X Add variables limits into properties items
-		X Add slider control
+	.Rewrite animation processing with animation stack graph as C# version
+	.Change serialization manager as C# version with automatic prop versionning
+	.Separate Operator:Create() and Operator:Process() methods as C# version
+
+.Editor:GUI
+	.Use SDL2 for GUI...
+	.Make Declarative UI
 	.TreeNodeCtrl
 		.Add node renaming
-	X Button
-		X add style: menu and color
 	.Viewport
 		...
 	.add a thread for working process (operatorfx computing, compilation)
@@ -67,8 +26,7 @@ move setDepth() and setInputs() from OperatorFx to NCompiledAsset...
 		.add an assets directory (an assert is just an fxgen designer project)
 		.load assets list from directory then add them to treeview
 		.compile and compute asserts node graph (later add cache)
-	.add undo-redo (later)
-	X add min-max properties limits
+	.add undo-redo as c# version with commands
 	.managed string properties changed on key enter evt
 
 Version 0.7 alpha (Release: New FxGen Engine !)
@@ -85,7 +43,6 @@ Version 0.7 alpha (Release: New FxGen Engine !)
 	.Fixed Menu destruction crash
 	.Application Management Removed
 	.Win32 dependencies removed (now gui_win32.cpp in editor, TODO linux and OSX version)
-	.could Use SDL (window, thread...)!
 .Editor
 	X Replaced projets by assets
 	X NOpGraphModel and NAssetModel created
