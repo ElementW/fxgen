@@ -154,5 +154,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="OpEngine_ClassDiagram.cd" />
+    <None Include="Gui_ClassDiagram.cd" />
   </ItemGroup>
 </Project>
