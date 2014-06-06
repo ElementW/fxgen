@@ -144,6 +144,7 @@ XCopy /S /Y $(OutDir)*.pdb ..\..\..\W32Bin\</Command>
     <ClInclude Include="..\..\Include\CoreLib.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Gui_ClassDiagram.cd" />
     <None Include="OpEngine_ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
