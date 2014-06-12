@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="NGUIWnd">
-    <Position X="6.25" Y="0.5" Width="2.25" />
+    <Position X="5" Y="0.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>CsCIAAIIAAGAAACIQMEEAEDcARIAgEIABgIAAARQAEA=</HashCode>
       <FileName>C:\projects.net\johann\SourceForge\Compare\Core\Source\GUI.h</FileName>
@@ -18,10 +18,66 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="N2DPainter">
-    <Position X="9.25" Y="1" Width="2.25" />
+    <Position X="7.75" Y="0.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AABAIAAAABIAgAAAAAAAAAAAAAAAAAAAAEAgABAAACA=</HashCode>
       <FileName>C:\projects.net\johann\SourceForge\Compare\Core\Source\GUI.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NMenuCtrl">
+    <Position X="7.5" Y="12" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AgSwgBAAAIGAAhAAQAIAAIFAkBCIBEgAAAIAFAARAAA=</HashCode>
+      <FileName>C:\projects.net\johann\SourceForge\Compare\Core\Source\MenuCtrl.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NTextCtrl">
+    <Position X="4.5" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAAAAEAEAAAAAAAAAAAAAAAAEAAAAAABAAAAAA=</HashCode>
+      <FileName>C:\projects.net\johann\SourceForge\Compare\Core\Source\StandardsCtrl.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NStripBarCtrl">
+    <Position X="10.75" Y="12" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAEAAEAAABEAAAAAABAABIAAEgACAAAAAAQCAA=</HashCode>
+      <FileName>C:\projects.net\johann\SourceForge\Compare\Core\Source\StripBarCtrl.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NButtonCtrl">
+    <Position X="0.75" Y="12" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAIAAEAAAAAAAAAEADCABIAAEAACgAAAAAQgAA=</HashCode>
+      <FileName>C:\projects.net\johann\SourceForge\Compare\Core\Source\StandardsCtrl.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NSlideCtrl">
+    <Position X="14" Y="12" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>gISACAAAAAEQAAIAABgAAAhEABACAcEAAAAAgAAQAAA=</HashCode>
+      <FileName>C:\projects.net\johann\SourceForge\Compare\Core\Source\StandardsCtrl.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NColorButtonCtrl">
+    <Position X="17" Y="12" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAQAAACAAAgAAAAAAIAAAAGIAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\projects.net\johann\SourceForge\Compare\Core\Source\StandardsCtrl.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NEditCtrl">
+    <Position X="19.75" Y="12" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AECQAAAARiAAAAAAAAAAAABEAAIAEEAABIIAAAAQAEA=</HashCode>
+      <FileName>C:\projects.net\johann\SourceForge\Compare\Core\Source\StandardsCtrl.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NMenuButtonCtrl">
+    <Position X="21.75" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAQAAAAgAAAAAAAAAAAAAAEIAACAAAAAAAAA=</HashCode>
+      <FileName>C:\projects.net\johann\SourceForge\Compare\Core\Source\StandardsCtrl.h</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
