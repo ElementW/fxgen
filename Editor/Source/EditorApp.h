@@ -24,7 +24,9 @@
 
 #include "EditorGUI.h"
 #include "EventsList.h"
+
 #include "GUI_Win32.h"
+#include "SDLApplication.h"
 
 //-----------------------------------------------------------------
 //                   Defines
@@ -37,6 +39,9 @@
 #define WIDTH			800
 #define HEIGHT		600
 
+#define PLATFORMAPP_CLASS	NSDLApplication
+//#define PLATFORMAPP_CLASS	NW32Application
+
 //-----------------------------------------------------------------
 //                   Prototypes
 //-----------------------------------------------------------------
@@ -46,7 +51,7 @@ class NEventsMgr;
 //!	\class		NFXGenApp
 //!	\brief		Application class declaration
 //-----------------------------------------------------------------
-class NFxGenApp : NW32Application
+class NFxGenApp : PLATFORMAPP_CLASS
 {
 public:
 	//Constructor-Destructor

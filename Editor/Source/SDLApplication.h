@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-//! \file		GUI_Win32.h
+//! \file		SDLApplication.h
 //! \brief	Win32 specific implementation
 //!
 //!	\author	Johann Nadalutti (jnadalutti@gmail.com)
-//!	\date		23-06-2008
+//!	\date		16-06-2014
 //!
 //!	\brief	This file applies the GNU LESSER GENERAL PUBLIC LICENSE
 //!					Version 2.1 , read file COPYING.
@@ -27,21 +27,22 @@
 #include "CoreLibPkg.h"
 
 //-----------------------------------------------------------------
-// Class Prototypes
+// Prototypes
 //-----------------------------------------------------------------
-	class NW32Application;
-	class NW32FileDialog;
+struct SDL_Window;
+struct SDL_KeyboardEvent;
+//class SDL_Renderer;
 
 //-----------------------------------------------------------------
-//!	\class	NW32Application
-//!	\brief	Win32 Application Class Definition
+//!	\class	NSDLApplication
+//!	\brief	SDL Application Class Definition
 //-----------------------------------------------------------------
-class NW32Application
+class NSDLApplication
 {
 public:
 	//Constructor-Destructor
-	NW32Application();
-	virtual	~NW32Application();
+	NSDLApplication();
+	virtual	~NSDLApplication();
 
 	//Methods
 	virtual	bool				Init();			//!< Override to perform Windows instance initialization, such as creating your window objects.
@@ -52,38 +53,18 @@ public:
 	virtual void				Present();
 
 	virtual void AskExit();	//!< Called in order to exit application
-	
+
 	virtual	void GetCursorPos(NPoint& _pos);
 	virtual	void SetCursorPos(const NPoint& _pos);
-	virtual	udword MessageBox(char* _pszText, udword _dwStyle=NMB_OK);
+	virtual	udword MessageBox(char* _pszText, udword _dwStyle = NMB_OK);
 
 protected:
 	//Methods
-	static LRESULT CALLBACK StaticWndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
-	NKey::Code W32KeyCodeToFxGen(WPARAM key, LPARAM flags);
+	NKey::Code NSDLApplication::SDLKeyCodeToFxGen(SDL_KeyboardEvent _sdlkey);
 
 	//Datas
-	HDC m_hDC;
-	HWND m_hW32Wnd;
+	SDL_Window* m_pwnd;
 
-
+	
+	
 };
-
-
-//-----------------------------------------------------------------
-//!	\class	NW32FileDialog
-//!	\brief	FileDialog Class Definition
-//-----------------------------------------------------------------
-/*class NW32FileDialog
-{
-public:
-	//Platform Dependent Methods
-	virtual bool Create(char* name, NWnd* parent, bool open=true, bool multiselect=false);
-	virtual udword	DoModal();	//Displays the dialog box and allows the user to make a selection
-
-protected:
-	//W32 Datas
-	OPENFILENAME	mOfn;								//Win32 OPENFILENAME struct
-	bool					mOpenFileDialog;		//Open or Save Display
-};
-*/

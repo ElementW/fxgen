@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-//! \file		GUI_Win32.h
+//! \file		SDLApplication.cpp
 //! \brief	Win32 specific implementation
 //!
 //!	\author	Johann Nadalutti (jnadalutti@gmail.com)
-//!	\date		23-06-2008
+//!	\date		16-06-2014
 //!
 //!	\brief	This file applies the GNU LESSER GENERAL PUBLIC LICENSE
 //!					Version 2.1 , read file COPYING.
@@ -152,6 +152,11 @@ void NW32Application::Run()
 
 	}
 
+}
+
+void NW32Application::Present()
+{
+	SwapBuffers(m_hDC); 
 }
 
 
