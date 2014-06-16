@@ -70,7 +70,7 @@ NFxGenApp::~NFxGenApp()
 bool NFxGenApp::Init()
 {
 	// Create main window
-	NW32Application::Init();
+	PLATFORMAPP_CLASS::Init();
 
 	// GUI SubSystem
 	NGUISubSystem* pgui = GetGUISubSystem();
@@ -96,7 +96,7 @@ void NFxGenApp::Run()
 	NGUISubSystem* pgui = GetGUISubSystem();
 	NPoint pt;
 
-	NW32Application::Run();
+	PLATFORMAPP_CLASS::Run();
 
 	// Create a clock for measuring the time elapsed
 /*  sf::Clock clock;
@@ -225,7 +225,7 @@ bool NFxGenApp::Exit()
 
 	GetGUISubSystem()->ShutDown();
 
-	NW32Application::Exit();
+	PLATFORMAPP_CLASS::Exit();
 
 	return true;
 }
@@ -235,7 +235,7 @@ bool NFxGenApp::Exit()
 //-----------------------------------------------------------------
 void NFxGenApp::Update()
 {
-	NW32Application::Update();
+	PLATFORMAPP_CLASS::Update();
 
 	NEditorGUI* pfrm = (NEditorGUI*)GetGUISubSystem()->GetMainWnd();
 
@@ -252,12 +252,15 @@ void NFxGenApp::Update()
 
 	//Update Windows drawing
 	NGUISubSystem* pgui = GetGUISubSystem();
-	if (pgui->Update())
+	
+	if (pgui->Update())	//Update/Draw UI
 	{
-		SwapBuffers( m_hDC );
+		//SwapBuffers( m_hDC );
+		//SDL_RenderPresent(m_prenderer);
+		Present();
 	}
 
-	Sleep(1);
+	//Sleep(1);
 
 }
 

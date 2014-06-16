@@ -16,6 +16,9 @@
     <Filter Include="Base UI Wnds">
       <UniqueIdentifier>{329dc849-646b-4ddb-898a-26b0bc56c147}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SDL2">
+      <UniqueIdentifier>{499fdfa4-4b0f-4330-9b98-5e19f6a36f22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Source\EditorApp.cpp">
@@ -64,6 +67,9 @@
     <ClCompile Include="..\..\..\Source\OpGraphModel.cpp">
       <Filter>Models</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Source\SDLApplication.cpp">
+      <Filter>SDL2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Source\EditorApp.h">
@@ -105,6 +111,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Source\OpGraphModel.h">
       <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\SDLApplication.h">
+      <Filter>SDL2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
